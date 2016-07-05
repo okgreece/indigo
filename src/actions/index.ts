@@ -1,10 +1,11 @@
 import { BookActions } from './book';
+import { CubeActions } from './cube';
 
 
 export {
-  BookActions
+  BookActions, CubeActions
 };
 
 export default [
-  BookActions
+  BookActions, CubeActions
 ];

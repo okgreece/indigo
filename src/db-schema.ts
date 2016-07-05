@@ -11,6 +11,10 @@ const schema: DBSchema = {
     books: {
       autoIncrement: true,
       primaryKey: 'id'
+    },
+    cubes: {
+      autoIncrement: true,
+      primaryKey: 'id'
     }
   }
 };

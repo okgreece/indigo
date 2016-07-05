@@ -51,13 +51,23 @@ import { StoreLogMonitorComponent } from '@ngrx/store-log-monitor';
             <span md-line>Browse Books</span>
             <span md-line class="secondary">Find your next book!</span>
           </a>
+          <a md-list-item linkTo="/" (click)="sidenav.close()">
+            <md-icon md-list-icon>cube</md-icon>
+            <span md-line>My Collection</span>
+            <span md-line class="secondary">View your cube collection!</span>
+          </a>
+          <a md-list-item linkTo="/cube/find" (click)="sidenav.close()">
+            <md-icon md-list-icon>search</md-icon>
+            <span md-line>Browse Cubes</span>
+            <span md-line class="secondary">Find your next cube!</span>
+          </a>
         </md-nav-list>
       </md-sidenav>
       <md-toolbar color="primary">
         <button md-icon-button (click)="sidenav.open()">
           <md-icon>menu</md-icon>
         </button>
-        <span>Books Sample App</span>
+        <span>Books & Cubes Sample App</span>
       </md-toolbar>
 
       <route-view></route-view>

@@ -1,6 +1,6 @@
 import { Routes } from '@ngrx/router';
 
-import { BookExistsGuard } from './guards';
+import { BookExistsGuard, CubeExistsGuard } from './guards';
 
 
 const routes: Routes = [
@@ -9,6 +9,14 @@ const routes: Routes = [
     loadComponent: () => new Promise(resolve => {
       (require as any).ensure([], require => {
         resolve(require('./pages/collection').CollectionPage);
+      });
+    })
+  },
+  {
+    path: '/cubes',
+    loadComponent: () => new Promise(resolve => {
+      (require as any).ensure([], require => {
+        resolve(require('./pages/cube/collection').CollectionPage);
       });
     })
   },
@@ -26,6 +34,24 @@ const routes: Routes = [
     loadComponent: () => new Promise(resolve => {
       (require as any).ensure([], require => {
         resolve(require('./pages/book-view').BookViewPage);
+      });
+    })
+  },
+
+  {
+    path: '/cube/find',
+    loadComponent: () => new Promise(resolve => {
+      (require as any).ensure([], require => {
+        resolve(require('./pages/cube/cube-find').CubeFindPage);
+      });
+    })
+  },
+  {
+    path: '/cube/:id',
+    guards: [ CubeExistsGuard ],
+    loadComponent: () => new Promise(resolve => {
+      (require as any).ensure([], require => {
+        resolve(require('./pages/cube/cube-view').CubeViewPage);
       });
     })
   },

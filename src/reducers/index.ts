@@ -8,7 +8,7 @@ import { Observable } from 'rxjs/Observable';
  * it any number of functions and it returns a function. This new function
  * takes a value and chains it through every composed function, returning
  * the output.
- * 
+ *
  * More: https://drboolean.gitbooks.io/mostly-adequate-guide/content/ch5.html
  */
 import { compose } from '@ngrx/core/compose';
@@ -28,7 +28,7 @@ import { storeLogger } from 'ngrx-store-logger';
  * functions and creates a new reducer that stores the gathers the values
  * of each reducer and stores them using the reducer's key. Think of it
  * almost like a database, where every reducer is a table in the db.
- * 
+ *
  * More: https://egghead.io/lessons/javascript-redux-implementing-combinereducers-from-scratch
  */
 import { combineReducers } from '@ngrx/store';
@@ -47,8 +47,11 @@ import { routerReducer, RouterState } from '@ngrx/router-store';
  * notation packages up all of the exports into a single object.
  */
 import searchReducer, * as fromSearch from './search';
+import cubes_searchReducer, * as fromCubesSearch from './cube/search';
 import booksReducer, * as fromBooks from './books';
+import cubesReducer, * as fromCubes from './cube/cubes';
 import collectionReducer, * as fromCollection from './collection';
+import cubes_collectionReducer, * as fromCubesCollection from './cube/collection';
 
 
 /**
@@ -58,8 +61,11 @@ import collectionReducer, * as fromCollection from './collection';
 export interface AppState {
   router: RouterState;
   search: fromSearch.SearchState;
+  cubes_search: fromCubesSearch.SearchState;
   books: fromBooks.BooksState;
+  cubes: fromCubes.CubesState;
   collection: fromCollection.CollectionState;
+  cubes_collection: fromCubesCollection.CollectionState;
 }
 
 
@@ -74,7 +80,9 @@ export default compose(storeLogger(), combineReducers)({
   router: routerReducer,
   search: searchReducer,
   books: booksReducer,
-  collection: collectionReducer
+  cubes: cubesReducer,
+  collection: collectionReducer,
+  cube_collection: cubes_collectionReducer
 });
 
 
@@ -97,6 +105,11 @@ export default compose(storeLogger(), combineReducers)({
  export function getBooksState() {
   return (state$: Observable<AppState>) => state$
     .select(s => s.books);
+}
+
+export function getCubesState() {
+  return (state$: Observable<AppState>) => state$
+    .select(s => s.cubes);
 }
 
 /**
@@ -126,6 +139,25 @@ export default compose(storeLogger(), combineReducers)({
  }
 
 
+
+
+export function getCubeEntities() {
+  return compose(fromCubes.getCubeEntities(), getCubesState());
+}
+
+export function getCube(id: string) {
+  return compose(fromCubes.getCube(id), getCubesState());
+}
+
+export function hasCube(id: string) {
+  return compose(fromCubes.hasCube(id), getCubesState());
+}
+
+export function getCubes(bookIds: string[]) {
+  return compose(fromCubes.getCubes(bookIds), getCubesState());
+}
+
+
 /**
  * Just like with the books selectors, we also have to compose the search
  * reducer's and collection reducer's selectors.
@@ -134,17 +166,29 @@ export function getSearchState() {
  return (state$: Observable<AppState>) => state$
    .select(s => s.search);
 }
-
+export function getCubesSearchState() {
+  return (state$: Observable<AppState>) => state$
+    .select(s => s.cubes_search);
+}
 export function getSearchBookIds() {
   return compose(fromSearch.getBookIds(), getSearchState());
+}
+
+export function getSearchCubeIds() {
+  return compose(fromCubesSearch.getCubeIds(), getCubesSearchState());
 }
 
 export function getSearchStatus() {
   return compose(fromSearch.getStatus(), getSearchState());
 }
-
+export function getCubesSearchStatus() {
+  return compose(fromCubesSearch.getStatus(), getCubesSearchState());
+}
 export function getSearchQuery() {
   return compose(fromSearch.getQuery(), getSearchState());
+}
+export function getCubesSearchQuery() {
+  return compose(fromCubesSearch.getQuery(), getCubesSearchState());
 }
 
 /**
@@ -157,31 +201,55 @@ export function getSearchResults() {
     .switchMap(bookIds => state$.let(getBooks(bookIds)));
 }
 
+export function getCubesSearchResults() {
+  return (state$: Observable<AppState>) => state$
+    .let(getSearchCubeIds())
+    .switchMap(cubeIds => state$.let(getCubes(cubeIds)));
+}
 
 
 export function getCollectionState() {
   return (state$: Observable<AppState>) => state$
     .select(s => s.collection);
 }
-
+export function getCubesCollectionState() {
+  return (state$: Observable<AppState>) => state$
+    .select(s => s.cubes_collection);
+}
 export function getCollectionLoaded() {
   return compose(fromCollection.getLoaded(), getCollectionState());
+}
+export function getCubesCollectionLoaded() {
+  return compose(fromCubesCollection.getLoaded(), getCubesCollectionState());
 }
 
 export function getCollectionLoading() {
   return compose(fromCollection.getLoading(), getCollectionState());
 }
-
+export function getCubesCollectionLoading() {
+  return compose(fromCubesCollection.getLoading(), getCubesCollectionState());
+}
 export function getCollectionBookIds() {
   return compose(fromCollection.getBookIds(), getCollectionState());
+}
+
+export function getCollectionCubeIds() {
+  return compose(fromCubesCollection.getCubeIds(), getCollectionState());
 }
 
 export function isBookInCollection(id: string) {
   return compose(fromCollection.isBookInCollection(id), getCollectionState());
 }
-
+export function isCubeInCollection(id: string) {
+  return compose(fromCubesCollection.isCubeInCollection(id), getCubesCollectionState());
+}
 export function getBookCollection() {
   return (state$: Observable<AppState>) => state$
     .let(getCollectionBookIds())
     .switchMap(bookIds => state$.let(getBooks(bookIds)));
+}
+export function getCubeCollection() {
+  return (state$: Observable<AppState>) => state$
+    .let(getCollectionCubeIds())
+    .switchMap(cubeIds => state$.let(getCubes(cubeIds)));
 }
