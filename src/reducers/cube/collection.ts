@@ -11,7 +11,8 @@ export interface CollectionState {
   loaded: boolean;
   loading: boolean;
   ids: string[];
-};
+}
+
 
 const initialState: CollectionState = {
   loaded: false,
@@ -33,7 +34,7 @@ export default function(state = initialState, action: Action): CollectionState {
       return {
         loaded: true,
         loading: false,
-        ids: cubes.map(cube => cube.id)
+        ids: cubes.map(cube => cube.name)
       };
     }
 
@@ -41,12 +42,12 @@ export default function(state = initialState, action: Action): CollectionState {
     case CubeActions.REMOVE_FROM_COLLECTION_FAIL: {
       const cube: Cube = action.payload;
 
-      if (state.ids.includes(cube.id)) {
+      if (state.ids.includes(cube.name)) {
         return state;
       }
 
       return Object.assign({}, state, {
-        ids: [ ...state.ids, cube.id ]
+        ids: [ ...state.ids, cube.name ]
       });
     }
 
@@ -55,7 +56,7 @@ export default function(state = initialState, action: Action): CollectionState {
       const cube: Cube = action.payload;
 
       return Object.assign({}, state, {
-        ids: state.ids.filter(id => id !== cube.id)
+        ids: state.ids.filter(id => id !== cube.name)
       });
     }
 

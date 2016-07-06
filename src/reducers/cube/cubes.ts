@@ -22,12 +22,11 @@ export default function(state = initialState, action: Action): CubesState {
     case CubeActions.SEARCH_COMPLETE:
     case CubeActions.LOAD_COLLECTION_SUCCESS: {
       const cubes: Cube[] = action.payload;
-      const newCubes = cubes.filter(cube => !state.entities[cube.id]);
-
-      const newCubeIds = newCubes.map(cube => cube.id);
-      const newCubeEntities = newCubes.reduce((entities: { [id: string]: Cube }, cube: Cube) => {
+      const newCubes = cubes.filter(cube => !state.entities[cube.name]);
+      const newCubeIds = newCubes.map(cube => cube.name);
+      const newCubeEntities = newCubes.reduce((entities: { [name: string]: Cube }, cube: Cube) => {
         return Object.assign(entities, {
-          [cube.id]: cube
+          [cube.name]: cube
         });
       }, {});
 
@@ -40,14 +39,14 @@ export default function(state = initialState, action: Action): CubesState {
     case CubeActions.LOAD_CUBE: {
       const cube: Cube = action.payload;
 
-      if (state.ids.includes(cube.id)) {
+      if (state.ids.includes(cube.name)) {
         return state;
       }
 
       return {
-        ids: [ ...state.ids, cube.id ],
+        ids: [ ...state.ids, cube.name ],
         entities: Object.assign({}, state.entities, {
-          [cube.id]: cube
+          [cube.name]: cube
         })
       };
     }
@@ -79,7 +78,7 @@ export function getCube(id: string) {
 export function getCubes(cubeIds: string[]) {
   return (state$: Observable<CubesState>) => state$
     .let(getCubeEntities())
-    .map(entities => cubeIds.map(id => entities[id]));
+    .map(entities => {return cubeIds.map(id => entities[id])});
 }
 
 export function hasCube(id: string) {

@@ -7,7 +7,7 @@ import { Guard, TraversalCandidate } from '@ngrx/router';
 import { Observable } from 'rxjs/Observable';
 
 import { GoogleCubesService } from '../services/google-cubes';
-import { AppState, hasCube, getCollectionLoaded } from '../reducers';
+import { AppState, hasCube, getCubesCollectionLoaded } from '../reducers';
 import { CubeActions } from '../actions/cube';
 
 
@@ -33,7 +33,7 @@ export class CubeExistsGuard implements Guard {
    * has finished.
    */
   waitForCollectionToLoad() {
-    return this.store.let(getCollectionLoaded())
+    return this.store.let(getCubesCollectionLoaded())
       .filter(loaded => loaded)
       .take(1);
   }

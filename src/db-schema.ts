@@ -14,7 +14,7 @@ const schema: DBSchema = {
     },
     cubes: {
       autoIncrement: true,
-      primaryKey: 'id'
+      primaryKey: 'name'
     }
   }
 };

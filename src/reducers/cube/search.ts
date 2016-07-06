@@ -10,7 +10,7 @@ export interface SearchState {
   ids: string[];
   loading: boolean;
   query: string;
-};
+}
 
 const initialState: SearchState = {
   ids: [],
@@ -31,9 +31,9 @@ export default function(state = initialState, action: Action): SearchState {
 
     case CubeActions.SEARCH_COMPLETE: {
       const cubes: Cube[] = action.payload;
-
+      debugger;
       return {
-        ids: cubes.map(cube => cube.id),
+        ids: cubes.map(cube => cube.name),
         loading: false,
         query: state.query
       };

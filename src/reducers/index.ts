@@ -65,7 +65,7 @@ export interface AppState {
   books: fromBooks.BooksState;
   cubes: fromCubes.CubesState;
   collection: fromCollection.CollectionState;
-  cubes_collection: fromCubesCollection.CollectionState;
+  cube_collection: fromCubesCollection.CollectionState;
 }
 
 
@@ -79,6 +79,7 @@ export interface AppState {
 export default compose(storeLogger(), combineReducers)({
   router: routerReducer,
   search: searchReducer,
+  cubes_search: cubes_searchReducer,
   books: booksReducer,
   cubes: cubesReducer,
   collection: collectionReducer,
@@ -153,8 +154,8 @@ export function hasCube(id: string) {
   return compose(fromCubes.hasCube(id), getCubesState());
 }
 
-export function getCubes(bookIds: string[]) {
-  return compose(fromCubes.getCubes(bookIds), getCubesState());
+export function getCubes(cubeIds: string[]) {
+  return compose(fromCubes.getCubes(cubeIds), getCubesState());
 }
 
 
@@ -214,12 +215,13 @@ export function getCollectionState() {
 }
 export function getCubesCollectionState() {
   return (state$: Observable<AppState>) => state$
-    .select(s => s.cubes_collection);
+    .select(s =>{return s.cube_collection});
 }
 export function getCollectionLoaded() {
   return compose(fromCollection.getLoaded(), getCollectionState());
 }
 export function getCubesCollectionLoaded() {
+
   return compose(fromCubesCollection.getLoaded(), getCubesCollectionState());
 }
 

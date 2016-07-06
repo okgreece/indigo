@@ -83,7 +83,7 @@ export class CubeEffects {
   @Effect() removeCubeFromCollection$ = this.updates$
     .whenAction(CubeActions.REMOVE_FROM_COLLECTION)
     .map<Cube>(toPayload)
-    .mergeMap(cube => this.db.executeWrite('cubes', 'delete', [ cube.id ])
+    .mergeMap(cube => this.db.executeWrite('cubes', 'delete', [ cube.name ])
       .mapTo(this.cubeActions.removeFromCollectionSuccess(cube))
       .catch(() => Observable.of(
         this.cubeActions.removeFromCollectionFail(cube)

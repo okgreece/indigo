@@ -17,7 +17,7 @@ export type CubeInput = Cube;
     MD_LIST_DIRECTIVES
   ],
   template: `
-    <a [linkTo]=" '/cube/' + id">
+    <a [linkTo]=" '/cube/' + name">
       <md-card>
         <md-card-title-group>
           <md-card-title>{{ name }}</md-card-title>
@@ -61,7 +61,7 @@ export class CubePreviewComponent {
   @Input() cube: CubeInput;
 
   get id() {
-    return this.cube.id;
+    return this.cube.name;
   }
 
   get name() {
