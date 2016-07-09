@@ -4,7 +4,15 @@ import { AddCommasPipe } from '../../pipes/add-commas';
 import { MD_CARD_DIRECTIVES } from '@angular2-material/card';
 import { MD_LIST_DIRECTIVES } from '@angular2-material/list';
 import { MdButton } from '@angular2-material/button';
-import {Cube} from "../../models/cube";
+import { Cube } from "../../models/cube";
+import { TreeBuilder } from "../tree/tree-builder"
+import {ExpressionTree} from "../../models/expressionTree";
+import { Observable } from 'rxjs/Observable';
+import {AggregateNode} from "../../models/aggregate/aggregateNode";
+import {FuncNode, FuncType} from "../../models/func/funcNode";
+import {TreeActions} from "../../actions/tree";
+import {AppState} from "../../reducers/index";
+import { Store } from '@ngrx/store';
 
 /**
  * Tip: Export type aliases for your component's inputs and outputs. Until we
@@ -12,6 +20,7 @@ import {Cube} from "../../models/cube";
  * component's API with type safety.
  */
 export type CubeInput = Cube;
+export type TreeInput = ExpressionTree;
 export type InCollectionInput = boolean;
 export type AddOutput = Cube;
 export type RemoveOutput = Cube;
@@ -19,12 +28,18 @@ export type RemoveOutput = Cube;
 @Component({
   selector: 'cube-detail',
   pipes: [ AddCommasPipe ],
-  directives: [ MD_CARD_DIRECTIVES, MD_LIST_DIRECTIVES, MdButton ],
+  directives: [ MD_CARD_DIRECTIVES, MD_LIST_DIRECTIVES, MdButton , TreeBuilder ],
   template: `
     <md-card>
       <md-card-title-group>
         <md-card-title>{{ name }}</md-card-title>
       </md-card-title-group>
+      
+      <tree-builder >
+        
+      </tree-builder>
+      
+      
       
       <md-card-actions align="end">
         <button md-raised-button color="warn" *ngIf="inCollection" (click)="remove.emit(cube)">
@@ -79,6 +94,26 @@ export class CubeDetailComponent {
   @Input() inCollection: InCollectionInput;
   @Output() add = new EventEmitter<AddOutput>();
   @Output() remove = new EventEmitter<RemoveOutput>();
+  tree$: Observable<TreeInput>;
+
+
+  public constructor(    private treeActions: TreeActions,    private store: Store<AppState>
+
+  ){
+    let root = new FuncNode(FuncType.Add);
+    root.children.push(new AggregateNode());
+    root.children.push(new AggregateNode());
+    let expressionTree = new ExpressionTree();
+    expressionTree.root = root;
+    this.tree$ = Observable.create(function (observer) {
+      observer.next(expressionTree);
+    }) ;
+
+    this.store.dispatch(this.treeActions.replace(expressionTree));
+
+
+
+  }
 
   get id() {
     return this.cube.id;

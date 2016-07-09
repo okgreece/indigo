@@ -68,7 +68,7 @@ export default function(state = initialState, action: Action): CubesState {
 export function getCubeEntities() {
   return (state$: Observable<CubesState>) => state$
     .select(s => s.entities);
-};
+}
 
 export function getCube(id: string) {
   return (state$: Observable<CubesState>) => state$

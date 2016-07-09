@@ -52,7 +52,7 @@ import booksReducer, * as fromBooks from './books';
 import cubesReducer, * as fromCubes from './cube/cubes';
 import collectionReducer, * as fromCollection from './collection';
 import cubes_collectionReducer, * as fromCubesCollection from './cube/collection';
-
+import tree_Reducer, * as fromTree from "./tree/trees";
 
 /**
  * As mentioned, we treat each reducer like a table in a database. This means
@@ -66,6 +66,7 @@ export interface AppState {
   cubes: fromCubes.CubesState;
   collection: fromCollection.CollectionState;
   cube_collection: fromCubesCollection.CollectionState;
+  tree: fromTree.TreesState
 }
 
 
@@ -83,7 +84,8 @@ export default compose(storeLogger(), combineReducers)({
   books: booksReducer,
   cubes: cubesReducer,
   collection: collectionReducer,
-  cube_collection: cubes_collectionReducer
+  cube_collection: cubes_collectionReducer,
+  tree: tree_Reducer
 });
 
 
@@ -111,6 +113,11 @@ export default compose(storeLogger(), combineReducers)({
 export function getCubesState() {
   return (state$: Observable<AppState>) => state$
     .select(s => s.cubes);
+}
+
+export function getTreesState() {
+  return (state$: Observable<AppState>) => state$
+    .select(s => s.tree);
 }
 
 /**
@@ -254,4 +261,9 @@ export function getCubeCollection() {
   return (state$: Observable<AppState>) => state$
     .let(getCollectionCubeIds())
     .switchMap(cubeIds => state$.let(getCubes(cubeIds)));
+}
+
+
+export function getTree() {
+  return compose(fromTree.getTree(), getTreesState());
 }

@@ -4,7 +4,7 @@ import { AddCommasPipe } from '../../pipes/add-commas';
 import { EllipsisPipe } from '../../pipes/ellipsis';
 import { MD_CARD_DIRECTIVES } from '@angular2-material/card';
 import { MD_LIST_DIRECTIVES } from '@angular2-material/list';
-import {Cube} from "../../models/cube";
+import { Cube } from "../../models/cube";
 
 
 export type CubeInput = Cube;

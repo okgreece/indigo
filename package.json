@@ -51,12 +51,14 @@
     "@ngrx/store-devtools": "^2.0.0-beta.1",
     "@ngrx/store-log-monitor": "^2.0.0-beta.1",
     "core-js": "^2.2.2",
+    "d3": "^3.5.17",
+    "jquery": "^3.1.0",
+    "lodash": "^4.13.1",
     "ngrx-store-logger": "^0.1.4",
     "normalize.css": "^4.1.1",
     "rxjs": "5.0.0-beta.6",
-    "zone.js": "^0.6.11",
-    "lodash": "^4.13.1",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "zone.js": "^0.6.11"
   },
   "devDependencies": {
     "angular2-hmr": "~0.6.0",
@@ -88,6 +90,7 @@
     "karma-webpack": "^1.7.0",
     "promise-loader": "^1.0.0",
     "raw-loader": "0.5.1",
+    "retyped-chosen-tsd-ambient": "^1.4.2-0",
     "source-map-loader": "^0.1.5",
     "style-loader": "^0.13.1",
     "ts-helpers": "1.1.1",

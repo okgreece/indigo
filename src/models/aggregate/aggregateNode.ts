@@ -13,7 +13,6 @@ export class AggregateNode extends ExpressionNode{
   public constructor(){
     super(AggregateNode.name);
     this.children = [];
-
   }
 
   public get element():AggregateRequest{
