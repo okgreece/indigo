@@ -2,7 +2,10 @@ import {Cube} from "../../models/cube";
 import {Observable} from "rxjs/Rx";
 import {NgClass, CORE_DIRECTIVES, FORM_DIRECTIVES} from "@angular/common";
 import * as _ from 'lodash';
-import {ChangeDetectionStrategy,ViewEncapsulation,
+import {TAB_DIRECTIVES} from 'ng2-bootstrap';
+
+import {
+  ChangeDetectionStrategy, ViewEncapsulation,
   Component, Input, Directive, Attribute, OnChanges, DoCheck, ElementRef, OnInit, SimpleChange,
   AfterViewInit, ViewChild
 } from '@angular/core';
@@ -15,6 +18,15 @@ import {AppState, getTree} from "../../reducers/index";
 import {Store} from "@ngrx/store";
 import {ExpressionNode} from "../../models/expressionNode";
 import {TreeActions} from "../../actions/tree";
+import {MapToIterable} from "../../pipes/mapToIterable";
+import {NgChosenComponent} from "../ng-chosen";
+import {AggregateNode} from "../../models/aggregate/aggregateNode";
+import {AggregateRequest} from "../../models/aggregate/aggregateRequest";
+import {Aggregate} from "../../models/aggregate";
+import {Sort} from "../../models/sort";
+import {Drilldown} from "../../models/drilldown";
+import {Cut} from "../../models/cut";
+import {RudolfCubesService} from "../../services/rudolf-cubes";
 declare let $:JQueryStatic;
 /*
  * We're loading this component asynchronously
@@ -26,10 +38,10 @@ console.log('`Tree Builder` component loaded asynchronously');
 
 @Component({
   moduleId: 'tree-builder',
-
+  pipes: [MapToIterable],
   selector: 'tree-builder',
   encapsulation: ViewEncapsulation.None,
-
+  directives: [TAB_DIRECTIVES, CORE_DIRECTIVES, NgChosenComponent],
   changeDetection: ChangeDetectionStrategy.OnPush, // ⇐⇐⇐
   template: require('./tree-builder.html'),
   styles: [`
@@ -77,16 +89,15 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
   @ViewChild('selectElem') el:ElementRef;
 
   @Input() expressionTree:Observable<ExpressionTree>;
-  expressionTreeInstance: ExpressionTree;
+  expressionTreeInstance:ExpressionTree;
   length:number;
   @ViewChild('drawingCanvas') drawingCanvas;
 
   constructor(@Inject(ElementRef) elementRef:ElementRef,
               @Attribute('width') width:number,
               @Attribute('height') height:number,
-              private store: Store<AppState>,
-              private routeParams$: RouteParams, private treeActions: TreeActions
-  ) {
+              private store:Store<AppState>,
+              private routeParams$:RouteParams, private treeActions:TreeActions, private googleCubes: RudolfCubesService) {
 
     this.width = width;
     this.height = height;
@@ -95,7 +106,7 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
   }
 
 
-
+  @Input() cube:Cube;
 
   width:number;
   height:number;
@@ -103,17 +114,16 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
   ngAfterViewInit() {
     this.baseSvg = d3.select(this.drawingCanvas.nativeElement).append("svg").attr("width", this.viewerWidth)
       .attr("height", this.viewerHeight)
-      .attr("class", "overlay")
       .call(this.zoomListener);
     let that = this;
     this.expressionTree.subscribe(function (expressionTree) {
       that.expressionTreeInstance = expressionTree;
 
-      if(that.tree){
+      if (that.tree) {
         that.expressionTreeInstance = expressionTree;
         that.update(expressionTree.root);
       }
-      else{
+      else {
         that.baseSvg.html("");
 
         that.init();
@@ -121,22 +131,22 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
       }
 
 
-
     });
   }
-  ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
+
+  ngOnChanges(changes:{[propertyName:string]:SimpleChange}) {
     for (let propName in changes) {
       //alert(propName);
       let chng = changes[propName];
-      let cur  = JSON.stringify(chng.currentValue);
+      let cur = JSON.stringify(chng.currentValue);
       let prev = JSON.stringify(chng.previousValue);
     }
   }
+
   init() {
 
 
     let treeData = this.expressionTreeInstance.root;
-
 
 
     // Call visit function to establish maxLabelLength
@@ -185,7 +195,7 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
         }
 
         // get coords of mouseEvent relative to svg container to allow for panning
-        if(typeof($)=='undefined')return;
+        if (typeof($) == 'undefined')return;
         let relCoords = d3.mouse($('svg').get(0));
         if (relCoords[0] < this.panBoundary) {
           that.panTimer = true;
@@ -224,15 +234,15 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
           if (index > -1) {
             that.draggingNode.parent.children.splice(index, 1);
           }
-          if (typeof that.selectedNode.children !== 'undefined' ) {
-              that.selectedNode.children.push(that.draggingNode);
+          if (typeof that.selectedNode.children !== 'undefined') {
+            that.selectedNode.children.push(that.draggingNode);
 
           } else {
             that.selectedNode.children = [];
             that.selectedNode.children.push(that.draggingNode);
           }
           // Make sure that the node being added to is expanded so user can see added node is correctly moved
-          that.expand(that.selectedNode);
+          //that.expand(that.selectedNode);
           that.sortTree();
           that.endDrag();
         } else {
@@ -429,21 +439,21 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
 
   // Helper functions for collapsing and expanding nodes.
 
-  collapse(d) {
-    if (d.expanded) {
-      if(d.children )
-        d.children.forEach(this.collapse);
-      d.expanded = false;
-    }
-  }
+  /*collapse(d) {
+   if (d.expanded) {
+   if(d.children )
+   d.children.forEach(this.collapse);
+   d.expanded = false;
+   }
+   }
 
-  expand(d) {
-    if (!d.expanded) {
-      if(d.children)
-        d.children.forEach(this.expand);
-      d.expanded = true;
-    }
-  }
+   expand(d) {
+   if (!d.expanded) {
+   if(d.children)
+   d.children.forEach(this.expand);
+   d.expanded = true;
+   }
+   }*/
 
   overCircle(d) {
     this.selectedNode = d;
@@ -502,23 +512,25 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
 
   // Toggle children function
 
-  toggleChildren(d) {
-    if (d.expanded) {
-        d.expanded = false;
-    } else if (!d.expanded) {
-      d.expanded = true;
-    }
-    return d;
-  }
+  /*
+   toggleChildren(d) {
+   if (d.expanded) {
+   d.expanded = false;
+   } else if (!d.expanded) {
+   d.expanded = true;
+   }
+   return d;
+   }
+   */
 
 
   // Toggle children on click.
 
-  private activeNode: ExpressionNode;
+  private activeNode:ExpressionNode;
 
   click(d) {
     if (d3.event.defaultPrevented) return; // click suppressed
-    d = this.toggleChildren(d);
+    //d = this.toggleChildren(d);
     this.update(d);
     this.centerNode(d);
     this.activeNode = d;
@@ -531,7 +543,7 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
     let levelWidth = [1];
     let childCount = function (level, n) {
 
-      if (n.expanded && n.children && n.children.length > 0) {
+      if (n.children && n.children.length > 0) {
         if (levelWidth.length <= level + 1) levelWidth.push(0);
 
         levelWidth[level + 1] += n.children.length;
@@ -549,7 +561,7 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
     let nodes = this.tree.nodes(this.root).reverse(),
       links = this.tree.links(nodes);
     nodes.forEach(function (node) {
-      if(!node.children) node.children = [];
+      if (!node.children) node.children = [];
     });
     // Set widths between levels based on maxLabelLength.
     let that = this;
@@ -583,12 +595,12 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
 
     nodeEnter.append("text")
       .attr("x", function (d) {
-        return d.children  ? -10 : 10;
+        return d.children ? -10 : 10;
       })
       .attr("dy", ".35em")
       .attr('class', 'nodeText')
       .attr("text-anchor", function (d) {
-        return d.children  ? "end" : "start";
+        return d.children ? "end" : "start";
       })
       .text(function (d) {
         return d.name;
@@ -700,7 +712,8 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
     });
   }
 
-  addChild(){
+  addChild() {
+    if (!this.activeNode)return;
     this.activeNode.children.push(new ExpressionNode("lol"));
     this.store.dispatch(this.treeActions.replace(this.expressionTreeInstance));
 
@@ -709,6 +722,107 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
   }
 
 
+  newAggregateRequest:AggregateRequest = new AggregateRequest();
 
+  addAggregateChild() {
+    if (!this.activeNode)return;
+
+
+    let aggregateNode = new AggregateNode();
+    aggregateNode.element = this.newAggregateRequest;
+
+    this.activeNode.children.push(aggregateNode);
+    this.store.dispatch(this.treeActions.replace(this.expressionTreeInstance));
+
+    this.newAggregateRequest = new AggregateRequest;
+  }
+
+  removeNode() {
+    if (!this.activeNode)return;
+
+    if (this.activeNode.parent) {
+      let index = this.activeNode.parent.children.indexOf(this.activeNode);
+      if (index > -1) {
+        this.activeNode.parent.children.splice(index, 1);
+      }
+    }
+    else {
+      if (this.activeNode == this.expressionTreeInstance.root) {
+        this.expressionTreeInstance.root = null;
+      }
+    }
+    this.store.dispatch(this.treeActions.replace(this.expressionTreeInstance));
+
+  }
+
+  addAggregate() {
+    let that = this;
+    let newAggregate = _.filter(this.cube.model.aggregates, function (aggregate) {
+      return aggregate.ref == that.newAggregateValue;
+    })[0];
+    this.newAggregateRequest.aggregates.push(newAggregate);
+  }
+
+  addCut() {
+    let that = this;
+    let newCut = _.filter(this.cube.model.dimensions, function (dimension) {
+      return dimension.ref == that.newCutValue;
+    })[0];
+    this.newAggregateRequest.cuts.push(newCut);
+  }
+
+  addDrilldown() {
+    let that = this;
+    let newDrilldown = _.filter(this.cube.model.dimensions, function (dimension) {
+      return dimension.ref == that.newDrilldownValue;
+    })[0];
+    this.newAggregateRequest.drilldowns.push(newDrilldown);
+  }
+
+  addSort() {
+    let that = this;
+    let newSort = _.filter(this.cube.model.dimensions, function (dimension) {
+      return dimension.ref == that.newSortValue;
+    })[0];
+    this.newAggregateRequest.sorts.push(newSort);
+  }
+
+  newAggregateChanged($event) {
+    this.newAggregateValue = $event.value;
+  }
+
+  newCutChanged($event) {
+    this.newCutValue = $event.value;
+  }
+
+  newSortChanged($event) {
+    this.newSortValue = $event.value;
+  }
+
+  newDrilldownChanged($event) {
+    this.newDrilldownValue = $event.value;
+  }
+
+  newAggregateValue:string;
+
+  newSortValue:string;
+
+  newDrilldownValue:string;
+
+  newCutValue:string;
+
+
+  execute(){
+    if(this.activeNode instanceof AggregateNode){
+      let activeNode = this.activeNode;
+      this.googleCubes.aggregate(this.cube.name).subscribe(response=>{
+        activeNode.value = response;
+        this.store.dispatch(this.treeActions.replace(this.expressionTreeInstance));
+
+      });
+
+       /* .catch(() => Observable.of(this.cubeActions.searchComplete([]));*/
+    }
+  }
 
 }

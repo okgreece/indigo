@@ -7,10 +7,10 @@ import {Cut} from "../cut";
  */
 export class AggregateRequest{
 
-  sorts: Sort[];
-  aggregates: Aggregate[];
-  drilldowns: Drilldown[];
-  cuts: Cut[];
+  sorts: Sort[] = [];
+  aggregates: Aggregate[] = [];
+  drilldowns: Drilldown[] = [];
+  cuts: Cut[] = [];
 
   execute(){
 

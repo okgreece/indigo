@@ -41,7 +41,7 @@ import { StoreLogMonitorComponent } from '@ngrx/store-log-monitor';
     <md-sidenav-layout fullscreen>
       <md-sidenav #sidenav>
         <md-nav-list>
-          <a md-list-item linkTo="/" (click)="sidenav.close()">
+          <!--<a md-list-item linkTo="/" (click)="sidenav.close()">
             <md-icon md-list-icon>book</md-icon>
             <span md-line>My Collection</span>
             <span md-line class="secondary">View your book collection!</span>
@@ -50,7 +50,7 @@ import { StoreLogMonitorComponent } from '@ngrx/store-log-monitor';
             <md-icon md-list-icon>search</md-icon>
             <span md-line>Browse Books</span>
             <span md-line class="secondary">Find your next book!</span>
-          </a>
+          </a>-->
           <a md-list-item linkTo="/" (click)="sidenav.close()">
             <md-icon md-list-icon>cube</md-icon>
             <span md-line>My Collection</span>

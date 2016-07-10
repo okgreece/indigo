@@ -3,5 +3,6 @@
  */
 export class Dimension {
 
-label:string
+  label:string;
+  ref: string;
 }

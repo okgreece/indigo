@@ -1,9 +1,68 @@
 <div>
 
   <div class="row">
+
+    <div class="col-sm-12">
+      <tabset>
+        <tab heading="Aggregates">
+          <div class="col-sm-3">
+            <h4>Aggregates</h4>
+            <ul>
+              <li *ngFor="let aggregate of newAggregateRequest.aggregates">{{aggregate.label}}</li>
+            </ul>
+
+            <ng-chosen *ngIf="cube.model" [items]="cube.model.aggregates|mapToIterable" [valueAccessor]="'ref'"
+                       [labelAccessor]="'label'" [(selectedValue)]="newAggregateValue"  (selectedValueChanged)="newAggregateChanged($event)">
+
+            </ng-chosen>
+
+            <button class="btn" (click)="addAggregate()">Add</button>
+          </div>
+          <div class="col-sm-3">
+            <h4>Cuts</h4>
+            <li *ngFor="let cut of newAggregateRequest.cuts">{{cut.label}}</li>
+            <ng-chosen *ngIf="cube.model" [items]="cube.model.dimensions|mapToIterable" [valueAccessor]="'ref'"
+                       [labelAccessor]="'label'" [(selectedValue)]="newCutValue" (selectedValueChanged)="newCutChanged($event)">
+
+            </ng-chosen>
+
+            <button class="btn" (click)="addCut()">Add</button>
+          </div>
+          <div class="col-sm-3">
+            <h4>Drildowns</h4>
+            <li *ngFor="let drilldown of newAggregateRequest.drilldowns">{{drilldown.label}}</li>
+            <ng-chosen *ngIf="cube.model" [items]="cube.model.dimensions|mapToIterable" [valueAccessor]="'ref'"
+                       [labelAccessor]="'label'" [(selectedValue)]="newDrilldownValue" (selectedValueChanged)="newDrilldownChanged($event)">
+
+            </ng-chosen>
+
+            <button class="btn"  (click)="addDrilldown()">Add</button>
+          </div>
+          <div class="col-sm-3">
+            <h4>Sorts</h4>
+            <li *ngFor="let sort of newAggregateRequest.sorts">{{sort.label}}</li>
+            <ng-chosen *ngIf="cube.model" [items]="cube.model.dimensions|mapToIterable" [valueAccessor]="'ref'"
+                       [labelAccessor]="'label'" [(selectedValue)]="newSortValue" (selectedValueChanged)="newSortChanged($event)">
+
+            </ng-chosen>
+
+            <button class="btn" (click)="addSort()">Add</button>
+          </div>
+          <button class="btn btn-primary" (click)="addAggregateChild()">Add Aggregate request</button>
+
+        </tab>
+        <tab heading="Functions">Static content2</tab>
+        <tab heading="External data">Static content2</tab>
+        <tab heading="Static data">Static content4</tab>
+
+      </tabset>
+    </div>
+
+
     <div class="col-sm-12">
       <button (click)="addChild()">Add</button>
-      <button>Remove</button>
+      <button (click)="removeNode()">Remove</button>
+      <button (click)="execute()">Execute</button>
       <button>Clear all</button>
       <button>Undo</button>
     </div>

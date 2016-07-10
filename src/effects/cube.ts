@@ -13,7 +13,7 @@ import { Observable } from 'rxjs/Observable';
 import { Database } from '@ngrx/db';
 
 import { AppState } from '../reducers';
-import { GoogleCubesService } from '../services/google-cubes';
+import { RudolfCubesService } from '../services/rudolf-cubes';
 import { CubeActions } from '../actions/cube';
 import {Cube} from "../models/cube";
 
@@ -22,7 +22,7 @@ import {Cube} from "../models/cube";
 export class CubeEffects {
   constructor(
     private updates$: StateUpdates<AppState>,
-    private googleCubes: GoogleCubesService,
+    private googleCubes: RudolfCubesService,
     private db: Database,
     private cubeActions: CubeActions
   ) { }
@@ -61,6 +61,16 @@ export class CubeEffects {
       .catch(() => Observable.of(this.cubeActions.searchComplete([])))
     );
 
+
+  @Effect() getCube = this.updates$
+    .whenAction(CubeActions.LOAD_CUBE_SUCCESS)
+    .map<Cube>(toPayload)
+    .mergeMap(cube => { return this.db.insert('cubes', [cube ])
+      .mapTo(this.cubeActions.addToCollectionSuccess(cube))
+      .catch(() => Observable.of(
+        this.cubeActions.addToCollectionFail(cube)
+      ))}
+    );
 
   @Effect() clearSearch$ = this.updates$
     .whenAction(CubeActions.SEARCH)

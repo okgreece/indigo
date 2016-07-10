@@ -13,7 +13,7 @@ import { MD_CARD_DIRECTIVES } from '@angular2-material/card';
   directives: [ CubePreviewListComponent, MD_CARD_DIRECTIVES ],
   template: `
     <md-card>
-      <md-card-title>My Collection</md-card-title>
+      <md-card-title>My Cubes Collection</md-card-title>
     </md-card>
 
     <cube-preview-list [cubes]="cubes$ | async"></cube-preview-list>

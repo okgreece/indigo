@@ -21,4 +21,11 @@ export class AggregateNode extends ExpressionNode{
   public set element(value: AggregateRequest){
     this._aggregate = value;
   };
+
+  _value:any;
+
+  public set value(value){
+    this._value = value;
+  }
+
 }

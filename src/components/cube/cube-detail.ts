@@ -13,6 +13,8 @@ import {FuncNode, FuncType} from "../../models/func/funcNode";
 import {TreeActions} from "../../actions/tree";
 import {AppState} from "../../reducers/index";
 import { Store } from '@ngrx/store';
+import {NgChosenComponent} from "../ng-chosen";
+import {MapToIterable} from "../../pipes/mapToIterable";
 
 /**
  * Tip: Export type aliases for your component's inputs and outputs. Until we
@@ -27,32 +29,9 @@ export type RemoveOutput = Cube;
 
 @Component({
   selector: 'cube-detail',
-  pipes: [ AddCommasPipe ],
-  directives: [ MD_CARD_DIRECTIVES, MD_LIST_DIRECTIVES, MdButton , TreeBuilder ],
-  template: `
-    <md-card>
-      <md-card-title-group>
-        <md-card-title>{{ name }}</md-card-title>
-      </md-card-title-group>
-      
-      <tree-builder >
-        
-      </tree-builder>
-      
-      
-      
-      <md-card-actions align="end">
-        <button md-raised-button color="warn" *ngIf="inCollection" (click)="remove.emit(cube)">
-        Remove Cube from Collection
-        </button>
-
-        <button md-raised-button color="primary" *ngIf="!inCollection" (click)="add.emit(cube)">
-        Add Cube to Collection
-        </button>
-      </md-card-actions>
-    </md-card>
-
-  `,
+  pipes: [ AddCommasPipe , MapToIterable],
+  directives: [ MD_CARD_DIRECTIVES, MD_LIST_DIRECTIVES, MdButton , TreeBuilder, NgChosenComponent ],
+  template: require('./cube-detail.html'),
   styles: [`
     :host {
       display: flex;
@@ -116,12 +95,20 @@ export class CubeDetailComponent {
   }
 
   get id() {
-    return this.cube.id;
+    return this.cube?this.cube.id:"";
   }
 
   get name() {
-    return this.cube.name;
+    return this.cube?this.cube.name:"";
   }
 
+
+  get model() {
+    return this.cube.model;
+  }
+
+  selectedValueChanged(event){
+
+  }
 
 }

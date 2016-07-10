@@ -2,14 +2,14 @@
  * Created by larjo on 24/6/2016.
  */
 import {Component, ViewChild, ElementRef, AfterViewInit, Input, Output, EventEmitter} from '@angular/core';
-declare let $:JQueryStatic;
+import * as $ from "jquery";
+import * as _ from 'lodash';
 
 @Component({
   selector: 'ng-chosen',
-  template: `<select #selectElem>
-        <option *ngFor="let item of items" [value]="item[valueAccessor]" [selected]="item[valueAccessor] === selectedValue">{{item[labelAccessor]}}</option>
-        </select>
-        <h4>{{selectedValue}}</h4>`
+  template: `<select #selectElem class="form-control">
+        <option *ngFor="let item of items" [value]="item.value[valueAccessor]" [selected]="item == selectedValue">{{item.value[labelAccessor]}}</option>
+        </select>`
 })
 export class NgChosenComponent implements AfterViewInit {
 
@@ -20,7 +20,13 @@ export class NgChosenComponent implements AfterViewInit {
 
   private _selectedValue:string;
 
+
+  constructor() {
+
+  }
+
   get selectedValue():string {
+
     return this._selectedValue;
   }
 
@@ -35,10 +41,15 @@ export class NgChosenComponent implements AfterViewInit {
   selectedValueChanged = new EventEmitter();
 
   ngAfterViewInit() {
+    if (!this.selectedValue) {
+      this.selectedValue = this.items[_.first(_.keys(this.items))].key;
+    }
     $(this.el.nativeElement)
-      .chosen()
+    //.chosen()
       .on('change', (e, args) => {
-        this.selectedValue = args.selected;
+        // debugger;
+        this.selectedValue = $(e.target).children("option:selected").attr("value");
       });
+
   }
 }

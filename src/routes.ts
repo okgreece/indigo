@@ -8,7 +8,7 @@ const routes: Routes = [
     path: '/',
     loadComponent: () => new Promise(resolve => {
       (require as any).ensure([], require => {
-        resolve(require('./pages/collection').CollectionPage);
+        resolve(require('./pages/cube/collection').CollectionPage);
       });
     })
   },

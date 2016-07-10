@@ -61,11 +61,11 @@ export class CubePreviewComponent {
   @Input() cube: CubeInput;
 
   get id() {
-    return this.cube.name;
+    return this.cube?this.cube.name:"";
   }
 
   get name() {
-    return this.cube.name;
+    return this.cube?this.cube.name:"";
   }
 
 

@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import { Guard, TraversalCandidate } from '@ngrx/router';
 import { Observable } from 'rxjs/Observable';
 
-import { GoogleCubesService } from '../services/google-cubes';
+import { RudolfCubesService } from '../services/rudolf-cubes';
 import { AppState, hasCube, getCubesCollectionLoaded } from '../reducers';
 import { CubeActions } from '../actions/cube';
 
@@ -23,7 +23,7 @@ import { CubeActions } from '../actions/cube';
 export class CubeExistsGuard implements Guard {
   constructor(
     private store: Store<AppState>,
-    private googleCubes: GoogleCubesService,
+    private googleCubes: RudolfCubesService,
     private cubeActions: CubeActions
   ) { }
 
@@ -66,9 +66,9 @@ export class CubeExistsGuard implements Guard {
   hasCube(id: string) {
     return this.hasCubeInStore(id)
       .switchMap(inStore => {
-        if (inStore) {
+        /*if (inStore) {
           return Observable.of(inStore);
-        }
+        }*/
 
         return this.hasCubeInApi(id);
       });
