@@ -60,7 +60,7 @@ export type RemoveOutput = Cube;
 })
 export class CubeDetailComponent {
   /**
-   * Dumb components receieve data through @Input() and communicate events
+   * Dumb components receive data through @Input() and communicate events
    * through @Output() but generally maintain no internal state of their
    * own. All decisions are delegated to 'container', or 'smart'
    * components before data updates flow back down.
@@ -80,8 +80,7 @@ export class CubeDetailComponent {
 
   ){
     let root = new FuncNode(FuncType.Add);
-    root.children.push(new AggregateNode());
-    root.children.push(new AggregateNode());
+
     let expressionTree = new ExpressionTree();
     expressionTree.root = root;
     this.tree$ = Observable.create(function (observer) {

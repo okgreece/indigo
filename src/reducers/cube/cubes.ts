@@ -2,9 +2,9 @@ import '@ngrx/core/add/operator/select';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { Action } from '@ngrx/store';
-
 import { CubeActions } from '../../actions';
 import {Cube} from "../../models/cube";
+import {plainToConstructor, plainToConstructorArray} from "constructor-utils";
 
 
 export interface CubesState {
@@ -68,11 +68,16 @@ export default function(state = initialState, action: Action): CubesState {
 export function getCubeEntities() {
   return (state$: Observable<CubesState>) => state$
     .select(s => s.entities);
-};
+}
 
 export function getCube(id: string) {
   return (state$: Observable<CubesState>) => state$
-    .select(s => s.entities[id]);
+    .select(s => {
+      debugger;
+      return plainToConstructor(Cube, s.entities[id]);
+
+
+    });
 }
 
 export function getCubes(cubeIds: string[]) {

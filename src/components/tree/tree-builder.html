@@ -8,7 +8,7 @@
           <div class="col-sm-3">
             <h4>Aggregates</h4>
             <ul>
-              <li *ngFor="let aggregate of newAggregateRequest.aggregates">{{aggregate.label}}</li>
+              <li *ngFor="let aggregate of newAggregateRequest.aggregates">{{aggregate.column.label}}</li>
             </ul>
 
             <ng-chosen *ngIf="cube.model" [items]="cube.model.aggregates|mapToIterable" [valueAccessor]="'ref'"
@@ -20,8 +20,8 @@
           </div>
           <div class="col-sm-3">
             <h4>Cuts</h4>
-            <li *ngFor="let cut of newAggregateRequest.cuts">{{cut.label}}</li>
-            <ng-chosen *ngIf="cube.model" [items]="cube.model.dimensions|mapToIterable" [valueAccessor]="'ref'"
+            <li *ngFor="let cut of newAggregateRequest.cuts">{{cut.column.label}}</li>
+            <ng-chosen *ngIf="cube.model" [items]="cube.model.attributes|mapToIterable" [valueAccessor]="'ref'"
                        [labelAccessor]="'label'" [(selectedValue)]="newCutValue" (selectedValueChanged)="newCutChanged($event)">
 
             </ng-chosen>
@@ -30,8 +30,8 @@
           </div>
           <div class="col-sm-3">
             <h4>Drildowns</h4>
-            <li *ngFor="let drilldown of newAggregateRequest.drilldowns">{{drilldown.label}}</li>
-            <ng-chosen *ngIf="cube.model" [items]="cube.model.dimensions|mapToIterable" [valueAccessor]="'ref'"
+            <li *ngFor="let drilldown of newAggregateRequest.drilldowns">{{drilldown.column.label}}</li>
+            <ng-chosen *ngIf="cube.model" [items]="cube.model.get_attributes()|mapToIterable" [valueAccessor]="'ref'"
                        [labelAccessor]="'label'" [(selectedValue)]="newDrilldownValue" (selectedValueChanged)="newDrilldownChanged($event)">
 
             </ng-chosen>
@@ -40,8 +40,8 @@
           </div>
           <div class="col-sm-3">
             <h4>Sorts</h4>
-            <li *ngFor="let sort of newAggregateRequest.sorts">{{sort.label}}</li>
-            <ng-chosen *ngIf="cube.model" [items]="cube.model.dimensions|mapToIterable" [valueAccessor]="'ref'"
+            <li *ngFor="let sort of newAggregateRequest.sorts">{{sort.column.label}}</li>
+            <ng-chosen *ngIf="cube.model" [items]="cube.model.get_attributes()|mapToIterable" [valueAccessor]="'ref'"
                        [labelAccessor]="'label'" [(selectedValue)]="newSortValue" (selectedValueChanged)="newSortChanged($event)">
 
             </ng-chosen>

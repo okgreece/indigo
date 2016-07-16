@@ -27,6 +27,8 @@ import {Sort} from "../../models/sort";
 import {Drilldown} from "../../models/drilldown";
 import {Cut} from "../../models/cut";
 import {RudolfCubesService} from "../../services/rudolf-cubes";
+import {TreeExecution} from "../../services/tree-execution";
+import {AggregateParam} from "../../models/aggregateParam";
 declare let $:JQueryStatic;
 /*
  * We're loading this component asynchronously
@@ -83,6 +85,10 @@ console.log('`Tree Builder` component loaded asynchronously');
     .ghostCircle, .activeDrag .ghostCircle{
       display: none;
     }
+    
+    svg{
+      width:100%;
+    }
   `]
 })
 export class TreeBuilder implements AfterViewInit, OnChanges {
@@ -97,7 +103,11 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
               @Attribute('width') width:number,
               @Attribute('height') height:number,
               private store:Store<AppState>,
-              private routeParams$:RouteParams, private treeActions:TreeActions, private googleCubes: RudolfCubesService) {
+              private routeParams$:RouteParams,
+              private treeActions:TreeActions,
+              private rudolfCubesService: RudolfCubesService,
+              private treeExecution: TreeExecution
+  ) {
 
     this.width = width;
     this.height = height;
@@ -145,7 +155,8 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
 
   init() {
 
-
+    this.viewerWidth = $(this.drawingCanvas.nativeElement).width();
+    this.viewerHeight = $(this.drawingCanvas.nativeElement).height();
     let treeData = this.expressionTreeInstance.root;
 
 
@@ -253,6 +264,8 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
     // Layout the tree initially and center on the root node.
     this.update(this.root);
     this.centerNode(this.root);
+    this.activeNode = this.root;
+
   }
 
 
@@ -296,8 +309,8 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
   root:any;
 
   // size of the diagram
-  viewerWidth:number = 800;// $(document).width();
-  viewerHeight:number = 600;// $(document).height();
+  viewerWidth:number ;// $(document).width();
+  viewerHeight:number ;// $(document).height();
 
 
   // define a d3 diagonal projection for use by the node paths later on.
@@ -637,7 +650,7 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
     node.select("circle.nodeCircle")
       .attr("r", 4.5)
       .style("fill", function (d) {
-        return !d.expanded ? "lightsteelblue" : "#fff";
+        return !d.executed ? "lightsteelblue" : "green";
       });
 
     // Transition nodes to their new position.
@@ -735,6 +748,7 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
     this.store.dispatch(this.treeActions.replace(this.expressionTreeInstance));
 
     this.newAggregateRequest = new AggregateRequest;
+    this.newAggregateRequest.cube = this.cube;
   }
 
   removeNode() {
@@ -757,33 +771,47 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
 
   addAggregate() {
     let that = this;
-    let newAggregate = _.filter(this.cube.model.aggregates, function (aggregate) {
+    let newAggregateCol = _.filter(this.cube.model.aggregates, function (aggregate) {
       return aggregate.ref == that.newAggregateValue;
     })[0];
+    let newAggregate = new AggregateParam();
+    newAggregate.column = newAggregateCol;
     this.newAggregateRequest.aggregates.push(newAggregate);
   }
 
   addCut() {
     let that = this;
-    let newCut = _.filter(this.cube.model.dimensions, function (dimension) {
+    let newCutDimension = _.filter(this.cube.model.dimensions, function (dimension) {
       return dimension.ref == that.newCutValue;
     })[0];
+    let newCut = new Cut();
+    newCut.column = newCutDimension;
+    newCut.value = that.newCutValueVal;
     this.newAggregateRequest.cuts.push(newCut);
   }
 
   addDrilldown() {
     let that = this;
-    let newDrilldown = _.filter(this.cube.model.dimensions, function (dimension) {
+    let newDrilldownDimension = _.filter(this.cube.model.dimensions, function (dimension) {
       return dimension.ref == that.newDrilldownValue;
     })[0];
+
+    let newDrilldown = new Drilldown();
+    newDrilldown.column = newDrilldownDimension;
+
     this.newAggregateRequest.drilldowns.push(newDrilldown);
   }
 
   addSort() {
     let that = this;
-    let newSort = _.filter(this.cube.model.dimensions, function (dimension) {
+    let newSortColumn = _.filter(this.cube.model.dimensions, function (dimension) {
       return dimension.ref == that.newSortValue;
     })[0];
+
+    let newSort = new Sort();
+    newSort.column = newSortColumn;
+    newSort.direction = that.newSortDirection;
+
     this.newAggregateRequest.sorts.push(newSort);
   }
 
@@ -793,6 +821,7 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
 
   newCutChanged($event) {
     this.newCutValue = $event.value;
+
   }
 
   newSortChanged($event) {
@@ -811,18 +840,16 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
 
   newCutValue:string;
 
+  newCutValueVal:string;
+
+  newSortDirection:string;
+
 
   execute(){
-    if(this.activeNode instanceof AggregateNode){
-      let activeNode = this.activeNode;
-      this.googleCubes.aggregate(this.cube.name).subscribe(response=>{
-        activeNode.value = response;
-        this.store.dispatch(this.treeActions.replace(this.expressionTreeInstance));
 
-      });
+    this.treeExecution.execute(this.expressionTreeInstance, this.activeNode);
 
-       /* .catch(() => Observable.of(this.cubeActions.searchComplete([]));*/
-    }
+
   }
 
 }

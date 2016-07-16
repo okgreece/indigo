@@ -11,7 +11,7 @@ export class ExpressionNode{
 
   private _element:any;
 
-  private _value:any;
+  public _value:any;
 
   public parent:ExpressionNode;
 
@@ -30,6 +30,9 @@ export class ExpressionNode{
   public get value(){
     return this._name;
   }
+
+
+  public executed: boolean = false;
 
 
 }

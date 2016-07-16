@@ -2,14 +2,7 @@
   <md-card-title-group>
     <md-card-title>{{ name }}</md-card-title>
   </md-card-title-group>
-  <div *ngIf="model">
 
-
-    <ng-chosen [items]="cube.model.dimensions|mapToIterable" [valueAccessor]="'value'" [labelAccessor]="'label'" [selectedValue]="value"
-               (selectedValueChanged)="selectedValueChanged($event)">
-
-    </ng-chosen>
-  </div>
   <tree-builder  [cube]="cube">
 
   </tree-builder>
