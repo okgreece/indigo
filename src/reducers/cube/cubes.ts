@@ -5,6 +5,7 @@ import { Action } from '@ngrx/store';
 import { CubeActions } from '../../actions';
 import {Cube} from "../../models/cube";
 import {plainToConstructor, plainToConstructorArray} from "constructor-utils";
+import {TypedJSON} from "typedjson/src/typed-json";
 
 
 export interface CubesState {
@@ -74,7 +75,10 @@ export function getCube(id: string) {
   return (state$: Observable<CubesState>) => state$
     .select(s => {
       debugger;
-      return plainToConstructor(Cube, s.entities[id]);
+      let cube = TypedJSON.parse( JSON.stringify(s.entities[id]), Cube);
+      debugger;
+
+      return  cube;
 
 
     });

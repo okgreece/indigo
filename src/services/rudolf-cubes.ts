@@ -2,7 +2,6 @@ import 'rxjs/add/operator/map';
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import * as _ from 'lodash';
 import {Cube} from "../models/cube";
 import {AggregateRequest} from "../models/aggregate/aggregateRequest";
 

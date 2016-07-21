@@ -1,10 +1,16 @@
 import {Model} from "./model";
 import {Type, plainToConstructor} from "constructor-utils";
+import {JsonMember,JsonObject} from "typedjson/src/typed-json";
 
+@JsonObject
 export class Cube {
-  id: string;
+  constructor(){}
+
+  @JsonMember
+  id:number;
+  @JsonMember
   name: string;
 
-  @Type(() => Model)
+  @JsonMember
   model: Model;
 }

@@ -1,22 +1,26 @@
 import {Dimension} from "./dimension";
 import {Aggregate} from "./aggregate";
 import {Type, plainToConstructor} from "constructor-utils";
+import {JsonMember,JsonObject} from "typedjson/src/typed-json";
 
 /**
  * Created by larjo on 25/6/2016.
  */
+@JsonObject
 export class Model{
-  @Type(() => Map<string, Dimension>)
-  dimensions: Map<string, Dimension> = [];
+  @JsonMember
+  dimensions: Map<string, Dimension> ;
 
-  @Type(() => Aggregate)
-  aggregates: Aggregate[] = [];
+  @JsonMember
+  aggregates: Map<string, Aggregate>;
 
 
   private _attributes;
+  constructor(){}
 
   public get attributes(){
     let attributes = {};
+    debugger;
 
     for(var dimension in this.dimensions){
       debugger;
