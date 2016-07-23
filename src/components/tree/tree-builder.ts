@@ -18,17 +18,18 @@ import {AppState, getTree} from "../../reducers/index";
 import {Store} from "@ngrx/store";
 import {ExpressionNode} from "../../models/expressionNode";
 import {TreeActions} from "../../actions/tree";
-import {MapToIterable} from "../../pipes/mapToIterable";
+import {IterablePipe} from "../../pipes/mapToIterable";
 import {NgChosenComponent} from "../ng-chosen";
 import {AggregateNode} from "../../models/aggregate/aggregateNode";
 import {AggregateRequest} from "../../models/aggregate/aggregateRequest";
-import {Aggregate} from "../../models/aggregate";
 import {Sort} from "../../models/sort";
 import {Drilldown} from "../../models/drilldown";
 import {Cut} from "../../models/cut";
 import {RudolfCubesService} from "../../services/rudolf-cubes";
 import {TreeExecution} from "../../services/tree-execution";
 import {AggregateParam} from "../../models/aggregateParam";
+import {SortDirection, SortDirectionEnum} from "../../models/sortDirection";
+import {Dimension} from "../../models/dimension";
 declare let $:JQueryStatic;
 /*
  * We're loading this component asynchronously
@@ -40,7 +41,7 @@ console.log('`Tree Builder` component loaded asynchronously');
 
 @Component({
   moduleId: 'tree-builder',
-  pipes: [MapToIterable],
+  pipes: [IterablePipe],
   selector: 'tree-builder',
   encapsulation: ViewEncapsulation.None,
   directives: [TAB_DIRECTIVES, CORE_DIRECTIVES, NgChosenComponent],
@@ -105,9 +106,8 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
               private store:Store<AppState>,
               private routeParams$:RouteParams,
               private treeActions:TreeActions,
-              private rudolfCubesService: RudolfCubesService,
-              private treeExecution: TreeExecution
-  ) {
+              private rudolfCubesService:RudolfCubesService,
+              private treeExecution:TreeExecution) {
 
     this.width = width;
     this.height = height;
@@ -302,15 +302,15 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
   draggingNode:any = null;
   // panning variables
   panSpeed:number = 200;
-  panBoundary:number = 20; // Within 20px from edges will pan when dragging.
+  panBoundary:number = 10; // Within 20px from edges will pan when dragging.
   // Misc. variables
   i:number = 0;
   duration:number = 750;
   root:any;
 
   // size of the diagram
-  viewerWidth:number ;// $(document).width();
-  viewerHeight:number ;// $(document).height();
+  viewerWidth:number;// $(document).width();
+  viewerHeight:number;// $(document).height();
 
 
   // define a d3 diagonal projection for use by the node paths later on.
@@ -623,7 +623,7 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
     // phantom node to give us mouseover in a radius around it
     nodeEnter.append("circle")
       .attr('class', 'ghostCircle')
-      .attr("r", 30)
+      .attr("r", 15)
       .attr("opacity", 0.2) // change this to zero to hide the target area
       .style("fill", "red")
       .attr('pointer-events', 'mouseover')
@@ -743,7 +743,7 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
 
     let aggregateNode = new AggregateNode();
     aggregateNode.element = this.newAggregateRequest;
-
+    this.newAggregateRequest.cube = this.cube;
     this.activeNode.children.push(aggregateNode);
     this.store.dispatch(this.treeActions.replace(this.expressionTreeInstance));
 
@@ -771,7 +771,7 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
 
   addAggregate() {
     let that = this;
-    let newAggregateCol = _.filter(this.cube.model.aggregates, function (aggregate) {
+    let newAggregateCol = _.filter(Array.from(this.cube.model.aggregates.values()), function (aggregate) {
       return aggregate.ref == that.newAggregateValue;
     })[0];
     let newAggregate = new AggregateParam();
@@ -781,8 +781,8 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
 
   addCut() {
     let that = this;
-    let newCutDimension = _.filter(this.cube.model.dimensions, function (dimension) {
-      return dimension.ref == that.newCutValue;
+    let newCutDimension = _.filter(Array.from(this.cube.model.attributes.values()), function (attribute) {
+      return attribute.ref == that.newCutValue;
     })[0];
     let newCut = new Cut();
     newCut.column = newCutDimension;
@@ -792,8 +792,8 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
 
   addDrilldown() {
     let that = this;
-    let newDrilldownDimension = _.filter(this.cube.model.dimensions, function (dimension) {
-      return dimension.ref == that.newDrilldownValue;
+    let newDrilldownDimension = _.filter(Array.from(this.cube.model.attributes.values()), function (attribute) {
+      return attribute.ref == that.newDrilldownValue;
     })[0];
 
     let newDrilldown = new Drilldown();
@@ -804,32 +804,40 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
 
   addSort() {
     let that = this;
-    let newSortColumn = _.filter(this.cube.model.dimensions, function (dimension) {
-      return dimension.ref == that.newSortValue;
+    let newSortColumn = _.filter(Array.from(this.cube.model.attributes.values()), function (attribute) {
+      return attribute.ref == that.newSortValue;
+    })[0];
+
+    let newSortDirection = _.filter(Array.from(this.sortDirections.values()), function (direction) {
+      return direction == SortDirection.parse(that.newSortDirection);
     })[0];
 
     let newSort = new Sort();
     newSort.column = newSortColumn;
-    newSort.direction = that.newSortDirection;
-
+    newSort.direction = newSortDirection;
     this.newAggregateRequest.sorts.push(newSort);
   }
 
-  newAggregateChanged($event) {
-    this.newAggregateValue = $event.value;
+  newAggregateChanged(val) {
+    this.newAggregateValue = val;
   }
 
-  newCutChanged($event) {
-    this.newCutValue = $event.value;
+  newCutChanged(val) {
+    this.newCutValue = val;
+    this.getMembers(val);
 
   }
 
-  newSortChanged($event) {
-    this.newSortValue = $event.value;
+  newSortChanged(val) {
+    this.newSortValue = val;
   }
 
-  newDrilldownChanged($event) {
-    this.newDrilldownValue = $event.value;
+  newSortDirectionChanged(val) {
+    this.newSortDirection = val;
+  }
+
+  newDrilldownChanged(val) {
+    this.newDrilldownValue = val;
   }
 
   newAggregateValue:string;
@@ -845,10 +853,40 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
   newSortDirection:string;
 
 
-  execute(){
+  sortDirections:Map<string,SortDirection> = SortDirection.directions;
+
+
+  execute() {
+
 
     this.treeExecution.execute(this.expressionTreeInstance, this.activeNode);
 
+
+  }
+
+  setCutValue(member:string){
+    this.newCutValueVal = member;
+  }
+  members:Map<string, Map<string,Object>> = new Map<string, Map<string,Object>>();
+
+  cutMembers:string[]=[];
+
+  getMembers(attributeName:string) {
+
+    let newCutDimension = _.filter(Array.from(this.cube.model.attributes.values()), function (attribute) {
+      return attribute.ref == attributeName;
+    })[0].dimension;
+    let that = this;
+    this.rudolfCubesService.members(this.cube, newCutDimension).subscribe(response=> {
+      debugger;
+      that.members.set(newCutDimension.ref, response);
+
+      that.cutMembers = _.map(Array.from(response.values()), function(member){
+        return member[attributeName];
+      });
+      //this.store.dispatch(this.treeActions.replace(expresseionTree));
+    });
+    /* .catch(() => Observable.of(this.cubeActions.searchComplete([]));*/
 
   }
 

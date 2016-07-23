@@ -1,10 +1,10 @@
-import {Dimension} from "./dimension";
+import {Attribute} from "./attribute";
 /**
  * Created by larjo_000 on 27/6/2016.
  */
 export class Cut{
 
-  column:Dimension;
+  column:Attribute;
   value:any;
 
 

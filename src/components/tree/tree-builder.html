@@ -5,50 +5,60 @@
     <div class="col-sm-12">
       <tabset>
         <tab heading="Aggregates">
-          <div class="col-sm-3">
+          <div class="col-sm-3 row-fluid">
             <h4>Aggregates</h4>
             <ul>
               <li *ngFor="let aggregate of newAggregateRequest.aggregates">{{aggregate.column.label}}</li>
             </ul>
 
-            <ng-chosen *ngIf="cube.model" [items]="cube.model.aggregates|mapToIterable" [valueAccessor]="'ref'"
+            <ng-chosen [items]="cube?.model?.aggregates|iterable" [valueAccessor]="'ref'"
                        [labelAccessor]="'label'" [(selectedValue)]="newAggregateValue"  (selectedValueChanged)="newAggregateChanged($event)">
 
             </ng-chosen>
-
             <button class="btn" (click)="addAggregate()">Add</button>
           </div>
           <div class="col-sm-3">
             <h4>Cuts</h4>
-            <li *ngFor="let cut of newAggregateRequest.cuts">{{cut.column.label}}</li>
-            <ng-chosen *ngIf="cube.model" [items]="cube.model.attributes|mapToIterable" [valueAccessor]="'ref'"
-                       [labelAccessor]="'label'" [(selectedValue)]="newCutValue" (selectedValueChanged)="newCutChanged($event)">
+            <li *ngFor="let cut of newAggregateRequest.cuts">{{cut.column.fullLabel}}={{cut.value}}</li>
+            <ng-chosen [items]="cube?.model?.attributes|iterable" [valueAccessor]="'ref'"
+                       [labelAccessor]="'fullLabel'" [(selectedValue)]="newCutValue" (selectedValueChanged)="newCutChanged($event)">
+
 
             </ng-chosen>
+            <input type="text" (change)="getMembers(newCutValue)"  [(ngModel)]="newCutValueVal"/>
+
+            <ul>
+              <li *ngFor="let member of cutMembers">
+                <a (click)="setCutValue(member)" >{{member}}</a>
+              </li>
+            </ul>
 
             <button class="btn" (click)="addCut()">Add</button>
           </div>
-          <div class="col-sm-3">
+         <div class="col-sm-3">
             <h4>Drildowns</h4>
-            <li *ngFor="let drilldown of newAggregateRequest.drilldowns">{{drilldown.column.label}}</li>
-            <ng-chosen *ngIf="cube.model" [items]="cube.model.get_attributes()|mapToIterable" [valueAccessor]="'ref'"
-                       [labelAccessor]="'label'" [(selectedValue)]="newDrilldownValue" (selectedValueChanged)="newDrilldownChanged($event)">
+            <li *ngFor="let drilldown of newAggregateRequest.drilldowns">{{drilldown.column.fullLabel}}</li>
+            <ng-chosen  [items]="cube?.model?.attributes|iterable" [valueAccessor]="'ref'"
+                       [labelAccessor]="'fullLabel'" [(selectedValue)]="newDrilldownValue" (selectedValueChanged)="newDrilldownChanged($event)">
 
             </ng-chosen>
 
             <button class="btn"  (click)="addDrilldown()">Add</button>
           </div>
-          <div class="col-sm-3">
+         <div class="col-sm-3">
             <h4>Sorts</h4>
-            <li *ngFor="let sort of newAggregateRequest.sorts">{{sort.column.label}}</li>
-            <ng-chosen *ngIf="cube.model" [items]="cube.model.get_attributes()|mapToIterable" [valueAccessor]="'ref'"
-                       [labelAccessor]="'label'" [(selectedValue)]="newSortValue" (selectedValueChanged)="newSortChanged($event)">
+            <li *ngFor="let sort of newAggregateRequest.sorts">{{sort.column.fullLabel}}: {{sort.direction.label}} </li>
+            <ng-chosen *ngIf="cube.model" [items]="cube.model.attributes|iterable" [valueAccessor]="'ref'"
+                       [labelAccessor]="'fullLabel'" [(selectedValue)]="newSortValue" (selectedValueChanged)="newSortChanged($event)">
 
             </ng-chosen>
+           <ng-chosen *ngIf="cube.model" [items]="sortDirections|iterable" [valueAccessor]="'key'"
+                      [labelAccessor]="'label'"
+                       [(selectedValue)]="newSortDirection" (selectedValueChanged)="newSortDirectionChanged($event)">
 
-            <button class="btn" (click)="addSort()">Add</button>
+           </ng-chosen>
+           <button class="btn" (click)="addSort()">Add</button>
           </div>
-          <button class="btn btn-primary" (click)="addAggregateChild()">Add Aggregate request</button>
 
         </tab>
         <tab heading="Functions">Static content2</tab>
@@ -60,7 +70,7 @@
 
 
     <div class="col-sm-12">
-      <button (click)="addChild()">Add</button>
+      <button class="btn btn-primary" (click)="addAggregateChild()">Add Aggregate request</button>
       <button (click)="removeNode()">Remove</button>
       <button (click)="execute()">Execute</button>
       <button>Clear all</button>

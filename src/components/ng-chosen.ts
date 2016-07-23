@@ -4,12 +4,15 @@
 import {Component, ViewChild, ElementRef, AfterViewInit, Input, Output, EventEmitter} from '@angular/core';
 import * as $ from "jquery";
 import * as _ from 'lodash';
+import {NestedPropertyPipe} from "../pipes/nestedProperty";
 
 @Component({
   selector: 'ng-chosen',
-  template: `<select #selectElem class="form-control">
-        <option *ngFor="let item of items" [value]="item.value[valueAccessor]" [selected]="item == selectedValue">{{item.value[labelAccessor]}}</option>
-        </select>`
+  pipes: [NestedPropertyPipe],
+  template: `
+<select #selectElem (change)="selectedValueChanged.emit(selectElem.value)" class="form-control">
+        <option *ngFor="let item of items" [value]="item?.value[valueAccessor]" [selected]="selectedValue==item.value[valueAccessor]?'selected':''" >{{item?.value | nestedProperty:labelAccessor}}</option>
+</select>`
 })
 export class NgChosenComponent implements AfterViewInit {
 
@@ -17,6 +20,8 @@ export class NgChosenComponent implements AfterViewInit {
   @Input() public items = [];
   @Input() public valueAccessor:string;
   @Input() public labelAccessor:string;
+
+
 
   private _selectedValue:string;
 
@@ -33,7 +38,6 @@ export class NgChosenComponent implements AfterViewInit {
   @Input()
   set selectedValue(value:string) {
     this._selectedValue = value;
-    this.selectedValueChanged.emit({value: value});
   }
 
 
@@ -41,15 +45,10 @@ export class NgChosenComponent implements AfterViewInit {
   selectedValueChanged = new EventEmitter();
 
   ngAfterViewInit() {
-    if (!this.selectedValue) {
-      this.selectedValue = this.items[_.first(_.keys(this.items))].key;
+    if (this.items.length>0) {
+      this.selectedValueChanged.emit(this.items[_.first(_.keys(this.items))].key);
     }
-    $(this.el.nativeElement)
-    //.chosen()
-      .on('change', (e, args) => {
-        // debugger;
-        this.selectedValue = $(e.target).children("option:selected").attr("value");
-      });
+
 
   }
 }

@@ -67,7 +67,7 @@ import { StoreLogMonitorComponent } from '@ngrx/store-log-monitor';
         <button md-icon-button (click)="sidenav.open()">
           <md-icon>menu</md-icon>
         </button>
-        <span>OpenBudgets.eu fiscal indicators</span>
+        <span>OpenBudgets.eu Fiscal Indicators app</span>
       </md-toolbar>
 
       <route-view></route-view>

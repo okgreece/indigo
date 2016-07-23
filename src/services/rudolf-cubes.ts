@@ -1,40 +1,68 @@
 import 'rxjs/add/operator/map';
-import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import {Injectable} from '@angular/core';
+import {Http} from '@angular/http';
+import {Observable} from 'rxjs/Observable';
 import {Cube} from "../models/cube";
 import {AggregateRequest} from "../models/aggregate/aggregateRequest";
+import {Dimension} from "../models/dimension";
 
 @Injectable()
 export class RudolfCubesService {
-  private API_PATH: string = 'http://ws307.math.auth.gr/rudolf/public/api/v3/cubes';
+  private API_PATH:string = 'http://ws307.math.auth.gr/rudolf/public/api/v3/cubes';
 
-  constructor(private http: Http) {}
+  constructor(private http:Http) {
+  }
 
-  searchCubes(queryTitle: string): Observable<Cube[]> {
+  searchCubes(queryTitle:string):Observable<Cube[]> {
     return this.http.get(`${this.API_PATH}`)
       .map(res => res.json().data);
   }
 
-  retrieveCube(name: string): Observable<Cube> {
+  retrieveCube(name:string):Observable<Cube> {
     return this.http.get(`${this.API_PATH}/${name}/model`)
       .map(res => res.json());
   }
 
-  aggregate(element:AggregateRequest): Observable<Cube> {
+  aggregate(element:AggregateRequest):Observable<Cube> {
     ///
     // http://ws307.math.auth.gr/rudolf/public/api/3/cubes/budget-thessaloniki-expenditure-2012__1ef74/aggregate?
     // drilldown=administrativeClassification.notation|administrativeClassification.prefLabel&pagesize=30&order=amount.sum:desc
+    debugger;
+    let drilldownString = element.drilldowns.map(d => d.column.ref).join('|');
+    let orderString = element.sorts.map(s=>s.column.ref + ':' + s.direction.key).join('|');
+    let cutString = element.cuts.map(c=>c.column.ref + ":" + c.value).join('|');
 
-    let drilldownString =  element.drilldowns.map(d => d.column).join('|');
-    let orderString = element.sorts.map(s=>s.column+':'+s.direction).join('|');
-    let cutString = element.cuts.map(c=>c.column+":"+c.value).join('|');
-
-
-   // return this.http.get(`${this.API_PATH}/${element.cube.name}/aggregate?drilldown=administrativeClassification.notation|administrativeClassification.prefLabel&pagesize=30&order=amount.sum:desc`)
-    return this.http.get(`${this.API_PATH}/${element.cube.name}/aggregate?drilldown=${drilldownString}&pagesize=${element.pageSize}&order=${orderString}`)
+    return this.http.get(`${this.API_PATH}/${element.cube.name}/aggregate?drilldown=${drilldownString}&pagesize=${element.pageSize}&order=${orderString}&cut=${cutString}`)
       .map(res => {
-        return res.json();})
+        return res.json();
+      })
       ;
   }
+
+
+  members(cube:Cube, dimension:Dimension):Observable<Map<string,Object>> {
+    ///
+    // http://next.openspending.org/api/3/cubes/1c95cb52b1d32ee8537fafd2fe1a945d%3Adouala2015/members/economic_classification_2
+
+
+    return this.http.get(`${this.API_PATH}/${cube.name}/members/${dimension.ref}`)
+      .map(res => {
+
+        let data = res.json().data;
+
+        let members = new Map<string, Object>();
+
+        for(var key in data){
+          if(data.hasOwnProperty(key))
+            members.set(key, data[key]);
+        }
+
+        return members;
+
+
+        }
+      )
+      ;
+  }
+
 }

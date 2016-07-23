@@ -74,10 +74,7 @@ export function getCubeEntities() {
 export function getCube(id: string) {
   return (state$: Observable<CubesState>) => state$
     .select(s => {
-      debugger;
-      let cube = TypedJSON.parse( JSON.stringify(s.entities[id]), Cube);
-      debugger;
-
+      let cube = new Cube().deserialize(s.entities[id]);
       return  cube;
 
 

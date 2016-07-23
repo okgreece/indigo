@@ -14,7 +14,7 @@ import {TreeActions} from "../../actions/tree";
 import {AppState} from "../../reducers/index";
 import { Store } from '@ngrx/store';
 import {NgChosenComponent} from "../ng-chosen";
-import {MapToIterable} from "../../pipes/mapToIterable";
+import {IterablePipe} from "../../pipes/mapToIterable";
 
 /**
  * Tip: Export type aliases for your component's inputs and outputs. Until we
@@ -29,7 +29,7 @@ export type RemoveOutput = Cube;
 
 @Component({
   selector: 'cube-detail',
-  pipes: [ AddCommasPipe , MapToIterable],
+  pipes: [ AddCommasPipe , IterablePipe],
   directives: [ MD_CARD_DIRECTIVES, MD_LIST_DIRECTIVES, MdButton , TreeBuilder, NgChosenComponent ],
   template: require('./cube-detail.html'),
   styles: [`
@@ -80,7 +80,6 @@ export class CubeDetailComponent {
 
   ){
     let root = new FuncNode(FuncType.Add);
-
     let expressionTree = new ExpressionTree();
     expressionTree.root = root;
     this.tree$ = Observable.create(function (observer) {
@@ -94,6 +93,7 @@ export class CubeDetailComponent {
   }
 
   get id() {
+
     return this.cube?this.cube.id:"";
   }
 

@@ -1,35 +1,33 @@
-/**
- * Created by larjo on 23/6/2016.
- */
-import { Pipe } from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
 
 /**
- * Map to Iteratble Pipe
+ * Iterable Pipe
  *
  * It accepts Objects and [Maps](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)
  *
  * Example:
  *
- *  <div *ngFor="#keyValuePair of someObject | mapToIterable">
+ *  <div *ngFor="let keyValuePair of someObject | iterable">
  *    key {{keyValuePair.key}} and value {{keyValuePair.value}}
  *  </div>
  *
  */
-@Pipe({ name: 'mapToIterable' })
-export class MapToIterable {
-  transform(value: any) {
-    let result: any = [];
+@Pipe({name: 'iterable'})
+export class IterablePipe implements PipeTransform {
+  transform(iterable: any, args: any[]): any {
+    let result = [];
 
-    if(value.entries) {
-      for (var [key, value] of value.entries()) {
-        result.push({ key, value });
-      }
+    if(iterable.entries) {
+      iterable.forEach((value, key) => {
+        result.push({key, value});
+      });
     } else {
-      for(let key in value) {
-        result.push({ key, value: value[key] });
+      for(let key in iterable) {
+        if(iterable.hasOwnProperty(key)) {
+          result.push({key, value: iterable[key]});
+        }
       }
     }
-
     return result;
   }
 }
