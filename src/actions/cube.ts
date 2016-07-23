@@ -102,8 +102,6 @@ export class CubeActions {
   }
   static LOAD_CUBE_SUCCESS = '[Cube] Load Cube';
   loadCubeComplete(cube:Cube) :Action{
-
-    debugger;
     return {
       type: CubeActions.LOAD_CUBE_SUCCESS,
       payload:cube

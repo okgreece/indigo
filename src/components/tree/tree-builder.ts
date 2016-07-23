@@ -6,7 +6,7 @@ import {TAB_DIRECTIVES} from 'ng2-bootstrap';
 
 import {
   ChangeDetectionStrategy, ViewEncapsulation,
-  Component, Input, Directive, Attribute, OnChanges, DoCheck, ElementRef, OnInit, SimpleChange,
+  Component, Input, Directive, Attribute as MetadataAttribute, OnChanges, DoCheck, ElementRef, OnInit, SimpleChange,
   AfterViewInit, ViewChild
 } from '@angular/core';
 import {Inject} from '@angular/core';
@@ -14,7 +14,7 @@ import * as d3 from 'd3';
 import Timer = NodeJS.Timer;
 import {ExpressionTree} from "../../models/expressionTree";
 import {RouteParams} from "@ngrx/router";
-import {AppState, getTree} from "../../reducers/index";
+import {AppState, getTree, getCube} from "../../reducers/index";
 import {Store} from "@ngrx/store";
 import {ExpressionNode} from "../../models/expressionNode";
 import {TreeActions} from "../../actions/tree";
@@ -29,7 +29,9 @@ import {RudolfCubesService} from "../../services/rudolf-cubes";
 import {TreeExecution} from "../../services/tree-execution";
 import {AggregateParam} from "../../models/aggregateParam";
 import {SortDirection, SortDirectionEnum} from "../../models/sortDirection";
-import {Dimension} from "../../models/dimension";
+import {Aggregate} from "../../models/aggregate";
+import {Attribute} from "../../models/attribute";
+import {NestedPropertyPipe} from "../../pipes/nestedProperty";
 declare let $:JQueryStatic;
 /*
  * We're loading this component asynchronously
@@ -41,7 +43,7 @@ console.log('`Tree Builder` component loaded asynchronously');
 
 @Component({
   moduleId: 'tree-builder',
-  pipes: [IterablePipe],
+  pipes: [IterablePipe,NestedPropertyPipe],
   selector: 'tree-builder',
   encapsulation: ViewEncapsulation.None,
   directives: [TAB_DIRECTIVES, CORE_DIRECTIVES, NgChosenComponent],
@@ -101,8 +103,8 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
   @ViewChild('drawingCanvas') drawingCanvas;
 
   constructor(@Inject(ElementRef) elementRef:ElementRef,
-              @Attribute('width') width:number,
-              @Attribute('height') height:number,
+              @MetadataAttribute('width') width:number,
+              @MetadataAttribute('height') height:number,
               private store:Store<AppState>,
               private routeParams$:RouteParams,
               private treeActions:TreeActions,
@@ -121,7 +123,15 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
   width:number;
   height:number;
 
+
+  aggregates = [];
+
+
   ngAfterViewInit() {
+
+
+
+
     this.baseSvg = d3.select(this.drawingCanvas.nativeElement).append("svg").attr("width", this.viewerWidth)
       .attr("height", this.viewerHeight)
       .call(this.zoomListener);
@@ -144,14 +154,7 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
     });
   }
 
-  ngOnChanges(changes:{[propertyName:string]:SimpleChange}) {
-    for (let propName in changes) {
-      //alert(propName);
-      let chng = changes[propName];
-      let cur = JSON.stringify(chng.currentValue);
-      let prev = JSON.stringify(chng.previousValue);
-    }
-  }
+
 
   init() {
 
@@ -725,14 +728,7 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
     });
   }
 
-  addChild() {
-    if (!this.activeNode)return;
-    this.activeNode.children.push(new ExpressionNode("lol"));
-    this.store.dispatch(this.treeActions.replace(this.expressionTreeInstance));
 
-    //this.treeActions.addToCollection(this.expressionTree);
-    //this.update(this.expressionTreeInstance.root);
-  }
 
 
   newAggregateRequest:AggregateRequest = new AggregateRequest();
@@ -770,87 +766,55 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
   }
 
   addAggregate() {
-    let that = this;
-    let newAggregateCol = _.filter(Array.from(this.cube.model.aggregates.values()), function (aggregate) {
-      return aggregate.ref == that.newAggregateValue;
-    })[0];
     let newAggregate = new AggregateParam();
-    newAggregate.column = newAggregateCol;
+    newAggregate.column = this.newAggregateAggregate;
     this.newAggregateRequest.aggregates.push(newAggregate);
   }
 
   addCut() {
-    let that = this;
-    let newCutDimension = _.filter(Array.from(this.cube.model.attributes.values()), function (attribute) {
-      return attribute.ref == that.newCutValue;
-    })[0];
     let newCut = new Cut();
-    newCut.column = newCutDimension;
-    newCut.value = that.newCutValueVal;
+    debugger;
+    newCut.column = this.newCutAttribute;
+    newCut.value = this.newCutValueVal;
     this.newAggregateRequest.cuts.push(newCut);
   }
 
   addDrilldown() {
-    let that = this;
-    let newDrilldownDimension = _.filter(Array.from(this.cube.model.attributes.values()), function (attribute) {
-      return attribute.ref == that.newDrilldownValue;
-    })[0];
-
     let newDrilldown = new Drilldown();
-    newDrilldown.column = newDrilldownDimension;
-
+    newDrilldown.column = this.newDrilldownAttribute;
     this.newAggregateRequest.drilldowns.push(newDrilldown);
   }
 
   addSort() {
-    let that = this;
-    let newSortColumn = _.filter(Array.from(this.cube.model.attributes.values()), function (attribute) {
-      return attribute.ref == that.newSortValue;
-    })[0];
-
-    let newSortDirection = _.filter(Array.from(this.sortDirections.values()), function (direction) {
-      return direction == SortDirection.parse(that.newSortDirection);
-    })[0];
 
     let newSort = new Sort();
-    newSort.column = newSortColumn;
-    newSort.direction = newSortDirection;
+    newSort.column = this.newSortAttribute;
+    newSort.direction = this.newSortDirection;
     this.newAggregateRequest.sorts.push(newSort);
   }
 
-  newAggregateChanged(val) {
-    this.newAggregateValue = val;
+  selectedCutChanged($event){
+    this.newCutValueVal = "";
+    this.newCutAttribute = $event;
+    this.getMembers($event.ref);
   }
 
-  newCutChanged(val) {
-    this.newCutValue = val;
-    this.getMembers(val);
-
+  selectedCutValChanged(search:string){
+    this.searchMembers(this.newCutAttribute, search);
   }
 
-  newSortChanged(val) {
-    this.newSortValue = val;
-  }
 
-  newSortDirectionChanged(val) {
-    this.newSortDirection = val;
-  }
+  newAggregateAggregate:Aggregate ;
 
-  newDrilldownChanged(val) {
-    this.newDrilldownValue = val;
-  }
+  newSortAttribute:Attribute;
 
-  newAggregateValue:string;
+  newDrilldownAttribute:Attribute;
 
-  newSortValue:string;
-
-  newDrilldownValue:string;
-
-  newCutValue:string;
+  newCutAttribute:Attribute;
 
   newCutValueVal:string;
 
-  newSortDirection:string;
+  newSortDirection:SortDirection;
 
 
   sortDirections:Map<string,SortDirection> = SortDirection.directions;
@@ -871,6 +835,21 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
 
   cutMembers:string[]=[];
 
+
+  searchMembers(attribute:Attribute, search: string){
+    let that = this;
+    this.rudolfCubesService.members(this.cube, attribute).subscribe(response=> {
+      that.members.set(attribute.ref, response);
+
+      that.cutMembers = _.map(Array.from(response.values()), function(member){
+        return member[attribute.ref];
+      }).filter(function (value) {
+        return search==""|| search==undefined || search==null || value.indexOf(search)>-1;
+      });
+
+    });
+  }
+
   getMembers(attributeName:string) {
 
     let newCutDimension = _.filter(Array.from(this.cube.model.attributes.values()), function (attribute) {
@@ -878,12 +857,12 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
     })[0].dimension;
     let that = this;
     this.rudolfCubesService.members(this.cube, newCutDimension).subscribe(response=> {
-      debugger;
       that.members.set(newCutDimension.ref, response);
 
       that.cutMembers = _.map(Array.from(response.values()), function(member){
         return member[attributeName];
       });
+
       //this.store.dispatch(this.treeActions.replace(expresseionTree));
     });
     /* .catch(() => Observable.of(this.cubeActions.searchComplete([]));*/

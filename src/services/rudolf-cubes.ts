@@ -5,6 +5,7 @@ import {Observable} from 'rxjs/Observable';
 import {Cube} from "../models/cube";
 import {AggregateRequest} from "../models/aggregate/aggregateRequest";
 import {Dimension} from "../models/dimension";
+import 'rxjs/add/operator/mergeMap'
 
 @Injectable()
 export class RudolfCubesService {
@@ -20,14 +21,26 @@ export class RudolfCubesService {
 
   retrieveCube(name:string):Observable<Cube> {
     return this.http.get(`${this.API_PATH}/${name}/model`)
-      .map(res => res.json());
+      .map(res => res.json()).flatMap((cube)=>{
+        let fullCube = new Cube().deserialize(cube);
+        let observables = [];
+
+
+        fullCube.model.dimensions.forEach((dimension, key) => {
+          observables.push(this.loadDimensionMembers(cube, dimension));
+        });
+
+
+        return Observable.forkJoin(observables, function () {
+          return cube;
+        });
+      });
   }
 
   aggregate(element:AggregateRequest):Observable<Cube> {
     ///
     // http://ws307.math.auth.gr/rudolf/public/api/3/cubes/budget-thessaloniki-expenditure-2012__1ef74/aggregate?
     // drilldown=administrativeClassification.notation|administrativeClassification.prefLabel&pagesize=30&order=amount.sum:desc
-    debugger;
     let drilldownString = element.drilldowns.map(d => d.column.ref).join('|');
     let orderString = element.sorts.map(s=>s.column.ref + ':' + s.direction.key).join('|');
     let cutString = element.cuts.map(c=>c.column.ref + ":" + c.value).join('|');
@@ -39,30 +52,46 @@ export class RudolfCubesService {
       ;
   }
 
+  _membersCache:Map<string,Map<string,Object>> = new Map<string,Map<string,Object>>();
 
   members(cube:Cube, dimension:Dimension):Observable<Map<string,Object>> {
     ///
     // http://next.openspending.org/api/3/cubes/1c95cb52b1d32ee8537fafd2fe1a945d%3Adouala2015/members/economic_classification_2
+    let that = this;
+    if(this._membersCache && this._membersCache.has(`${cube.name}.${dimension.ref}`)){
+      return Observable.create(function (observer) {
+        observer.next(that._membersCache.get(`${cube.name}.${dimension.ref}`));
+      }) ;
+
+    }
+
+    return this.loadDimensionMembers(cube, dimension);
 
 
+  }
+
+  loadDimensionMembers(cube:Cube, dimension:Dimension){
     return this.http.get(`${this.API_PATH}/${cube.name}/members/${dimension.ref}`)
       .map(res => {
 
-        let data = res.json().data;
+          let data = res.json().data;
 
-        let members = new Map<string, Object>();
+          let members = new Map<string, Object>();
 
-        for(var key in data){
-          if(data.hasOwnProperty(key))
-            members.set(key, data[key]);
-        }
+          for(var key in data){
+            if(data.hasOwnProperty(key))
+              members.set(key, data[key]);
+          }
 
-        return members;
+          this._membersCache.set(`${cube.name}.${dimension.ref}`, members);
+
+          return members;
 
 
         }
       )
       ;
   }
+
 
 }

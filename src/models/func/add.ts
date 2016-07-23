@@ -4,6 +4,7 @@ import { Func} from "./func";
  */
 export class Add extends Func{
   invoke(input:any) {
+    debugger;
   }
 
   public get name(){

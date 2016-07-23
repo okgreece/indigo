@@ -10,9 +10,19 @@ import {NestedPropertyPipe} from "../pipes/nestedProperty";
   selector: 'ng-chosen',
   pipes: [NestedPropertyPipe],
   template: `
-<select #selectElem (change)="selectedValueChanged.emit(selectElem.value)" class="form-control">
-        <option *ngFor="let item of items" [value]="item?.value[valueAccessor]" [selected]="selectedValue==item.value[valueAccessor]?'selected':''" >{{item?.value | nestedProperty:labelAccessor}}</option>
-</select>`
+
+<select #selectElem [(ngModel)]="selectedItem" (ngModelChange)="onChangeObj($event)">
+    <option [ngValue]="item" *ngFor="let item of items">{{item | nestedProperty:labelAccessor}}</option>
+ </select>
+
+
+
+
+
+`
+
+
+
 })
 export class NgChosenComponent implements AfterViewInit {
 
@@ -22,31 +32,44 @@ export class NgChosenComponent implements AfterViewInit {
   @Input() public labelAccessor:string;
 
 
+  onChangeObj(newObj) {
+    console.log(newObj);
+   // this._selectedItem = newObj;
+    this.selectedItemChange.emit(newObj);
 
-  private _selectedValue:string;
+    // ... do other stuff here ...
+  }
+
+  private _selectedItem: any;
+
 
 
   constructor() {
 
   }
 
-  get selectedValue():string {
+  get selectedItem():any {
 
-    return this._selectedValue;
+    return this._selectedItem;
   }
 
-  @Input()
-  set selectedValue(value:string) {
-    this._selectedValue = value;
+  set selectedItem(value:any) {
+    /*if(value)
+      this.selectedItemChange.emit({value:value});*/
+    this._selectedItem = value;
   }
 
 
   @Output()
-  selectedValueChanged = new EventEmitter();
+  selectedItemChange = new EventEmitter();
 
   ngAfterViewInit() {
     if (this.items.length>0) {
-      this.selectedValueChanged.emit(this.items[_.first(_.keys(this.items))].key);
+      debugger;
+
+
+      this.selectedItem =this.items[0];
+
     }
 
 

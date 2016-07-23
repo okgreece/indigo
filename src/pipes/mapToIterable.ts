@@ -16,18 +16,20 @@ import {Pipe, PipeTransform} from '@angular/core';
 export class IterablePipe implements PipeTransform {
   transform(iterable: any, args: any[]): any {
     let result = [];
-
-    if(iterable.entries) {
-      iterable.forEach((value, key) => {
-        result.push({key, value});
-      });
-    } else {
-      for(let key in iterable) {
-        if(iterable.hasOwnProperty(key)) {
-          result.push({key, value: iterable[key]});
+    if(iterable){
+      if( iterable.entries) {
+        iterable.forEach((value, key) => {
+          result.push( value);
+        });
+      } else {
+        for(let key in iterable) {
+          if(iterable.hasOwnProperty(key)) {
+            result.push(iterable[key]);
+          }
         }
       }
     }
+
     return result;
   }
 }

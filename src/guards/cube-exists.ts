@@ -23,7 +23,7 @@ import { CubeActions } from '../actions/cube';
 export class CubeExistsGuard implements Guard {
   constructor(
     private store: Store<AppState>,
-    private googleCubes: RudolfCubesService,
+    private rudolfCubesService: RudolfCubesService,
     private cubeActions: CubeActions
   ) { }
 
@@ -51,7 +51,7 @@ export class CubeExistsGuard implements Guard {
    * it in the store, returning `true` or `false` if it was found.
    */
   hasCubeInApi(id: string) {
-    return this.googleCubes.retrieveCube(id)
+    return this.rudolfCubesService.retrieveCube(id)
       .map(cube => this.cubeActions.loadCube(cube))
       .do(action => this.store.dispatch(action))
       .map(cube => !!cube)

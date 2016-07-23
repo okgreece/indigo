@@ -19,24 +19,30 @@ export class TreeExecution {
 
   constructor(private rudolfCubesService: RudolfCubesService, private store:Store<AppState>, private treeActions:TreeActions) {}
 
-    execute(expresseionTree: ExpressionTree, rootNode:ExpressionNode){
+    execute(expressionTree: ExpressionTree, rootNode:ExpressionNode){
       for (var child of rootNode.children) {
-        this.execute(expresseionTree, child);
+        this.execute(expressionTree, child);
       }
       if(rootNode instanceof AggregateNode){
         this.rudolfCubesService.aggregate(rootNode.element).subscribe(response=>{
           rootNode.value = response;
           rootNode.executed = true;
-          this.store.dispatch(this.treeActions.replace(expresseionTree));
 
         });
 
         /* .catch(() => Observable.of(this.cubeActions.searchComplete([]));*/
       }
       else if(rootNode instanceof FuncNode){
+        let data = rootNode.children.map(function (child) {
+          return child.value;
+        });
 
+        rootNode.value = rootNode.element.invoke(data);
 
       }
+
+      this.store.dispatch(this.treeActions.replace(expressionTree));
+
     }
 
 }

@@ -5,27 +5,33 @@
     <div class="col-sm-12">
       <tabset>
         <tab heading="Aggregates">
-          <div class="col-sm-3 row-fluid">
+          <div class="row-fluid">
             <h4>Aggregates</h4>
             <ul>
               <li *ngFor="let aggregate of newAggregateRequest.aggregates">{{aggregate.column.label}}</li>
             </ul>
 
-            <ng-chosen [items]="cube?.model?.aggregates|iterable" [valueAccessor]="'ref'"
-                       [labelAccessor]="'label'" [(selectedValue)]="newAggregateValue"  (selectedValueChanged)="newAggregateChanged($event)">
 
-            </ng-chosen>
-            <button class="btn" (click)="addAggregate()">Add</button>
+            <select [(ngModel)]="newAggregateAggregate" >
+              <option [ngValue]="item" *ngFor="let item of cube?.model?.aggregates.values()">{{item | nestedProperty:'label'}}</option>
+            </select>
+
+
+
+
+
+            <button  md-raised-button color="warn" (click)="addAggregate()" [disabled]="newAggregateAggregate==undefined">Add</button>
           </div>
-          <div class="col-sm-3">
+          <div class="row-fluid">
             <h4>Cuts</h4>
             <li *ngFor="let cut of newAggregateRequest.cuts">{{cut.column.fullLabel}}={{cut.value}}</li>
-            <ng-chosen [items]="cube?.model?.attributes|iterable" [valueAccessor]="'ref'"
-                       [labelAccessor]="'fullLabel'" [(selectedValue)]="newCutValue" (selectedValueChanged)="newCutChanged($event)">
+
+            <select [(ngModel)]="newCutAttribute"  (ngModelChange)="selectedCutChanged($event)">
+              <option [ngValue]="item" *ngFor="let item of cube?.model?.attributes|iterable">{{item | nestedProperty:'fullLabel'}}</option>
+            </select>
 
 
-            </ng-chosen>
-            <input type="text" (change)="getMembers(newCutValue)"  [(ngModel)]="newCutValueVal"/>
+            <input type="text" (ngModelChange)="selectedCutValChanged($event)"  [(ngModel)]="newCutValueVal"/>
 
             <ul>
               <li *ngFor="let member of cutMembers">
@@ -33,31 +39,36 @@
               </li>
             </ul>
 
-            <button class="btn" (click)="addCut()">Add</button>
+            <button class="btn" (click)="addCut()" [disabled]="newCutAttribute==undefined">Add</button>
           </div>
-         <div class="col-sm-3">
+         <div class="row-fluid">
             <h4>Drildowns</h4>
             <li *ngFor="let drilldown of newAggregateRequest.drilldowns">{{drilldown.column.fullLabel}}</li>
-            <ng-chosen  [items]="cube?.model?.attributes|iterable" [valueAccessor]="'ref'"
-                       [labelAccessor]="'fullLabel'" [(selectedValue)]="newDrilldownValue" (selectedValueChanged)="newDrilldownChanged($event)">
 
-            </ng-chosen>
+           <select [(ngModel)]="newDrilldownAttribute">
+             <option [ngValue]="item" *ngFor="let item of cube?.model?.attributes|iterable">{{item | nestedProperty:'fullLabel'}}</option>
+           </select>
 
-            <button class="btn"  (click)="addDrilldown()">Add</button>
+
+            <button class="btn"  (click)="addDrilldown()" [disabled]="newDrilldownAttribute==undefined">Add</button>
           </div>
-         <div class="col-sm-3">
+         <div class="row-fluid">
             <h4>Sorts</h4>
             <li *ngFor="let sort of newAggregateRequest.sorts">{{sort.column.fullLabel}}: {{sort.direction.label}} </li>
-            <ng-chosen *ngIf="cube.model" [items]="cube.model.attributes|iterable" [valueAccessor]="'ref'"
-                       [labelAccessor]="'fullLabel'" [(selectedValue)]="newSortValue" (selectedValueChanged)="newSortChanged($event)">
 
-            </ng-chosen>
-           <ng-chosen *ngIf="cube.model" [items]="sortDirections|iterable" [valueAccessor]="'key'"
-                      [labelAccessor]="'label'"
-                       [(selectedValue)]="newSortDirection" (selectedValueChanged)="newSortDirectionChanged($event)">
 
-           </ng-chosen>
-           <button class="btn" (click)="addSort()">Add</button>
+           <select [(ngModel)]="newSortAttribute">
+             <option [ngValue]="item" *ngFor="let item of cube?.model?.attributes|iterable">{{item | nestedProperty:'fullLabel'}}</option>
+           </select>
+
+
+
+           <select [(ngModel)]="newSortDirection">
+             <option [ngValue]="item" *ngFor="let item of sortDirections|iterable">{{item | nestedProperty:'label'}}</option>
+           </select>
+
+
+           <button class="btn" (click)="addSort()" [disabled]="newSortAttribute==undefined||newSortDirection==undefined">Add</button>
           </div>
 
         </tab>
