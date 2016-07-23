@@ -838,7 +838,7 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
 
   searchMembers(attribute:Attribute, search: string){
     let that = this;
-    this.rudolfCubesService.members(this.cube, attribute).subscribe(response=> {
+    this.rudolfCubesService.members(this.cube, attribute.dimension).subscribe(response=> {
       that.members.set(attribute.ref, response);
 
       that.cutMembers = _.map(Array.from(response.values()), function(member){
