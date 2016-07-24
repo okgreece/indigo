@@ -36,4 +36,11 @@ export class FuncNode extends ExpressionNode{
   public set element(value: Func){
     this._func = value;
   };
+
+  public set value(value){
+    this._value = value;
+  }
+  public get value(){
+    return this._value ;
+  }
 }

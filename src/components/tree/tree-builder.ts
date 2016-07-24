@@ -773,7 +773,6 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
 
   addCut() {
     let newCut = new Cut();
-    debugger;
     newCut.column = this.newCutAttribute;
     newCut.value = this.newCutValueVal;
     this.newAggregateRequest.cuts.push(newCut);

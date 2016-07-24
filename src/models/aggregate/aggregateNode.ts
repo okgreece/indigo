@@ -27,5 +27,8 @@ export class AggregateNode extends ExpressionNode{
   public set value(value){
     this._value = value;
   }
+  public get value(){
+    return this._value ;
+  }
 
 }
