@@ -3,80 +3,192 @@
   <div class="row">
 
     <div class="col-sm-12">
-      <tabset>
-        <tab heading="Aggregates">
-          <div class="row-fluid">
-            <h4>Aggregates</h4>
+
+
+
+      <md-tab-group class="demo-tab-group">
+        <md-tab>
+          <template md-tab-label>Aggregates</template>
+          <template md-tab-content>
+            <div class="row-fluid col-sm-12">
+              <h4>Aggregates</h4>
+              <div class="col-sm-12">
+                <ul>
+                  <li *ngFor="let aggregate of newAggregateRequest.aggregates"> {{aggregate.column.label}}<a class="action-anchor" (click)="removeAggregate(aggregate)">[✖]</a>
+                  </li>
+                </ul>
+              </div>
+
+
+              <div class="col-sm-6">
+                <select class="form-control col-sm-6" [(ngModel)]="newAggregateAggregate" >
+                <option [ngValue]="item" *ngFor="let item of cube?.model?.aggregates|iterable">{{item | nestedProperty:'label'}}</option>
+              </select>
+              </div>
+
+
+              <button  md-raised-button color="warn" (click)="addAggregate()" [disabled]="newAggregateAggregate==undefined">Add</button>
+            </div>
+            <div class="row-fluid col-sm-12">
+              <h4>Cuts</h4>
+              <div class="col-sm-12">
+                <ul>
+                  <li *ngFor="let cut of newAggregateRequest.cuts">{{cut.column.fullLabel}}={{cut.value}}  <a class="action-anchor" (click)="removeCut(cut)">[✖]</a></li>
+
+                </ul>
+              </div>
+
+              <div class="col-sm-6">
+                <select class="form-control" [(ngModel)]="newCutAttribute"  (ngModelChange)="selectedCutChanged($event)">
+                  <option [ngValue]="item" *ngFor="let item of cube?.model?.attributes|iterable">{{item | nestedProperty:'fullLabel'}}</option>
+                </select>
+              </div>
+
+              <div class="col-sm-6">
+                <input class="form-control" type="text" (ngModelChange)="selectedCutValChanged($event)"  [(ngModel)]="newCutValueVal"/>
+
+              </div>
+
+              <div class="col-sm-12">
+                <ul>
+                  <li *ngFor="let member of cutMembers">
+                    <a (click)="setCutValue(member)" >{{member}}</a>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="col-sm-12">
+                <button  md-raised-button class="btn" (click)="addCut()" [disabled]="newCutAttribute==undefined">Add</button>
+
+              </div>
+
+            </div>
+            <div class="row-fluid col-sm-12">
+              <h4>Drilldowns</h4>
+              <div class="col-sm-12">
+                <ul>
+                  <li *ngFor="let drilldown of newAggregateRequest.drilldowns">{{drilldown.column.fullLabel}}  <a (click)="removeDrilldown(drilldown)">[✖]</a></li>
+
+                </ul>
+              </div>
+
+              <div class="col-sm-6">
+                <select class="form-control" [(ngModel)]="newDrilldownAttribute">
+                  <option [ngValue]="item" *ngFor="let item of cube?.model?.attributes|iterable">{{item | nestedProperty:'fullLabel'}}</option>
+                </select>
+
+              </div>
+
+              <div class="col-sm-12">
+                <button  md-raised-button class="btn"  (click)="addDrilldown()" [disabled]="newDrilldownAttribute==undefined">Add</button>
+
+              </div>
+
+            </div>
+            <div class="row-fluid col-sm-12">
+              <h4>Sorts</h4>
+              <div class="col-sm-12">
+                <ul>
+                  <li *ngFor="let sort of newAggregateRequest.sorts">{{sort.column.fullLabel}}: {{sort.direction.label}}   <a  class="action-anchor" (click)="removeSort(sort)">[✖]</a></li>
+
+                </ul>
+              </div>
+
+              <div class="col-sm-6">
+                <select class="form-control" [(ngModel)]="newSortAttribute">
+                  <option [ngValue]="item" *ngFor="let item of cube?.model?.attributes|iterable">{{item | nestedProperty:'fullLabel'}}</option>
+                </select>
+
+              </div>
+
+              <div class="col-sm-6">
+                <select class="form-control" [(ngModel)]="newSortDirection">
+                  <option [ngValue]="item" *ngFor="let item of sortDirections|iterable">{{item | nestedProperty:'label'}}</option>
+                </select>
+              </div>
+
+              <div class="col-sm-12">
+                <button  md-raised-button class="btn" (click)="addSort()" [disabled]="newSortAttribute==undefined||newSortDirection==undefined">Add</button>
+
+              </div>
+
+            </div>
+
+          </template>
+        </md-tab>
+
+
+        <md-tab>
+          <template md-tab-label>Functions</template>
+          <template md-tab-content>
+            <div class="row-fluid">
+              <div class="col-sm-3">
+                <button md-raised-button>Addition</button>
+              </div>
+              <div class="col-sm-3">
+                <button>Difference</button>
+              </div>
+              <div class="col-sm-3">
+                <button>Multiplication</button>
+              </div>
+              <div class="col-sm-3">
+                <button>Division</button>
+              </div>
+            </div>
+            <div class="row-fluid">
+              <div class="col-sm-3">
+                <button>Exponential</button>
+              </div>
+              <div class="col-sm-3">
+                <button>Negation</button>
+              </div>
+              <div class="col-sm-3">
+                <button>Logarithm</button>
+              </div>
+
+            </div>
+            <div class="row-fluid">
+              <div class="col-sm-3">
+                <button>Minimum</button>
+              </div>
+              <div class="col-sm-3">
+                <button>Maximum</button>
+              </div>
+              <div class="col-sm-3">
+                <button>Average</button>
+              </div>
+
+            </div>
+          </template>
+        </md-tab>
+
+        <md-tab>
+          <template md-tab-label>External data</template>
+          <template md-tab-content>
             <ul>
-              <li *ngFor="let aggregate of newAggregateRequest.aggregates">{{aggregate.column.label}}</li>
+              <li>Cosmopolitan API</li>
             </ul>
+          </template>
+        </md-tab>
 
 
-            <select [(ngModel)]="newAggregateAggregate" >
-              <option [ngValue]="item" *ngFor="let item of cube?.model?.aggregates.values()">{{item | nestedProperty:'label'}}</option>
-            </select>
-
-
-
-
-
-            <button  md-raised-button color="warn" (click)="addAggregate()" [disabled]="newAggregateAggregate==undefined">Add</button>
-          </div>
-          <div class="row-fluid">
-            <h4>Cuts</h4>
-            <li *ngFor="let cut of newAggregateRequest.cuts">{{cut.column.fullLabel}}={{cut.value}}</li>
-
-            <select [(ngModel)]="newCutAttribute"  (ngModelChange)="selectedCutChanged($event)">
-              <option [ngValue]="item" *ngFor="let item of cube?.model?.attributes|iterable">{{item | nestedProperty:'fullLabel'}}</option>
-            </select>
-
-
-            <input type="text" (ngModelChange)="selectedCutValChanged($event)"  [(ngModel)]="newCutValueVal"/>
-
-            <ul>
-              <li *ngFor="let member of cutMembers">
-                <a (click)="setCutValue(member)" >{{member}}</a>
-              </li>
-            </ul>
-
-            <button class="btn" (click)="addCut()" [disabled]="newCutAttribute==undefined">Add</button>
-          </div>
-         <div class="row-fluid">
-            <h4>Drildowns</h4>
-            <li *ngFor="let drilldown of newAggregateRequest.drilldowns">{{drilldown.column.fullLabel}}</li>
-
-           <select [(ngModel)]="newDrilldownAttribute">
-             <option [ngValue]="item" *ngFor="let item of cube?.model?.attributes|iterable">{{item | nestedProperty:'fullLabel'}}</option>
-           </select>
-
-
-            <button class="btn"  (click)="addDrilldown()" [disabled]="newDrilldownAttribute==undefined">Add</button>
-          </div>
-         <div class="row-fluid">
-            <h4>Sorts</h4>
-            <li *ngFor="let sort of newAggregateRequest.sorts">{{sort.column.fullLabel}}: {{sort.direction.label}} </li>
-
-
-           <select [(ngModel)]="newSortAttribute">
-             <option [ngValue]="item" *ngFor="let item of cube?.model?.attributes|iterable">{{item | nestedProperty:'fullLabel'}}</option>
-           </select>
+        <md-tab>
+          <template md-tab-label>Custom data</template>
+          <template md-tab-content>
+            <label for="custom_data">
+              <textarea name="" id="custom_data" cols="30" rows="10"></textarea>
+            </label>
+          </template>
+        </md-tab>
 
 
 
-           <select [(ngModel)]="newSortDirection">
-             <option [ngValue]="item" *ngFor="let item of sortDirections|iterable">{{item | nestedProperty:'label'}}</option>
-           </select>
+
+      </md-tab-group>
 
 
-           <button class="btn" (click)="addSort()" [disabled]="newSortAttribute==undefined||newSortDirection==undefined">Add</button>
-          </div>
 
-        </tab>
-        <tab heading="Functions">Static content2</tab>
-        <tab heading="External data">Static content2</tab>
-        <tab heading="Static data">Static content4</tab>
 
-      </tabset>
     </div>
 
 
@@ -90,4 +202,7 @@
 
   </div>
   <div #drawingCanvas></div>
+  <div>{{activeNode?.name}}</div>
+  <ngrx-json-tree *ngIf="activeNode!=null&&activeNode!=undefined" [value]="activeNode?.value"></ngrx-json-tree>
+
 </div>

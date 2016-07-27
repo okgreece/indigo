@@ -29,7 +29,7 @@ export type CubeInput = Cube;
   `,
   styles: [`
     md-card {
-      width: 400px;
+      width: 600px;
       height: 300px;
       margin: 15px;
     }

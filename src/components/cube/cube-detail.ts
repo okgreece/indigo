@@ -39,7 +39,7 @@ export type RemoveOutput = Cube;
       margin: 75px 0;
     }
     md-card {
-      max-width: 600px;
+      max-width: 800px;
     }
     md-card-title {
       margin-left: 10px;

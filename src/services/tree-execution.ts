@@ -49,7 +49,7 @@ export class TreeExecution {
           observables.push(this.execute(expressionTree, child));
         });
 
-        let observable = Observable.forkJoin(observables);
+        let observable = Observable.forkJoin(observables).share();
         observable.subscribe(response=>{
           let data = rootNode.children.map(function (child) {
             return child.value;

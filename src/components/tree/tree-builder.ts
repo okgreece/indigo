@@ -9,7 +9,7 @@ import {
   Component, Input, Directive, Attribute as MetadataAttribute, OnChanges, DoCheck, ElementRef, OnInit, SimpleChange,
   AfterViewInit, ViewChild
 } from '@angular/core';
-import {Inject} from '@angular/core';
+import {Inject, NgZone, ChangeDetectorRef} from '@angular/core';
 import * as d3 from 'd3';
 import Timer = NodeJS.Timer;
 import {ExpressionTree} from "../../models/expressionTree";
@@ -32,6 +32,11 @@ import {SortDirection, SortDirectionEnum} from "../../models/sortDirection";
 import {Aggregate} from "../../models/aggregate";
 import {Attribute} from "../../models/attribute";
 import {NestedPropertyPipe} from "../../pipes/nestedProperty";
+import {JsonTreeComponent} from "../../lib/json-tree/json-tree";
+import {NgIf, NgFor, AsyncPipe} from '@angular/common';
+import {MD_TABS_DIRECTIVES} from '@angular2-material/tabs/tabs';
+import {MdToolbar} from '@angular2-material/toolbar/toolbar';
+import {MdInput} from '@angular2-material/input/input';
 declare let $:JQueryStatic;
 /*
  * We're loading this component asynchronously
@@ -45,9 +50,9 @@ console.log('`Tree Builder` component loaded asynchronously');
   moduleId: 'tree-builder',
   pipes: [IterablePipe,NestedPropertyPipe],
   selector: 'tree-builder',
-  encapsulation: ViewEncapsulation.None,
-  directives: [TAB_DIRECTIVES, CORE_DIRECTIVES, NgChosenComponent],
+  directives: [TAB_DIRECTIVES, CORE_DIRECTIVES, NgChosenComponent, JsonTreeComponent, MD_TABS_DIRECTIVES, MdToolbar, MdInput, NgIf, FORM_DIRECTIVES, NgFor],
   changeDetection: ChangeDetectionStrategy.OnPush, // ⇐⇐⇐
+  encapsulation: ViewEncapsulation.None,
   template: require('./tree-builder.html'),
   styles: [`
      .node {
@@ -92,9 +97,15 @@ console.log('`Tree Builder` component loaded asynchronously');
     svg{
       width:100%;
     }
+    
+    a.action-anchor{
+      cursor:pointer;
+      margin: auto 10px ;
+    
+    }
   `]
 })
-export class TreeBuilder implements AfterViewInit, OnChanges {
+export class TreeBuilder implements AfterViewInit {
   @ViewChild('selectElem') el:ElementRef;
 
   @Input() expressionTree:Observable<ExpressionTree>;
@@ -109,16 +120,32 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
               private routeParams$:RouteParams,
               private treeActions:TreeActions,
               private rudolfCubesService:RudolfCubesService,
-              private treeExecution:TreeExecution) {
+              private treeExecution:TreeExecution, private zone: NgZone, private ref: ChangeDetectorRef) {
 
     this.width = width;
     this.height = height;
     this.el = elementRef;
     this.expressionTree = store.let(getTree());
+
+    setInterval(() => {
+      // the following is required, otherwise the view will not be updated
+      this.ref.markForCheck();
+    }, 1000);
   }
 
 
-  @Input() cube:Cube;
+  _cube:Cube;
+
+  public get cube(){
+    return this._cube;
+  }
+
+  @Input()
+
+  public set cube(value:Cube){
+    let that = this;
+    that._cube = value;
+  }
 
   width:number;
   height:number;
@@ -129,29 +156,31 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
 
   ngAfterViewInit() {
 
-
-
-
-    this.baseSvg = d3.select(this.drawingCanvas.nativeElement).append("svg").attr("width", this.viewerWidth)
-      .attr("height", this.viewerHeight)
-      .call(this.zoomListener);
-    let that = this;
-    this.expressionTree.subscribe(function (expressionTree) {
-      that.expressionTreeInstance = expressionTree;
-
-      if (that.tree) {
+    window.setTimeout(() =>{
+      this.baseSvg = d3.select(this.drawingCanvas.nativeElement).append("svg").attr("width", this.viewerWidth)
+        .attr("height", this.viewerHeight)
+        .call(this.zoomListener);
+      let that = this;
+      this.expressionTree.subscribe(function (expressionTree) {
         that.expressionTreeInstance = expressionTree;
-        that.update(expressionTree.root);
-      }
-      else {
-        that.baseSvg.html("");
 
-        that.init();
+        if (that.tree) {
+          that.expressionTreeInstance = expressionTree;
+          that.update(expressionTree.root);
+        }
+        else {
+          that.baseSvg.html("");
 
-      }
+          that.init();
+
+        }
 
 
+      });
     });
+
+
+
   }
 
 
@@ -545,11 +574,19 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
   private activeNode:ExpressionNode;
 
   click(d) {
+    this.zone.run(()=>{
+      this.activeNode = d;
+      this.ref.markForCheck();
+
+
+    });
+    this.activeNode = d;
+
     if (d3.event.defaultPrevented) return; // click suppressed
     //d = this.toggleChildren(d);
     this.update(d);
     this.centerNode(d);
-    this.activeNode = d;
+
   }
 
   update(source) {
@@ -769,6 +806,12 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
     let newAggregate = new AggregateParam();
     newAggregate.column = this.newAggregateAggregate;
     this.newAggregateRequest.aggregates.push(newAggregate);
+
+  }
+
+
+  removeAggregate(aggregate: AggregateParam){
+    _.remove(this.newAggregateRequest.aggregates, aggregate);
   }
 
   addCut() {
@@ -778,10 +821,20 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
     this.newAggregateRequest.cuts.push(newCut);
   }
 
+
+  removeCut(cut: Cut){
+    _.remove(this.newAggregateRequest.cuts, cut);
+  }
+
   addDrilldown() {
     let newDrilldown = new Drilldown();
     newDrilldown.column = this.newDrilldownAttribute;
     this.newAggregateRequest.drilldowns.push(newDrilldown);
+  }
+
+
+  removeDrilldown(drilldown: Drilldown){
+    _.remove(this.newAggregateRequest.drilldowns, drilldown);
   }
 
   addSort() {
@@ -790,6 +843,10 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
     newSort.column = this.newSortAttribute;
     newSort.direction = this.newSortDirection;
     this.newAggregateRequest.sorts.push(newSort);
+  }
+
+  removeSort(sort: Sort){
+    _.remove(this.newAggregateRequest.sorts, sort);
   }
 
   selectedCutChanged($event){
@@ -822,7 +879,10 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
   execute() {
 
 
-    this.treeExecution.execute(this.expressionTreeInstance, this.activeNode);
+    this.treeExecution.execute(this.expressionTreeInstance, this.activeNode).subscribe(()=>{
+      this.ref.markForCheck();
+
+    });
 
 
   }
@@ -836,6 +896,7 @@ export class TreeBuilder implements AfterViewInit, OnChanges {
 
 
   searchMembers(attribute:Attribute, search: string){
+    if(!attribute) return;
     let that = this;
     this.rudolfCubesService.members(this.cube, attribute.dimension).subscribe(response=> {
       that.members.set(attribute.ref, response);
