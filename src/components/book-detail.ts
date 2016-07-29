@@ -52,7 +52,7 @@ export type RemoveOutput = Book;
     :host {
       display: flex;
       justify-content: center;
-      margin: 75px 0;
+      margin: 30px 0;
     }
     md-card {
       max-width: 600px;

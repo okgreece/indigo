@@ -38,7 +38,14 @@ export class TreeExecution {
       }
       else if(rootNode instanceof FuncNode) {
 
+        if(rootNode.children.length<1){
+          return Observable.create(function (observer) {
+            rootNode.executed = true;
+            that.store.dispatch(that.treeActions.replace(expressionTree));
 
+            observer.next({});
+          })
+        }
         let observables = [];
 
         rootNode.children.map(function (child) {

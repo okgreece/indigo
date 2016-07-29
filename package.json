@@ -7,7 +7,7 @@
     "typings": "typings",
     "postinstall": "npm run typings -- install",
     "build": "webpack --progress --profile --colors --display-error-details --display-cached",
-    "server:dev": "webpack-dev-server --inline --progress --profile --colors --watch --display-error-details --display-cached --content-base src/",
+    "server:dev": "webpack-dev-server --host 0.0.0.0 --inline --progress --profile --colors --watch --display-error-details --display-cached --content-base src/",
     "start": "npm run server:dev",
     "test": "karma start --single-run",
     "test:watch": "karma start"

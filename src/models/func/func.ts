@@ -8,4 +8,8 @@ export abstract class Func{
   public get name():string{
     return undefined;
   }
+
+  public get symbol():string{
+    return 'F';
+  }
 }

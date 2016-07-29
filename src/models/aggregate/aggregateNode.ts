@@ -31,4 +31,8 @@ export class AggregateNode extends ExpressionNode{
     return this._value ;
   }
 
+  public get symbol(){
+    return 'A';
+  }
+
 }

@@ -4,7 +4,7 @@ import {product} from '../../lib/permutations';
 /**
  * Created by larjo_000 on 27/6/2016.
  */
-export class Add extends Func{
+export class Difference extends Func{
   invoke(inputs:any[]) {
 
     let drilldowns = _.intersection.apply(_,inputs.map(function (aggregate) { return aggregate.attributes; }));
@@ -36,7 +36,7 @@ export class Add extends Func{
               already[aggregate] = cell[aggregate];
             }
             else{
-              already[aggregate] += cell[aggregate];
+              already[aggregate] -= cell[aggregate];
             }
           });
 
@@ -57,11 +57,11 @@ export class Add extends Func{
   }
 
   public get name(){
-    return "Addition";
+    return "Difference";
   }
 
   public get symbol(){
-    return '+';
+    return '-';
   }
 
 }

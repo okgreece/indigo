@@ -36,10 +36,11 @@ export type RemoveOutput = Cube;
     :host {
       display: flex;
       justify-content: center;
-      margin: 75px 0;
+      margin: 30px 0;
     }
     md-card {
-      max-width: 800px;
+      max-width: 90%;
+      min-width: 90%;
     }
     md-card-title {
       margin-left: 10px;
@@ -79,7 +80,7 @@ export class CubeDetailComponent {
   public constructor(    private treeActions: TreeActions,    private store: Store<AppState>
 
   ){
-    let root = new FuncNode(FuncType.Add);
+    let root = new FuncNode(FuncType.Addition);
     let expressionTree = new ExpressionTree();
     expressionTree.root = root;
     this.tree$ = Observable.create(function (observer) {

@@ -30,7 +30,7 @@ import { StoreLogMonitorComponent } from '@ngrx/store-log-monitor';
 
     md-sidenav-layout {
       background: rgba(0, 0, 0, .03);
-      right: 30% !important; // Make space for the devtools, demo only
+     // right: 30% !important; // Make space for the devtools, demo only
     }
 
     md-sidenav {
@@ -67,13 +67,15 @@ import { StoreLogMonitorComponent } from '@ngrx/store-log-monitor';
         <button md-icon-button (click)="sidenav.open()">
           <md-icon>menu</md-icon>
         </button>
-        <span>OpenBudgets.eu Fiscal Indicators app</span>
+        <span class="indigo">indigo</span>
       </md-toolbar>
 
       <route-view></route-view>
-
+      <footer class="text-center"><span class="indigo">indigo</span> is a fiscal indicators and analytics presentation app. It is funded by the <a href="http://openbudgets.eu">OpenBudgets.eu</a> project</footer>
     </md-sidenav-layout>
+<!--
     <ngrx-store-log-monitor toggleCommand="ctrl-t"></ngrx-store-log-monitor>
+-->
   `
 })
 export default class App { }

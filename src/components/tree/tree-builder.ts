@@ -37,6 +37,11 @@ import {NgIf, NgFor, AsyncPipe} from '@angular/common';
 import {MD_TABS_DIRECTIVES} from '@angular2-material/tabs/tabs';
 import {MdToolbar} from '@angular2-material/toolbar/toolbar';
 import {MdInput} from '@angular2-material/input/input';
+import {Add} from "../../models/func/add";
+import {MdButton, MdAnchor} from '@angular2-material/button/button';
+import {MdIcon} from '@angular2-material/icon/icon';
+import {FuncNode, FuncType} from "../../models/func/funcNode";
+import {TreeVisualization} from "./visualization";
 declare let $:JQueryStatic;
 /*
  * We're loading this component asynchronously
@@ -50,7 +55,8 @@ console.log('`Tree Builder` component loaded asynchronously');
   moduleId: 'tree-builder',
   pipes: [IterablePipe,NestedPropertyPipe],
   selector: 'tree-builder',
-  directives: [TAB_DIRECTIVES, CORE_DIRECTIVES, NgChosenComponent, JsonTreeComponent, MD_TABS_DIRECTIVES, MdToolbar, MdInput, NgIf, FORM_DIRECTIVES, NgFor],
+  directives: [TAB_DIRECTIVES, CORE_DIRECTIVES, NgChosenComponent, JsonTreeComponent, MD_TABS_DIRECTIVES, MdToolbar, MdInput, NgIf, FORM_DIRECTIVES, NgFor,MdButton, MdAnchor, MdIcon,
+  TreeVisualization],
   changeDetection: ChangeDetectionStrategy.OnPush, // ⇐⇐⇐
   encapsulation: ViewEncapsulation.None,
   template: require('./tree-builder.html'),
@@ -61,6 +67,12 @@ console.log('`Tree Builder` component loaded asynchronously');
 
     .overlay{
       background-color:#EEE;
+    }
+    
+    .nodeSymbol{
+      fill:white;
+      font-weight:bold;
+    
     }
 
     .node circle {
@@ -96,6 +108,7 @@ console.log('`Tree Builder` component loaded asynchronously');
     
     svg{
       width:100%;
+      height: 600px;
     }
     
     a.action-anchor{
@@ -103,10 +116,23 @@ console.log('`Tree Builder` component loaded asynchronously');
       margin: auto 10px ;
     
     }
+    
+    .md-tab-label{
+      min-width:auto!important;
+    
+    }
+    
+    md-toolbar-row [md-mini-fab]{
+      margin:2px;
+    
+    }
+    
+    span.node-key {
+      cursor: pointer;
+    }
   `]
 })
 export class TreeBuilder implements AfterViewInit {
-  @ViewChild('selectElem') el:ElementRef;
 
   @Input() expressionTree:Observable<ExpressionTree>;
   expressionTreeInstance:ExpressionTree;
@@ -124,7 +150,6 @@ export class TreeBuilder implements AfterViewInit {
 
     this.width = width;
     this.height = height;
-    this.el = elementRef;
     this.expressionTree = store.let(getTree());
 
     setInterval(() => {
@@ -294,12 +319,15 @@ export class TreeBuilder implements AfterViewInit {
       });
 
     // Layout the tree initially and center on the root node.
-    this.update(this.root);
-    this.centerNode(this.root);
     this.activeNode = this.root;
 
-  }
+    this.update(this.root);
+    this.centerNode(this.root);
 
+  }
+  centerActiveNode(){
+    this.centerNode(this.activeNode);
+  }
 
   //Following code to be uncommented when we are trying to observe changes. Then we might not render onint.
   /*ngDoCheck()
@@ -334,7 +362,7 @@ export class TreeBuilder implements AfterViewInit {
   draggingNode:any = null;
   // panning variables
   panSpeed:number = 200;
-  panBoundary:number = 10; // Within 20px from edges will pan when dragging.
+  panBoundary:number = 15; // Within 20px from edges will pan when dragging.
   // Misc. variables
   i:number = 0;
   duration:number = 750;
@@ -607,7 +635,7 @@ export class TreeBuilder implements AfterViewInit {
     };
 
     childCount(0, this.root);
-    let newHeight = d3.max(levelWidth) * 25; // 25 pixels per line
+    let newHeight = d3.max(levelWidth) * 35; // 25 pixels per line
     this.tree = this.tree.size([newHeight, this.viewerWidth]);
 
     // Compute the new tree layout.
@@ -648,7 +676,7 @@ export class TreeBuilder implements AfterViewInit {
 
     nodeEnter.append("text")
       .attr("x", function (d) {
-        return d.children ? -10 : 10;
+        return d.children ? -15 : 15;
       })
       .attr("dy", ".35em")
       .attr('class', 'nodeText')
@@ -659,6 +687,17 @@ export class TreeBuilder implements AfterViewInit {
         return d.name;
       })
       .style("fill-opacity", 0);
+
+
+
+
+    nodeEnter.append("circle")
+      .attr('class', 'zombieCircle')
+      .attr("r", 15)
+      .style("fill", "green")
+      .attr("opacity", function (d) {
+        return d == that.activeNode ? 0.2 : 0.0;
+      });
 
     // phantom node to give us mouseover in a radius around it
     nodeEnter.append("circle")
@@ -674,10 +713,21 @@ export class TreeBuilder implements AfterViewInit {
         that.outCircle(node);
       });
 
+
+    nodeEnter.append("text")
+      .attr("x", -3.5)
+      .attr("dy", "3.5")
+      .attr('class', 'nodeSymbol')
+      .attr("text-anchor", "center" )
+      .text(function (d) {
+        return d.symbol;
+      })
+      .style("fill-opacity", 1);
+
     // Update the text to reflect whether node has children or not.
     node.select('text')
       .attr("x", function (d) {
-        return d.children ? -10 : 10;
+        return d.children ? -15 : 15;
       })
       .attr("text-anchor", function (d) {
         return d.children ? "end" : "start";
@@ -686,11 +736,18 @@ export class TreeBuilder implements AfterViewInit {
         return d.name;
       });
 
+
+    node.select('circle.zombieCircle')
+      .attr("opacity", function (d) {
+        return d == that.activeNode ? 0.2 : 0.0;
+      });
+
+
     // Change the circle fill depending on whether it has children and is expanded
     node.select("circle.nodeCircle")
-      .attr("r", 4.5)
+      .attr("r", 10)
       .style("fill", function (d) {
-        return !d.executed ? "lightsteelblue" : "green";
+        return !d.executed ? "lightsteelblue" : "indigo";
       });
 
     // Transition nodes to their new position.
@@ -786,6 +843,7 @@ export class TreeBuilder implements AfterViewInit {
 
   removeNode() {
     if (!this.activeNode)return;
+    if(!this.activeNode == this.root) return;
 
     if (this.activeNode.parent) {
       let index = this.activeNode.parent.children.indexOf(this.activeNode);
@@ -793,11 +851,7 @@ export class TreeBuilder implements AfterViewInit {
         this.activeNode.parent.children.splice(index, 1);
       }
     }
-    else {
-      if (this.activeNode == this.expressionTreeInstance.root) {
-        this.expressionTreeInstance.root = null;
-      }
-    }
+
     this.store.dispatch(this.treeActions.replace(this.expressionTreeInstance));
 
   }
@@ -926,6 +980,26 @@ export class TreeBuilder implements AfterViewInit {
       //this.store.dispatch(this.treeActions.replace(expresseionTree));
     });
     /* .catch(() => Observable.of(this.cubeActions.searchComplete([]));*/
+
+  }
+
+  public funcType = FuncType;
+
+  addFuncChild(funcType: FuncType){
+    if (!this.activeNode)return;
+
+
+    let funcNode = new FuncNode(funcType);
+    this.activeNode.children.push(funcNode);
+    this.store.dispatch(this.treeActions.replace(this.expressionTreeInstance));
+
+
+  }
+
+  clearAll(){
+    this.root.children = [];
+    this.update(this.root);
+    this.store.dispatch(this.treeActions.replace(this.expressionTreeInstance));
 
   }
 
