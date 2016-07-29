@@ -254,20 +254,26 @@
       <div>
 
       </div>
-      <div #drawingCanvas></div>
+      <div id="drawingCanvas" #drawingCanvas></div>
 
       <hr/>
 
       <h4>{{activeNode?.name}}</h4>
-      <div class="well col-sm-6">
-        <ngrx-json-tree *ngIf="activeNode!=null&&activeNode!=undefined" [value]="activeNode?.value"></ngrx-json-tree>
+      <div class="col-sm-12 well">
+        <div class="col-sm-6">
+          <h5>Definition</h5>
+          <ngrx-json-tree *ngIf="activeNode!=null&&activeNode!=undefined" [value]="activeNode?.element"></ngrx-json-tree>
+          <h5>Values</h5>
+          <ngrx-json-tree *ngIf="activeNode!=null&&activeNode!=undefined" [value]="activeNode?.value"></ngrx-json-tree>
 
+        </div>
+        <div class="col-sm-6">
+          <h5>Visualization</h5>
+
+          <visualization [expressionTree]="expressionTree"></visualization>
+
+        </div>
       </div>
-      <div class="well col-sm-6">
-        <visualization [expressionTree]="expressionTree"></visualization>
-
-      </div>
-
 
     </md-card-content>
 

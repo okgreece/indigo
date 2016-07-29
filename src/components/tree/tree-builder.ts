@@ -106,7 +106,7 @@ console.log('`Tree Builder` component loaded asynchronously');
       display: none;
     }
     
-    svg{
+    #drawingCanvas svg{
       width:100%;
       height: 600px;
     }
@@ -124,6 +124,13 @@ console.log('`Tree Builder` component loaded asynchronously');
     
     md-toolbar-row [md-mini-fab]{
       margin:2px;
+    
+    }
+    
+    .md-tab-body-wrapper{
+    
+      max-height:700px;
+      overflow-y:auto!important;
     
     }
     
@@ -155,7 +162,7 @@ export class TreeBuilder implements AfterViewInit {
     setInterval(() => {
       // the following is required, otherwise the view will not be updated
       this.ref.markForCheck();
-    }, 1000);
+    }, 5000);
   }
 
 

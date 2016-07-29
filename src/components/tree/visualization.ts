@@ -62,12 +62,10 @@ console.log('`Tree Builder` component loaded asynchronously');
   encapsulation: ViewEncapsulation.None,
   template: require('./visualization.html'),
   styles: [`
-  .bar {
-    fill: steelblue;
-  }
+
   
   .bar:hover {
-    fill: brown;
+    stroke: indigo;
   }
   
   .axis {
@@ -144,7 +142,7 @@ export class TreeVisualization implements AfterViewInit {
   xAxis;
   yAxis;
 
-  margin = {top: 20, right: 20, bottom: 30, left: 40};
+  margin = {top: 20, right: 20, bottom: 70, left: 40};
 
 
 
@@ -153,6 +151,7 @@ export class TreeVisualization implements AfterViewInit {
     let that = this;
     let data = that.expressionTreeInstance.root.value;
     if(!data) return;
+    let colors = d3.scale.category20();
 
 
     that.x = d3.scale.ordinal()
@@ -182,7 +181,13 @@ export class TreeVisualization implements AfterViewInit {
     that.baseSvg.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + that.height + ")")
-      .call(that.xAxis);
+      .call(that.xAxis)
+      .selectAll("text")
+      .attr("y", 0)
+      .attr("x", 9)
+      .attr("dy", ".35em")
+      .attr("transform", "rotate(90)")
+      .style("text-anchor", "start");
 
     that.baseSvg.append("g")
       .attr("class", "y axis")
@@ -190,7 +195,7 @@ export class TreeVisualization implements AfterViewInit {
       .append("text")
       .attr("transform", "rotate(-90)")
       .attr("y", 6)
-      .attr("dy", ".71em")
+      .attr("dy", ".31em")
       .style("text-anchor", "end")
       .text(data.aggregates[0]);
 
@@ -198,6 +203,7 @@ export class TreeVisualization implements AfterViewInit {
       .data(data.cells)
       .enter().append("rect")
       .attr("class", "bar")
+      .attr("fill",function(d,i){return colors(i)})
       .attr("x", function(d) { return that.x(d[data.attributes[0]]); })
       .attr("width", that.x.rangeBand())
       .attr("y", function(d) { return that.y(d[data.aggregates[0]]); })
