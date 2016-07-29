@@ -91,6 +91,8 @@ export class TreeVisualization implements AfterViewInit {
   ngAfterViewInit(): any {
 
     let that = this;
+    that.width = $(that.vizCanvas.nativeElement).width() - that.margin.left - that.margin.right;
+    that.height = 400 - that.margin.top - that.margin.bottom;
     that.baseSvg = d3.select(that.vizCanvas.nativeElement).append("svg")
       .attr("width", that.width + that.margin.left + that.margin.right)
       .attr("height", that.height + that.margin.top + that.margin.bottom)
@@ -135,25 +137,15 @@ export class TreeVisualization implements AfterViewInit {
   }
 
 
+  width;
+  height;
+  x;
+  y;
+  xAxis;
+  yAxis;
 
   margin = {top: 20, right: 20, bottom: 30, left: 40};
-  width = 960 - this.margin.left - this.margin.right;
-  height = 500 - this.margin.top - this.margin.bottom;
 
-  x = d3.scale.ordinal()
-  .rangeRoundBands([0, this.width], .1);
-
-   y = d3.scale.linear()
-  .range([this.height, 0]);
-
-   xAxis = d3.svg.axis()
-  .scale(this.x)
-  .orient("bottom");
-
-   yAxis = d3.svg.axis()
-  .scale(this.y)
-  .orient("left")
-  .ticks(20, ".0s");
 
 
 
@@ -163,8 +155,25 @@ export class TreeVisualization implements AfterViewInit {
     if(!data) return;
 
 
+    that.x = d3.scale.ordinal()
+      .rangeRoundBands([0, that.width], .1);
+
+    that.y = d3.scale.linear()
+      .range([that.height, 0]);
+
+    that.xAxis = d3.svg.axis()
+      .scale(that.x)
+      .orient("bottom");
+
+    that.yAxis = d3.svg.axis()
+      .scale(that.y)
+      .orient("left")
+      .ticks(20, ".0s");
 
     that.x.domain(data.attributes);
+
+
+    that.x.domain(data.cells.map(function(d){return d[data.attributes[0]]}));
     that.y.domain([0, d3.max(data.cells, function(d) {
       return d[data.aggregates[0]];
 
