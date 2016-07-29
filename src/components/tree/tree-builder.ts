@@ -37,7 +37,6 @@ import {NgIf, NgFor, AsyncPipe} from '@angular/common';
 import {MD_TABS_DIRECTIVES} from '@angular2-material/tabs/tabs';
 import {MdToolbar} from '@angular2-material/toolbar/toolbar';
 import {MdInput} from '@angular2-material/input/input';
-import {Add} from "../../models/func/add";
 import {MdButton, MdAnchor} from '@angular2-material/button/button';
 import {MdIcon} from '@angular2-material/icon/icon';
 import {FuncNode, FuncType} from "../../models/func/funcNode";

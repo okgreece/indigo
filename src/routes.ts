@@ -47,11 +47,20 @@ const routes: Routes = [
     })
   },
   {
-    path: '/cube/:id',
+    path: '/cube/builder/:id',
     guards: [ CubeExistsGuard ],
     loadComponent: () => new Promise(resolve => {
       (require as any).ensure([], require => {
         resolve(require('./pages/cube/cube-view').CubeViewPage);
+      });
+    })
+  },
+  {
+    path: '/cube/analytics/:id',
+    guards: [ CubeExistsGuard ],
+    loadComponent: () => new Promise(resolve => {
+      (require as any).ensure([], require => {
+        resolve(require('./pages/cube/cube-analytics').CubeAnalyticsPage);
       });
     })
   },
