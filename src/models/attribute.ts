@@ -4,6 +4,9 @@ import {Dimension} from "./dimension";
  */
 
 export class Attribute implements Serializable<Attribute>{
+  serialize(input: Attribute): Object {
+    return this;
+  }
   deserialize(input:Object):Attribute {
 
     this.ref = input.ref;

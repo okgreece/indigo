@@ -10,6 +10,8 @@ import {Minimum} from "./minimum";
 import {Maximum} from "./maximum";
 import {Average} from "./average";
 import {Negation} from "./negation";
+import * as _ from 'lodash';
+import {AggregateNode} from "../aggregate/aggregateNode";
 /**
  * Created by larjo_000 on 27/6/2016.
  */
@@ -33,7 +35,25 @@ export class FuncNode extends ExpressionNode {
   }
 
 
-  public constructor(funcType: FuncType) {
+
+  serialize(input: FuncNode): Object {
+    return this;
+  }
+
+  deserialize(input:Object):FuncNode {
+
+    super.deserialize(input);
+    switch (input.element.__type){
+      case "Add":
+        this._func =  new Add();
+    }
+
+    return this;
+  }
+
+
+
+  /*public constructor(funcType: FuncType) {
 
     super(undefined);
     this.children = [];
@@ -71,6 +91,14 @@ export class FuncNode extends ExpressionNode {
 
     }
   }
+*/
+
+
+  public constructor(){
+    super(FuncNode.name);
+    this.children = [];
+  }
+
 
   public _func: Func;
 
@@ -93,4 +121,7 @@ export class FuncNode extends ExpressionNode {
   public get symbol(){
     return this.element.symbol;
   }
+
+
+
 }

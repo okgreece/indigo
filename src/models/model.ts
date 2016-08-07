@@ -26,7 +26,9 @@ export class Model implements Serializable<Model>{
     return this;
   }
 
-
+  serialize(input: Model): Object {
+    return this;
+  }
 
   dimensions: Map<string, Dimension> = new Map<string,Dimension>() ;
 

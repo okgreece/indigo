@@ -29,7 +29,9 @@ export class Dimension implements Serializable<Dimension> {
     return this;
   }
   constructor(){}
-
+  serialize(input: Dimension): Object {
+    return this;
+  }
   @JsonMember
   label:string;
 

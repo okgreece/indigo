@@ -2,8 +2,11 @@ import {ExpressionNode} from "./expressionNode";
 /**
  * Created by larjo_000 on 27/6/2016.
  */
-  
+
 export class Aggregate implements Serializable<Aggregate>{
+  serialize(input: Aggregate): Object {
+    return this;
+  }
   deserialize(input:Object):Aggregate {
 
     this.ref = input.ref;
@@ -12,6 +15,11 @@ export class Aggregate implements Serializable<Aggregate>{
 
     return this;
   }
+
+
+
+
+
   ref: string;
 
   measure:string;

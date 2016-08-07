@@ -40,9 +40,9 @@ import {MdToolbar} from '@angular2-material/toolbar/toolbar';
 import {MdInput} from '@angular2-material/input/input';
 import {MdButton, MdAnchor} from '@angular2-material/button/button';
 import {MdIcon} from '@angular2-material/icon/icon';
-import {FuncNode, FuncType} from "../../models/func/funcNode";
+import {FuncNode, FuncType} from '../../models/func/funcNode'
 
-import {TreeVisualization} from "./visualization";
+import {TreeVisualization} from './visualization';
 declare let $:JQueryStatic;
 /*
  * We're loading this component asynchronously
@@ -1050,7 +1050,9 @@ export class TreeBuilder implements AfterViewInit {
 
     this.jsonModal.hide();
     debugger;
-    this.store.dispatch(this.treeActions.replace(JSON.parse(this.editableExpressionTreeInstance)));
+    let tree = new ExpressionTree().deserialize(JSON.parse(this.editableExpressionTreeInstance));
+
+    this.store.dispatch(this.treeActions.replace(tree);
 
   }
 
