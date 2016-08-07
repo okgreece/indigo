@@ -104,7 +104,7 @@ export class TreeVisualization implements AfterViewInit {
       that.expressionTreeInstance = expressionTree;
 
 
-      that.init();
+      that.init(expressionTree.root);
 
     });
 
@@ -147,9 +147,9 @@ export class TreeVisualization implements AfterViewInit {
 
 
 
-  init(){
+  init(root: ExpressionNode){
     let that = this;
-    let data = that.expressionTreeInstance.root.value;
+    let data = root.value;
     if(!data) return;
     let colors = d3.scale.category20();
 
@@ -213,5 +213,14 @@ export class TreeVisualization implements AfterViewInit {
 
   @Input() expressionTree: Observable<ExpressionTree>;
   expressionTreeInstance: ExpressionTree;
+  _root: ExpressionNode;
 
+  public get root(){
+    return this._root;
+  }
+  @Input()
+  public set root(value){
+    this._root = value;
+    if(value)this.init(value);
+  }
 }

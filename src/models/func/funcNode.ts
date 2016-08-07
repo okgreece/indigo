@@ -72,7 +72,7 @@ export class FuncNode extends ExpressionNode {
     }
   }
 
-  _func: Func;
+  public _func: Func;
 
   public get element(): Func {
     return this._func;

@@ -1,8 +1,9 @@
 import {Cube} from "../../models/cube";
 import {Observable} from "rxjs/Rx";
-import {NgClass, CORE_DIRECTIVES, FORM_DIRECTIVES} from "@angular/common";
+import {NgClass, CORE_DIRECTIVES, FORM_DIRECTIVES, JsonPipe} from "@angular/common";
 import * as _ from 'lodash';
-import {TAB_DIRECTIVES} from 'ng2-bootstrap';
+import {TAB_DIRECTIVES, ModalDirective} from 'ng2-bootstrap';
+import {MODAL_DIRECTIVES, BS_VIEW_PROVIDERS} from 'ng2-bootstrap/ng2-bootstrap';
 
 import {
   ChangeDetectionStrategy, ViewEncapsulation,
@@ -40,6 +41,7 @@ import {MdInput} from '@angular2-material/input/input';
 import {MdButton, MdAnchor} from '@angular2-material/button/button';
 import {MdIcon} from '@angular2-material/icon/icon';
 import {FuncNode, FuncType} from "../../models/func/funcNode";
+
 import {TreeVisualization} from "./visualization";
 declare let $:JQueryStatic;
 /*
@@ -52,10 +54,11 @@ console.log('`Tree Builder` component loaded asynchronously');
 
 @Component({
   moduleId: 'tree-builder',
-  pipes: [IterablePipe,NestedPropertyPipe],
+  pipes: [IterablePipe,NestedPropertyPipe, JsonPipe],
   selector: 'tree-builder',
-  directives: [TAB_DIRECTIVES, CORE_DIRECTIVES, NgChosenComponent, JsonTreeComponent, MD_TABS_DIRECTIVES, MdToolbar, MdInput, NgIf, FORM_DIRECTIVES, NgFor,MdButton, MdAnchor, MdIcon,
+  directives: [MODAL_DIRECTIVES,TAB_DIRECTIVES, CORE_DIRECTIVES, NgChosenComponent, JsonTreeComponent, MD_TABS_DIRECTIVES, MdToolbar, MdInput, NgIf, FORM_DIRECTIVES, NgFor,MdButton, MdAnchor, MdIcon,
   TreeVisualization],
+  viewProviders:[BS_VIEW_PROVIDERS],
   changeDetection: ChangeDetectionStrategy.OnPush, // ⇐⇐⇐
   encapsulation: ViewEncapsulation.None,
   template: require('./tree-builder.html'),
@@ -144,6 +147,7 @@ export class TreeBuilder implements AfterViewInit {
   expressionTreeInstance:ExpressionTree;
   length:number;
   @ViewChild('drawingCanvas') drawingCanvas;
+  @ViewChild('jsonModal') jsonModal;
 
   constructor(@Inject(ElementRef) elementRef:ElementRef,
               @MetadataAttribute('width') width:number,
@@ -193,13 +197,13 @@ export class TreeBuilder implements AfterViewInit {
         .call(this.zoomListener);
       let that = this;
       this.expressionTree.subscribe(function (expressionTree) {
-        that.expressionTreeInstance = expressionTree;
-
-        if (that.tree) {
+        if (that.tree && that.expressionTreeInstance.root == expressionTree.root) {
           that.expressionTreeInstance = expressionTree;
           that.update(expressionTree.root);
         }
         else {
+          that.expressionTreeInstance = expressionTree;
+
           that.baseSvg.html("");
 
           that.init();
@@ -836,26 +840,42 @@ export class TreeBuilder implements AfterViewInit {
   addAggregateChild() {
     if (!this.activeNode)return;
 
-
     let aggregateNode = new AggregateNode();
     aggregateNode.element = this.newAggregateRequest;
     this.newAggregateRequest.cube = this.cube;
+    this.newAggregateRequest.page = this.newAggregatePageNumber;
+    this.newAggregateRequest.pageSize = this.newAggregatePageSize;
     this.activeNode.children.push(aggregateNode);
+
+    this.activeNode.value = null;
+    this.activeNode.executed = false;
+
     this.store.dispatch(this.treeActions.replace(this.expressionTreeInstance));
+
 
     this.newAggregateRequest = new AggregateRequest;
     this.newAggregateRequest.cube = this.cube;
   }
 
   removeNode() {
+
     if (!this.activeNode)return;
     if(!this.activeNode == this.root) return;
 
+
     if (this.activeNode.parent) {
+      let parent = this.activeNode.parent;
+
       let index = this.activeNode.parent.children.indexOf(this.activeNode);
       if (index > -1) {
         this.activeNode.parent.children.splice(index, 1);
       }
+
+      parent.value = null;
+      parent.executed = false;
+
+
+      this.activeNode = parent;
     }
 
     this.store.dispatch(this.treeActions.replace(this.expressionTreeInstance));
@@ -932,10 +952,14 @@ export class TreeBuilder implements AfterViewInit {
 
   newSortDirection:SortDirection;
 
+  newCustomValue: any;
 
   sortDirections:Map<string,SortDirection> = SortDirection.directions;
+  public newAggregatePageNumber: number = 0;
+  public newAggregatePageSize: number = 30;
+  addValueChild(){
 
-
+  }
   execute() {
 
 
@@ -993,8 +1017,6 @@ export class TreeBuilder implements AfterViewInit {
 
   addFuncChild(funcType: FuncType){
     if (!this.activeNode)return;
-
-
     let funcNode = new FuncNode(funcType);
     this.activeNode.children.push(funcNode);
     this.store.dispatch(this.treeActions.replace(this.expressionTreeInstance));
@@ -1008,5 +1030,33 @@ export class TreeBuilder implements AfterViewInit {
     this.store.dispatch(this.treeActions.replace(this.expressionTreeInstance));
 
   }
+  @ViewChild('childModal') public childModal: ModalDirective;
+
+  public showChildModal():void {
+    this.editableExpressionTreeInstance = JSON.stringify(this.expressionTreeInstance);
+    debugger;
+    this.childModal.show();
+  }
+
+
+  public showJSONModal():void {
+    debugger;
+    this.editableExpressionTreeInstance = JSON.stringify(this.expressionTreeInstance);
+    this.jsonModal.show();
+  }
+
+
+  public saveJSONModal():void {
+
+    this.jsonModal.hide();
+    debugger;
+    this.store.dispatch(this.treeActions.replace(JSON.parse(this.editableExpressionTreeInstance)));
+
+  }
+
+
+
+
+  editableExpressionTreeInstance: string;
 
 }

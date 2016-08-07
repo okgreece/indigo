@@ -49,10 +49,6 @@ export class Add extends Func{
       aggregates: aggregates,
       attributes:drilldowns
     };
-
-
-
-
     return value;
   }
 

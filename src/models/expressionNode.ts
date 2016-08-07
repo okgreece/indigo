@@ -1,5 +1,7 @@
 import {Inject} from "@angular/core";
 import {Observer} from "rxjs/Rx";
+import * as _ from 'lodash';
+
 /**
  * Created by larjo_000 on 26/6/2016.
  */
@@ -34,5 +36,8 @@ export class ExpressionNode{
 
   public executed: boolean = false;
 
+  public toJSON = function () {
+    return _.omit(this, [ "parent" ]);
+  };
 
 }

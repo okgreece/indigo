@@ -5,6 +5,7 @@ import { MD_SIDENAV_DIRECTIVES } from '@angular2-material/sidenav';
 import { MdIcon, MdIconRegistry } from '@angular2-material/icon';
 import { MD_LIST_DIRECTIVES } from '@angular2-material/list';
 import { StoreLogMonitorComponent } from '@ngrx/store-log-monitor';
+import {Component, ViewContainerRef} from '@angular/core';
 
 @Component({
   selector: 'app',
@@ -78,4 +79,10 @@ import { StoreLogMonitorComponent } from '@ngrx/store-log-monitor';
 -->
   `
 })
-export default class App { }
+export default class App {
+
+  public constructor(public viewContainerRef:ViewContainerRef) {
+
+    // You need this small hack in order to catch application root view container ref
+  }
+}
