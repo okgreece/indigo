@@ -4,14 +4,14 @@ import {AggregateRequest} from "./aggregateRequest";
  * Created by larjo_000 on 27/6/2016.
  */
 export class AggregateNode extends ExpressionNode implements Serializable<AggregateNode>{
-  static get name():string {
-    return "Aggregate";
+  static get label():string {
+    return "Aggregates";
   }
 
   _aggregate : AggregateRequest;
 
   public constructor(){
-    super(AggregateNode.name);
+    super(AggregateNode.label);
     this.children = [];
   }
 
@@ -38,7 +38,7 @@ export class AggregateNode extends ExpressionNode implements Serializable<Aggreg
 
   deserialize(input:Object):AggregateNode {
 
-    this._aggregate = new AggregateRequest().deserialize(input.root)
+    this._aggregate = new AggregateRequest().deserialize(input.element)
 
     return this;
   }

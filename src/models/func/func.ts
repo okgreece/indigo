@@ -8,7 +8,7 @@ export abstract class Func implements Serializable<Func>{
 
   public abstract invoke(input:any);
 
-  public get name():string{
+  public get label():string{
     return undefined;
   }
 

@@ -13,13 +13,13 @@ export class ExpressionTree implements Serializable<ExpressionTree>{
 
   deserialize(input:Object):ExpressionTree {
     this.id = input.id;
-
+debugger;
     switch(input.root.__type){
       case "FuncNode":
-        //this.root = new FuncNode().deserialize(input.root);
+        this.root = FuncNode.factory().deserialize(input.root);
         break;
       case "AggregateNode":
-       // this.root = new AggregateNode().deserialize(input.root);
+        this.root = new AggregateNode().deserialize(input.root);
         break;
 
     }

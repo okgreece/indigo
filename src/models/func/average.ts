@@ -56,7 +56,7 @@ export class Average extends Func{
     return value;
   }
 
-  public get name(){
+  public get label(){
     return "Average";
   }
 

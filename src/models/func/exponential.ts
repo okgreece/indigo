@@ -56,7 +56,7 @@ export class Exponential extends Func{
     return value;
   }
 
-  public get name(){
+  public get label(){
     return "Exponential";
   }
 

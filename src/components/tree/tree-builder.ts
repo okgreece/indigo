@@ -235,7 +235,7 @@ export class TreeBuilder implements AfterViewInit {
     this.visit(treeData,
       function (d) {
         that.totalNodes++;
-        that.maxLabelLength = Math.max(d.name.length, that.maxLabelLength);
+        that.maxLabelLength = Math.max(d.label.length, that.maxLabelLength);
       },
       function (d) {
         return d.children && d.children.length > 0 ? d.children : null;
@@ -412,7 +412,7 @@ export class TreeBuilder implements AfterViewInit {
 
   sortTree() {
     this.tree.sort(function (a, b) {
-      return a.name.toLowerCase() < b.name.toLowerCase() ? 1 : -1;
+      return a.label.toLowerCase() < b.label.toLowerCase() ? 1 : -1;
     });
   }
 
@@ -694,7 +694,7 @@ export class TreeBuilder implements AfterViewInit {
         return d.children ? "end" : "start";
       })
       .text(function (d) {
-        return d.name;
+        return d.label;
       })
       .style("fill-opacity", 0);
 
@@ -743,7 +743,7 @@ export class TreeBuilder implements AfterViewInit {
         return d.children ? "end" : "start";
       })
       .text(function (d) {
-        return d.name;
+        return d.label;
       });
 
 
@@ -1039,20 +1039,20 @@ export class TreeBuilder implements AfterViewInit {
   }
 
 
-  public showJSONModal():void {
+  public showSerializationModal():void {
     debugger;
     this.editableExpressionTreeInstance = JSON.stringify(this.expressionTreeInstance);
     this.jsonModal.show();
   }
 
 
-  public saveJSONModal():void {
+  public saveSerializationModal():void {
 
     this.jsonModal.hide();
     debugger;
     let tree = new ExpressionTree().deserialize(JSON.parse(this.editableExpressionTreeInstance));
 
-    this.store.dispatch(this.treeActions.replace(tree);
+    this.store.dispatch(this.treeActions.replace(tree));
 
   }
 

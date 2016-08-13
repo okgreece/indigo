@@ -1,8 +1,9 @@
 import {Inject} from "@angular/core";
 import {Observer} from "rxjs/Rx";
 import * as _ from 'lodash';
-import {FuncNode} from "./func/funcNode";
 import {AggregateNode} from "./aggregate/aggregateNode";
+import {Component, forwardRef} from '@angular/core';
+import {FuncNode} from "./func/funcNode";
 
 /**
  * Created by larjo_000 on 26/6/2016.
@@ -12,24 +13,7 @@ export class ExpressionNode implements Serializable<ExpressionNode>{
   deserialize(input:Object):ExpressionNode {
 
 
-    let children = [];
 
-
-    for(var child of input.children){
-      debugger;
-
-      switch (child.__type){
-        case "FuncNode":
-           children.push(new FuncNode().deserialize(input.root));
-          break;
-        case "AggregateNode":
-         children.push(new AggregateNode().deserialize(input.root));
-          break;
-      }
-
-    }
-    this.children = children;
-    return this;
   }
 
   serialize(input: ExpressionNode): Object {
@@ -37,8 +21,10 @@ export class ExpressionNode implements Serializable<ExpressionNode>{
   }
 
   public constructor(name:string){
-    this._name = name;
+    this._label = name;
+
   }
+
 
   private _element:any;
 
@@ -48,24 +34,25 @@ export class ExpressionNode implements Serializable<ExpressionNode>{
 
   public children: ExpressionNode[] = [];
 
-  private _name;
+  private _label;
 
   public get element (){
     return this._element;
   }
 
-  public get name(){
-    return this._name;
+  public get label(){
+    return this._label;
   }
 
   public get value(){
-    return this._name;
+    return this._label;
   }
 
 
   public executed: boolean = false;
 
   public toJSON = function () {
+    debugger;
 
     return _.extend({__type:this.constructor.name, element:this.element, symbol:this.symbol},_.omit(this, [ "parent" ]));
   };

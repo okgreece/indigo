@@ -56,7 +56,7 @@ export class Minimum extends Func{
     return value;
   }
 
-  public get name(){
+  public get label(){
     return "Minimum";
   }
 

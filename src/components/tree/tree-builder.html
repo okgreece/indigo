@@ -275,7 +275,6 @@
     </md-tab-group>
   </div>
   <!-- Large modal -->
-  <button class="btn btn-primary" (click)="showJSONModal()">Serialization</button>
 
   <div bsModal  [config]="{backdrop: false}"  #jsonModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -287,10 +286,15 @@
           <h4 class="modal-title">Tree serialization</h4>
         </div>
         <div class="modal-body">
-          <textarea name="" id="" [(ngModel)]="editableExpressionTreeInstance" cols="30" rows="10" ></textarea>
-        </div>
-        <button class="btn btn-primary" (click)="saveJSONModal()">Save</button>
+          <div class="row">
+            <textarea name="" id="" [(ngModel)]="editableExpressionTreeInstance" class="col-sm-12" cols="30" rows="10" >{{editableExpressionTreeInstance|json}}</textarea>
 
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" (click)="saveSerializationModal()">Update</button>
+
+        </div>
       </div>
     </div>
   </div>
@@ -311,6 +315,7 @@
             </button>
             <button md-mini-fab (click)="clearAll()"  > <md-icon class="md-24">clear_all</md-icon></button>
             <button md-mini-fab  ><md-icon class="md-24">undo</md-icon></button>
+          <button md-mini-fab title="Serialization"  (click)="showSerializationModal()"><md-icon class="md-24">all_out</md-icon></button>
 
 
         </md-toolbar>
@@ -322,7 +327,7 @@
 
       <hr/>
 
-      <h4>{{activeNode?.name}}</h4>
+      <h4>{{activeNode?.label}}</h4>
       <div class="col-sm-12 well">
         <div class="col-sm-6">
           <h5>Definition</h5>

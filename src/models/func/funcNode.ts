@@ -30,8 +30,8 @@ export enum FuncType{
 }
 
 export class FuncNode extends ExpressionNode {
-  get name(): string {
-    return this._func.name;
+  get label(): string {
+    return this._func.label;
   }
 
 
@@ -42,10 +42,64 @@ export class FuncNode extends ExpressionNode {
 
   deserialize(input:Object):FuncNode {
 
-    super.deserialize(input);
+    let children = [];
+
+    debugger;
+
+    for(var child of input.children){
+
+      switch (child.__type){
+        case "FuncNode":
+          children.push(FuncNode.factory().deserialize(child));
+          break;
+        case "AggregateNode":
+          children.push(new AggregateNode().deserialize(child));
+          break;
+      }
+
+    }
+    this.children = children;
     switch (input.element.__type){
-      case "Add":
+      case Add.constructor.name:
         this._func =  new Add();
+        break;
+
+      case Difference.constructor.name:
+        this._func =  new Difference();
+        break;
+
+      case Division.constructor.name:
+        this._func =  new Division();
+        break;
+
+      case Exponential.constructor.name:
+        this._func =  new Exponential();
+        break;
+
+      case Logarithm.constructor.name:
+        this._func =  new Logarithm();
+        break;
+
+      case Maximum.constructor.name:
+        this._func =  new Maximum();
+        break;
+
+      case Minimum.constructor.name:
+        this._func =  new Minimum();
+        break;
+
+      case Negation.constructor.name:
+        this._func =  new Negation();
+        break;
+
+      case Multiplication.constructor.name:
+        this._func =  new Multiplication();
+        break;
+
+      case Average.constructor.name:
+        this._func =  new Average();
+        break;
+
     }
 
     return this;
@@ -53,7 +107,7 @@ export class FuncNode extends ExpressionNode {
 
 
 
-  /*public constructor(funcType: FuncType) {
+  public constructor(funcType: FuncType) {
 
     super(undefined);
     this.children = [];
@@ -91,13 +145,12 @@ export class FuncNode extends ExpressionNode {
 
     }
   }
-*/
 
 
-  public constructor(){
-    super(FuncNode.name);
-    this.children = [];
+  public static factory(){
+    return new FuncNode(FuncType.Addition);
   }
+
 
 
   public _func: Func;
@@ -121,6 +174,8 @@ export class FuncNode extends ExpressionNode {
   public get symbol(){
     return this.element.symbol;
   }
+
+
 
 
 
