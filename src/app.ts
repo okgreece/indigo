@@ -71,7 +71,7 @@ import {Component, ViewContainerRef} from '@angular/core';
         <span class="indigo">indigo</span>
       </md-toolbar>
 
-      <route-view></route-view>
+      <route-view>Loading...</route-view>
       <footer class="text-center"><span class="indigo">indigo</span> is a fiscal indicators and analytics presentation app. It is funded by the <a href="http://openbudgets.eu">OpenBudgets.eu</a> project</footer>
     </md-sidenav-layout>
 <!--

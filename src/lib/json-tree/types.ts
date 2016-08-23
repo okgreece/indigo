@@ -63,16 +63,19 @@ export function getChildrenFor(object: any): any[] {
   const literalType = getTypeOf(object);
 
   if (literalType === KNOWN.Object) {
-    return Object.getOwnPropertyNames(object).map(name => {
+    return Object.getOwnPropertyNames(object).filter(function(name){return typeof object[name]!='function';})
+      .map(name => {
       return { key: name, value: object[name] };
     });
   }
   else if (literalType === KNOWN.Array) {
+
     return object.map((value, index) => {
       return { key: index, value };
     });
   }
   else if (literalType === KNOWN.Iterable) {
+
     return Array.from(object).map((value, index) => {
       return { key: index, value };
     });

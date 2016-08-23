@@ -52,9 +52,8 @@ export class ExpressionNode implements Serializable<ExpressionNode>{
   public executed: boolean = false;
 
   public toJSON = function () {
-    debugger;
 
-    return _.extend({__type:this.constructor.name, element:this.element, symbol:this.symbol},_.omit(this, [ "parent" ]));
+    return _.extend({__type:this.constructor.name, element:this.element, symbol:this.symbol},_.omit(this, [ "parent", "toJSON" ]));
   };
 
 

@@ -305,17 +305,17 @@
       <p>
         <md-toolbar color="primary">
 
-            <button md-mini-fab (click)="centerActiveNode()">
+            <button md-mini-fab (click)="centerActiveNode()" title="Center root node">
               <md-icon class="md-24">filter_center_focus</md-icon></button>
 
-            <button [disabled]="!activeNode||activeNode==root" md-mini-fab (click)="removeNode()">
+            <button title="Remove node" [disabled]="!activeNode||activeNode==root" md-mini-fab (click)="removeNode()">
               <md-icon class="md-24">remove_circle</md-icon></button>
-            <button md-mini-fab   (click)="execute()">
+            <button title="Execute node" md-mini-fab   (click)="execute()">
               <md-icon class="md-24">play_circle_outline</md-icon>
             </button>
-            <button md-mini-fab (click)="clearAll()"  > <md-icon class="md-24">clear_all</md-icon></button>
-            <button md-mini-fab  ><md-icon class="md-24">undo</md-icon></button>
-          <button md-mini-fab title="Serialization"  (click)="showSerializationModal()"><md-icon class="md-24">all_out</md-icon></button>
+            <button title="Clear all nodes" md-mini-fab (click)="clearAll()"  > <md-icon class="md-24">clear_all</md-icon></button>
+            <button title="Undo" md-mini-fab  ><md-icon class="md-24">undo</md-icon></button>
+          <button title="Serialize/deserialize expression tree" md-mini-fab title="Serialization"  (click)="showSerializationModal()"><md-icon class="md-24">all_out</md-icon></button>
 
 
         </md-toolbar>
@@ -337,7 +337,6 @@
 
         </div>
         <div class="col-sm-6">
-          <h5>Visualization</h5>
 
           <visualization [root]="activeNode" [expressionTree]="expressionTree"></visualization>
 

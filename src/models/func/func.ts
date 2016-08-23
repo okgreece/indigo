@@ -17,13 +17,11 @@ export abstract class Func implements Serializable<Func>{
   }
 
   public toJSON = function () {
-    debugger;
-
-
     return _.extend( {name:this.name, symbol:this.symbol, __type:this.constructor.name}, this);
   };
 
   deserialize(input:Object):Func {
+
   }
 
   serialize(){

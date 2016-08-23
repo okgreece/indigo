@@ -96,7 +96,7 @@ console.log('`Tree Builder` component loaded asynchronously');
 
     .templink {
       fill: none;
-      stroke: red;
+      stroke: indigo;
       stroke-width: 3px;
     }
 
@@ -106,6 +106,10 @@ console.log('`Tree Builder` component loaded asynchronously');
 
     .ghostCircle, .activeDrag .ghostCircle{
       display: none;
+    }
+    
+    .expanded-indicator{
+      cursor: pointer;
     }
     
     #drawingCanvas svg{
@@ -337,6 +341,8 @@ export class TreeBuilder implements AfterViewInit {
   }
   centerActiveNode(){
     this.centerNode(this.activeNode);
+    d3.behavior.zoom().scale(1);
+
   }
 
   //Following code to be uncommented when we are trying to observe changes. Then we might not render onint.
@@ -539,7 +545,10 @@ export class TreeBuilder implements AfterViewInit {
    }*/
 
   overCircle(d) {
-    this.selectedNode = d;
+    if(!(d instanceof AggregateNode)){
+      this.selectedNode = d;
+
+    }
     this.updateTempConnector();
   };
 
@@ -714,7 +723,7 @@ export class TreeBuilder implements AfterViewInit {
       .attr('class', 'ghostCircle')
       .attr("r", 15)
       .attr("opacity", 0.2) // change this to zero to hide the target area
-      .style("fill", "red")
+      .style("fill", "indigo")
       .attr('pointer-events', 'mouseover')
       .on("mouseover", function (node) {
         that.overCircle(node);
@@ -725,10 +734,10 @@ export class TreeBuilder implements AfterViewInit {
 
 
     nodeEnter.append("text")
-      .attr("x", -3.5)
-      .attr("dy", "3.5")
+
       .attr('class', 'nodeSymbol')
-      .attr("text-anchor", "center" )
+      .attr("text-anchor", "middle" )
+      .attr("alignment-baseline", "central" )
       .text(function (d) {
         return d.symbol;
       })
@@ -845,7 +854,13 @@ export class TreeBuilder implements AfterViewInit {
     this.newAggregateRequest.cube = this.cube;
     this.newAggregateRequest.page = this.newAggregatePageNumber;
     this.newAggregateRequest.pageSize = this.newAggregatePageSize;
-    this.activeNode.children.push(aggregateNode);
+    if(this.activeNode instanceof FuncNode){
+      this.activeNode.children.push(aggregateNode);
+
+    }
+    else{
+      this.activeNode.parent.children.push(aggregateNode);
+    }
 
     this.activeNode.value = null;
     this.activeNode.executed = false;
@@ -1018,7 +1033,15 @@ export class TreeBuilder implements AfterViewInit {
   addFuncChild(funcType: FuncType){
     if (!this.activeNode)return;
     let funcNode = new FuncNode(funcType);
-    this.activeNode.children.push(funcNode);
+
+    if(this.activeNode instanceof FuncNode){
+      this.activeNode.children.push(funcNode);
+
+    }
+    else{
+      this.activeNode.parent.children.push(funcNode);
+    }
+
     this.store.dispatch(this.treeActions.replace(this.expressionTreeInstance));
 
 
@@ -1034,13 +1057,11 @@ export class TreeBuilder implements AfterViewInit {
 
   public showChildModal():void {
     this.editableExpressionTreeInstance = JSON.stringify(this.expressionTreeInstance);
-    debugger;
     this.childModal.show();
   }
 
 
   public showSerializationModal():void {
-    debugger;
     this.editableExpressionTreeInstance = JSON.stringify(this.expressionTreeInstance);
     this.jsonModal.show();
   }
@@ -1049,7 +1070,6 @@ export class TreeBuilder implements AfterViewInit {
   public saveSerializationModal():void {
 
     this.jsonModal.hide();
-    debugger;
     let tree = new ExpressionTree().deserialize(JSON.parse(this.editableExpressionTreeInstance));
 
     this.store.dispatch(this.treeActions.replace(tree));
