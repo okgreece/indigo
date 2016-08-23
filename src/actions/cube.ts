@@ -23,10 +23,13 @@ export class CubeActions {
   }
 
   static SEARCH_COMPLETE = '[Cube] Search Complete';
-  searchComplete(results: Cube[]): Action {
+  searchComplete(results: Cube[], search: string): Action {
     return {
       type: CubeActions.SEARCH_COMPLETE,
-      payload: results
+      payload: results.filter(function (cube) {
+        if(search=="")return true;
+        return cube.name.indexOf(search)>-1;
+      })
     };
   }
 

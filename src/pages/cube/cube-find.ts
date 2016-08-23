@@ -50,6 +50,8 @@ export class CubeFindPage {
      */
     this.searchQuery$ = store.let(getCubesSearchQuery()).take(1);
     this.cubes$ = store.let(getCubesSearchResults());
+    this.store.dispatch(this.cubeActions.search(""));
+
   }
 
   search(query: SearchOutput) {

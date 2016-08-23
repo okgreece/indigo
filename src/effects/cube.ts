@@ -55,11 +55,11 @@ export class CubeEffects {
   @Effect() search$ = this.updates$
     .whenAction(CubeActions.SEARCH)
     .map<string>(toPayload)
-    .filter(query => query !== '')
     .switchMap(query => this.googleCubes.searchCubes(query)
-      .map(cubes => this.cubeActions.searchComplete(cubes))
-      .catch(() => Observable.of(this.cubeActions.searchComplete([])))
-    );
+      .map(cubes => this.cubeActions.searchComplete(cubes, query))
+      .catch(() => Observable.of(this.cubeActions.searchComplete([],query)))
+    )
+    ;
 
 
   @Effect() getCube = this.updates$
@@ -76,7 +76,7 @@ export class CubeEffects {
     .whenAction(CubeActions.SEARCH)
     .map<string>(toPayload)
     .filter(query => query === '')
-    .mapTo(this.cubeActions.searchComplete([]));
+    .mapTo(this.cubeActions.searchComplete([], ""));
 
 
   @Effect() addCubeToCollection$ = this.updates$
