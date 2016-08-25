@@ -43,6 +43,9 @@ import {MdIcon} from '@angular2-material/icon/icon';
 import {FuncNode, FuncType} from '../../models/func/funcNode'
 
 import {TreeVisualization} from './visualization';
+import {ValueNode} from "../../models/value/valueNode";
+import {Value} from "../../models/value/val";
+import {BarChartVisualization} from "./visualizations/barchart";
 declare let $:JQueryStatic;
 /*
  * We're loading this component asynchronously
@@ -57,7 +60,7 @@ console.log('`Tree Builder` component loaded asynchronously');
   pipes: [IterablePipe,NestedPropertyPipe, JsonPipe],
   selector: 'tree-builder',
   directives: [MODAL_DIRECTIVES,TAB_DIRECTIVES, CORE_DIRECTIVES, NgChosenComponent, JsonTreeComponent, MD_TABS_DIRECTIVES, MdToolbar, MdInput, NgIf, FORM_DIRECTIVES, NgFor,MdButton, MdAnchor, MdIcon,
-  TreeVisualization],
+  TreeVisualization, BarChartVisualization],
   viewProviders:[BS_VIEW_PROVIDERS],
   changeDetection: ChangeDetectionStrategy.OnPush, // ⇐⇐⇐
   encapsulation: ViewEncapsulation.None,
@@ -973,6 +976,28 @@ export class TreeBuilder implements AfterViewInit {
   public newAggregatePageNumber: number = 0;
   public newAggregatePageSize: number = 30;
   addValueChild(){
+    if (!this.activeNode)return;
+
+    let valueNode = new ValueNode();
+    let val = new Value();
+    val.cells = [{value:this.newCustomValue}];
+
+    valueNode.element = val;
+
+
+    if(this.activeNode instanceof FuncNode){
+      this.activeNode.children.push(valueNode);
+
+    }
+    else{
+      this.activeNode.parent.children.push(valueNode);
+    }
+
+    this.activeNode.value = null;
+    this.activeNode.executed = false;
+
+    this.store.dispatch(this.treeActions.replace(this.expressionTreeInstance));
+
 
   }
   execute() {

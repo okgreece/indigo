@@ -10,17 +10,19 @@ import {Attribute} from "./attribute";
 @JsonObject
 export class Model implements Serializable<Model>{
   deserialize(input:Object):Model {
-
-    for(var dimensionName in input.dimensions){
-      if(input.dimensions.hasOwnProperty(dimensionName)){
-        this.dimensions.set(dimensionName, new Dimension().deserialize(input.dimensions[dimensionName]));
+    if(!input) return null;
+    if(input.hasOwnProperty("dimensions"))
+      for(var dimensionName in input.dimensions){
+        if(input.dimensions.hasOwnProperty(dimensionName)){
+          this.dimensions.set(dimensionName, new Dimension().deserialize(input.dimensions[dimensionName]));
+        }
       }
-    }
 
-    for(var aggregateName in input.aggregates){
-      if(input.aggregates.hasOwnProperty(aggregateName))
-        this.aggregates.set(aggregateName, new Aggregate().deserialize(input.aggregates[aggregateName]));
-    }
+    if(input.hasOwnProperty("aggregates"))
+      for(var aggregateName in input.aggregates){
+        if(input.aggregates.hasOwnProperty(aggregateName))
+          this.aggregates.set(aggregateName, new Aggregate().deserialize(input.aggregates[aggregateName]));
+      }
     let attributes = this.attributes;
 
     return this;

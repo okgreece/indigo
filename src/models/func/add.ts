@@ -1,6 +1,5 @@
 import { Func} from "./func";
 import * as _ from 'lodash';
-import {product} from '../../lib/permutations';
 /**
  * Created by larjo_000 on 27/6/2016.
  */
