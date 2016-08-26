@@ -46,6 +46,7 @@ import {TreeVisualization} from './visualization';
 import {ValueNode} from "../../models/value/valueNode";
 import {Value} from "../../models/value/val";
 import {BarChartVisualization} from "./visualizations/barchart";
+import {Transitivity} from "../../models/transitivity";
 declare let $:JQueryStatic;
 /*
  * We're loading this component asynchronously
@@ -915,6 +916,7 @@ export class TreeBuilder implements AfterViewInit {
   addCut() {
     let newCut = new Cut();
     newCut.column = this.newCutAttribute;
+    newCut.transitivity = this.newCutTransitivity;
     newCut.value = this.newCutValueVal;
     this.newAggregateRequest.cuts.push(newCut);
   }
@@ -1018,6 +1020,10 @@ export class TreeBuilder implements AfterViewInit {
 
   cutMembers:string[]=[];
 
+  transitivities:Transitivity[] = Transitivity.staticFactory();
+
+  newCutTransitivity: Transitivity = this.transitivities[0];
+
 
   searchMembers(attribute:Attribute, search: string){
     if(!attribute) return;
@@ -1028,7 +1034,7 @@ export class TreeBuilder implements AfterViewInit {
       that.cutMembers = _.map(Array.from(response.values()), function(member){
         return member[attribute.ref];
       }).filter(function (value) {
-        return search==""|| search==undefined || search==null || value.indexOf(search)>-1;
+        return value&& (search==""|| search==undefined || search==null || value.indexOf(search)>-1);
       });
 
     });

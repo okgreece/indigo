@@ -65,6 +65,14 @@
               </select>
             </div>
 
+            <div class="col-sm-12 form-group">
+              <select class="form-control" [(ngModel)]="newCutTransitivity" >
+                <option [ngValue]="item" *ngFor="let item of transitivities|iterable">{{item |
+                  nestedProperty:'label'}}
+                </option>
+              </select>
+            </div>
+
             <div class="col-sm-9 form-group">
               <textarea class="form-control" type="text" (ngModelChange)="selectedCutValChanged($event)"
                         [(ngModel)]="newCutValueVal"></textarea>

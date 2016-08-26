@@ -4,7 +4,7 @@
 
 import * as _ from 'lodash';
 
-export abstract class Value implements Serializable<Value>{
+export  class Value implements Serializable<Value>{
 
   public abstract invoke(input:any);
 

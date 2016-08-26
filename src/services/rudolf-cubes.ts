@@ -43,7 +43,7 @@ export class RudolfCubesService {
     // drilldown=administrativeClassification.notation|administrativeClassification.prefLabel&pagesize=30&order=amount.sum:desc
     let drilldownString = element.drilldowns.map(d => d.column.ref).join('|');
     let orderString = element.sorts.map(s=>s.column.ref + ':' + s.direction.key).join('|');
-    let cutString = element.cuts.map(c=>c.column.ref + ":" + c.value).join('|');
+    let cutString = element.cuts.map(c=>c.column.ref+c.transitivity.key + ":" + c.value).join('|');
     let aggregatesString =  element.aggregates.map(a=>a.column.ref).join("|");
 
     return this.http.get(`${this.API_PATH}/${element.cube.name}/aggregate?drilldown=${drilldownString}&pagesize=${element.pageSize}&page=${element.page}&order=${orderString}&cut=${cutString}&aggregates=${aggregatesString}`)
