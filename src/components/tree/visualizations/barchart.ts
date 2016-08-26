@@ -42,7 +42,7 @@ import {MdButton, MdAnchor} from '@angular2-material/button/button';
 import {MdIcon} from '@angular2-material/icon/icon';
 import {FuncNode, FuncType} from "../../../models/func/funcNode";
 import {TreeVisualization} from "../visualization";
-declare let $:JQueryStatic;
+declare let $: JQueryStatic;
 
 /**
  * Created by larjo on 25/8/2016.
@@ -50,9 +50,9 @@ declare let $:JQueryStatic;
 
 @Component({
   moduleId: 'visualizaation',
-  pipes: [IterablePipe,NestedPropertyPipe],
+  pipes: [IterablePipe, NestedPropertyPipe],
   selector: 'barchart',
-  directives: [TAB_DIRECTIVES, CORE_DIRECTIVES, NgChosenComponent, JsonTreeComponent, MD_TABS_DIRECTIVES, MdToolbar, MdInput, NgIf, FORM_DIRECTIVES, NgFor,MdButton, MdAnchor, MdIcon],
+  directives: [TAB_DIRECTIVES, CORE_DIRECTIVES, NgChosenComponent, JsonTreeComponent, MD_TABS_DIRECTIVES, MdToolbar, MdInput, NgIf, FORM_DIRECTIVES, NgFor, MdButton, MdAnchor, MdIcon],
   changeDetection: ChangeDetectionStrategy.OnPush, // ⇐⇐⇐
   encapsulation: ViewEncapsulation.None,
   template: require('../visualization.html'),
@@ -80,15 +80,14 @@ declare let $:JQueryStatic;
 
   `]
 })
-export class BarChartVisualization extends TreeVisualization{
+export class BarChartVisualization extends TreeVisualization {
   xAxis;
   yAxis;
 
 
-
   @ViewChild('vizCanvas') vizCanvas;
 
-  private generateBarChart(data: Object, tuple){
+  private generateBarChart(data: Object, tuple) {
     let colors = d3.scale.category20();
     let that = this;
     let baseSvg = d3.select(that.vizCanvas.nativeElement).append("svg")
@@ -114,8 +113,10 @@ export class BarChartVisualization extends TreeVisualization{
     that.x.domain(data.attributes);
 
 
-    that.x.domain(data.cells.map(function(d){return d[data.attributes[0]]}));
-    that.y.domain([0, d3.max(data.cells, function(d) {
+    that.x.domain(data.cells.map(function (d) {
+      return d[data.attributes[0]]
+    }));
+    that.y.domain([0, d3.max(data.cells, function (d) {
       return d[data.aggregates[0]];
 
     })]);
@@ -145,15 +146,22 @@ export class BarChartVisualization extends TreeVisualization{
       .data(data.cells)
       .enter().append("rect")
       .attr("class", "bar")
-      .attr("fill",function(d,i){return colors(i)})
-      .attr("x", function(d) { return that.x(d[data.attributes[0]]); })
+      .attr("fill", function (d, i) {
+        return colors(i)
+      })
+      .attr("x", function (d) {
+        return that.x(d[data.attributes[0]]);
+      })
       .attr("width", that.x.rangeBand())
-      .attr("y", function(d) { return that.y(d[data.aggregates[0]]); })
-      .attr("height", function(d) { return that.height - that.y(d[data.aggregates[0]]); });
+      .attr("y", function (d) {
+        return that.y(d[data.aggregates[0]]);
+      })
+      .attr("height", function (d) {
+        return that.height - that.y(d[data.aggregates[0]]);
+      });
 
 
-
-    if(tuple){
+    if (tuple) {
       baseSvg.append("text")
         .attr("x", (that.width / 2))
         .attr("y", 0 - (that.margin.top / 2))
@@ -166,61 +174,67 @@ export class BarChartVisualization extends TreeVisualization{
 
   }
 
-  init(root: ExpressionNode){
+  init(root: ExpressionNode) {
 
 
     let that = this;
     let data = root.value;
-    if(!data) return;
+    if (!data) return;
     d3.select(that.vizCanvas.nativeElement).html("");
-
 
 
     let dimensions = _.difference(_.uniq(_.flatten(_.map(data.cells, function (cell) {
       return _.keys(cell);
     }))), data.aggregates);
 
-    if(dimensions.length>1){
+    if (dimensions.length > 1) {
       let restDimensions = _.slice(dimensions, 1);
-      let tuples = _.uniqWith(_.map(data.cells, function(cell){return _.pick(cell,restDimensions)}), _.isEqual);
+      let tuples = _.uniqWith(_.map(data.cells, function (cell) {
+        return _.pick(cell, restDimensions)
+      }), _.isEqual);
 
       _.each(tuples, function (tuple) {
         let subset = _.clone(data);
-        subset.cells = _.filter(data.cells, function(cell){return _.isEqual(_.pick(cell, restDimensions), tuple)});
+        subset.cells = _.map(_.filter(data.cells, function (cell) {
+          return _.isEqual(_.pick(cell, restDimensions), tuple)
+        }), function (cell) {
+          return _.pick(cell, _.union(_.slice(dimensions, 0, 1), data.aggregates))
+        });
         that.generateBarChart(subset, tuple);
 
-      } );
+      });
 
     }
-    else{
+    else {
       this.generateBarChart(data, null);
     }
 
-debugger;
+    debugger;
 
 
   }
+
   @Input() expressionTree: Observable<ExpressionTree>;
 
   x;
   y;
-  public get root(){
+
+  public get root() {
     return this._root;
   }
+
   @Input()
-  public set root(value){
+  public set root(value) {
     this._root = value;
-    if(value)this.init(value);
+    if (value)this.init(value);
   }
 
 
+  constructor(@Inject(ElementRef) elementRef: ElementRef,
+              private store: Store<AppState>,
+              private ref: ChangeDetectorRef) {
 
-
-  constructor(@Inject(ElementRef) elementRef:ElementRef,
-              private store:Store<AppState>,
-             private ref: ChangeDetectorRef) {
-
-    super(elementRef,store,ref);
+    super(elementRef, store, ref);
 
   }
 
