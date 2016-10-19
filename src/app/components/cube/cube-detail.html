@@ -1,0 +1,21 @@
+<md-card>
+  <md-card-title-group>
+    <md-card-title>Cube: {{ name }}</md-card-title>
+  </md-card-title-group>
+
+  <bc-tree-builder [viewerHeight]="'1000'"  [cube]="cube">
+    Loading...
+  </bc-tree-builder>
+
+
+
+ <!-- <md-card-actions align="end">
+    <button md-raised-button color="warn" *ngIf="inCollection" (click)="remove.emit(cube)">
+      Remove Cube from Collection
+    </button>
+
+    <button md-raised-button color="primary" *ngIf="!inCollection" (click)="add.emit(cube)">
+      Add Cube to Collection
+    </button>
+  </md-card-actions>-->
+</md-card>

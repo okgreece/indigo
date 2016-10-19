@@ -1,0 +1,191 @@
+<div class="row-fluid col-sm-12 well">
+  <h4>Aggregates</h4>
+  <div class="col-sm-12">
+
+    <ul class="alt-list">
+      <li *ngFor="let aggregate of newAggregateRequest.aggregates">
+        <div class="col-sm-2">
+          <button md-mini-fab (click)="removeAggregate(aggregate)">
+            <md-icon class="md-24">remove_circle</md-icon>
+          </button>
+        </div>
+        <div class="col-sm-9"><b>{{aggregate.column.label}}</b></div>
+
+      </li>
+
+    </ul>
+
+  </div>
+  <button md-icon-button (click)="addAggregate()" [disabled]="newAggregateAggregate==undefined">
+    <md-icon class="md-24">playlist_add</md-icon>
+  </button>
+
+  <div class="col-sm-9 form-group">
+    <select class="form-control col-sm-6" [(ngModel)]="newAggregateAggregate">
+      <option [ngValue]="item" *ngFor="let item of cube?.model?.aggregates|iterable">{{item |
+        nestedProperty:'label'}}
+      </option>
+    </select>
+  </div>
+
+
+</div>
+<div class="row-fluid col-sm-12 well">
+  <h4>Filters</h4>
+  <div class="col-sm-12">
+    <ul class="alt-list">
+      <li *ngFor="let cut of newAggregateRequest.cuts">
+        <div class="col-sm-2">
+          <button md-mini-fab (click)="removeCut(cut)">
+            <md-icon class="md-24">remove_circle</md-icon>
+          </button>
+        </div>
+        <div class="col-sm-9"><b><b>{{cut.column.fullLabel}}</b>: {{cut.value}} </b></div>
+
+      </li>
+
+    </ul>
+
+
+  </div>
+
+  <div class="col-sm-12 form-group">
+    <select class="form-control" [(ngModel)]="newCutAttribute" (ngModelChange)="selectedCutChanged($event)">
+      <option [ngValue]="item" *ngFor="let item of cube?.model?.attributes|iterable">{{item |
+        nestedProperty:'fullLabel'}}
+      </option>
+    </select>
+  </div>
+
+  <div class="col-sm-12 form-group">
+    <select class="form-control" [(ngModel)]="newCutTransitivity" >
+      <option [ngValue]="item" *ngFor="let item of transitivities|iterable">{{item |
+        nestedProperty:'label'}}
+      </option>
+    </select>
+  </div>
+
+  <div class="col-sm-9 form-group">
+              <textarea class="form-control" type="text" (ngModelChange)="selectedCutValChanged($event)"
+                        [(ngModel)]="newCutValueVal"></textarea>
+
+  </div>
+  <button md-icon-button (click)="addCut()" [disabled]="newCutAttribute==undefined">
+    <md-icon class="md-24">playlist_add</md-icon>
+  </button>
+  <div *ngIf="newCutAttribute!=undefined" class="col-sm-12">
+    <ul class="alt-list" style="overflow: auto; max-height: 300px;">
+      <li *ngFor="let member of cutMembers">
+        <a class="action-anchor" (click)="setCutValue(member)">{{member}}</a>
+      </li>
+    </ul>
+  </div>
+
+</div>
+<div class="row-fluid col-sm-12 well">
+  <h4>Drill down</h4>
+  <div class="col-sm-12">
+
+
+    <ul class="alt-list">
+      <li *ngFor="let drilldown of newAggregateRequest.drilldowns">
+        <div class="col-sm-2">
+          <button md-mini-fab (click)="removeDrilldown(drilldown)">
+            <md-icon class="md-24">remove_circle</md-icon>
+          </button>
+        </div>
+        <div class="col-sm-9"><b>{{drilldown.column.fullLabel}}</b></div>
+
+      </li>
+
+    </ul>
+
+  </div>
+
+  <div class="col-sm-9 form-group">
+    <select class="form-control" [(ngModel)]="newDrilldownAttribute">
+      <option [ngValue]="item" *ngFor="let item of cube?.model?.attributes|iterable">{{item |
+        nestedProperty:'fullLabel'}}
+      </option>
+    </select>
+
+  </div>
+
+  <button md-icon-button (click)="addDrilldown()" [disabled]="newDrilldownAttribute==undefined">
+    <md-icon class="md-24">playlist_add</md-icon>
+  </button>
+
+
+</div>
+<div class="row-fluid col-sm-12 well">
+  <h4>Sorting</h4>
+  <div class="col-sm-12">
+    <ul class="alt-list">
+      <li *ngFor="let sort of newAggregateRequest.sorts">
+        <div class="col-sm-2">
+          <button md-mini-fab (click)="removeSort(sort)">
+            <md-icon class="md-24">remove_circle</md-icon>
+          </button>
+        </div>
+        <div class="col-sm-9"><b>{{sort.column.fullLabel}}</b>: {{sort.direction.label}}</div>
+
+      </li>
+
+    </ul>
+  </div>
+
+  <div class="col-sm-12 form-group">
+    <select class="form-control" [(ngModel)]="newSortAttribute">
+      <option [ngValue]="item" *ngFor="let item of cube?.model?.attributes|iterable">{{item |
+        nestedProperty:'fullLabel'}}
+      </option>
+    </select>
+
+  </div>
+
+  <div class="col-sm-8 form-group">
+    <select class="form-control" [(ngModel)]="newSortDirection">
+      <option [ngValue]="item" *ngFor="let item of sortDirections|iterable">{{item |
+        nestedProperty:'label'}}
+      </option>
+    </select>
+  </div>
+  <button md-icon-button (click)="addSort()"
+          [disabled]="newSortAttribute==undefined||newSortDirection==undefined">
+    <md-icon class="md-24">playlist_add</md-icon>
+  </button>
+
+
+</div>
+
+<div class="row-fluid col-sm-12 well">
+  <h4>Pagination</h4>
+
+  <div class="col-sm-12 form-group">
+    <input class="form-control"  type="number" [(ngModel)]="newAggregatePageNumber"  placeholder="Page Number" align="end"/>
+
+
+
+  </div>
+  <div class="col-sm-12 form-group">
+    <input class="form-control"  type="number" [(ngModel)]="newAggregatePageSize" placeholder="Page Size" align="end"/>
+
+
+
+  </div>
+
+
+
+
+</div>
+<hr style="display: inline-block">
+<div class="row-fluid col-sm-12 text-center well">
+
+  <button md-raised-button color="primary" (click)="addAggregateChild()">
+    ADD REQUEST NODE
+  </button>
+
+
+</div>
+
+<hr style="display: inline-block">

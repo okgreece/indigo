@@ -1,0 +1,90 @@
+<md-card>
+  <md-card-title-group>
+    <md-card-title>Cube: {{ (cube$|async).name }}</md-card-title>
+  </md-card-title-group>
+
+  <md-card-content>
+    <div class="col-sm-12">
+      <div class="col-sm-12">
+        <md-card *ngFor="let algorithm of algorithms">
+          <md-card-title-group>
+            <md-card-title>{{ algorithm.title }}</md-card-title>
+          </md-card-title-group>
+          <md-card-content>
+            <p>
+              <md-toolbar color="primary">
+
+                <button md-mini-fab (click)="execute(algorithm)">
+                  <md-icon class="md-24">play_circle_outline</md-icon>
+                </button>
+
+
+
+              </md-toolbar>
+            </p>
+
+            <div class="row">
+              <div class="col-sm-4">
+                <div *ngFor="let input of algorithm.inputs|iterable" class="col-sm-12">
+                  <h4>Input: {{input.title}}</h4>
+                  <div *ngIf="input.type==InputTypes.BABBAGE_RAW_DATA">
+                    <request-builder [cube]="cube$|async" (onRequestBuilt)="onRequestBuilt($event, algorithm.name, input.name)"></request-builder>
+                  </div>
+                  <div *ngIf="input.type==InputTypes.ATTRIBUTE_REF">
+                    <select class="form-control" [(ngModel)]="analysisCalls[algorithm.name]?.inputs[input.name]" >
+                      <option [ngValue]="item" *ngFor="let item of (cube$|async).model?.attributes|iterable">{{item |
+                        nestedProperty:'fullLabel'}}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div *ngIf="input.type==InputTypes.AGGREGATE_REF">
+                    <div class="col-sm-9 form-group">
+                      <select class="form-control col-sm-6" [(ngModel)]="analysisCalls[algorithm.name]?.inputs[input.name]">
+                        <option [ngValue]="item" *ngFor="let item of (cube$|async).model?.aggregates|iterable">{{item |
+                          nestedProperty:'label'}}
+                        </option>
+                      </select>
+                    </div>
+
+                  </div>
+
+                  <div *ngIf="input.type==InputTypes.PARAMETER" >
+                    <input  type="text" [(ngModel)]="analysisCalls[algorithm.name]?.inputs[input.name]">
+                  </div>
+
+                </div>
+
+
+              </div>
+
+              <div class="col-sm-6">
+                <h4>Output</h4>
+                <div >
+                  <analytics-line-chart  class="col-sm-12" style="min-height: 500px;"   [values]="analysisCalls[algorithm.name]?.outputs['values']"></analytics-line-chart>
+                </div>
+              </div>
+            </div>
+
+
+
+
+
+
+
+
+          </md-card-content>
+
+        </md-card>
+
+
+      </div>
+
+
+
+    </div>
+  </md-card-content>
+
+
+
+</md-card>

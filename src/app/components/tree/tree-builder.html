@@ -1,0 +1,171 @@
+<div class="row">
+
+
+  <div class="col-sm-4">
+    <md-tab-group class="demo-tab-group">
+      <md-tab>
+        <template md-tab-label>Aggregate Request</template>
+        <template md-tab-content>
+          <request-builder [cube]="cube" (onRequestBuilt)="onRequestBuilt($event)"></request-builder>
+
+
+        </template>
+      </md-tab>
+
+
+      <md-tab>
+        <template md-tab-label>Functions</template>
+        <template md-tab-content>
+          <div class="row-fluid well col-sm-12 text-center">
+            <div class="col-sm-4">
+              <button (click)="addFuncChild(funcType.Addition)" md-raised-button>Addition</button>
+            </div>
+            <div class="col-sm-4">
+              <button (click)="addFuncChild(funcType.Difference)"  md-raised-button>Difference</button>
+            </div>
+            <div class="col-sm-4">
+              <button (click)="addFuncChild(funcType.Multiplication)"  md-raised-button>Multiplication</button>
+            </div>
+
+          </div>
+          <div class="row-fluid well col-sm-12 text-center">
+            <div class="col-sm-4">
+              <button (click)="addFuncChild(funcType.Division)"  md-raised-button>Division</button>
+            </div>
+            <div class="col-sm-4">
+              <button (click)="addFuncChild(funcType.Exponential)"  md-raised-button>Exponential</button>
+            </div>
+            <div class="col-sm-4">
+              <button (click)="addFuncChild(funcType.Negation)"  md-raised-button>Negation</button>
+            </div>
+
+          </div>
+          <div class="row-fluid well col-sm-12 text-center">
+            <div class="col-sm-4">
+              <button (click)="addFuncChild(funcType.Minimum)"  md-raised-button>Minimum</button>
+            </div>
+            <div class="col-sm-4">
+              <button (click)="addFuncChild(funcType.Maximum)"  md-raised-button>Maximum</button>
+            </div>
+            <div class="col-sm-4">
+              <button (click)="addFuncChild(funcType.Average)"  md-raised-button>Average</button>
+            </div>
+
+          </div>
+        </template>
+      </md-tab>
+
+
+      <md-tab>
+        <template md-tab-label>Custom data</template>
+        <template md-tab-content>
+
+
+          <div class="row-fluid col-sm-12 well">
+            <h4>Flat number or JSON object</h4>
+
+            <div class="col-sm-12 form-group">
+              <label for="custom_data">
+                <textarea [(ngModel)]="newCustomValue" id="custom_data" cols="30" rows="10"></textarea>
+              </label>
+            </div>
+
+          </div>
+          <hr style="display: inline-block">
+          <div class="row-fluid col-sm-12 text-center well">
+
+            <button md-raised-button color="primary" (click)="addValueChild()">
+              ADD VALUE NODE
+            </button>
+
+
+          </div>
+
+          <hr style="display: inline-block">
+
+
+
+
+        </template>
+      </md-tab>
+
+
+    </md-tab-group>
+  </div>
+  <!-- Large modal -->
+
+
+
+  <div bsModal  [config]="{backdrop: false}"  #jsonModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" (click)="jsonModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">Tree serialization</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <textarea name="" id="" [(ngModel)]="editableExpressionTreeInstance" class="col-sm-12" cols="30" rows="10" >{{editableExpressionTreeInstance|json}}</textarea>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" (click)="saveSerializationModal()">Update</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <md-card class="col-sm-8">
+
+    <md-card-content>
+      <p>
+        <md-toolbar color="primary">
+
+            <button md-mini-fab (click)="centerActiveNode()" title="Center root node">
+              <md-icon class="md-24">filter_center_focus</md-icon></button>
+
+            <button title="Remove node" [disabled]="!activeNode||activeNode==root" md-mini-fab (click)="removeNode()">
+              <md-icon class="md-24">remove_circle</md-icon></button>
+            <button title="Execute node" md-mini-fab   (click)="execute()">
+              <md-icon class="md-24">play_circle_outline</md-icon>
+            </button>
+            <button title="Clear all nodes" md-mini-fab (click)="clearAll()"  > <md-icon class="md-24">clear_all</md-icon></button>
+            <button title="Undo" md-mini-fab  ><md-icon class="md-24">undo</md-icon></button>
+          <button title="Serialize/deserialize expression tree" md-mini-fab title="Serialization"  (click)="showSerializationModal()"><md-icon class="md-24">all_out</md-icon></button>
+
+
+        </md-toolbar>
+      </p>
+      <div>
+
+      </div>
+      <div id="drawingCanvas" #drawingCanvas></div>
+
+      <hr/>
+
+      <h4>{{activeNode?.label}}</h4>
+      <div class="col-sm-12 well">
+        <div class="col-sm-6">
+          <h5>Definition</h5>
+          <ngrx-json-tree *ngIf="activeNode!=null&&activeNode!=undefined" [value]="activeNode?.element"></ngrx-json-tree>
+          <h5>Values</h5>
+          <ngrx-json-tree *ngIf="activeNode!=null&&activeNode!=undefined" [value]="activeNode?.value"></ngrx-json-tree>
+
+        </div>
+        <div class="col-sm-6">
+
+          <barchart [root]="activeNode" [expressionTree]="expressionTree"></barchart>
+
+        </div>
+      </div>
+
+    </md-card-content>
+
+  </md-card>
+
+
+</div>
