@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "build": "ng build --prod",
-    "start": "ng serve"
+    "start": "ng serve --host 0.0.0.0 "
   },
   "repository": {
     "type": "git",
