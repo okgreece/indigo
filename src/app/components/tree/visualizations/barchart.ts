@@ -1,9 +1,5 @@
-import {Cube} from "../../../models/cube";
 import {Observable} from "rxjs/Rx";
-import {NgClass, CORE_DIRECTIVES, FORM_DIRECTIVES} from "@angular/common";
 import * as _ from 'lodash';
-import {TAB_DIRECTIVES} from 'ng2-bootstrap';
-
 import {
   ChangeDetectionStrategy, ViewEncapsulation,
   Component, Input, Directive, Attribute as MetadataAttribute, OnChanges, DoCheck, ElementRef, OnInit, SimpleChange,
@@ -13,16 +9,10 @@ import {Inject, NgZone, ChangeDetectorRef} from '@angular/core';
 import * as d3 from 'd3';
 import Timer = NodeJS.Timer;
 import {ExpressionTree} from "../../../models/expressionTree";
-import {State, getTree, getSelectedCube} from "../../../reducers/index";
 import {Store} from "@ngrx/store";
 import {ExpressionNode} from "../../../models/expressionNode";
-import {IterablePipe} from "../../../pipes/mapToIterable";
-import {NgChosenComponent} from "../../ng-chosen";
-import {NestedPropertyPipe} from "../../../pipes/nestedProperty";
-import {JsonTreeComponent} from "../../../lib/json-tree/json-tree";
-import {NgIf, NgFor, AsyncPipe} from '@angular/common';
 import {TreeVisualization} from "../visualization";
-import {MdToolbar, MdInput, MdButton, MdAnchor, MdIcon} from "@angular/material";
+import {TreesState} from "../../../reducers/tree/trees";
 declare let $: JQueryStatic;
 
 /**
@@ -66,7 +56,7 @@ export class BarChartVisualization extends TreeVisualization {
 
   @ViewChild('vizCanvas') vizCanvas;
 
-  private generateBarChart(data: Object, tuple) {
+  private generateBarChart(data: ExpressionNode, tuple) {
     let colors = d3.scale.category20();
     let that = this;
     let baseSvg = d3.select(that.vizCanvas.nativeElement).append("svg")
@@ -128,14 +118,14 @@ export class BarChartVisualization extends TreeVisualization {
       .attr("fill", function (d, i) {
         return colors(i)
       })
-      .attr("x", function (d) {
+      .attr("x", function (d:ExpressionNode) {
         return that.x(d[data.attributes[0]]);
       })
       .attr("width", that.x.rangeBand())
-      .attr("y", function (d) {
+      .attr("y", function (d:ExpressionNode) {
         return that.y(d[data.aggregates[0]]);
       })
-      .attr("height", function (d) {
+      .attr("height", function (d:ExpressionNode) {
         return that.height - that.y(d[data.aggregates[0]]);
       });
 
@@ -209,8 +199,8 @@ export class BarChartVisualization extends TreeVisualization {
 
 
   constructor(@Inject(ElementRef) elementRef: ElementRef,
-              private store: Store<State>,
-              private ref: ChangeDetectorRef) {
+               store: Store<TreesState>,
+               ref: ChangeDetectorRef) {
 
     super(elementRef, store, ref);
 

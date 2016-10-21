@@ -7,11 +7,12 @@ import {Serializable} from "../iserializeable";
 
 export  class Value implements Serializable<Value>{
 
-  public abstract invoke(input:any);
+  public invoke(input:any){}
 
   public get label():string{
     return undefined;
   }
+  public cells:any[] = [];
 
   public get symbol():string{
     return 'V';
@@ -21,7 +22,7 @@ export  class Value implements Serializable<Value>{
     return _.extend( {name:this.name, symbol:this.symbol, __type:this.constructor.name}, this);
   };
 
-  deserialize(input:Object):Value {
+  deserialize(input:any):Value {
     return input;
   }
 

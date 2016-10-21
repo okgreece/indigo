@@ -40,9 +40,9 @@ export class CubeEffects {
     .debounceTime(300)
     .map<string>(action => action.payload)
     .switchMap(query => {
-      if (query === '') {
+     /* if (query === '') {
         return empty();
-      }
+      }*/
 
       const nextSearch$ = this.actions$.ofType(cube.ActionTypes.SEARCH).skip(1);
 

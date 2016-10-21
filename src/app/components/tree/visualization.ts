@@ -13,18 +13,10 @@ import {Inject, NgZone, ChangeDetectorRef} from '@angular/core';
 import * as d3 from 'd3';
 import Timer = NodeJS.Timer;
 import {ExpressionTree} from "../../models/expressionTree";
-import {State,  getSelectedCube} from "../../reducers/index";
 import {Store} from "@ngrx/store";
 import {ExpressionNode} from "../../models/expressionNode";
-import {IterablePipe} from "../../pipes/mapToIterable";
-import {NgChosenComponent} from "../ng-chosen";
-import {RudolfCubesService} from "../../services/rudolf-cubes";
-import {TreeExecution} from "../../services/tree-execution";
-import {NestedPropertyPipe} from "../../pipes/nestedProperty";
-import {JsonTreeComponent} from "../../lib/json-tree/json-tree";
-import {NgIf, NgFor, AsyncPipe} from '@angular/common';
-import {MdToolbar, MdAnchor, MdButton, MdInput, MdIcon} from "@angular/material";
-import {getTree} from "../../reducers/tree/trees";
+
+import {getTree, TreesState} from "../../reducers/tree/trees";
 import * as $ from 'jquery'
 /*
  * We're loading this component asynchronously
@@ -70,7 +62,7 @@ export class TreeVisualization implements AfterViewInit {
   @ViewChild('vizCanvas') vizCanvas;
 
   constructor(@Inject(ElementRef) elementRef:ElementRef,
-              private store:Store<State>,
+              private store:Store<TreesState>,
                private ref: ChangeDetectorRef) {
 
 

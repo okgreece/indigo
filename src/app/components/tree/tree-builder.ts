@@ -186,7 +186,7 @@ export class TreeBuilder implements AfterViewInit {
           that.update(expressionTree.root);
         }
         else {
-          that.expressionTreeInstance = expressionTree;
+          that.expressionTreeInstance =  new ExpressionTree().deserialize(JSON.parse(JSON.stringify(expressionTree_)));
 
           that.baseSvg.html("");
 
@@ -432,7 +432,7 @@ export class TreeBuilder implements AfterViewInit {
       this.zoomListener.scale(this.zoomListener.scale());
       this.zoomListener.translate([translateX, translateY]);
       this.panTimer = setTimeout(function () {
-        that.pan(domNode, speed, direction);
+        that.pan(domNode,  direction);
       }, 50);
     }
   }
@@ -536,7 +536,7 @@ export class TreeBuilder implements AfterViewInit {
     this.updateTempConnector();
   };
 
-  outCircle(d) {
+  outCircle(d: ExpressionNode) {
     this.selectedNode = null;
     this.updateTempConnector();
   };
@@ -713,7 +713,7 @@ export class TreeBuilder implements AfterViewInit {
         that.overCircle(node);
       })
       .on("mouseout", function (node: ExpressionNode) {
-        that.outCircle(node: ExpressionNode);
+        that.outCircle(node);
       });
 
 
@@ -862,7 +862,7 @@ export class TreeBuilder implements AfterViewInit {
   addValueChild(){
     if (!this.activeNode)return;
 
-    let valueNode = new ValueNode();
+    let valueNode = new ValueNode;
     let val = new Value();
     val.cells = [{value:this.newCustomValue}];
 

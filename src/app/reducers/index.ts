@@ -52,6 +52,7 @@ import * as fromCubesCollection from './cube/collection';
 import * as fromTrees from './tree/trees';
 import {Cube} from "../models/cube";
 import {TreesState} from "./tree/trees";
+import {environment} from "../../environments/environment";
 
 
 /**
@@ -94,7 +95,7 @@ const developmentReducer = compose(storeFreeze, combineReducers)(reducers);
 const productionReducer = combineReducers(reducers);
 
 export function reducer(state: any, action: any) {
-  if (PROD) {
+  if (environment.production) {
     return productionReducer(state, action);
   }
   else {

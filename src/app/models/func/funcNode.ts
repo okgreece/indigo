@@ -37,6 +37,7 @@ export class FuncNode extends ExpressionNode {
 
 
 
+
   serialize(input: FuncNode): Object {
     return this;
   }
@@ -46,7 +47,7 @@ export class FuncNode extends ExpressionNode {
     let children = [];
 
 
-    for(var child of input._children){
+    for(let child of input._children){
 
       switch (child.__type){
         case "FuncNode":

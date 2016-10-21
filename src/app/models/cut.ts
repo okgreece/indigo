@@ -9,5 +9,13 @@ export class Cut {
   value:any;
   transitivity: Transitivity;
 
+  deserialize(input:any):Cut {
 
+    this.column = new Attribute().deserialize(input.column);
+    this.transitivity = new Transitivity().deserialize(input.transitivity);
+    this.value = input.value;
+
+
+    return this;
+  }
 }

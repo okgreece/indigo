@@ -20,13 +20,13 @@ export function reducer(state = initialState, action: cube.Actions): State {
     case cube.ActionTypes.SEARCH: {
       const query = action.payload;
 
-      if (query === '') {
+     /* if (query === '') {
         return {
           ids: [],
           loading: false,
           query
         };
-      }
+      }*/
 
       return Object.assign({}, state, {
         query,

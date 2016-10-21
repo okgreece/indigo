@@ -20,7 +20,9 @@
     "types": [
       "node",
       "hammerjs",
-      "jquery"
+      "jquery",
+      "d3",
+      "lodash"
     ]
   },
   "awesomeTypescriptLoaderOptions": {

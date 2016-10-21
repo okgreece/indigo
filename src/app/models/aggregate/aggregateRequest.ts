@@ -35,26 +35,26 @@ export class AggregateRequest implements Serializable<AggregateRequest>{
 
 
 
-    for(let sort:any of input.sorts){
+    for(let sort of input.sorts){
       sorts.push(new Sort().deserialize(sort))
     }
     this.sorts = sorts;
 
 
-    for(let aggregate:any of input.aggregates){
-      sorts.push(new AggregateParam().deserialize(aggregate))
+    for(let aggregate of input.aggregates){
+      aggregates.push(new AggregateParam().deserialize(aggregate))
     }
     this.aggregates = aggregates;
 
 
-    for(let drilldown:any of input.drilldowns){
+    for(let drilldown of input.drilldowns){
       drilldowns.push(new Drilldown().deserialize(drilldown))
     }
     this.drilldowns = drilldowns;
 
 
 
-    for(let cut:any of input.cuts){
+    for(let cut of input.cuts){
       cuts.push(new Cut().deserialize(cut))
     }
     this.cuts = cuts;

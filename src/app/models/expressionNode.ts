@@ -10,8 +10,16 @@ import {Serializable} from "./iserializeable";
  * Created by larjo_000 on 26/6/2016.
  */
 export class ExpressionNode implements Serializable<ExpressionNode>{
+  get symbol(): string {
+    return this._symbol;
+  }
+
+  set symbol(value: string) {
+    this._symbol = value;
+  }
 
   deserialize(input:any):ExpressionNode {
+
 
     return input;
 
@@ -33,7 +41,7 @@ export class ExpressionNode implements Serializable<ExpressionNode>{
 
   public parent:ExpressionNode;
 
-  public children: ExpressionNode[] = [];
+  public _children: ExpressionNode[] = [];
 
   private _label;
 
@@ -49,6 +57,7 @@ export class ExpressionNode implements Serializable<ExpressionNode>{
     return this._label;
   }
 
+  private _symbol:string;
 
   public executed: boolean = false;
 
@@ -81,7 +90,9 @@ export class ExpressionNode implements Serializable<ExpressionNode>{
 
   private _x0:number;
   private _y0:number;
-  private _children:any;
 
+
+  public x:number;
+  public y:number;
 
 }

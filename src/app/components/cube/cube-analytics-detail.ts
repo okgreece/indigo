@@ -4,14 +4,12 @@ import {
 } from '@angular/core';
 import {NgIf, NgFor, AsyncPipe} from '@angular/common';
 import * as fromRoot from '../../reducers';
-import { AddCommasPipe } from '../../pipes';
 import { Cube } from "../../models/cube";
 import { TreeBuilder } from "../tree/tree-builder"
 import {ExpressionTree} from "../../models/expressionTree";
 import {State} from "../../reducers";
 import { Store } from '@ngrx/store';
 import {NgChosenComponent} from "../ng-chosen";
-import {IterablePipe} from "../../pipes";
 import {JsonTreeComponent} from "../../lib/json-tree/json-tree";
 import {MdButton, MdToolbar, MdInput, MdAnchor, MdIcon} from "@angular/material";
 import {AlgorithmsService} from "../../services/algorithms";
@@ -33,7 +31,7 @@ export type AddOutput = Cube;
 export type RemoveOutput = Cube;
 
 @NgModule({
-  declarations: [ MdButton , TreeBuilder, NgChosenComponent,  NgChosenComponent, JsonTreeComponent,  MdToolbar, MdInput, NgIf, NgFor,MdButton, MdAnchor, MdIcon,AddCommasPipe , IterablePipe],
+  declarations: [ MdButton , TreeBuilder, NgChosenComponent,  NgChosenComponent, JsonTreeComponent,  MdToolbar, MdInput, NgIf, NgFor,MdButton, MdAnchor, MdIcon],
 
 })
 
@@ -85,7 +83,7 @@ export class CubeAnalyticsDetailComponent {
     return this._algorithms;
   }
 
-  set algorithms(value: Array) {
+  set algorithms(value: Algorithm[]) {
     this._algorithms = value;
   }
   /**
@@ -125,7 +123,7 @@ export class CubeAnalyticsDetailComponent {
       observable.subscribe(function (algorithms:Algorithm[]) {
         that.algorithms = algorithms;
 
-        for(let algorithm: Algorithm of that.algorithms){
+        for(let algorithm of that.algorithms){
           that.analysisCalls[algorithm.name]= new AnalysisCall(algorithm);
         }
 

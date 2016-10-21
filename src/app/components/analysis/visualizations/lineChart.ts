@@ -103,7 +103,7 @@ export class LineChartVisualization extends AfterViewInit {
   @Input() values$: Observable<any>;
  private _values: any;
 
-  private generateBarChart(data: Object) {
+  private generateBarChart(data: any) {
     let margin = {top: 20, right: 20, bottom: 30, left: 150};
 
 

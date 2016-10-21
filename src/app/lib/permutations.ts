@@ -49,9 +49,9 @@ function _cartesianProductOf(args) {
  *  {Array}        - An array of objects e.g. [{firstName:'Ben',LastName:'Smith'},{..]
   **/
 function _cartesianProductObj(optObj){
-  var keys = _.keys(optObj);
-  var opts = _.values(optObj);
-  var combs = _cartesianProductOf(opts);
+  let keys = _.keys(optObj);
+  let opts = _.values(optObj);
+  let combs = _cartesianProductOf(opts);
   return _.map(combs,function(comb){
     return _.zipObject(keys,comb);
   });
@@ -137,9 +137,9 @@ function combinations_with_replacement(obj,n){
   if (typeof obj=='string') obj = _.toArray(obj);
   n = n?n:obj.length;
   // make n copies of keys/indices
-  for (var j = 0, nInds=[]; j < n; j++) {nInds.push(_.keys(obj)) }
+  for (let j = 0, nInds=[]; j < n; j++) {nInds.push(_.keys(obj)) }
   // get product of the indices, then filter to keep elements in order
-  var arrangements = product(nInds).filter(pair=>pair[0]<=pair[1]);
+  let arrangements = product(nInds).filter(pair=>pair[0]<=pair[1]);
   return _.map(arrangements,indices=>_.map(indices,i=>obj[i]))
 }
 

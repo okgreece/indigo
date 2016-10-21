@@ -14,12 +14,18 @@ export class ValueNode extends ExpressionNode {
   }
 
 
+  public constructor(){
+    super("value");
+
+  }
+
+
 
   serialize(input: ValueNode): Object {
     return this;
   }
 
-  deserialize(input:Object):ValueNode {
+  deserialize(input:any):ValueNode {
 
     this._val = input.element;
 

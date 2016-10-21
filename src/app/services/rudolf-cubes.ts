@@ -9,7 +9,7 @@ import 'rxjs/add/operator/mergeMap'
 
 @Injectable()
 export class RudolfCubesService {
-  private API_PATH:string = 'http://localhost/rudolf/public/api/v3/cubes';
+  private API_PATH:string = 'http://ws307.math.auth.gr/rudolf/public/api/v3/cubes';
 
   constructor(private http:Http) {
   }
@@ -39,7 +39,7 @@ export class RudolfCubesService {
   }
 
   aggregate(element:AggregateRequest):Observable<Cube> {
-    ///
+    debugger;
     // http://ws307.math.auth.gr/rudolf/public/api/3/cubes/budget-thessaloniki-expenditure-2012__1ef74/aggregate?
     // drilldown=administrativeClassification.notation|administrativeClassification.prefLabel&pagesize=30&order=amount.sum:desc
     let drilldownString = element.drilldowns.map(d => d.column.ref).join('|');
