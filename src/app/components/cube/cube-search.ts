@@ -1,7 +1,7 @@
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { Component, Output, Input, EventEmitter } from '@angular/core';
+import {Component, Output, Input, EventEmitter, AfterViewInit} from '@angular/core';
 
 
 @Component({
@@ -44,8 +44,13 @@ import { Component, Output, Input, EventEmitter } from '@angular/core';
     }
   `]
 })
-export class CubeSearchComponent {
+export class CubeSearchComponent implements AfterViewInit{
+  ngAfterViewInit(): void {
+    this.search.emit("")
+
+  }
   @Input() query: string = '';
   @Input() searching = false;
   @Output() search = new EventEmitter<string>();
+
 }

@@ -39,16 +39,17 @@
     "@ngrx/router-store": "^1.1.0",
     "@ngrx/store": "^2.0.0",
     "@ngrx/store-devtools": "^3.1.0",
+    "angular2-prettyjson": "^1.0.5",
     "core-js": "^2.2.2",
-    "ngrx-store-freeze": "^0.1.0",
-    "rxjs": "^5.0.0-beta.12",
-    "ts-helpers": "^1.1.1",
-    "zone.js": "^0.6.25",
     "d3": "^3.5.17",
     "jquery": "^3.1.1",
     "lodash": "4.13.1",
     "ng2-bootstrap": "^1.1.13",
-    "underscore": "^1.8.3"
+    "ngrx-store-freeze": "^0.1.0",
+    "rxjs": "^5.0.0-beta.12",
+    "ts-helpers": "^1.1.1",
+    "underscore": "^1.8.3",
+    "zone.js": "^0.6.25"
   },
   "devDependencies": {
     "@types/d3": "3.5.36",

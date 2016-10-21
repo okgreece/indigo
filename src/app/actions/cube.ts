@@ -26,6 +26,7 @@ export const ActionTypes = {
 export class CubeActions {
   static SEARCH = '[Cube] Search';
   search(query: string): Action {
+    debugger;
     return {
       type: CubeActions.SEARCH,
       payload: query
@@ -34,6 +35,7 @@ export class CubeActions {
 
   static SEARCH_COMPLETE = '[Cube] Search Complete';
   searchComplete(results: Cube[], search: string): Action {
+    debugger;
     return {
       type: CubeActions.SEARCH_COMPLETE,
       payload: results.filter(function (cube) {

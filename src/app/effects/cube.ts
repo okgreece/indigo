@@ -43,7 +43,7 @@ export class CubeEffects {
      /* if (query === '') {
         return empty();
       }*/
-
+debugger;
       const nextSearch$ = this.actions$.ofType(cube.ActionTypes.SEARCH).skip(1);
 
       return this.rudolfCubes.searchCubes(query)
