@@ -56,6 +56,9 @@ export class CubeExistsGuard implements CanActivate {
    */
   hasCubeInApi(id: string): Observable<boolean> {
     return this.rudolfCubes.retrieveCube(id)
+/*
+      .switchMap((cubeEntity)=>this.rudolfCubes.retrievePackage(cubeEntity))
+*/
       .map(cubeEntity => new cube.LoadAction(cubeEntity))
       .do(action => this.store.dispatch(action))
       .map(cube => !!cube)

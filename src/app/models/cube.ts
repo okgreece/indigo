@@ -6,6 +6,7 @@ export class Cube implements Serializable<Cube>{
 
     this.name = input.name;
     this.model = new Model().deserialize(input.model);
+    this.pckg = input.pckg;
 
     return this;
   }
@@ -13,6 +14,9 @@ export class Cube implements Serializable<Cube>{
     return this;
   }
   constructor(){}
+
+
+  pckg: any;
 
   id:number;
   name: string;

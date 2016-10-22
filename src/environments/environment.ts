@@ -4,5 +4,8 @@
 // The list of which env maps to which file can be found in `angular-cli.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  apiUrl:"http://next.openspending.org",
+  DAMUrl: "http://okfnrg.math.auth.gr/ocpu/",
+  versionSuffix: "3"
 };

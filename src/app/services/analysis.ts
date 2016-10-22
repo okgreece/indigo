@@ -14,7 +14,6 @@ import {Subscription} from "rxjs";
 
 @Injectable()
 export class AnalysisService {
-  private API_PATH:string = 'http://localhost/rudolf/public/api/v3/cubes';
 
   constructor(private http:Http, public rudolfService: RudolfCubesService) {
   }

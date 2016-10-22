@@ -7,13 +7,13 @@ import {Cube} from '../../models/cube';
   template: `
   <md-card>
     <md-card-title-group>
-      <md-card-title>{{ cube.name }}</md-card-title>
+      <md-card-title>{{ cube.package.title }}</md-card-title>
     </md-card-title-group>
     <div class="row">
-      <a [routerLink]=" '/cube/indicators/' + cube.name">Indicators Builder</a>
+      <a [routerLink]=" '/cube/indicators/' + cube.id">Indicators Builder</a>
     </div>
     <div class="row">
-      <a [routerLink]=" '/cube/analytics/' + cube.name">Analytics & Data Mining</a>
+      <a [routerLink]=" '/cube/analytics/' + cube.id">Analytics & Data Mining</a>
     </div>
 
 

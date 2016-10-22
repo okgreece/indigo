@@ -83,8 +83,9 @@ export class CubeDetailComponent {
   }
 
   get name() {
-    return this.cube?this.cube.name:"";
+    return this.cube.pckg?this.cube.pckg.title:"";
   }
+
 
 
   get model():Model {

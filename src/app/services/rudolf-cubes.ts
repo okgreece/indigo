@@ -1,22 +1,26 @@
 import 'rxjs/add/operator/map';
 import {Injectable} from '@angular/core';
-import {Http} from '@angular/http';
+import {Http, URLSearchParams} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import {Cube} from "../models/cube";
 import {AggregateRequest} from "../models/aggregate/aggregateRequest";
 import {Dimension} from "../models/dimension";
 import 'rxjs/add/operator/mergeMap'
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class RudolfCubesService {
-  private API_PATH:string = 'http://ws307.math.auth.gr/rudolf/public/api/v3/cubes';
+  private API_PATH:string = environment.apiUrl+"/api/"+
+    environment.versionSuffix +"/cubes";
+  private API_PACKAGES_PATH:string = environment.apiUrl+"/search/package";
+  private API_PACKAGE_PATH:string = environment.apiUrl+"/api/"+environment.versionSuffix+"/info";
 
   constructor(private http:Http) {
   }
 
   searchCubes(queryTitle:string):Observable<Cube[]> {
-    return this.http.get(`${this.API_PATH}`)
-      .map(res => res.json().data)
+    return this.http.get(`${this.API_PACKAGES_PATH}`)
+      .map(res => res.json())
       ;
   }
 
@@ -31,10 +35,26 @@ export class RudolfCubesService {
           observables.push(this.loadDimensionMembers(cube, dimension));
         });
 
+        observables.push(this.retrievePackage(cube));
 
         return Observable.forkJoin(observables, function () {
+          debugger;
           return cube;
         });
+      });
+  }
+
+  retrievePackage(cube:Cube):Observable<Cube> {
+    return this.http.get(`${this.API_PACKAGE_PATH}/${cube.name}/package`)
+      .map(res => {
+
+        let pckg = res.json();
+
+        cube.pckg = pckg;
+
+        return pckg;
+
+
       });
   }
 
@@ -47,7 +67,13 @@ export class RudolfCubesService {
     let cutString = element.cuts.map(c=>c.column.ref+c.transitivity.key + ":" + c.value).join('|');
     let aggregatesString =  element.aggregates.map(a=>a.column.ref).join("|");
 
-    return this.http.get(`${this.API_PATH}/${element.cube.name}/aggregate?drilldown=${drilldownString}&pagesize=${element.pageSize}&page=${element.page}&order=${orderString}&cut=${cutString}&aggregates=${aggregatesString}`)
+    let params = new URLSearchParams();
+    if(element.drilldowns.length>0) params.set("drilldown", drilldownString);
+    if(element.cuts.length>0) params.set("cut", cutString);
+    if(element.sorts.length>0) params.set("order", orderString);
+    if(element.aggregates.length>0) params.set("aggregates", aggregatesString);
+
+    return this.http.get(`${this.API_PATH}/${element.cube.name}/aggregate`, {search:params})
       .map(res => {
         return res.json();
       })
@@ -80,7 +106,7 @@ export class RudolfCubesService {
 
           let members = new Map<string, Object>();
 
-          for(var key in data){
+          for(let key in data){
             if(data.hasOwnProperty(key))
               members.set(key, data[key]);
           }

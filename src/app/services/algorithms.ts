@@ -9,6 +9,7 @@ import 'rxjs/add/operator/mergeMap'
 import {Algorithm} from "../models/analysis/algorithm";
 import {Input, InputTypes} from "../models/analysis/input";
 import {Output, OutputTypes} from "../models/analysis/output";
+import {environment} from "../../environments/environment";
 
 @Injectable()
 export class AlgorithmsService {
@@ -73,7 +74,7 @@ export class AlgorithmsService {
     timeSeriesAlgorithm.outputs.set(json_output.name, json_output);
 
     timeSeriesAlgorithm.method = RequestMethod.Post;
-    timeSeriesAlgorithm.endpoint = new URL("http://okfnrg.math.auth.gr/ocpu/library/TimeSeries.OBeu/R/babbage.tsa.obeu");
+    timeSeriesAlgorithm.endpoint = new URL(environment.DAMUrl+"/library/TimeSeries.OBeu/R/babbage.tsa.obeu");
 
 
     return timeSeriesAlgorithm;

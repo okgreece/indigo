@@ -154,7 +154,7 @@ export class CubeAnalyticsDetailComponent {
   }
 
   get name() {
-    return this.cube?this.cube.name:"";
+    return this.cube?this.cube.pckg.title:"";
   }
 
   public onRequestBuilt($request, algorithmName, inputName):void{
