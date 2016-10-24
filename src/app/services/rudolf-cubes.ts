@@ -59,7 +59,6 @@ export class RudolfCubesService {
   }
 
   aggregate(element:AggregateRequest):Observable<Cube> {
-    debugger;
     // http://ws307.math.auth.gr/rudolf/public/api/3/cubes/budget-thessaloniki-expenditure-2012__1ef74/aggregate?
     // drilldown=administrativeClassification.notation|administrativeClassification.prefLabel&pagesize=30&order=amount.sum:desc
     let drilldownString = element.drilldowns.map(d => d.column.ref).join('|');

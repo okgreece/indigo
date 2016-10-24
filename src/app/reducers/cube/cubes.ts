@@ -24,18 +24,17 @@ export function reducer(state = initialState, action: cube.Actions | collection.
   switch (action.type) {
     case cube.ActionTypes.SEARCH_COMPLETE:
     case collection.ActionTypes.LOAD_SUCCESS: {
-      const cubes = action.payload;
-      const newCubes = cubes.filter(cube => !state.entities[cube.name]);
-
-      const newCubeIds = newCubes.map(cube => cube.name);
-      const newCubeEntities = newCubes.reduce((entities: { [id: string]: Cube }, cube: Cube) => {
+      const packages = action.payload;
+      const newPackages = packages.filter(pckg => !state.entities[pckg.id]);
+      const newPackageIds = newPackages.map(pckg => pckg.id);
+      const newCubeEntities = newPackages.reduce((entities: { [id: string]: any }, pckg: any) => {
         return Object.assign(entities, {
-          [cube.name]: cube
+          [pckg.id]: {pckg:pckg.package, id:pckg.id}
         });
       }, {});
-
+debugger;
       return {
-        ids: [ ...state.ids, ...newCubeIds ],
+        ids: [ ...state.ids, ...newPackageIds ],
         entities: Object.assign({}, state.entities, newCubeEntities),
         selectedCubeId: state.selectedCubeId
       };
@@ -43,15 +42,15 @@ export function reducer(state = initialState, action: cube.Actions | collection.
 
     case cube.ActionTypes.LOAD: {
       const cube = action.payload;
-
-      if (state.ids.indexOf(cube.name) > -1) {
+debugger;
+/*      if (state.ids.indexOf(cube.name) > -1) {
         return state;
-      }
-
+      }*/
+      let mergedCube = Object.assign({}, cube, state.entities[cube.name]);
       return {
         ids: [ ...state.ids, cube.name ],
         entities: Object.assign({}, state.entities, {
-          [cube.name]: cube
+          [cube.name]: mergedCube
         }),
         selectedCubeId: state.selectedCubeId
       };
@@ -106,18 +105,6 @@ export function getSelectedCube(state$: Observable<State>) {
 }
 
 
-export function getCube(state$: Observable<State>) {
-
-  return combineLatest<{ [id: string]: Cube }, string>(
-    state$.let(getCubeEntities),
-    state$.let(getSelectedCubeId)
-  )
-  .map(([ entities, selectedCubeId ]) => {
-    let cube = new Cube().deserialize(entities[selectedCubeId]);
-    return  cube;
-
-    });
-}
 
 export function getAllCubes(state$: Observable<State>) {
   return combineLatest<{ [id: string]: Cube }, string[]>(

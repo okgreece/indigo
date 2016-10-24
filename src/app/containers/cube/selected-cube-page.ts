@@ -25,6 +25,8 @@ export class SelectedCubePageComponent {
 
   constructor(private store: Store<fromRoot.State>) {
     this.cube$ = store.let(fromRoot.getSelectedCube);
+    this.cube$.subscribe(function (data) {
+    });
     this.isSelectedCubeInCollection$ = store.let(fromRoot.isSelectedCubeInCollection);
   }
 

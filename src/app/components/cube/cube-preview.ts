@@ -7,7 +7,7 @@ import {Cube} from '../../models/cube';
   template: `
   <md-card>
     <md-card-title-group>
-      <md-card-title>{{ cube.package.title }}</md-card-title>
+      <md-card-title>{{ cube.pckg.title }}</md-card-title>
     </md-card-title-group>
     <div class="row">
       <a [routerLink]=" '/cube/indicators/' + cube.id">Indicators Builder</a>
