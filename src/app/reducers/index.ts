@@ -50,8 +50,8 @@ import * as fromCubeSearch from './cube/search';
 import * as fromCubes from './cube/cubes';
 import * as fromCubesCollection from './cube/collection';
 import * as fromTrees from './tree/trees';
+import * as fromExecutions from './execution/execution';
 import {Cube} from "../models/cube";
-import {TreesState} from "./tree/trees";
 import {environment} from "../../environments/environment";
 
 
@@ -69,6 +69,7 @@ export interface State {
   cubes: fromCubes.State;
   cubeCollection: fromCubesCollection.State;
   trees: fromTrees.TreesState;
+  executions: fromExecutions.State;
 }
 
 
@@ -88,7 +89,8 @@ const reducers = {
   cubeSearch: fromCubeSearch.reducer,
   cubes: fromCubes.reducer,
   cubeCollection: fromCubesCollection.reducer,
-  trees: fromTrees.reducer
+  trees: fromTrees.reducer,
+  executions: fromExecutions.reducer
 };
 
 const developmentReducer = compose(storeFreeze, combineReducers)(reducers);
@@ -205,6 +207,24 @@ export const isSelectedBookInCollection = function (state$: Observable<State>) {
   )
   .map(([ ids, selectedBook ]) => ids.indexOf(selectedBook.id) > -1);
 };
+
+
+
+
+
+
+
+
+
+export function getExecutionState(state$: Observable<State>) {
+  return state$.select(s => {
+    return s.executions
+  });
+}
+
+
+export const getExecutionLoading = compose(fromExecutions.getLoading, getExecutionState);
+
 
 
 

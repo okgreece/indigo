@@ -108,7 +108,7 @@ export class AcfChartVisualization extends AfterViewInit {
 
 
     let x = d3.scale.ordinal()
-      .rangeRoundBands([0, viewerWidth], 1-(1/correlations.length));
+      .rangeRoundBands([0, viewerWidth], 0.9+(0.001*correlations.length));
 
     let y = d3.scale.linear()
       .range([viewerHeight, 0]);

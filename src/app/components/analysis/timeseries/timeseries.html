@@ -3,7 +3,15 @@
 
   <div class="col-sm-12">  <analytics-line-chart  class="col-sm-12" style="min-height: 500px;"   [values]="data?.forecast.values"></analytics-line-chart>
   </div>
+  <hr class="col-sm-12"/>
 
+  <h3>Decomposition</h3>
+  <div class="col-sm-6"><h4 class="text-center">Trends</h4>  <analytics-line-chart  class="col-sm-12" style="min-height: 500px;"   [values]="data?.decomposition.trends"></analytics-line-chart>
+  </div>
+
+  <div class="col-sm-6"><h4 class="text-center">Residuals</h4>  <analytics-line-chart  class="col-sm-12" style="min-height: 500px;"   [values]="data?.decomposition.remainders"></analytics-line-chart>
+  </div>
+  <hr class="col-sm-12"/>
   <div class="col-sm-6"><h3>ACF</h3>
     <analytics-acf-chart  class="col-sm-12" style="min-height: 250px;"   [data]="data?.autocorrelation.acf.regular"></analytics-acf-chart>
   </div>

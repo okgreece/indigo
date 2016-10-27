@@ -113,16 +113,17 @@ export class LineChartVisualization extends AfterViewInit {
 
 
     let amounts =_.flatten(data.map(function (d:any) {
-      let values = [Math.abs(d.amount)];
-      if(_.has(d,"up80")) values.push(Math.abs(d.up80));
-      if(_.has(d,"up95")) values.push(Math.abs(d.up95));
-      if(_.has(d,"low80")) values.push(Math.abs(d.low80));
-      if(_.has(d,"low95")) values.push(Math.abs(d.low95));
+      let values = [(d.amount)];
+      if(_.has(d,"up80")) values.push((d.up80));
+      if(_.has(d,"up95")) values.push((d.up95));
+      if(_.has(d,"low80")) values.push((d.low80));
+      if(_.has(d,"low95")) values.push((d.low95));
       return values;
 
     }));
 
     let max =1.1* d3.max(amounts);
+    let min = (1-(0.1*Math.sign(d3.min(amounts))))* d3.min(amounts);
 
 
 
@@ -170,7 +171,7 @@ export class LineChartVisualization extends AfterViewInit {
 
 
       x.domain(d3.extent(data, function(d:any) { return d.year; }));
-      y.domain([-max,max]);
+      y.domain([min,max]);
 
     svg.append("g")
       .attr("class", "x axis")
@@ -190,6 +191,7 @@ export class LineChartVisualization extends AfterViewInit {
       .attr("transform", "rotate(-90)")
       .attr("y", 6)
       .attr("dy", ".71em")
+      .attr("dx", "-0.71em")
       .style("text-anchor", "end")
       .text("Amount");
 
@@ -230,6 +232,14 @@ export class LineChartVisualization extends AfterViewInit {
       .style("stroke", "black")
       .style("fill", "none")
       .style("stroke-width", "1");
+
+    svg.append("svg:line")
+      .attr("x1", 0)
+      .attr("x2", viewerWidth)
+      .attr("y1", y(0))
+      .attr("y2",y(0))
+      .style("stroke", "black");
+
 
   }
 

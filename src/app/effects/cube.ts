@@ -49,7 +49,7 @@ export class CubeEffects {
         .takeUntil(nextSearch$)
         .map(cubes => {return new cube.SearchCompleteAction(cubes.filter(function (cube) {
           if(query=="")return true;
-          return  (cube.package.title.indexOf(query)>-1);
+          return  (cube.package.title.toLocaleLowerCase().indexOf(query.toLocaleLowerCase())>-1);
         }));})
         .catch(() => of(new cube.SearchCompleteAction([])));
     });

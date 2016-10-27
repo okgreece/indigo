@@ -93,6 +93,34 @@ export class AnalysisService {
            });
          }
 
+
+         let stl_plot = response.param[0]["stl.plot"];
+         let trends:any = [];
+         for(let i=0;i<stl_plot.time.length;i++){
+           let val = {
+             year: parseInt(stl_plot.time[i]),
+             amount:parseFloat(stl_plot.trend[i])
+           };
+           if(stl_plot["conf.interval.low"]){
+             val.low80 = stl_plot["conf.interval.low"][i];
+           }
+           if(stl_plot["conf.interval.up"]){
+             val.up80 = stl_plot["conf.interval.up"][i];
+           }
+           trends.push(val);
+         }
+         let remainders:any = [];
+         for(let i=0;i<stl_plot.time.length;i++){
+           let val = {
+             year: parseInt(stl_plot.time[i]),
+             amount:parseFloat(stl_plot.remainder[i])
+           };
+
+           remainders.push(val);
+         }
+
+
+
          return {
            forecast:{
              values: values, model: forecasts["ts.model"][0]
@@ -126,6 +154,8 @@ export class AnalysisService {
              }
            },
            decomposition:{
+             trends: trends,
+             remainders: remainders
 
            }
 

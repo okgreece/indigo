@@ -38,7 +38,6 @@ export class RudolfCubesService {
         observables.push(this.retrievePackage(cube));
 
         return Observable.forkJoin(observables, function () {
-          debugger;
           return cube;
         });
       });

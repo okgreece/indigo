@@ -4,19 +4,17 @@ import {Cube} from '../../models/cube';
 
 @Component({
   selector: 'bc-cube-preview',
-  template: `
-  <md-card>
-    <md-card-title-group>
-      <md-card-title>{{ cube.pckg.title }}</md-card-title>
-    </md-card-title-group>
-    <div class="row">
-          <button [routerLink]="'/cube/analytics/' + cube.id" color="primary" md-raised-button>Analytics & Data Mining</button>
+  template: `<md-card>
+  <md-card-title-group>
+    <md-card-title>{{ cube.pckg.title }}</md-card-title>
+  </md-card-title-group>
+  <div class="row text-center">
+    <button [routerLink]="'/cube/analytics/' + cube.id" color="primary" md-raised-button>Analytics & Data Mining
+    </button>
+    <button [routerLink]="'/cube/indicators/' + cube.id" md-raised-button>Indicators Builder</button>
+  </div>
 
-      <button [routerLink]="'/cube/indicators/' + cube.id"  md-raised-button>Indicators Builder</button>
-
-    </div>
-   
-  </md-card>
+</md-card>
 
   `,
   styles: [`

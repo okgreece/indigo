@@ -74,9 +74,13 @@
 
               </div>
 
-              <div class="col-sm-6">
+              <div class="col-sm-8">
                 <div >
-                  <analytics-timeseries-output  class="col-sm-12" style="min-height: 500px;"   [data]="analysisCalls[algorithm.name]?.outputs['values']"></analytics-timeseries-output>
+                  Select an aggregate, a time-related drilldown and the prediction steps parameter from the left and click on the execute button on top right.
+
+                  <md-spinner *ngIf="loading$|async"></md-spinner>
+                  <analytics-timeseries-output  class="col-sm-12" style="min-height: 500px;"   [data]="analysisCalls[algorithm.name]?.outputs['values']">
+                  </analytics-timeseries-output>
                 </div>
               </div>
             </div>
