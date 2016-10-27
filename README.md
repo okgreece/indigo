@@ -1,34 +1,19 @@
-#@ngrx example application
+#Indigo: the Analysis and Data Mining frontend for OpenBudgets.eu
 
-Example application utilizing @ngrx libraries, showcasing common patterns and best practices. 
-You can find the live app [here](http://ngrx.github.io/example-app/).
+Indigo is a browser application written in TypeScript and based on Angular 2. With Indigo, users will be able to:
+1. Leverage the data mining and analysis features developed for the OpenBudgets.eu project
+2. Build expression-based indicators with aggregate requests as building blocks
 
-This app is a book collection manager. Using the Google Books API, the user can search for 
-books and add them to their collection. This application utilizes [@ngrx/db](https://github.com/ngrx/db) 
-to persist the collection across sessions; [@ngrx/store](https://github.com/ngrx/store) to manage 
-the state of the app and to cache requests made to the Google Books API; 
-[@angular/router](https://github.com/angular/angular) to manage navigation between routes; 
-and [@ngrx/effects](https://github.com/ngrx/effects) to isolate side effects. 
-
-Built with [angular-cli](https://github.com/angular/angular-cli)
-
-### Included
- - [ngrx/store](https://github.com/ngrx/store) - RxJS powered state management for Angular2 apps, inspired by Redux
- - [ngrx/effects](https://github.com/ngrx/effects) - Side effect model for @ngrx/store
- - [angular/router](https://github.com/angular/angular) - Angular2 Component Router
- - [ngrx/db](https://github.com/ngrx/db) - RxJS powered IndexedDB for Angular2 apps
- - [ngrx/store-devtools](https://github.com/ngrx/store-devtools) - Instrumentation for @ngrx/store enabling time-travel debugging
- - [codewareio/ngrx-store-freeze](https://github.com/codewareio/ngrx-store-freeze) - A @ngrx/store meta reducer that prevents state from being mutated
-
+Indigo was build to work with OpenSpending out of the box, at least for analysis processes that require just an aggregation request.
 ### Quick start
 
 ```bash
 # clone the repo
-git clone https://github.com/ngrx/example-app.git
+git clone https://github.com/okgreece/indigo
 
 
 # change directory to repo
-cd example-app
+cd indigo
 
 # Use npm or yarn to install the dependencies:
 npm install
@@ -40,7 +25,17 @@ yarn
 ng serve
 ```
 
-Navigate to [http://localhost:4200/](http://localhost:4200/) in your browser
+Navigate to [http://localhost:4200/indigo](http://localhost:4200/indigo) in your browser
 
 _NOTE:_ The above setup instructions assume you have added local npm bin folders to your path. 
 If this is not the case you will need to install the angular-cli globally.
+
+### Configuration
+Indigo lets you set the following configuration options, by editing the `src/environments/environment.ts` file:
+
+  1. `production`: Keep this value false, otherwise the environment.prod will be used instead,
+  2. `apiUrl`: This is the cubes endpoint URL. For example, `http://yourserver/rudolf/public` or `http://next.openspending.org`,
+  
+  3. `DAMUrl`: The backend's URL. For the demo this is an OpenCPU instance at `http://okfnrg.math.auth.gr/ocpu/`,
+  4. `versionSuffix`: Legacy support for rudolf that had "v3" instead of plain "3" in its API URL. For OpenSpending, use "3". This will be depreciated in next versions, as rudolf is also going to follow the same numbering scheme,
+  5. `baseHref`: The path of the application. Defaults to "indigo/"

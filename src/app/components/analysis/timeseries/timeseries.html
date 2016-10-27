@@ -1,0 +1,23 @@
+<div class="col-sm-12" *ngIf="data" #container>
+  <h3>Forecasts from {{data?.forecast.model}}</h3>
+
+  <div class="col-sm-12">  <analytics-line-chart  class="col-sm-12" style="min-height: 500px;"   [values]="data?.forecast.values"></analytics-line-chart>
+  </div>
+
+  <div class="col-sm-6"><h3>ACF</h3>
+    <analytics-acf-chart  class="col-sm-12" style="min-height: 250px;"   [data]="data?.autocorrelation.acf.regular"></analytics-acf-chart>
+  </div>
+  <div class="col-sm-6"> <h3>ACF residuals</h3>
+    <analytics-acf-chart  class="col-sm-12" style="min-height: 250px;"   [data]="data?.autocorrelation.acf.residuals"></analytics-acf-chart>
+  </div>
+  <div class="col-sm-6"><h3>PACF</h3>
+    <analytics-acf-chart  class="col-sm-12" style="min-height: 250px;"   [data]="data?.autocorrelation.pacf.regular"></analytics-acf-chart>
+  </div>
+  <div class="col-sm-6"> <h3>PACF residuals</h3>
+    <analytics-acf-chart  class="col-sm-12" style="min-height: 250px;"   [data]="data?.autocorrelation.pacf.residuals"></analytics-acf-chart>
+  </div>
+
+
+
+ </div>
+

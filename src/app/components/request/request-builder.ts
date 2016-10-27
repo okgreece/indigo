@@ -98,7 +98,25 @@ export class RequestBuilder{
   }
   _cube:Cube;
 
+
+
+  @Output() requestChange = new EventEmitter();
+
+
+  public get request():AggregateRequest{
+    return this.newAggregateRequest;
+  }
+
+  @Input()
+  public set request(value:AggregateRequest){
+    let that = this;
+    that.newAggregateRequest = value;
+  }
+
+
+
   constructor(private rudolfCubesService:RudolfCubesService){
+
   }
 
 
@@ -124,6 +142,9 @@ export class RequestBuilder{
     let newAggregate = new AggregateParam();
     newAggregate.column = this._newAggregateAggregate;
     this.newAggregateRequest.aggregates.push(newAggregate);
+
+    this.requestChange.emit(this.request);
+
 
   }
 

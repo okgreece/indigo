@@ -1,20 +1,20 @@
 <md-card>
   <md-card-title-group>
-    <md-card-title>Cube: {{ (cube$|async).name }}</md-card-title>
+    <md-card-title>Cube: {{ (cube$|async).pckg.title }}</md-card-title>
   </md-card-title-group>
 
   <md-card-content>
     <div class="col-sm-12">
       <div class="col-sm-12">
         <md-card *ngFor="let algorithm of algorithms">
-          <md-card-title-group>
-            <md-card-title>{{ algorithm.title }}</md-card-title>
-          </md-card-title-group>
+
           <md-card-content>
             <p>
               <md-toolbar color="primary">
 
-                <button md-mini-fab (click)="execute(algorithm)">
+                  <h4>{{ algorithm.title }}</h4>
+                <button md-tooltip="Execute" style="margin-left: auto" md-mini-fab (click)="execute(algorithm)">
+
                   <md-icon class="md-24">play_circle_outline</md-icon>
                 </button>
 
@@ -23,14 +23,16 @@
               </md-toolbar>
             </p>
 
+
             <div class="row">
               <div class="col-sm-4">
                 <div *ngFor="let input of algorithm.inputs|iterable" class="col-sm-12">
-                  <h4>Input: {{input.title}}</h4>
                   <div *ngIf="input.type==InputTypes.BABBAGE_RAW_DATA">
-                    <request-builder [cube]="cube$|async" (onRequestBuilt)="onRequestBuilt($event, algorithm.name, input.name)"></request-builder>
+                    <h4>Input: {{input.title}}</h4>
+
+                    <request-builder [cube]="cube$|async" [(request)]="newAggregateRequest"></request-builder>
                   </div>
-                  <div *ngIf="input.type==InputTypes.ATTRIBUTE_REF">
+                  <!--<div *ngIf="input.type==InputTypes.ATTRIBUTE_REF">
                     <select class="form-control" [(ngModel)]="analysisCalls[algorithm.name]?.inputs[input.name]" >
                       <option [ngValue]="item" *ngFor="let item of (cube$|async).model?.attributes|iterable">{{item |
                         nestedProperty:'fullLabel'}}
@@ -48,10 +50,24 @@
                     </div>
 
                   </div>
+-->
 
-                  <div *ngIf="input.type==InputTypes.PARAMETER" >
-                    <input  type="text" [(ngModel)]="analysisCalls[algorithm.name]?.inputs[input.name]">
+
+
+                  <div class="row-fluid col-sm-12 well" *ngIf="input.type==InputTypes.PARAMETER" >
+                    <h4>Input: parameter</h4>
+                    <div class="col-sm-12">
+
+                      <input  class="form-control"  value="{{input.default_value}}"  placeholder="{{input.title}}" type="{{input.data_type}}" [(ngModel)]="analysisCalls[algorithm.name]?.inputs[input.name]">
+
+                    </div>
+
                   </div>
+
+
+
+
+
 
                 </div>
 
@@ -59,9 +75,8 @@
               </div>
 
               <div class="col-sm-6">
-                <h4>Output</h4>
                 <div >
-                  <analytics-line-chart  class="col-sm-12" style="min-height: 500px;"   [values]="analysisCalls[algorithm.name]?.outputs['values']"></analytics-line-chart>
+                  <analytics-timeseries-output  class="col-sm-12" style="min-height: 500px;"   [data]="analysisCalls[algorithm.name]?.outputs['values']"></analytics-timeseries-output>
                 </div>
               </div>
             </div>

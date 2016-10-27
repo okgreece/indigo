@@ -24,6 +24,7 @@ import {ValueNode} from "../../models/value/valueNode";
 import {Value} from "../../models/value/val";
 import * as $ from 'jquery'
 import {ReplaceAction} from "../../actions/tree";
+import {AggregateRequest} from "../../models/aggregate/aggregateRequest";
 /*
  * We're loading this component asynchronously
  * We are using some magic with es6-promise-loader that will wrap the module with a Promise
@@ -947,11 +948,12 @@ export class TreeBuilder implements AfterViewInit {
   }
 
 
-  public onRequestBuilt($request):void{
+  public buildAggregateRequestNode():void{
+    debugger;
     if (!this.activeNode)return;
-
+    this.newAggregateRequest.cube = this.cube;
     let aggregateNode = new AggregateNode();
-    aggregateNode.element = $request;
+    aggregateNode.element = this.newAggregateRequest;
 
     if(this.activeNode instanceof FuncNode){
       this.activeNode.children.push(aggregateNode);
@@ -965,9 +967,12 @@ export class TreeBuilder implements AfterViewInit {
 
     this.store.dispatch(new ReplaceAction(this.expressionTreeInstance));
 
-
+    this.newAggregateRequest = new AggregateRequest;
   }
 
   editableExpressionTreeInstance: string;
+
+
+  newAggregateRequest = new AggregateRequest;
 
 }

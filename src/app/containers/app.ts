@@ -44,11 +44,11 @@ import * as layout from '../actions/layout';
           Browse Books
         </bc-nav-item>     -->   
         
-        <bc-nav-item (activate)="closeSidenav()" routerLink="/cubes" icon="collections_bookmark" hint="View your bookmarked datasets">
+     <!--   <bc-nav-item (activate)="closeSidenav()" routerLink="/cubes" icon="collections_bookmark" hint="View your bookmarked datasets">
           My Collection
-        </bc-nav-item>
-        <bc-nav-item (activate)="closeSidenav()" routerLink="/cube/find" icon="search" hint="Find a dataset!">
-          Browse Datasets
+        </bc-nav-item>-->
+        <bc-nav-item (activate)="closeSidenav()" routerLink="/cube/find" icon="search" >
+          Browse Cubes
         </bc-nav-item>
        <button md-button #mybutton (click)="closeSidenav()">Close</button>
 

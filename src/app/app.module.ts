@@ -38,6 +38,8 @@ import {TreeExecution} from "./services/tree-execution";
 import {AlgorithmsService} from "./services/algorithms";
 import {CubeAnalyticsPage} from "./containers/cube/cube-analytics";
 import {AnalysisService} from "./services/analysis";
+import {environment} from "../environments/environment";
+import {APP_BASE_HREF} from '@angular/common';
 
 
 
@@ -47,6 +49,7 @@ import {AnalysisService} from "./services/analysis";
     BrowserModule,
     MaterialModule.forRoot(),
     ComponentsModule,
+
     RouterModule.forRoot(routes, { useHash: true }),
 
     /**
@@ -113,11 +116,13 @@ import {AnalysisService} from "./services/analysis";
     RudolfCubesService,
     TreeExecution,
     AlgorithmsService,
-    AnalysisService
+    AnalysisService,
+    {provide: APP_BASE_HREF, useValue: environment.baseHref}
   ],
   bootstrap: [
     AppComponent
   ]
 })
 export class AppModule {
+  public environment = environment;
 }

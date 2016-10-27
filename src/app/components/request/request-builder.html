@@ -51,9 +51,14 @@
 
   <div class="col-sm-12 form-group">
     <select class="form-control" [(ngModel)]="newCutAttribute" (ngModelChange)="selectedCutChanged($event)">
-      <option [ngValue]="item" *ngFor="let item of cube?.model?.attributes|iterable">{{item |
-        nestedProperty:'fullLabel'}}
-      </option>
+
+      <optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" label="{{dim.label}}">
+        <option [ngValue]="item" *ngFor="let item of dim?.attributes|iterable">{{item |
+          nestedProperty:'label'}}
+        </option>
+      </optgroup>
+
+
     </select>
   </div>
 
@@ -104,9 +109,11 @@
 
   <div class="col-sm-9 form-group">
     <select class="form-control" [(ngModel)]="newDrilldownAttribute">
-      <option [ngValue]="item" *ngFor="let item of cube?.model?.attributes|iterable">{{item |
-        nestedProperty:'fullLabel'}}
-      </option>
+      <optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" label="{{dim.label}}">
+        <option [ngValue]="item" *ngFor="let item of dim?.attributes|iterable">{{item |
+          nestedProperty:'label'}}
+        </option>
+      </optgroup>
     </select>
 
   </div>
@@ -136,9 +143,11 @@
 
   <div class="col-sm-12 form-group">
     <select class="form-control" [(ngModel)]="newSortAttribute">
-      <option [ngValue]="item" *ngFor="let item of cube?.model?.attributes|iterable">{{item |
-        nestedProperty:'fullLabel'}}
-      </option>
+      <optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" label="{{dim.label}}">
+        <option [ngValue]="item" *ngFor="let item of dim?.attributes|iterable">{{item |
+          nestedProperty:'label'}}
+        </option>
+      </optgroup>
     </select>
 
   </div>
@@ -178,14 +187,3 @@
 
 
 </div>
-<hr style="display: inline-block">
-<div class="row-fluid col-sm-12 text-center well">
-
-  <button md-raised-button color="primary" (click)="addAggregateChild()">
-    ADD REQUEST NODE
-  </button>
-
-
-</div>
-
-<hr style="display: inline-block">

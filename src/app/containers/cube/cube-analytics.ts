@@ -19,7 +19,7 @@ import {ActivatedRoute} from "@angular/router";
 
   template: `
     <cube-analytics-detail
-      [cube]="cube$|async"
+     
       [inCollection]="isCubeInCollection$ | async"
       (add)="addToCollection($event)"
       (remove)="removeFromCollection($event)">

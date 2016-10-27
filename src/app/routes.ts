@@ -15,7 +15,7 @@ import {CubeAnalyticsPage} from "./containers/cube/cube-analytics";
 export const routes: Routes = [
   {
     path: '',
-    component: CollectionPageComponent
+    component: FindCubePageComponent
   },
   {
     path: 'cubes',

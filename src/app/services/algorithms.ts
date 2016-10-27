@@ -39,7 +39,7 @@ export class AlgorithmsService {
     raw_data_input.cardinality = 1;
     raw_data_input.type = InputTypes.BABBAGE_RAW_DATA;
     raw_data_input.name = "json_data";
-    raw_data_input.title = "Raw data coming from an aggregation";
+    raw_data_input.title = "Data coming from an aggregation";
 
     let time_dimension_input = new Input();
     time_dimension_input.cardinality = 1;
@@ -58,6 +58,8 @@ export class AlgorithmsService {
     prediction_steps_input.type = InputTypes.PARAMETER;
     prediction_steps_input.name = "prediction_steps";
     prediction_steps_input.title = "Prediction Steps";
+    prediction_steps_input.data_type = "number";
+    prediction_steps_input.default_value = 4;
 
 
     timeSeriesAlgorithm.inputs.set(raw_data_input.name, raw_data_input);

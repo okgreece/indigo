@@ -39,7 +39,8 @@ export class AggregateNode extends ExpressionNode implements Serializable<Aggreg
 
   deserialize(input:any):AggregateNode {
 
-    this._aggregate = new AggregateRequest().deserialize(input.element)
+    this._aggregate = new AggregateRequest().deserialize(input.element);
+    this.id = input.id;
 
     return this;
   }

@@ -1,6 +1,7 @@
 import { Action } from '@ngrx/store';
 import { type } from '../util';
 import {ExpressionTree} from "../models/expressionTree";
+import {ExpressionNode} from "../models/expressionNode";
 
 
 
@@ -14,6 +15,7 @@ import {ExpressionTree} from "../models/expressionTree";
  */
 export const ActionTypes = {
   REPLACE:           type('[Tree] Replace'),
+  EXECUTE:           type('[Tree] Execute')
 
 };
 
@@ -28,7 +30,14 @@ export const ActionTypes = {
 export class ReplaceAction implements Action {
   type = ActionTypes.REPLACE;
 
-  constructor(public payload: ExpressionTree) { }
+  constructor(public payload: ExpressionTree) {
+  }
+}
+
+export class ExecuteAction implements Action {
+  type = ActionTypes.EXECUTE;
+
+  constructor(public tree: ExpressionTree, public node: ExpressionNode) { }
 }
 
 
@@ -37,5 +46,5 @@ export class ReplaceAction implements Action {
  * so that reducers can easily compose action types
  */
 export type Actions
-  = ReplaceAction
+  = ReplaceAction|ExecuteAction
   ;

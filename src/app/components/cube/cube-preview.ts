@@ -10,13 +10,12 @@ import {Cube} from '../../models/cube';
       <md-card-title>{{ cube.pckg.title }}</md-card-title>
     </md-card-title-group>
     <div class="row">
-      <a [routerLink]=" '/cube/indicators/' + cube.id">Indicators Builder</a>
-    </div>
-    <div class="row">
-      <a [routerLink]=" '/cube/analytics/' + cube.id">Analytics & Data Mining</a>
-    </div>
+          <button [routerLink]="'/cube/analytics/' + cube.id" color="primary" md-raised-button>Analytics & Data Mining</button>
 
+      <button [routerLink]="'/cube/indicators/' + cube.id"  md-raised-button>Indicators Builder</button>
 
+    </div>
+   
   </md-card>
 
   `,

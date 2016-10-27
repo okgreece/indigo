@@ -5,7 +5,8 @@
 
 export const environment = {
   production: false,
-  apiUrl:"http://next.openspending.org",
+  apiUrl:"http://ws307.math.auth.gr/rudolf/public",
   DAMUrl: "http://okfnrg.math.auth.gr/ocpu/",
-  versionSuffix: "3"
+  versionSuffix: "v3",
+  baseHref: "indigo/"
 };

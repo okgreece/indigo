@@ -46,6 +46,7 @@ export class FuncNode extends ExpressionNode {
 
     let children = [];
 
+    this.id = input.id;
 
     for(let child of input._children){
 

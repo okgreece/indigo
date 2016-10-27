@@ -5,6 +5,7 @@ import {AggregateNode} from "./aggregate/aggregateNode";
 import {Component, forwardRef} from '@angular/core';
 import {FuncNode} from "./func/funcNode";
 import {Serializable} from "./iserializeable";
+import {UUID} from "angular2-uuid";
 
 /**
  * Created by larjo_000 on 26/6/2016.
@@ -34,6 +35,8 @@ export class ExpressionNode implements Serializable<ExpressionNode>{
 
   }
 
+
+  public id = UUID.UUID();
 
   private _element:any;
 

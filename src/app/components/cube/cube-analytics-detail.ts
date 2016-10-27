@@ -19,6 +19,8 @@ import {InputTypes} from "../../models/analysis/input";
 import {AnalysisCall} from "../../models/analysis/analysisCall";
 import {AnalysisService} from "../../services/analysis";
 import {OutputTypes} from "../../models/analysis/output";
+import {AggregateRequest} from "../../models/aggregate/aggregateRequest";
+import {Attribute} from "../../models/attribute";
 
 /**
  * Tip: Export type aliases for your component's inputs and outputs. Until we
@@ -69,6 +71,11 @@ export type RemoveOutput = Cube;
     
     }
     
+    
+    md-toolbar.md-primary button{
+      color:black;
+    }
+    
   `]
 })
 export class CubeAnalyticsDetailComponent {
@@ -96,7 +103,7 @@ export class CubeAnalyticsDetailComponent {
    *
    * Tip: Utilize getters to keep templates clean in 'dumb' components.
    */
-  @Input() cube: Cube;
+ cube: Cube;
   cube$: Observable<Cube>;
   @Input() inCollection: InCollectionInput;
   @Output() add = new EventEmitter<AddOutput>();
@@ -157,23 +164,51 @@ export class CubeAnalyticsDetailComponent {
     return this.cube?this.cube.pckg.title:"";
   }
 
-  public onRequestBuilt($request, algorithmName, inputName):void{
+  isDateTime(column: Attribute):boolean{
+    debugger;
+    return this.cube.pckg.model.dimensions[column.dimension.orig_dimension].dimensionType == "datetime";
+  }
 
 
-    this.analysisCalls[algorithmName].inputs[inputName] = $request;
+  public buildAggregateRequest( algorithmName, inputName):void{
+
 
 
 
   }
 
+  public canExecute(algorithm:Algorithm){
+
+
+  }
 
   public execute(algorithm:Algorithm){
+    let dateTimeDimension = this.newAggregateRequest.drilldowns.find(drilldown=>this.isDateTime(drilldown.column));
+
+    this.newAggregateRequest.cube = this.cube;
+
+    if(dateTimeDimension!=undefined){
+      this.analysisCalls[algorithm.name].inputs["time"] = dateTimeDimension.column.ref;
+
+    }
+
+    if(this.newAggregateRequest.aggregates.length>0){
+      this.analysisCalls[algorithm.name].inputs["amount"] =this.newAggregateRequest.aggregates[0].column.ref;
+
+    }
+
+    this.analysisCalls[algorithm.name].inputs["json_data"] = this.newAggregateRequest;
+
+
+
     let that = this;
       this.analysisService.execute(algorithm, this.analysisCalls[algorithm.name]).subscribe(function (values) {
        that.analysisCalls[algorithm.name].outputs["values"] = values;
        that.ref.detectChanges();
     });
   }
+
+  newAggregateRequest = new AggregateRequest;
 
 
 }

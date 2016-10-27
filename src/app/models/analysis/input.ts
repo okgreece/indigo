@@ -23,5 +23,7 @@ export class Input{
   cardinality: number =1;
   type: string;
   title: string;
+  data_type: string;
+  default_value: any;
 
 }

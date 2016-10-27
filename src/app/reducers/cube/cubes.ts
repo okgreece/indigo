@@ -32,7 +32,6 @@ export function reducer(state = initialState, action: cube.Actions | collection.
           [pckg.id]: {pckg:pckg.package, id:pckg.id}
         });
       }, {});
-debugger;
       return {
         ids: [ ...state.ids, ...newPackageIds ],
         entities: Object.assign({}, state.entities, newCubeEntities),
@@ -42,11 +41,10 @@ debugger;
 
     case cube.ActionTypes.LOAD: {
       const cube = action.payload;
-debugger;
 /*      if (state.ids.indexOf(cube.name) > -1) {
         return state;
       }*/
-      let mergedCube = Object.assign({}, cube, state.entities[cube.name]);
+      let mergedCube = Object.assign({}, state.entities[cube.name],cube);
       return {
         ids: [ ...state.ids, cube.name ],
         entities: Object.assign({}, state.entities, {

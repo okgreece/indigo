@@ -6,8 +6,15 @@
       <md-tab>
         <template md-tab-label>Aggregate Request</template>
         <template md-tab-content>
-          <request-builder [cube]="cube" (onRequestBuilt)="onRequestBuilt($event)"></request-builder>
+          <request-builder [cube]="cube" [(request)]="newAggregateRequest"></request-builder>
+          <div class="row-fluid col-sm-12 text-center well">
 
+            <button md-raised-button color="primary" (click)="buildAggregateRequestNode()">
+              CREATE REQUEST
+            </button>
+
+
+          </div>
 
         </template>
       </md-tab>

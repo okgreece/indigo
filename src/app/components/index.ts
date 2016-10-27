@@ -27,6 +27,8 @@ import {ModalModule} from "ng2-bootstrap";
 import {JsonNodeComponent} from "../lib/json-tree/json-node";
 import {CubeAnalyticsDetailComponent} from "./cube/cube-analytics-detail";
 import {LineChartVisualization} from "./analysis/visualizations/lineChart";
+import {TimeSeriesOutputComponent} from "./analysis/timeseries/timeseries";
+import {AcfChartVisualization} from "./analysis/visualizations/acfChart";
 
 
 export const COMPONENTS = [
@@ -49,7 +51,9 @@ export const COMPONENTS = [
   JsonTreeComponent,
   CubeAnalyticsDetailComponent,
   LineChartVisualization,
-  JsonNodeComponent
+  JsonNodeComponent,
+  TimeSeriesOutputComponent,
+  AcfChartVisualization
 ];
 
 

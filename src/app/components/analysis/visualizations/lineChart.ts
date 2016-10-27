@@ -48,7 +48,7 @@ import {Store} from "@ngrx/store";
 }
 .lineUp95 {
   fill: none;
-  stroke: red;
+  stroke: green;
   stroke-width: 1.5px;
     stroke-dasharray: 5,5; 
 
@@ -64,7 +64,7 @@ import {Store} from "@ngrx/store";
 }
 .lineLow80 {
   fill: none;
-  stroke: yellow;
+  stroke: orange;
   stroke-width: 1.5px;
     stroke-dasharray: 5,5; 
 
@@ -104,13 +104,25 @@ export class LineChartVisualization extends AfterViewInit {
  private _values: any;
 
   private generateBarChart(data: any) {
-    let margin = {top: 20, right: 20, bottom: 30, left: 150};
+    let margin = {top: 20, right: 40, bottom: 30, left: 150};
 
 
 
     let viewerWidth = $(this.vizCanvas.nativeElement).width() - margin.left - margin.right;
     let viewerHeight = $(this.vizCanvas.nativeElement).height() - margin.top - margin.bottom;
 
+
+    let amounts =_.flatten(data.map(function (d:any) {
+      let values = [Math.abs(d.amount)];
+      if(_.has(d,"up80")) values.push(Math.abs(d.up80));
+      if(_.has(d,"up95")) values.push(Math.abs(d.up95));
+      if(_.has(d,"low80")) values.push(Math.abs(d.low80));
+      if(_.has(d,"low95")) values.push(Math.abs(d.low95));
+      return values;
+
+    }));
+
+    let max =1.1* d3.max(amounts);
 
 
 
@@ -158,12 +170,18 @@ export class LineChartVisualization extends AfterViewInit {
 
 
       x.domain(d3.extent(data, function(d:any) { return d.year; }));
-      y.domain(d3.extent(data, function(d:any) { return d.amount; }));
+      y.domain([-max,max]);
 
     svg.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + viewerHeight + ")")
-      .call(xAxis);
+      .call(xAxis)
+      .selectAll("text")
+      .attr("y", 0)
+      .attr("x", 9)
+      .attr("dy", ".35em")
+      .attr("transform", "rotate(45)")
+      .style("text-anchor", "start");
 
     svg.append("g")
       .attr("class", "y axis")
@@ -173,7 +191,7 @@ export class LineChartVisualization extends AfterViewInit {
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Amount (euros)");
+      .text("Amount");
 
     svg.append("path")
       .datum(data)
@@ -204,6 +222,14 @@ export class LineChartVisualization extends AfterViewInit {
       .attr("d", lineLow95);
 
 
+    svg.append("rect")
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("height", viewerHeight)
+      .attr("width", viewerWidth)
+      .style("stroke", "black")
+      .style("fill", "none")
+      .style("stroke-width", "1");
 
   }
 
