@@ -3,7 +3,7 @@
  */
 import {
   ChangeDetectionStrategy, ViewEncapsulation,
-  Component, Input, Directive, Attribute as MetadataAttribute, OnChanges, DoCheck, ElementRef, OnInit, SimpleChange,
+  Component, Input,   ElementRef,
   AfterViewInit, ViewChild
 } from '@angular/core';
 import {Inject, NgZone, ChangeDetectorRef} from '@angular/core';

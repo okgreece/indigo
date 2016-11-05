@@ -45,6 +45,11 @@ export const routes: Routes = [
     canActivate: [ CubeExistsGuard ],
     component: CubeAnalyticsPage
   },
+  {
+    path: 'cube/analytics/:id/algorithms',
+    canActivate: [ CubeExistsGuard ],
+    component: CubeAnalyticsPage
+  },
 
 
   {

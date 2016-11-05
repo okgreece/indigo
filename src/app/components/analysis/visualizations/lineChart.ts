@@ -112,7 +112,7 @@ export class LineChartVisualization extends AfterViewInit {
     let viewerHeight = $(this.vizCanvas.nativeElement).height() - margin.top - margin.bottom;
 
 
-    let amounts =_.flatten(data.map(function (d:any) {
+    let amounts=_.flatten(data.map(function (d:any) {
       let values = [(d.amount)];
       if(_.has(d,"up80")) values.push((d.up80));
       if(_.has(d,"up95")) values.push((d.up95));
@@ -128,38 +128,36 @@ export class LineChartVisualization extends AfterViewInit {
 
 
 
-    let x = d3.scale.linear()
+    let x = d3.scaleLinear()
       .range([0, viewerWidth]);
 
-    let y = d3.scale.linear()
+    let y = d3.scaleLinear()
       .range([viewerHeight, 0]);
 
-    let xAxis = d3.svg.axis()
-      .scale(x)
-      .orient("bottom").tickFormat(d3.format("d"))
+    let xAxis = d3.axisBottom(x).
+      tickFormat(d3.format("d"))
       /*.tickFormat(function(d){
         debugger;
         return d3.time.format('%Y')(new Date(d));
       })*/;
 
-    let yAxis = d3.svg.axis()
-      .scale(y)
-      .orient("left");
+    let yAxis = d3.axisLeft(y);
 
-    let line = d3.svg.line()
+
+    let line = d3.line()
       .x(function(d:any) { return x(d.year); })
       .y(function(d:any) { return y(d.amount); });
 
-    let lineUp80 = d3.svg.line()
+    let lineUp80 = d3.line()
       .x(function(d:any) { return x(d.year); })
       .y(function(d:any) { return y(d.up80); });
-    let lineUp95 = d3.svg.line()
+    let lineUp95 = d3.line()
       .x(function(d:any) { return x(d.year); })
       .y(function(d:any) { return y(d.up95); });
-    let lineLow80 = d3.svg.line()
+    let lineLow80 = d3.line()
       .x(function(d:any) { return x(d.year); })
       .y(function(d:any) { return y(d.low80); });
-    let lineLow95 = d3.svg.line()
+    let lineLow95 = d3.line()
       .x(function(d:any) { return x(d.year); })
       .y(function(d:any) { return y(d.low95); });
 
@@ -243,7 +241,7 @@ export class LineChartVisualization extends AfterViewInit {
 
   }
 
-  parseTime = d3.time.format("y");
+  parseTime = d3.timeParse("y");
 
   init(values: any) {
 

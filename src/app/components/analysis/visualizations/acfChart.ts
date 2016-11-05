@@ -107,23 +107,21 @@ export class AcfChartVisualization extends AfterViewInit {
 
 
 
-    let x = d3.scale.ordinal()
-      .rangeRoundBands([0, viewerWidth], 0.9+(0.001*correlations.length));
+    let x = d3.scaleBand()
+      .rangeRound([0, viewerWidth])
+      .padding(0.9+(0.001*correlations.length));
 
-    let y = d3.scale.linear()
+    let y = d3.scaleLinear()
       .range([viewerHeight, 0]);
 
 
 
 
-    let xAxis = d3.svg.axis()
-      .scale(x)
-      .orient("bottom")
+    let xAxis = d3.axisBottom(x)
       .tickFormat(d3.format("d"));
 
-    let yAxis = d3.svg.axis()
-      .scale(y)
-      .orient("left");
+    let yAxis = d3.axisLeft(y)
+      ;
 
 
 
@@ -164,7 +162,7 @@ export class AcfChartVisualization extends AfterViewInit {
       .attr("x", function (d:any) {
         return x(d["lag"]);
       })
-      .attr("width", x.rangeBand())
+      .attr("width", x.bandwidth())
       .attr("y", function (d:any) {
         if (d.correlation > 0){
           return y(d.correlation);
@@ -232,7 +230,7 @@ export class AcfChartVisualization extends AfterViewInit {
 
   }
 
-  parseTime = d3.time.format("y");
+  parseTime = d3.timeParse("y");
 
   init(data: any) {
 

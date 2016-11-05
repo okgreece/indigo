@@ -8,7 +8,7 @@ import * as layout from '../actions/layout';
 
 
 @Component({
-  selector: 'book-collection-app',
+  selector: 'indigo-app',
   styles:[`    * {
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;

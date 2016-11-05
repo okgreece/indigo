@@ -31,6 +31,9 @@
   "exclude": [
     "node_modules"
   ],
+  "include": [
+    "typings/**/*"
+  ],
   "compileOnSave": false,
   "buildOnSave": false,
   "atom": { "rewriteTsconfig": false }
