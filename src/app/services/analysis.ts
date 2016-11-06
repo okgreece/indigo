@@ -97,7 +97,7 @@ export class AnalysisService {
          let stl_plot = response.param[0]["stl.plot"];
          let trends:any = [];
          for(let i=0;i<stl_plot.time.length;i++){
-           let val = {
+           let val:any = {
              year: parseInt(stl_plot.time[i]),
              amount:parseFloat(stl_plot.trend[i])
            };

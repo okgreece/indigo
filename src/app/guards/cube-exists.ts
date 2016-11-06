@@ -60,7 +60,7 @@ export class CubeExistsGuard implements CanActivate {
       .switchMap((cubeEntity)=>this.rudolfCubes.retrievePackage(cubeEntity))
 */
       .map(cubeEntity => new cube.LoadAction(cubeEntity))
-      .do(action => this.store.dispatch(action))
+      .do((action:cube.LoadAction) => this.store.dispatch(action))
       .map(cube => !!cube)
       .catch(() => {
         this.router.navigate(['/404']);

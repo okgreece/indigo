@@ -24,7 +24,7 @@ export function reducer(state = initialState, action: cube.Actions | collection.
   switch (action.type) {
     case cube.ActionTypes.SEARCH_COMPLETE:
     case collection.ActionTypes.LOAD_SUCCESS: {
-      const packages = action.payload;
+      const packages:any = action.payload;
       const newPackages = packages.filter(pckg => !state.entities[pckg.id]);
       const newPackageIds = newPackages.map(pckg => pckg.id);
       const newCubeEntities = newPackages.reduce((entities: { [id: string]: any }, pckg: any) => {

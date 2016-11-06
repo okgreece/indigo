@@ -51,7 +51,6 @@ export class AcfChartVisualization extends AfterViewInit {
   }
   @Input()
   set data(value: any) {
-    debugger;
     this._data = value;
 
 
@@ -117,8 +116,7 @@ export class AcfChartVisualization extends AfterViewInit {
 
 
 
-    let xAxis = d3.axisBottom(x)
-      .tickFormat(d3.format("d"));
+    let xAxis = d3.axisBottom(x);
 
     let yAxis = d3.axisLeft(y)
       ;

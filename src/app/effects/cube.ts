@@ -38,7 +38,7 @@ export class CubeEffects {
   search$: Observable<Action> = this.actions$
     .ofType(cube.ActionTypes.SEARCH)
     .debounceTime(300)
-    .map<string>(action => action.payload)
+    .map(action => action.payload)
     .switchMap(query => {
      /* if (query === '') {
         return empty();

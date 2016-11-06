@@ -1,18 +1,17 @@
 import {Cube} from "../../models/cube";
 import {Observable} from "rxjs/Rx";
 import {ModalDirective} from 'ng2-bootstrap/ng2-bootstrap';
-import {Node} from "@types/node";
 
 import {
   ChangeDetectionStrategy, ViewEncapsulation,
-  Component, Input, Directive, Attribute as MetadataAttribute, OnChanges, DoCheck, ElementRef, OnInit, SimpleChange,
+  Component, Input, Attribute as MetadataAttribute, ElementRef,
   AfterViewInit, ViewChild
 } from '@angular/core';
 import {Inject, NgZone, ChangeDetectorRef} from '@angular/core';
 
 import Timer = NodeJS.Timer;
 import {ExpressionTree} from "../../models/expressionTree";
-import {State, getSelectedCube, getTree} from "../../reducers/index";
+import {State, getTree} from "../../reducers/index";
 import {Store} from "@ngrx/store";
 import {ExpressionNode} from "../../models/expressionNode";
 import {AggregateNode} from "../../models/aggregate/aggregateNode";
@@ -27,6 +26,7 @@ import {Value} from "../../models/value/val";
 import * as $ from 'jquery'
 import {ReplaceAction} from "../../actions/tree";
 import {AggregateRequest} from "../../models/aggregate/aggregateRequest";
+import {HierarchyPointNode} from "d3-hierarchy";
 /*
  * We're loading this component asynchronously
  * We are using some magic with es6-promise-loader that will wrap the module with a Promise
@@ -103,7 +103,7 @@ console.log('`Tree Builder` component loaded asynchronously');
     }
     
     .md-tab-label{
-      min-width:auto!important;
+      min-width:100%!important;
     
     }
     
@@ -176,9 +176,11 @@ export class TreeBuilder implements AfterViewInit {
   @Input()
 
   viewerHeight: number;// $(document).height();
+  root:any;
 
 
   aggregates = [];
+  duration = 750;
 
 
   ngAfterViewInit() {
@@ -216,6 +218,10 @@ export class TreeBuilder implements AfterViewInit {
   activeNode: any;
 
 
+  treemap: any;
+
+  g:any;
+
   init() {
 
 
@@ -233,7 +239,7 @@ export class TreeBuilder implements AfterViewInit {
       .attr("width", width + margin.right + margin.left)
       .attr("height", height + margin.top + margin.bottom);
 
-    let g = svg
+    this.g = svg
 
         .append("g")
       .attr("transform", "translate("
@@ -250,33 +256,33 @@ export class TreeBuilder implements AfterViewInit {
         .scaleExtent([1 / 2, 4])
         .on("zoom", zoomed));
 
+    let that = this;
+
     function zoomed() {
-      var transform = d3.event.transform;
-      g.attr("transform", function() {
+      let transform = d3.event.transform;
+      that.g.attr("transform", function() {
         return transform.translate(margin.left,margin.top).toString();
       });
     }
-    let i = 0,
-      duration = 750,
-      root;
+
 
 // declares a tree layout and assigns the size
-    let treemap = d3.tree<ExpressionNode>().size([height, width]);
+    this.treemap = d3.tree<ExpressionNode>().size([height, width]);
 
 // Assigns parent, children, height, depth
-    root = d3.hierarchy(treeData, function (d) {
+    this.root = d3.hierarchy(treeData, function (d) {
       return d.children;
     });
-    root.x0 = height / 2;
-    root.y0 = 0;
+    this.root.x0 = height / 2;
+    this.root.y0 = 0;
 
 // Collapse after the second level
-    if (root.children)
-      root.children.forEach(collapse);
+    if (this.root.children)
+      this.root.children.forEach(collapse);
 
-    this.activeNode = root;
+    this.activeNode = this.root;
 
-    update(root);
+    this.update(this.root);
 
 // Collapse the node and all it's children
     function collapse(d) {
@@ -288,203 +294,162 @@ export class TreeBuilder implements AfterViewInit {
     }
 
 
-    function getTransformation(transform) {
-      // Create a dummy g for calculation purposes only. This will never
-      // be appended to the DOM and will be discarded once this function
-      // returns.
-      let g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-
-      // Set the transform attribute to the provided string value.
-      g.setAttributeNS(null, "transform", transform);
-
-      // consolidate the SVGTransformList containing all transformations
-      // to a single SVGTransform of type SVG_TRANSFORM_MATRIX and get
-      // its SVGMatrix.
-      let matrix = g.transform.baseVal.consolidate().matrix;
-
-      // Below calculations are taken and adapted from the private function
-      // transform/decompose.js of D3's module d3-interpolate.
-      let {a, b, c, d, e, f} = matrix;   // ES6, if this doesn't work, use below assignment
-      // var a=matrix.a, b=matrix.b, c=matrix.c, d=matrix.d, e=matrix.e, f=matrix.f; // ES5
-      let scaleX, scaleY, skewX;
-      if (scaleX = Math.sqrt(a * a + b * b)) a /= scaleX, b /= scaleX;
-      if (skewX = a * c + b * d) c -= a * skewX, d -= b * skewX;
-      if (scaleY = Math.sqrt(c * c + d * d)) c /= scaleY, d /= scaleY, skewX /= scaleY;
-      if (a * d < b * c) a = -a, b = -b, skewX = -skewX, scaleX = -scaleX;
-      return {
-        translateX: e,
-        translateY: f,
-        rotate: Math.atan2(b, a) * Math.PI / 180,
-        skewX: Math.atan(skewX) * Math.PI / 180,
-        scaleX: scaleX,
-        scaleY: scaleY
-      };
-    }
 
 
-    function update(source) {
+  }
+  update(source) {
 
 
-      /*   svg.append("rect")
-       .attr("width", width)
-       .attr("height", height)
-       .style("fill", "none")
-       .style("pointer-events", "all")
-       .call(d3.zoom()
-       .scaleExtent([1 / 2, 4])
-       .on("zoom", zoomed));*/
 
-      // Assigns the x and y position for the nodes
-      let treeData = treemap(root);
+    // Assigns the x and y position for the nodes
+    let treeData = this.treemap(this.root);
 
-      // Compute the new tree layout.
-      let nodes = treeData.descendants(),
-        links = treeData.descendants().slice(1);
+    // Compute the new tree layout.
+    let nodes = treeData.descendants(),
+      links = treeData.descendants().slice(1);
 
-      // Normalize for fixed-depth.
-      nodes.forEach(function (d) {
-        d.y = d.depth * 180
+    // Normalize for fixed-depth.
+    nodes.forEach(function (d) {
+      d.y = d.depth * 180
+    });
+
+    // ****************** Nodes section ***************************
+
+    // Update the nodes...
+    let node = this.g.selectAll('g.node')
+      .data(nodes, function (d: HierarchyPointNode<ExpressionNode>) {
+        return d.id ;
       });
 
-      // ****************** Nodes section ***************************
+    // Enter any new modes at the parent's previous position.
+    let nodeEnter = node.enter().append('g')
+      .attr('class', 'node')
+      .attr("transform", function (d) {
+        return "translate(" + source.y0 + "," + source.x0 + ")";
+      })
+      .on('click', click);
 
-      // Update the nodes...
-      let node = g.selectAll('g.node')
-        .data(nodes, function (d) {
-          return d.id || (d.id = ++i);
-        });
-
-      // Enter any new modes at the parent's previous position.
-      let nodeEnter = node.enter().append('g')
-        .attr('class', 'node')
-        .attr("transform", function (d) {
-          return "translate(" + source.y0 + "," + source.x0 + ")";
-        })
-        .on('click', click);
-
-      // Add Circle for the nodes
-      nodeEnter.append('circle')
-        .attr('class', 'node')
-        .attr('r', 1e-6)
-        .style("fill", function (d) {
-          return d._children ? "lightsteelblue" : "#fff";
-        });
-
-
-      nodeEnter.append("text")
-        .attr("x", function (d) {
-          return d.children ? -15 : 15;
-        })
-        .attr("dy", ".35em")
-        .attr('class', 'nodeText')
-        .attr("text-anchor", function (d) {
-          return d.children ? "end" : "start";
-        })
-        .text(function (d: ExpressionNode) {
-          return d.data.label;
-        });
-
-      // UPDATE
-      let nodeUpdate = nodeEnter.merge(node);
-
-      // Transition to the proper position for the node
-      nodeUpdate.transition()
-        .duration(duration)
-        .attr("transform", function (d) {
-          return "translate(" + d.y + "," + d.x + ")";
-        });
-
-      // Update the node attributes and style
-      nodeUpdate.select('circle.node')
-        .attr('r', 10)
-        .style("fill", function (d) {
-          return d._children ? "lightsteelblue" : "#fff";
-        })
-        .attr('cursor', 'pointer');
-
-
-      // Remove any exiting nodes
-      let nodeExit = node.exit().transition()
-        .duration(duration)
-        .attr("transform", function (d) {
-          return "translate(" + source.y + "," + source.x + ")";
-        })
-        .remove();
-
-      // On exit reduce the node circles size to 0
-      nodeExit.select('circle')
-        .attr('r', 1e-6);
-
-      // On exit reduce the opacity of text labels
-      nodeExit.select('text')
-        .style('fill-opacity', 1e-6);
-
-      // ****************** links section ***************************
-
-      // Update the links...
-      let link = g.selectAll('path.link')
-        .data(links, function (d) {
-          return d.id;
-        });
-
-      // Enter any new links at the parent's previous position.
-      let linkEnter = link.enter().insert('path', "g")
-        .attr("class", "link")
-        .attr('d', function (d) {
-          let o = {x: source.x0, y: source.y0};
-          return diagonal(o, o)
-        });
-
-      // UPDATE
-      let linkUpdate = linkEnter.merge(link);
-
-      // Transition back to the parent element position
-      linkUpdate.transition()
-        .duration(duration)
-        .attr('d', function (d) {
-          return diagonal(d, d.parent)
-        });
-
-      // Remove any exiting links
-      let linkExit = link.exit().transition()
-        .duration(duration)
-        .attr('d', function (d) {
-          let o = {x: source.x, y: source.y};
-          return diagonal(o, o)
-        })
-        .remove();
-
-      // Store the old positions for transition.
-      nodes.forEach(function (d) {
-        d.x0 = d.x;
-        d.y0 = d.y;
+    // Add Circle for the nodes
+    nodeEnter.append('circle')
+      .attr('class', 'node')
+      .attr('r', 1e-6)
+      .style("fill", function (d: HierarchyPointNode<ExpressionNode>) {
+        return d.children ? "lightsteelblue" : "#fff";
       });
 
-      // Creates a curved (diagonal) path from parent to the child nodes
-      function diagonal(s, d) {
 
-        let path = `M ${s.y} ${s.x}
+    nodeEnter.append("text")
+      .attr("x", function (d) {
+        return d.children ? -15 : 15;
+      })
+      .attr("dy", ".35em")
+      .attr('class', 'nodeText')
+      .attr("text-anchor", function (d:HierarchyPointNode<ExpressionNode>) {
+        return d.children ? "end" : "start";
+      })
+      .text(function (d: HierarchyPointNode<ExpressionNode>) {
+        return d.data.label;
+      });
+
+    // UPDATE
+    let nodeUpdate = nodeEnter.merge(node);
+
+    // Transition to the proper position for the node
+    nodeUpdate.transition()
+      .duration(this.duration)
+      .attr("transform", function (d) {
+        return "translate(" + d.y + "," + d.x + ")";
+      });
+
+    // Update the node attributes and style
+    nodeUpdate.select('circle.node')
+      .attr('r', 10)
+      .style("fill", function (d) {
+        return d._children ? "lightsteelblue" : "#fff";
+      })
+      .attr('cursor', 'pointer');
+
+
+    // Remove any exiting nodes
+    let nodeExit = node.exit().transition()
+      .duration(this.duration)
+      .attr("transform", function (d:HierarchyPointNode<ExpressionNode>) {
+        return "translate(" + source.y + "," + source.x + ")";
+      })
+      .remove();
+
+    // On exit reduce the node circles size to 0
+    nodeExit.select('circle')
+      .attr('r', 1e-6);
+
+    // On exit reduce the opacity of text labels
+    nodeExit.select('text')
+      .style('fill-opacity', 1e-6);
+
+    // ****************** links section ***************************
+
+    // Update the links...
+    let link = this.g.selectAll('path.link')
+      .data(links, function (d: HierarchyPointNode<ExpressionNode>) {
+        return d.data.id;
+      });
+
+    // Enter any new links at the parent's previous position.
+    let linkEnter = link.enter().insert('path', "g")
+      .attr("class", "link")
+      .attr('d', function (d) {
+        let o = {x: source.x0, y: source.y0};
+        return diagonal(o, o)
+      });
+
+    // UPDATE
+    let linkUpdate = linkEnter.merge(link);
+
+    // Transition back to the parent element position
+    linkUpdate.transition()
+      .duration(this.duration)
+      .attr('d', function (d) {
+        return diagonal(d, d.parent)
+      });
+
+    // Remove any exiting links
+    let linkExit = link.exit().transition()
+      .duration(this.duration)
+      .attr('d', function (d) {
+        let o = {x: source.x, y: source.y};
+        return diagonal(o, o)
+      })
+      .remove();
+
+    // Store the old positions for transition.
+    nodes.forEach(function (d: HierarchyPointNode<ExpressionNode>) {
+      d.data.x0 = d.x;
+      d.data.y0 = d.y;
+    });
+
+    // Creates a curved (diagonal) path from parent to the child nodes
+    function diagonal(s, d) {
+
+      let path = `M ${s.y} ${s.x}
             C ${(s.y + d.y) / 2} ${s.x},
               ${(s.y + d.y) / 2} ${d.x},
-              ${d.y} ${d.x}`
+              ${d.y} ${d.x}`;
 
-        return path
-      }
+      return path
+    }
 
-      // Toggle children on click.
-      function click(d) {
-        if (d.children) {
-          d._children = d.children;
-          d.children = null;
-        } else {
-          d.children = d._children;
-          d._children = null;
-        }
-        update(d);
+    // Toggle children on click.
+    function click(d) {
+      if (d.children) {
+        d._children = d.children;
+        d.children = null;
+      } else {
+        d.children = d._children;
+        d._children = null;
       }
+      this.update(d);
     }
   }
-
   removeNode() {
 
     if (!this.activeNode)return;

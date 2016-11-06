@@ -80,7 +80,6 @@ export class TimeSeriesOutputComponent extends AfterViewInit {
   }
   @Input()
   set data(value: any) {
-    debugger;
     this._data = value;
 
 

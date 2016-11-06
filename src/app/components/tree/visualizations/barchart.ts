@@ -2,10 +2,9 @@ import {Observable} from "rxjs/Rx";
 import * as _ from 'lodash';
 import {
   ChangeDetectionStrategy, ViewEncapsulation,
-  Component, Input, Directive, Attribute as MetadataAttribute, OnChanges, DoCheck, ElementRef, OnInit, SimpleChange,
-  AfterViewInit, ViewChild
+  Component, Input,  ElementRef, ViewChild
 } from '@angular/core';
-import {Inject, NgZone, ChangeDetectorRef} from '@angular/core';
+import {Inject,  ChangeDetectorRef} from '@angular/core';
 import * as d3 from 'd3';
 import Timer = NodeJS.Timer;
 import {ExpressionTree} from "../../../models/expressionTree";
@@ -56,33 +55,32 @@ export class BarChartVisualization extends TreeVisualization {
 
   @ViewChild('vizCanvas') vizCanvas;
 
-  private generateBarChart(data: ExpressionNode, tuple) {
-    let colors = d3.scale.category20();
+  private generateBarChart(data: any, tuple) {
+    let colors = d3.scaleOrdinal(d3.schemeCategory20);
     let that = this;
     let baseSvg = d3.select(that.vizCanvas.nativeElement).append("svg")
       .attr("width", that.width + that.margin.left + that.margin.right)
       .attr("height", that.height + that.margin.top + that.margin.bottom)
       .append("g")
       .attr("transform", "translate(" + that.margin.left + "," + that.margin.top + ")");
-    that.x = d3.scale.ordinal()
-      .rangeRoundBands([0, that.width], .1);
+    that.x = d3.scaleBand()
+      .rangeRound([0, that.width])
+      .padding(.1);
 
-    that.y = d3.scale.linear()
+    that.y = d3.scaleLinear()
       .range([that.height, 0]);
 
-    that.xAxis = d3.svg.axis()
-      .scale(that.x)
-      .orient("bottom");
+    that.xAxis = d3.axisBottom(that.x);
 
-    that.yAxis = d3.svg.axis()
-      .scale(that.y)
-      .orient("left")
+
+    that.yAxis = d3.axisLeft(that.y)
+
       .ticks(20, ".0s");
 
     that.x.domain(data.attributes);
 
 
-    that.x.domain(data.cells.map(function (d) {
+    that.x.domain(data.cells.map(function (d:any) {
       return d[data.attributes[0]]
     }));
     that.y.domain([0, d3.max(data.cells, function (d) {
@@ -116,7 +114,7 @@ export class BarChartVisualization extends TreeVisualization {
       .enter().append("rect")
       .attr("class", "bar")
       .attr("fill", function (d, i) {
-        return colors(i)
+        return colors(i.toString())
       })
       .attr("x", function (d:ExpressionNode) {
         return that.x(d[data.attributes[0]]);

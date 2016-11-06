@@ -18,7 +18,7 @@ export class RudolfCubesService {
   constructor(private http:Http) {
   }
 
-  searchCubes(queryTitle:string):Observable<Cube[]> {
+  searchCubes(queryTitle:string):Observable<any[]> {
     return this.http.get(`${this.API_PACKAGES_PATH}`)
       .map(res => res.json())
       ;

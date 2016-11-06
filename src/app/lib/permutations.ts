@@ -1,7 +1,4 @@
 /**
- * Created by larjo on 25/7/2016.
- */
-/**
  * Lodash mixins for combinatorics
  * Inspired by python itertools: https://docs.python.org/2.7/library/itertools.html
  *
@@ -37,7 +34,7 @@ function _cartesianProductOf(args) {
 
   return _.reduce(args, function(a, b) {
     return _.flatten(_.map(a, function(x) {
-      return _.map(b, function(y) {
+      return _.map<any,any>(b, function(y) {
         return _.concat(x,[y]);
       });
     }), true);
@@ -97,10 +94,11 @@ function permutations(obj, n){
   if (typeof obj=='string') obj = _.toArray(obj);
   n = n?n:obj.length;
   // make n copies of keys/indices
-  for (var j = 0, nInds=[]; j < n; j++) {nInds.push(_.keys(obj)) }
+  let nInds = [];
+  for (let j = 0; j < n; j++) {nInds.push(_.keys(obj)) }
   // get product of the indices, then filter to remove the same key twice
-  var arrangements = product(nInds).filter(pair=>pair[0]!==pair[1]);
-  return _.map(arrangements,indices=>_.map(indices,i=>obj[i]));
+  let arrangements = product(nInds).filter(pair=>pair[0]!==pair[1]);
+  return _.map(arrangements,indices=>_.map<any,any>(indices,i=>obj[i]));
 }
 
 
@@ -122,7 +120,7 @@ function combinations(obj,n){
   // array with n copies of the keys of obj
   return _(permutations(_.keys(obj),n))
     .filter(isSorted)
-    .map(indices=>_.map(indices,i=>obj[i]))
+    .map(indices=>_.map<any,any>(indices,i=>obj[i]))
     .value();
 }
 
@@ -137,10 +135,11 @@ function combinations_with_replacement(obj,n){
   if (typeof obj=='string') obj = _.toArray(obj);
   n = n?n:obj.length;
   // make n copies of keys/indices
-  for (let j = 0, nInds=[]; j < n; j++) {nInds.push(_.keys(obj)) }
+  let nInds = [];
+  for (let j = 0; j < n; j++) {nInds.push(_.keys(obj)) }
   // get product of the indices, then filter to keep elements in order
   let arrangements = product(nInds).filter(pair=>pair[0]<=pair[1]);
-  return _.map(arrangements,indices=>_.map(indices,i=>obj[i]))
+  return _.map(arrangements,indices=>_.map<any,any>(indices,i=>obj[i]))
 }
 
 module.exports={combinations_with_replacement,combinations,product,permutations};
