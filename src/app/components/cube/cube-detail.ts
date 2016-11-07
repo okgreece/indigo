@@ -45,7 +45,7 @@ import {MdButton} from "@angular/material";
       padding-bottom: 75px;
     }
   `],
-  template: require('./cube-detail.html')
+  template: require('./analytics/cube-detail.html')
 
 
 })

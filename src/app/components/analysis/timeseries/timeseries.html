@@ -1,31 +1,306 @@
 <div class="col-sm-12" *ngIf="data" #container>
-  <h3>Forecasts from {{data?.forecast.model}}</h3>
 
-  <div class="col-sm-12">  <analytics-line-chart  class="col-sm-12" style="min-height: 500px;"   [values]="data?.forecast.values"></analytics-line-chart>
+  <div class="col-sm-12">
+    <h3>Auto-correlation</h3>
+
+  </div>
+  <div class="col-sm-6"><h4>ACF</h4>
+    <analytics-acf-chart class="col-sm-12" style="min-height: 250px;"
+                         [data]="data?.autocorrelation.acf.regular"></analytics-acf-chart>
+  </div>
+  <div class="col-sm-6"><h4>ACF residuals</h4>
+    <analytics-acf-chart class="col-sm-12" style="min-height: 250px;"
+                         [data]="data?.autocorrelation.acf.residuals"></analytics-acf-chart>
+  </div>
+  <div class="col-sm-6"><h4>PACF</h4>
+    <analytics-acf-chart class="col-sm-12" style="min-height: 250px;"
+                         [data]="data?.autocorrelation.pacf.regular"></analytics-acf-chart>
+  </div>
+  <div class="col-sm-6"><h4>PACF residuals</h4>
+    <analytics-acf-chart class="col-sm-12" style="min-height: 250px;"
+                         [data]="data?.autocorrelation.pacf.residuals"></analytics-acf-chart>
   </div>
   <hr class="col-sm-12"/>
-
   <h3>Decomposition</h3>
-  <div class="col-sm-6"><h4 class="text-center">Trends</h4>  <analytics-line-chart  class="col-sm-12" style="min-height: 500px;"   [values]="data?.decomposition.trends"></analytics-line-chart>
+
+  <table class="text-center table table-bordered">
+    <thead>
+    <tr>
+      <th colspan="2">STL general information</th>
+    </tr>
+
+    </thead>
+    <tbody *ngIf="data?.decomposition.seasonal">
+    <tr>
+      <td>Win</td>
+      <td>{{data?.decomposition.general.win?data?.decomposition.general.win[0]:""}}</td>
+    </tr>
+    <tr>
+      <td>Degree</td>
+      <td>{{data?.decomposition.general["stl.degree"][0]}}</td>
+    </tr>
+
+
+    </tbody>
+
+    <tbody *ngIf="data?.decomposition.seasonal==false">
+    <tr>
+      <td>Degree</td>
+      <td>{{data?.decomposition.general["stl.degree"][0]}}</td>
+    </tr>
+    <tr>
+      <td>Degrees of freedom</td>
+      <td>{{data?.decomposition.general["degfr"][0]}}</td>
+    </tr>
+    <tr>
+      <td>Degrees of freedom (fitted)</td>
+      <td>{{data?.decomposition.general["degfr.fitted"][0]}}</td>
+    </tr>
+
+    </tbody>
+  </table>
+
+
+  <div class="col-sm-6"><h4 class="text-center">Trends</h4>
+    <analytics-line-chart class="col-sm-12" style="min-height: 500px;"
+                          [values]="data?.decomposition.trends"></analytics-line-chart>
   </div>
 
-  <div class="col-sm-6"><h4 class="text-center">Residuals</h4>  <analytics-line-chart  class="col-sm-12" style="min-height: 500px;"   [values]="data?.decomposition.remainders"></analytics-line-chart>
+  <div class="col-sm-6"><h4 class="text-center">Remainders</h4>
+    <analytics-line-chart class="col-sm-12" style="min-height: 500px;"
+                          [values]="data?.decomposition.remainders"></analytics-line-chart>
+  </div>
+
+  <div class="col-sm-4"><h4 class="text-center">Fitted - Residuals</h4>
+    <analytics-scatter-plot [x_accessor]="'year'" [y_accessor]="'amount'" class="col-sm-12" style="min-height: 500px;"
+                            [values]="data?.decomposition.fitted_residuals"></analytics-scatter-plot>
+  </div>
+
+
+  <div class="col-sm-4"><h4 class="text-center">Time - Residuals</h4>
+    <analytics-line-chart class="col-sm-12" style="min-height: 500px;"
+                          [values]="data?.decomposition.time_residuals"></analytics-line-chart>
+  </div>
+
+  <div class="col-sm-4"><h4 class="text-center">Time - Fitted</h4>
+    <analytics-line-chart class="col-sm-12" style="min-height: 500px;"
+                          [values]="data?.decomposition.time_fitted"></analytics-line-chart>
+  </div>
+
+
+  <table class="text-center table table-bordered">
+    <thead>
+    <tr>
+      <th colspan="2">Compare</th>
+    </tr>
+
+    </thead>
+    <tbody *ngIf="data?.decomposition.seasonal">
+    <tr>
+      <td>ARIMA Order</td>
+      <td>{{data?.decomposition.compare["arima.order"][0]}}</td>
+    </tr>
+    <tr>
+      <td>ARIMA coefficient</td>
+      <td>{{data?.decomposition.compare["arima.coef"][0]}}</td>
+    </tr>
+    <tr>
+      <td>ARIMA coefficient se</td>
+      <td>{{data?.decomposition.compare["arima.coef.se"][0]}}</td>
+    </tr>
+    <tr>
+      <td>Covariance coefficient</td>
+      <td>{{data?.decomposition.compare["covariance.coef"][0]}}</td>
+    </tr>
+    <tr>
+      <td>Residual variance</td>
+      <td>{{data?.decomposition.compare["resid.variance"][0]}}</td>
+    </tr>
+    <tr>
+      <td>Not used observations</td>
+      <td>{{data?.decomposition.compare["not.used.obs"][0]}}</td>
+    </tr>
+    <tr>
+      <td>Used observations</td>
+      <td>{{data?.decomposition.compare["used.obs"][0]}}</td>
+    </tr>
+    <tr>
+      <td>Loglik</td>
+      <td>{{data?.decomposition.compare["loglik"][0]}}</td>
+    </tr>
+    <tr>
+      <td>AIC</td>
+      <td>{{data?.decomposition.compare["aic"][0]}}</td>
+    </tr>
+
+    <tr>
+      <td>BIC</td>
+      <td>{{data?.decomposition.compare["bic"][0]}}</td>
+    </tr>
+    <tr>
+      <td>AICC</td>
+      <td>{{data?.decomposition.compare["aicc"][0]}}</td>
+    </tr>
+
+
+    </tbody>
+
+    <tbody *ngIf="data?.decomposition.seasonal==false">
+    <tr>
+      <td>Residual variance</td>
+      <td>{{data?.decomposition.compare["resid.variance"][0]}}</td>
+    </tr>
+
+    <tr>
+      <td>Used observations</td>
+      <td>{{data?.decomposition.compare["used.obs"][0]}}</td>
+    </tr>
+    <tr>
+      <td>Loglik</td>
+      <td>{{data?.decomposition.compare["loglik"][0]}}</td>
+    </tr>
+    <tr>
+      <td>AIC</td>
+      <td>{{data?.decomposition.compare["aic"][0]}}</td>
+    </tr>
+
+    <tr>
+      <td>BIC</td>
+      <td>{{data?.decomposition.compare["bic"][0]}}</td>
+    </tr>
+    <tr>
+      <td>GCV</td>
+      <td>{{data?.decomposition.compare["gcv"][0]}}</td>
+    </tr>
+
+
+    </tbody>
+  </table>
+
+
+
+  <hr class="col-sm-12"/>
+
+
+  <div class="col-sm-12">
+    <h3>Model Fitting</h3>
+
+
+    <table class="text-center table table-bordered">
+      <thead>
+      <tr>
+        <th colspan="2">Model</th>
+      </tr>
+
+      </thead>
+      <tbody >
+      <tr>
+        <td>ARIMA Order</td>
+        <td>{{data?.fitting.model["arima.order"][0]}}</td>
+      </tr>
+      <tr>
+        <td>ARIMA coefficient</td>
+        <td>{{data?.fitting.model["arima.coef"][0]}}</td>
+      </tr>
+      <tr>
+        <td>ARIMA coefficient se</td>
+        <td>{{data?.fitting.model["arima.coef.se"][0]}}</td>
+      </tr>
+
+
+      </tbody>
+
+
+    </table>
+
+
+
+    <div class="col-sm-4"><h4 class="text-center">Fitted - Residuals</h4>
+      <analytics-scatter-plot class="col-sm-12" style="min-height: 500px;" [values]="data?.fitting.fitted_residuals"
+                              [x_accessor]="'year'" [y_accessor]="'amount'"></analytics-scatter-plot>
+    </div>
+
+
+    <div class="col-sm-4"><h4 class="text-center">Time - Residuals</h4>
+      <analytics-line-chart class="col-sm-12" style="min-height: 500px;"
+                            [values]="data?.fitting.time_residuals"></analytics-line-chart>
+    </div>
+
+    <div class="col-sm-4"><h4 class="text-center">Time - Fitted</h4>
+      <analytics-line-chart class="col-sm-12" style="min-height: 500px;"
+                            [values]="data?.fitting.time_fitted"></analytics-line-chart>
+    </div>
+
+
+
+
+    <table class="text-center table table-bordered">
+      <thead>
+      <tr>
+        <th colspan="2">Compare</th>
+      </tr>
+
+      </thead>
+      <tbody >
+
+      <tr>
+        <td>Variance coefficient</td>
+        <td>{{data?.fitting.compare["variance.coef"][0]}}</td>
+      </tr>
+      <tr>
+        <td>Residual variance</td>
+        <td>{{data?.fitting.compare["resid.variance"][0]}}</td>
+      </tr>
+      <tr>
+        <td>Not used observations</td>
+        <td>{{data?.fitting.compare["not.used.obs"][0]}}</td>
+      </tr>
+      <tr>
+        <td>Used observations</td>
+        <td>{{data?.fitting.compare["used.obs"][0]}}</td>
+      </tr>
+      <tr>
+        <td>Loglik</td>
+        <td>{{data?.fitting.compare["loglik"][0]}}</td>
+      </tr>
+      <tr>
+        <td>AIC</td>
+        <td>{{data?.fitting.compare["aic"][0]}}</td>
+      </tr>
+
+      <tr>
+        <td>BIC</td>
+        <td>{{data?.fitting.compare["bic"][0]}}</td>
+      </tr>
+      <tr>
+        <td>AICC</td>
+        <td>{{data?.fitting.compare["aicc"][0]}}</td>
+      </tr>
+
+
+      </tbody>
+
+
+    </table>
+
+
+
+
   </div>
   <hr class="col-sm-12"/>
-  <div class="col-sm-6"><h3>ACF</h3>
-    <analytics-acf-chart  class="col-sm-12" style="min-height: 250px;"   [data]="data?.autocorrelation.acf.regular"></analytics-acf-chart>
-  </div>
-  <div class="col-sm-6"> <h3>ACF residuals</h3>
-    <analytics-acf-chart  class="col-sm-12" style="min-height: 250px;"   [data]="data?.autocorrelation.acf.residuals"></analytics-acf-chart>
-  </div>
-  <div class="col-sm-6"><h3>PACF</h3>
-    <analytics-acf-chart  class="col-sm-12" style="min-height: 250px;"   [data]="data?.autocorrelation.pacf.regular"></analytics-acf-chart>
-  </div>
-  <div class="col-sm-6"> <h3>PACF residuals</h3>
-    <analytics-acf-chart  class="col-sm-12" style="min-height: 250px;"   [data]="data?.autocorrelation.pacf.residuals"></analytics-acf-chart>
-  </div>
 
 
 
- </div>
 
+  <div class="col-sm-12">
+
+    <h3>Forecasts from {{data?.forecast.model}}</h3>
+
+    <div class="col-sm-12">
+      <analytics-line-chart class="col-sm-12" style="min-height: 500px;"
+                            [values]="data?.forecast.values"></analytics-line-chart>
+    </div>
+
+  </div>
+
+</div>

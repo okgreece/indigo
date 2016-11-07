@@ -64,7 +64,7 @@ export class LineChartVisualization extends AfterViewInit {
   private _values: any;
 
   private generateBarChart(data: any) {
-    let margin = {top: 20, right: 40, bottom: 30, left: 150};
+    let margin = {top: 20, right: 40, bottom: 30, left: 100};
 
 
     let viewerWidth = $(this.vizCanvas.nativeElement).width() - margin.left - margin.right;

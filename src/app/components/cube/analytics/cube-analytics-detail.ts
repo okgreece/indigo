@@ -3,25 +3,25 @@ import {
   ViewEncapsulation, ChangeDetectionStrategy
 } from '@angular/core';
 import {NgIf, NgFor, AsyncPipe} from '@angular/common';
-import * as fromRoot from '../../reducers';
-import {Cube} from "../../models/cube";
-import {TreeBuilder} from "../tree/tree-builder"
-import {ExpressionTree} from "../../models/expressionTree";
-import {State} from "../../reducers";
+import * as fromRoot from '../../../reducers';
+import {Cube} from "../../../models/cube";
+import {TreeBuilder} from "../../tree/tree-builder"
+import {ExpressionTree} from "../../../models/expressionTree";
+import {State} from "../../../reducers";
 import {Store} from '@ngrx/store';
-import {NgChosenComponent} from "../ng-chosen";
-import {JsonTreeComponent} from "../../lib/json-tree/json-tree";
+import {NgChosenComponent} from "../../ng-chosen";
+import {JsonTreeComponent} from "../../../lib/json-tree/json-tree";
 import {MdButton, MdToolbar, MdInput, MdAnchor, MdIcon} from "@angular/material";
-import {AlgorithmsService} from "../../services/algorithms";
-import {Algorithm} from '../../models/analysis/algorithm';
+import {AlgorithmsService} from "../../../services/algorithms";
+import {Algorithm} from '../../../models/analysis/algorithm';
 import {Observable} from 'rxjs/Observable';
-import {InputTypes} from "../../models/analysis/input";
-import {AnalysisCall} from "../../models/analysis/analysisCall";
-import {AnalysisService} from "../../services/analysis";
-import {OutputTypes} from "../../models/analysis/output";
-import {AggregateRequest} from "../../models/aggregate/aggregateRequest";
-import {Attribute} from "../../models/attribute";
-import * as execution from '../../actions/execution';
+import {InputTypes} from "../../../models/analysis/input";
+import {AnalysisCall} from "../../../models/analysis/analysisCall";
+import {AnalysisService} from "../../../services/analysis";
+import {OutputTypes} from "../../../models/analysis/output";
+import {AggregateRequest} from "../../../models/aggregate/aggregateRequest";
+import {Attribute} from "../../../models/attribute";
+import * as execution from '../../../actions/execution';
 
 /**
  * Tip: Export type aliases for your component's inputs and outputs. Until we

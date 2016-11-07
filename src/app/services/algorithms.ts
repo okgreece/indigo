@@ -76,7 +76,7 @@ export class AlgorithmsService {
     timeSeriesAlgorithm.outputs.set(json_output.name, json_output);
 
     timeSeriesAlgorithm.method = RequestMethod.Post;
-    timeSeriesAlgorithm.endpoint = new URL(environment.DAMUrl+"/library/TimeSeries.OBeu/R/babbage.tsa.obeu");
+    timeSeriesAlgorithm.endpoint = new URL(environment.DAMUrl+"/library/TimeSeries.OBeu/R/open_spending.ts");
 
 
     return timeSeriesAlgorithm;

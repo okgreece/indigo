@@ -9,8 +9,9 @@ import { ViewCubePageComponent } from './containers/cube/view-cube-page';
 import { CollectionPageComponent } from './containers/collection-page';
 import { CollectionCubePageComponent } from './containers/cube/collection-page';
 import { NotFoundPageComponent } from './containers/not-found-page';
-import {CubeAnalyticsDetailComponent} from "./components/cube/cube-analytics-detail";
+import {CubeAnalyticsDetailComponent} from "./components/cube/analytics/cube-analytics-detail";
 import {CubeAnalyticsPage} from "./containers/cube/cube-analytics";
+import { CubeAnalyticsIndexComponent} from "./containers/cube/cube-analytics-index-page";
 
 export const routes: Routes = [
   {
@@ -41,14 +42,14 @@ export const routes: Routes = [
   },
 
   {
-    path: 'cube/analytics/:id',
+    path: 'cube/analytics/:id/time_series',
     canActivate: [ CubeExistsGuard ],
     component: CubeAnalyticsPage
   },
   {
-    path: 'cube/analytics/:id/algorithms',
+    path: 'cube/analytics/:id',
     canActivate: [ CubeExistsGuard ],
-    component: CubeAnalyticsPage
+    component: CubeAnalyticsIndexComponent
   },
 
 

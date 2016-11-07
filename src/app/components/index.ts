@@ -25,10 +25,14 @@ import {RequestBuilder} from "./request/request-builder";
 import {JsonTreeComponent} from "../lib/json-tree/json-tree";
 import {ModalModule} from "ng2-bootstrap";
 import {JsonNodeComponent} from "../lib/json-tree/json-node";
-import {CubeAnalyticsDetailComponent} from "./cube/cube-analytics-detail";
+import {CubeAnalyticsDetailComponent} from "./cube/analytics/cube-analytics-detail";
 import {LineChartVisualization} from "./analysis/visualizations/lineChart";
 import {TimeSeriesOutputComponent} from "./analysis/timeseries/timeseries";
 import {AcfChartVisualization} from "./analysis/visualizations/acfChart";
+import { CubeAnalyticsIndexComponent} from "../containers/cube/cube-analytics-index-page";
+import {CubeAnalyticsListComponent} from "./cube/analytics/cube-analytics-list";
+import {CubeAnalyticsPreviewComponent} from "./cube/analytics/cube-analytics-preview";
+import {ScatterPlotVisualization} from "./analysis/visualizations/scatterPlot";
 
 
 export const COMPONENTS = [
@@ -50,10 +54,16 @@ export const COMPONENTS = [
   RequestBuilder,
   JsonTreeComponent,
   CubeAnalyticsDetailComponent,
+  CubeAnalyticsIndexComponent,
   LineChartVisualization,
+  ScatterPlotVisualization,
   JsonNodeComponent,
   TimeSeriesOutputComponent,
-  AcfChartVisualization
+  AcfChartVisualization,
+  CubePreviewListComponent,
+  CubePreviewComponent,
+  CubeAnalyticsListComponent,
+  CubeAnalyticsPreviewComponent
 ];
 
 

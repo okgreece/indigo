@@ -9,7 +9,7 @@ import {
   InCollectionInput,
   AddOutput,
   RemoveOutput
-} from '../../components/cube/cube-analytics-detail';
+} from '../../components/cube/analytics/cube-analytics-detail';
 import {Cube} from "../../models/cube";
 import {ActivatedRoute} from "@angular/router";
 
@@ -18,15 +18,10 @@ import {ActivatedRoute} from "@angular/router";
   selector: 'cube-analytics-index-page',
 
   template: `
-    <cube-analytics-detail
-     
-      [inCollection]="isCubeInCollection$ | async"
-      (add)="addToCollection($event)"
-      (remove)="removeFromCollection($event)">
-    </cube-analytics-detail>
+   <indigo-cube-preview-list></indigo-cube-preview-list>
   `
 })
-export class CubeAnalyticsIndexPage {
+export class CubeAnalyticsIndexComponent {
 
   isCubeInCollection$: Observable<InCollectionInput>;
   cube:Cube;

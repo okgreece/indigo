@@ -9,7 +9,7 @@ import {
   InCollectionInput,
   AddOutput,
   RemoveOutput
-} from '../../components/cube/cube-analytics-detail';
+} from '../../components/cube/analytics/cube-analytics-detail';
 import {Cube} from "../../models/cube";
 import {ActivatedRoute} from "@angular/router";
 
