@@ -51,12 +51,13 @@
                           [values]="data?.decomposition.remainders"></analytics-line-chart>
   </div>
 
-  <div class="col-sm-4"><h4 class="text-center">Fitted - Residuals</h4>
+  <div class="col-sm-12"><h4 class="text-center">Fitted - Residuals</h4>
     <analytics-scatter-plot [x_accessor]="'year'" [y_accessor]="'amount'" class="col-sm-12" style="min-height: 500px;" [label_x]="'Fitted Values'" [label_y]="'Residual Values'"
                             [values]="data?.decomposition.fitted_residuals"></analytics-scatter-plot>
   </div>
 
 
+<!--
   <div class="col-sm-4"><h4 class="text-center">Time - Residuals</h4>
     <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'" [label_y]="'Residual Values'"
                           [values]="data?.decomposition.time_residuals"></analytics-line-chart>
@@ -66,6 +67,7 @@
     <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'" [label_y]="'Fitted Values'"
                           [values]="data?.decomposition.time_fitted"></analytics-line-chart>
   </div>
+-->
 
 
   <table class="text-center table table-bordered">

@@ -37,6 +37,7 @@ import {DescriptiveStatisticsOutputComponent} from "./analysis/descriptive/descr
 import {FactRequestBuilder} from "./request/fact-request-builder";
 import {FrequencyVisualization} from "./analysis/visualizations/frequencyChart";
 import {BoxPlotVisualization} from "./analysis/visualizations/boxPlot";
+import {HistogramVisualization} from "./analysis/visualizations/histogram";
 
 
 export const COMPONENTS = [
@@ -54,6 +55,7 @@ export const COMPONENTS = [
   SidenavComponent,
   ToolbarComponent,
   TreeBuilder,
+  HistogramVisualization,
   BarChartVisualization,
   AggregateRequestBuilder,
   FactRequestBuilder,

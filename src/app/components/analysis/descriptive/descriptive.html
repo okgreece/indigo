@@ -60,6 +60,9 @@
   <div class="col-sm-12">
     <analytics-box-plot class="col-sm-12"  style="min-height: 500px;"  [label_y]="Frequency" [label_x]="Dimension" [data]="data.boxplot"></analytics-box-plot>
   </div>
+  <div class="col-sm-12">
+    <analytics-histogram *ngFor="let item of data.histogram" class="col-sm-12"  style="min-height: 500px;"  [label_y]="Frequency" [label_x]="Dimension" [values]="item"></analytics-histogram>
+  </div>
 
 
 </div>

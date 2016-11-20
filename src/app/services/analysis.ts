@@ -316,10 +316,21 @@ export class AnalysisService {
           boxplots.push(boxPlot);
         }
 
+        let hist = response.histogram;
+
+        let histograms = [];
+        let histogramKeys = Object.keys(hist);
+        for(let i=0; i<histogramKeys.length; i++){
+          let histogram = hist[histogramKeys[i]];
+          histogram["label"] = histogramKeys[i];
+          histograms.push(histogram);
+        }
+
         return {
           descriptives: descriptives,
           frequencies: frequencies,
-          boxplot: boxplots
+          boxplot: boxplots,
+          histogram: histograms
         };
       });
 
