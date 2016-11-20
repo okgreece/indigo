@@ -17,6 +17,7 @@ export class Algorithm{
 
   endpoint: URL;
   method:RequestMethod= RequestMethod.Post;
+  prompt: string;
 
 
 

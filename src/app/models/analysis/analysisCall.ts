@@ -1,5 +1,6 @@
 import {Input} from "./input";
 import {Algorithm} from './algorithm'
+import {Cube} from "../cube";
 /**
  * Created by larjo on 13/10/2016.
  */
@@ -10,7 +11,7 @@ public outputs: any = {};
 
 
 
-public constructor(public algorithm: Algorithm){
+public constructor(public algorithm: Algorithm, public cube: Cube){
 
   if(algorithm.inputs.entries()) {
     algorithm.inputs.forEach((value, key) => {

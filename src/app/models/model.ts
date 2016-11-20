@@ -2,24 +2,30 @@ import {Dimension} from "./dimension";
 import {Aggregate} from "./aggregate";
 import {Attribute} from "./attribute";
 import {Serializable} from "./iserializeable";
+import {Measure} from "./measure";
 
 /**
  * Created by larjo on 25/6/2016.
  */
-export class Model implements Serializable<Model>{
-  deserialize(input:any):Model {
-    if(!input) return null;
-    if(input.hasOwnProperty("dimensions"))
-      for(let dimensionName in input.dimensions){
-        if(input.dimensions.hasOwnProperty(dimensionName)){
+export class Model implements Serializable<Model> {
+  deserialize(input: any): Model {
+    if (!input) return null;
+    if (input.hasOwnProperty('dimensions'))
+      for (let dimensionName in input.dimensions) {
+        if (input.dimensions.hasOwnProperty(dimensionName)) {
           this.dimensions.set(dimensionName, new Dimension().deserialize(input.dimensions[dimensionName]));
         }
       }
 
-    if(input.hasOwnProperty("aggregates"))
-      for(let aggregateName in input.aggregates){
-        if(input.aggregates.hasOwnProperty(aggregateName))
+    if (input.hasOwnProperty('aggregates'))
+      for (let aggregateName in input.aggregates) {
+        if (input.aggregates.hasOwnProperty(aggregateName))
           this.aggregates.set(aggregateName, new Aggregate().deserialize(input.aggregates[aggregateName]));
+      }
+    if (input.hasOwnProperty('measures'))
+      for (let measureName in input.measures) {
+        if (input.measures.hasOwnProperty(measureName))
+          this.measures.set(measureName, new Measure().deserialize(input.measures[measureName]));
       }
 
     return this;
@@ -29,22 +35,24 @@ export class Model implements Serializable<Model>{
     return this;
   }
 
-  dimensions: Map<string, Dimension> = new Map<string,Dimension>() ;
+  dimensions: Map<string, Dimension> = new Map<string, Dimension>() ;
 
-  aggregates: Map<string, Aggregate> = new Map<string,Aggregate>();
+  aggregates: Map<string, Aggregate> = new Map<string, Aggregate>();
+
+  measures: Map<string, Measure> = new Map<string, Measure>();
 
   private _attributes: Map<string, Attribute>;
 
-  constructor(){
+  constructor() {
 
   }
 
   public get attributes(){
-    if(!this._attributes){
+    if (!this._attributes) {
       this._attributes = new Map<string, Attribute>();
-      if(this.dimensions.entries()) {
+      if (this.dimensions.entries()) {
         this.dimensions.forEach((value, key) => {
-          if(value.attributes.entries()) {
+          if (value.attributes.entries()) {
             value.attributes.forEach((value, key) => {
               this._attributes.set(value.ref, value);
             });

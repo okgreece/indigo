@@ -1,0 +1,65 @@
+<div class="col-sm-12" *ngIf="data" #container>
+
+
+
+  <h3>Statistical measures</h3>
+
+  <table class="text-center table table-bordered">
+
+
+    <tbody *ngIf="data?.descriptives">
+    <tr>
+      <td>Minimum observed value</td>
+      <td>{{data?.descriptives.Min.amount[0]}}</td>
+    </tr>
+
+    <tr>
+      <td>Maximum observed value</td>
+      <td>{{data?.descriptives.Max.amount[0]}}</td>
+    </tr>
+
+    <tr>
+      <td>Range of values</td>
+      <td>{{data?.descriptives.Range.amount[0]}}</td>
+    </tr>
+    <tr>
+      <td>Mean</td>
+      <td>{{data?.descriptives.Mean.amount[0]}}</td>
+    </tr>
+    <tr>
+      <td>Quantiles</td>
+      <td>25%: {{data?.descriptives.Quantiles.amount[0]}}, 75%: {{data?.descriptives.Quantiles.amount[1]}}</td>
+    </tr>
+
+    <tr>
+      <td>Variance</td>
+      <td>{{data?.descriptives.Variance.amount[0]}}</td>
+    </tr>
+
+    <tr>
+      <td>Standard Deviation</td>
+      <td>{{data?.descriptives.StandardDeviation.amount[0]}}</td>
+    </tr>
+    <tr>
+      <td>Skewness</td>
+      <td>{{data?.descriptives.Skewness[0]}}</td>
+    </tr>
+    <tr>
+      <td>Kurtosis</td>
+      <td>{{data?.descriptives.Kurtosis[0]}}</td>
+    </tr>
+
+    </tbody>
+  </table>
+
+
+  <div class="col-sm-12">
+    <analytics-frequency-chart class="col-sm-12"  style="min-height: 500px;"  [label_y]="Frequency" [label_x]="Dimension" [data]="data.frequencies"></analytics-frequency-chart>
+  </div>
+
+  <div class="col-sm-12">
+    <analytics-box-plot class="col-sm-12"  style="min-height: 500px;"  [label_y]="Frequency" [label_x]="Dimension" [data]="data.boxplot"></analytics-box-plot>
+  </div>
+
+
+</div>

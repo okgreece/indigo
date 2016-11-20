@@ -21,7 +21,7 @@ import {CubePreviewListComponent} from "./cube/cube-preview-list";
 import {CubeSearchComponent} from "./cube/cube-search";
 import {TreeBuilder} from "./tree/tree-builder";
 import {BarChartVisualization} from "./tree/visualizations/barchart";
-import {RequestBuilder} from "./request/request-builder";
+import {AggregateRequestBuilder} from "./request/aggregate-request-builder";
 import {JsonTreeComponent} from "../lib/json-tree/json-tree";
 import {ModalModule} from "ng2-bootstrap";
 import {JsonNodeComponent} from "../lib/json-tree/json-node";
@@ -33,6 +33,10 @@ import { CubeAnalyticsIndexComponent} from "../containers/cube/cube-analytics-in
 import {CubeAnalyticsListComponent} from "./cube/analytics/cube-analytics-list";
 import {CubeAnalyticsPreviewComponent} from "./cube/analytics/cube-analytics-preview";
 import {ScatterPlotVisualization} from "./analysis/visualizations/scatterPlot";
+import {DescriptiveStatisticsOutputComponent} from "./analysis/descriptive/descriptive";
+import {FactRequestBuilder} from "./request/fact-request-builder";
+import {FrequencyVisualization} from "./analysis/visualizations/frequencyChart";
+import {BoxPlotVisualization} from "./analysis/visualizations/boxPlot";
 
 
 export const COMPONENTS = [
@@ -51,14 +55,18 @@ export const COMPONENTS = [
   ToolbarComponent,
   TreeBuilder,
   BarChartVisualization,
-  RequestBuilder,
+  AggregateRequestBuilder,
+  FactRequestBuilder,
   JsonTreeComponent,
   CubeAnalyticsDetailComponent,
   CubeAnalyticsIndexComponent,
+  FrequencyVisualization,
+  BoxPlotVisualization,
   LineChartVisualization,
   ScatterPlotVisualization,
   JsonNodeComponent,
   TimeSeriesOutputComponent,
+  DescriptiveStatisticsOutputComponent,
   AcfChartVisualization,
   CubePreviewListComponent,
   CubePreviewComponent,

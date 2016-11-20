@@ -1,26 +1,6 @@
 <div class="col-sm-12" *ngIf="data" #container>
 
-  <div class="col-sm-12">
-    <h3>Auto-correlation</h3>
 
-  </div>
-  <div class="col-sm-6"><h4>ACF</h4>
-    <analytics-acf-chart class="col-sm-12" style="min-height: 250px;"
-                         [data]="data?.autocorrelation.acf.regular"></analytics-acf-chart>
-  </div>
-  <div class="col-sm-6"><h4>ACF residuals</h4>
-    <analytics-acf-chart class="col-sm-12" style="min-height: 250px;"
-                         [data]="data?.autocorrelation.acf.residuals"></analytics-acf-chart>
-  </div>
-  <div class="col-sm-6"><h4>PACF</h4>
-    <analytics-acf-chart class="col-sm-12" style="min-height: 250px;"
-                         [data]="data?.autocorrelation.pacf.regular"></analytics-acf-chart>
-  </div>
-  <div class="col-sm-6"><h4>PACF residuals</h4>
-    <analytics-acf-chart class="col-sm-12" style="min-height: 250px;"
-                         [data]="data?.autocorrelation.pacf.residuals"></analytics-acf-chart>
-  </div>
-  <hr class="col-sm-12"/>
   <h3>Decomposition</h3>
 
   <table class="text-center table table-bordered">
@@ -32,11 +12,11 @@
     </thead>
     <tbody *ngIf="data?.decomposition.seasonal">
     <tr>
-      <td>Win</td>
+      <td>Window</td>
       <td>{{data?.decomposition.general.win?data?.decomposition.general.win[0]:""}}</td>
     </tr>
     <tr>
-      <td>Degree</td>
+      <td>Degree of Fit</td>
       <td>{{data?.decomposition.general["stl.degree"][0]}}</td>
     </tr>
 
@@ -45,15 +25,15 @@
 
     <tbody *ngIf="data?.decomposition.seasonal==false">
     <tr>
-      <td>Degree</td>
+      <td>Degree of Fit</td>
       <td>{{data?.decomposition.general["stl.degree"][0]}}</td>
     </tr>
     <tr>
-      <td>Degrees of freedom</td>
+      <td>Effective Degrees of Freedom</td>
       <td>{{data?.decomposition.general["degfr"][0]}}</td>
     </tr>
     <tr>
-      <td>Degrees of freedom (fitted)</td>
+      <td>Fitted Degrees of Freedom</td>
       <td>{{data?.decomposition.general["degfr.fitted"][0]}}</td>
     </tr>
 
@@ -62,28 +42,28 @@
 
 
   <div class="col-sm-6"><h4 class="text-center">Trends</h4>
-    <analytics-line-chart class="col-sm-12" style="min-height: 500px;"
+    <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'" [label_y]="'Trend component'"
                           [values]="data?.decomposition.trends"></analytics-line-chart>
   </div>
 
   <div class="col-sm-6"><h4 class="text-center">Remainders</h4>
-    <analytics-line-chart class="col-sm-12" style="min-height: 500px;"
+    <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'" [label_y]="'Remainder Component'"
                           [values]="data?.decomposition.remainders"></analytics-line-chart>
   </div>
 
   <div class="col-sm-4"><h4 class="text-center">Fitted - Residuals</h4>
-    <analytics-scatter-plot [x_accessor]="'year'" [y_accessor]="'amount'" class="col-sm-12" style="min-height: 500px;"
+    <analytics-scatter-plot [x_accessor]="'year'" [y_accessor]="'amount'" class="col-sm-12" style="min-height: 500px;" [label_x]="'Fitted Values'" [label_y]="'Residual Values'"
                             [values]="data?.decomposition.fitted_residuals"></analytics-scatter-plot>
   </div>
 
 
   <div class="col-sm-4"><h4 class="text-center">Time - Residuals</h4>
-    <analytics-line-chart class="col-sm-12" style="min-height: 500px;"
+    <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'" [label_y]="'Residual Values'"
                           [values]="data?.decomposition.time_residuals"></analytics-line-chart>
   </div>
 
   <div class="col-sm-4"><h4 class="text-center">Time - Fitted</h4>
-    <analytics-line-chart class="col-sm-12" style="min-height: 500px;"
+    <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'" [label_y]="'Fitted Values'"
                           [values]="data?.decomposition.time_fitted"></analytics-line-chart>
   </div>
 
@@ -97,48 +77,48 @@
     </thead>
     <tbody *ngIf="data?.decomposition.seasonal">
     <tr>
-      <td>ARIMA Order</td>
+      <td>ARIMA Orders</td>
       <td>{{data?.decomposition.compare["arima.order"][0]}}</td>
     </tr>
     <tr>
-      <td>ARIMA coefficient</td>
+      <td>ARIMA Coefficients</td>
       <td>{{data?.decomposition.compare["arima.coef"][0]}}</td>
     </tr>
     <tr>
-      <td>ARIMA coefficient se</td>
+      <td>Coefficients Standard Error</td>
       <td>{{data?.decomposition.compare["arima.coef.se"][0]}}</td>
     </tr>
     <tr>
-      <td>Covariance coefficient</td>
+      <td>Estimated Coefficients Variance</td>
       <td>{{data?.decomposition.compare["covariance.coef"][0]}}</td>
     </tr>
     <tr>
-      <td>Residual variance</td>
+      <td>Residuals Variance</td>
       <td>{{data?.decomposition.compare["resid.variance"][0]}}</td>
     </tr>
     <tr>
-      <td>Not used observations</td>
-      <td>{{data?.decomposition.compare["not.used.obs"][0]}}</td>
+      <td>Not used Observations</td>
+      <td>{{data?.decomposition.compare["not.used.obs"].join(",")}}</td>
     </tr>
     <tr>
-      <td>Used observations</td>
-      <td>{{data?.decomposition.compare["used.obs"][0]}}</td>
+      <td>Used Observations</td>
+      <td>{{data?.decomposition.compare["used.obs"].join(",")}}</td>
     </tr>
     <tr>
-      <td>Loglik</td>
+      <td>Log-Likelihood</td>
       <td>{{data?.decomposition.compare["loglik"][0]}}</td>
     </tr>
     <tr>
-      <td>AIC</td>
+      <td>Akaike information criterion</td>
       <td>{{data?.decomposition.compare["aic"][0]}}</td>
     </tr>
 
     <tr>
-      <td>BIC</td>
+      <td>Bayesian information criterion</td>
       <td>{{data?.decomposition.compare["bic"][0]}}</td>
     </tr>
     <tr>
-      <td>AICC</td>
+      <td>Corrected Akaike information criterion</td>
       <td>{{data?.decomposition.compare["aicc"][0]}}</td>
     </tr>
 
@@ -147,29 +127,29 @@
 
     <tbody *ngIf="data?.decomposition.seasonal==false">
     <tr>
-      <td>Residual variance</td>
+      <td>Residuals Variance</td>
       <td>{{data?.decomposition.compare["resid.variance"][0]}}</td>
     </tr>
 
     <tr>
-      <td>Used observations</td>
-      <td>{{data?.decomposition.compare["used.obs"][0]}}</td>
+      <td>Used Observations</td>
+      <td>{{data?.decomposition.compare["used.obs"].join(",")}}</td>
     </tr>
     <tr>
-      <td>Loglik</td>
+      <td>Log-Likelihood</td>
       <td>{{data?.decomposition.compare["loglik"][0]}}</td>
     </tr>
     <tr>
-      <td>AIC</td>
+      <td>Akaike information criterion</td>
       <td>{{data?.decomposition.compare["aic"][0]}}</td>
     </tr>
 
     <tr>
-      <td>BIC</td>
+      <td>Bayesian information criterion</td>
       <td>{{data?.decomposition.compare["bic"][0]}}</td>
     </tr>
     <tr>
-      <td>GCV</td>
+      <td>Generalized cross validation</td>
       <td>{{data?.decomposition.compare["gcv"][0]}}</td>
     </tr>
 
@@ -195,15 +175,15 @@
       </thead>
       <tbody >
       <tr>
-        <td>ARIMA Order</td>
+        <td>ARIMA Orders</td>
         <td>{{data?.fitting.model["arima.order"][0]}}</td>
       </tr>
       <tr>
-        <td>ARIMA coefficient</td>
+        <td>ARIMA Coefficients</td>
         <td>{{data?.fitting.model["arima.coef"][0]}}</td>
       </tr>
       <tr>
-        <td>ARIMA coefficient se</td>
+        <td>Coefficients Standard Error</td>
         <td>{{data?.fitting.model["arima.coef.se"][0]}}</td>
       </tr>
 
@@ -212,22 +192,42 @@
 
 
     </table>
+    <div class="col-sm-12">
+      <h3>Auto-correlation/Partial Auto-correlation</h3>
 
+    </div>
+    <div class="col-sm-6"><h4>ACF</h4>
+      <analytics-acf-chart class="col-sm-12" style="min-height: 250px;" [label_x]="'Lags'" [label_y]="'Autocorrelation'"
+                           [data]="data?.autocorrelation.acf.regular"></analytics-acf-chart>
+    </div>
+    <div class="col-sm-6"><h4>ACF residuals</h4>
+      <analytics-acf-chart class="col-sm-12" style="min-height: 250px;" [label_x]="'Lags'" [label_y]="'Autocorrelation of residuals'"
+                           [data]="data?.autocorrelation.acf.residuals"></analytics-acf-chart>
+    </div>
+    <div class="col-sm-6"><h4>PACF</h4>
+      <analytics-acf-chart class="col-sm-12" style="min-height: 250px;" [label_y]="'Partial autocorrelation'" [label_x]="'Lags'"
+                           [data]="data?.autocorrelation.pacf.regular"></analytics-acf-chart>
+    </div>
+    <div class="col-sm-6"><h4>PACF residuals</h4>
+      <analytics-acf-chart class="col-sm-12" style="min-height: 250px;" [label_y]="'Partial autocorrelation of residuals'" [label_x]="'Lags'"
+                           [data]="data?.autocorrelation.pacf.residuals"></analytics-acf-chart>
+    </div>
+    <hr class="col-sm-12"/>
 
 
     <div class="col-sm-4"><h4 class="text-center">Fitted - Residuals</h4>
-      <analytics-scatter-plot class="col-sm-12" style="min-height: 500px;" [values]="data?.fitting.fitted_residuals"
+      <analytics-scatter-plot class="col-sm-12" style="min-height: 500px;" [values]="data?.fitting.fitted_residuals" [label_x]="'Fitted Values'" [label_y]="'Residual Values'"
                               [x_accessor]="'year'" [y_accessor]="'amount'"></analytics-scatter-plot>
     </div>
 
 
     <div class="col-sm-4"><h4 class="text-center">Time - Residuals</h4>
-      <analytics-line-chart class="col-sm-12" style="min-height: 500px;"
+      <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'" [label_y]="'Residual Values'"
                             [values]="data?.fitting.time_residuals"></analytics-line-chart>
     </div>
 
     <div class="col-sm-4"><h4 class="text-center">Time - Fitted</h4>
-      <analytics-line-chart class="col-sm-12" style="min-height: 500px;"
+      <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'" [label_y]="'Fitted Values'"
                             [values]="data?.fitting.time_fitted"></analytics-line-chart>
     </div>
 
@@ -244,36 +244,36 @@
       <tbody >
 
       <tr>
-        <td>Variance coefficient</td>
+        <td>Variance Coefficient</td>
         <td>{{data?.fitting.compare["variance.coef"][0]}}</td>
       </tr>
       <tr>
-        <td>Residual variance</td>
+        <td>Residuals Variance</td>
         <td>{{data?.fitting.compare["resid.variance"][0]}}</td>
       </tr>
       <tr>
-        <td>Not used observations</td>
-        <td>{{data?.fitting.compare["not.used.obs"][0]}}</td>
+        <td>Not used Observations</td>
+        <td>{{data?.fitting.compare["not.used.obs"].join(",")}}</td>
       </tr>
       <tr>
         <td>Used observations</td>
-        <td>{{data?.fitting.compare["used.obs"][0]}}</td>
+        <td>{{data?.fitting.compare["used.obs"].join(",")}}</td>
       </tr>
       <tr>
-        <td>Loglik</td>
+        <td>Log-Likelihood</td>
         <td>{{data?.fitting.compare["loglik"][0]}}</td>
       </tr>
       <tr>
-        <td>AIC</td>
+        <td>Akaike information criterion</td>
         <td>{{data?.fitting.compare["aic"][0]}}</td>
       </tr>
 
       <tr>
-        <td>BIC</td>
+        <td>Bayesian information criterion</td>
         <td>{{data?.fitting.compare["bic"][0]}}</td>
       </tr>
       <tr>
-        <td>AICC</td>
+        <td>Corrected Akaike information criterion</td>
         <td>{{data?.fitting.compare["aicc"][0]}}</td>
       </tr>
 
@@ -297,7 +297,7 @@
     <h3>Forecasts from {{data?.forecast.model}}</h3>
 
     <div class="col-sm-12">
-      <analytics-line-chart class="col-sm-12" style="min-height: 500px;"
+      <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'" [label_y]="cube.model.aggregates.get(analysisCall.inputs['amount']).label"
                             [values]="data?.forecast.values"></analytics-line-chart>
     </div>
 

@@ -7,6 +7,7 @@ import {AggregateRequest} from "../models/aggregate/aggregateRequest";
 import {Dimension} from "../models/dimension";
 import 'rxjs/add/operator/mergeMap'
 import { environment } from '../../environments/environment';
+import {FactRequest} from "../models/fact/factRequest";
 
 @Injectable()
 export class RudolfCubesService {
@@ -57,9 +58,23 @@ export class RudolfCubesService {
       });
   }
 
+  fact(element:FactRequest):Observable<Cube> {
+    let orderString = element.sorts.map(s=>s.column.ref + ':' + s.direction.key).join('|');
+    let cutString = element.cuts.map(c=>c.column.ref+c.transitivity.key + ":" + c.value).join('|');
+
+    let params = new URLSearchParams();
+    if(element.cuts.length>0) params.set("cut", cutString);
+    if(element.sorts.length>0) params.set("order", orderString);
+
+    return this.http.get(`${this.API_PATH}/${element.cube.name}/facts`, {search:params})
+      .map(res => {
+        return res.json();
+      })
+      ;
+  }
+
+
   aggregate(element:AggregateRequest):Observable<Cube> {
-    // http://ws307.math.auth.gr/rudolf/public/api/3/cubes/budget-thessaloniki-expenditure-2012__1ef74/aggregate?
-    // drilldown=administrativeClassification.notation|administrativeClassification.prefLabel&pagesize=30&order=amount.sum:desc
     let drilldownString = element.drilldowns.map(d => d.column.ref).join('|');
     let orderString = element.sorts.map(s=>s.column.ref + ':' + s.direction.key).join('|');
     let cutString = element.cuts.map(c=>c.column.ref+c.transitivity.key + ":" + c.value).join('|');

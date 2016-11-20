@@ -42,7 +42,7 @@ export const routes: Routes = [
   },
 
   {
-    path: 'cube/analytics/:id/time_series',
+    path: 'cube/analytics/:id/:algorithm',
     canActivate: [ CubeExistsGuard ],
     component: CubeAnalyticsPage
   },

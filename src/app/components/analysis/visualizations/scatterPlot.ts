@@ -31,6 +31,10 @@ import * as _ from 'lodash';
   display: none;
 }
 
+circle{
+fill: blue;
+}
+
 
 
   `]
@@ -55,6 +59,13 @@ export class ScatterPlotVisualization extends AfterViewInit {
   }
 
 
+  @Input()
+  public label_x: string;
+
+
+  @Input()
+  public label_y: string;
+
  private _x_accessor: string;
 private _y_accessor: string;
 
@@ -65,14 +76,16 @@ private _y_accessor: string;
     this._values = value;
 
 
-    if (value)
-      this.init(value);
-
+    if (this.values)
+      this.init(this.values);
 
     this.ref.detectChanges();
   }
 
   ngAfterViewInit(): void {
+
+    if (this.values)
+      this.init(this.values);
 
 
 
@@ -86,13 +99,25 @@ private _y_accessor: string;
   private generateBarChart(data: any) {
 
     let that = this;
-    let margin = {top: 20, right: 40, bottom: 30, left: 100};
+    let margin = {top: 20, right: 40, bottom: 50, left: 50};
 
 
     let viewerWidth = $(this.vizCanvas.nativeElement).width() - margin.left - margin.right;
     let viewerHeight = $(this.vizCanvas.nativeElement).height() - margin.top - margin.bottom;
+    let formatNumber = d3.format(".2n"),
+      formatBillion = function(x) { return formatNumber(x / 1e9) + "B"; },
+      formatMillion = function(x) { return formatNumber(x / 1e6) + "M"; },
+      formatThousand = function(x) { return formatNumber(x / 1e3) + "k"; },
+      formatAsIs = function(x) { return x; };
 
-
+    function formatAbbreviation(x) {
+      debugger;
+      let v = Math.abs(x);
+      return (v >= .9995e9 ? formatBillion
+        : v >= .9995e6 ? formatMillion
+        : v >= .9995e3 ? formatThousand
+        : formatAsIs)(x);
+    }
 
 
     let x = d3.scaleLinear().range([0, viewerWidth]);
@@ -120,7 +145,7 @@ private _y_accessor: string;
     svg.selectAll("dot")
       .data(data)
       .enter().append("circle")
-      .attr("r", 5)
+      .attr("r", 3)
       .attr("cx", function(d) {
         return x(d[that._x_accessor]);
       })
@@ -132,7 +157,7 @@ private _y_accessor: string;
     // Add the X Axis
     svg.append("g")
       .attr("transform", "translate(0," + viewerHeight + ")")
-      .call(d3.axisBottom(x))
+      .call(d3.axisBottom(x).tickFormat(formatAbbreviation))
       .selectAll("text")
       .attr("y", 0)
       .attr("x", 9)
@@ -142,14 +167,14 @@ private _y_accessor: string;
 
     // Add the Y Axis
     svg.append("g")
-      .call(d3.axisLeft(y));
+      .call(d3.axisLeft(y).tickFormat(formatAbbreviation));
 
 
 
     svg.append("rect")
       .attr("x", 0)
       .attr("y", 0)
-      .attr("height", viewerHeight)
+      .attr('height', viewerHeight)
       .attr("width", viewerWidth)
       .style("stroke", "black")
       .style("fill", "none")
@@ -163,6 +188,21 @@ private _y_accessor: string;
       .style("stroke", "black");
 
 
+
+    svg.append("text")
+      .attr("transform",
+        "translate(" + (viewerWidth/2) + " ," +
+        (viewerHeight + margin.top + 20) + ")")
+      .style("text-anchor", "middle")
+      .text(this.label_x);
+
+    svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left)
+      .attr("x",0 - (viewerHeight / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text(this.label_y);
 
 
 

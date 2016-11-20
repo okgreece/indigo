@@ -13,14 +13,12 @@ import * as $ from 'jquery'
 import * as _ from 'lodash';
 
 import {Store} from "@ngrx/store";
-import {AnalysisCall} from "../../../models/analysis/analysisCall";
-import {Cube} from "../../../models/cube";
 
 @Component({
-  selector: 'analytics-timeseries-output',
+  selector: 'analytics-descriptive-output',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  template: require('./timeseries.html'),
+  template: require('./descriptive.html'),
   styles: [`
 
   
@@ -76,7 +74,7 @@ import {Cube} from "../../../models/cube";
 
   `]
 })
-export class TimeSeriesOutputComponent extends AfterViewInit {
+export class DescriptiveStatisticsOutputComponent extends AfterViewInit {
   get data(): any {
     return this._data;
   }
@@ -84,8 +82,9 @@ export class TimeSeriesOutputComponent extends AfterViewInit {
   set data(value: any) {
     this._data = value;
 
-    if(this.data)
-      this.init(this.data);
+
+    if(value)
+    this.init(value);
 
 
     this.ref.detectChanges();
@@ -93,42 +92,21 @@ export class TimeSeriesOutputComponent extends AfterViewInit {
   ngAfterViewInit(): void {
 
     let that = this;
-    if(this.data)
-      this.init(this.data);
-debugger;
 
   }
-
-  @Input()
-  public analysisCall: AnalysisCall;
-
-  @Input()
-  public cube: Cube;
-
-
 
   @ViewChild('container') container:any;
 
 
- private _data: any;
-
-
+  private _data: any;
 
 
   init(values: any) {
 
-
     let that = this;
-
-
     this.container = this.elementRef;
 
-
-
-
-
   }
-
 
 
   constructor( private elementRef: ElementRef,       private ref: ChangeDetectorRef) {

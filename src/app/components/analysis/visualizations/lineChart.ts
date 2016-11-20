@@ -45,8 +45,7 @@ export class LineChartVisualization extends AfterViewInit {
     this._values = value;
 
 
-    if (value)
-      this.init(value);
+
 
 
     this.ref.detectChanges();
@@ -54,7 +53,8 @@ export class LineChartVisualization extends AfterViewInit {
 
   ngAfterViewInit(): void {
 
-
+    if (this.values)
+      this.init(this.values);
 
   }
 
@@ -62,9 +62,14 @@ export class LineChartVisualization extends AfterViewInit {
   @ViewChild('vizCanvas') vizCanvas: any;
 
   private _values: any;
+  @Input()
+  public label_x: string;
 
+
+  @Input()
+  public label_y: string;
   private generateBarChart(data: any) {
-    let margin = {top: 20, right: 40, bottom: 30, left: 100};
+    let margin = {top: 20, right: 40, bottom: 50, left: 50};
 
 
     let viewerWidth = $(this.vizCanvas.nativeElement).width() - margin.left - margin.right;
@@ -83,6 +88,20 @@ export class LineChartVisualization extends AfterViewInit {
 
     let max = 1.1 * d3.max(amounts);
     let min = (1 - (0.1 * Math.sign(d3.min(amounts)))) * d3.min(amounts);
+    let formatNumber = d3.format(".2n"),
+      formatBillion = function(x) { return formatNumber(x / 1e9) + "B"; },
+      formatMillion = function(x) { return formatNumber(x / 1e6) + "M"; },
+      formatThousand = function(x) { return formatNumber(x / 1e3) + "k"; },
+      formatAsIs = function(x) { return x; };
+
+    function formatAbbreviation(x) {
+      debugger;
+      let v = Math.abs(x);
+      return (v >= .9995e9 ? formatBillion
+        : v >= .9995e6 ? formatMillion
+        : v >= .9995e3 ? formatThousand
+        : formatAsIs)(x);
+    }
 
 
     let x = d3.scaleLinear()
@@ -96,7 +115,7 @@ export class LineChartVisualization extends AfterViewInit {
        return d3.time.format('%Y')(new Date(d));
        })*/;
 
-    let yAxis = d3.axisLeft(y);
+    let yAxis = d3.axisLeft(y).tickFormat(formatAbbreviation);
 
 
     let line = d3.line()
@@ -136,6 +155,8 @@ export class LineChartVisualization extends AfterViewInit {
         return y(d.low95);
       });
 
+
+
     let svg = d3.select(this.vizCanvas.nativeElement).append("svg")
       .attr("width", viewerWidth + margin.left + margin.right)
       .attr("height", viewerHeight + margin.top + margin.bottom)
@@ -173,7 +194,7 @@ export class LineChartVisualization extends AfterViewInit {
     svg.append("path")
       .datum(data)
       .attr("class", "line")
-      .attr("d", line);
+      .attr("d", line).attr("data-legend","Historical & Predicted");
 
 
     svg.append("path")
@@ -181,14 +202,14 @@ export class LineChartVisualization extends AfterViewInit {
         return _.has(d, "up80")
       }))
       .attr("class", "lineUp80")
-      .attr("d", lineUp80);
+      .attr("d", lineUp80).attr("data-legend","Upper limit for 80% prediction interval");
 
     svg.append("path")
       .datum(_.filter(data, function (d) {
         return _.has(d, "up95")
       }))
       .attr("class", "lineUp95")
-      .attr("d", lineUp95);
+      .attr("d", lineUp95).attr("data-legend","Upper limit for 95% prediction interval");
 
 
     svg.append("path")
@@ -196,7 +217,7 @@ export class LineChartVisualization extends AfterViewInit {
         return _.has(d, "low80")
       }))
       .attr("class", "lineLow80")
-      .attr("d", lineLow80);
+      .attr("d", lineLow80).attr("data-legend","Lower limit for 80% prediction interval");
 
 
     svg.append("path")
@@ -204,7 +225,7 @@ export class LineChartVisualization extends AfterViewInit {
         return _.has(d, "low95")
       }))
       .attr("class", "lineLow95")
-      .attr("d", lineLow95);
+      .attr("d", lineLow95).attr("data-legend","Lower limit for 95% prediction interval");
 
 
     svg.append("rect")
@@ -223,8 +244,26 @@ export class LineChartVisualization extends AfterViewInit {
       .attr("y2", y(0))
       .style("stroke", "black");
 
+    svg.append("text")
+      .attr("transform",
+        "translate(" + (viewerWidth / 2) + " ," +
+        (viewerHeight + margin.top + 20) + ")")
+      .style("text-anchor", "middle")
+      .text(this.label_x);
+
+    svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left)
+      .attr("x",0 - (viewerHeight / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text(this.label_y);
+
+
 
   }
+  @Input()
+  legend:boolean = false
 
 
   init(values: any) {

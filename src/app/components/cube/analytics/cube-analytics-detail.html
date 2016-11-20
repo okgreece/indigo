@@ -1,58 +1,33 @@
 <md-card>
-  <md-card-title-group>
-    <md-card-title>Cube: {{ (cube$|async).pckg.title }}</md-card-title>
-  </md-card-title-group>
+
 
   <md-card-content>
     <div class="col-sm-12">
       <div class="col-sm-12">
-        <md-card *ngFor="let algorithm of algorithms">
-
-          <md-card-content>
+        <md-card  >
+          <md-card-content *ngIf="algorithm">
             <p>
               <md-toolbar color="primary">
-
-                  <h4>{{ algorithm.title }}</h4>
+                  <h4>{{ (cube$|async).pckg.title }}: {{ algorithm.title }}</h4>
                 <button md-tooltip="Execute" style="margin-left: auto" md-mini-fab (click)="execute(algorithm)">
 
                   <md-icon class="md-24">play_circle_outline</md-icon>
                 </button>
-
-
-
               </md-toolbar>
             </p>
-
-
             <div class="row">
               <div class="col-sm-4">
                 <div *ngFor="let input of algorithm.inputs|iterable" class="col-sm-12">
-                  <div *ngIf="input.type==InputTypes.BABBAGE_RAW_DATA">
+                  <div *ngIf="input.type==InputTypes.BABBAGE_AGGREGATE_RAW_DATA">
                     <h4>Input: {{input.title}}</h4>
 
-                    <request-builder [cube]="cube$|async" [(request)]="newAggregateRequest"></request-builder>
+                    <aggregate-request-builder [cube]="cube$|async" [(request)]="newAggregateRequest"></aggregate-request-builder>
                   </div>
-                  <!--<div *ngIf="input.type==InputTypes.ATTRIBUTE_REF">
-                    <select class="form-control" [(ngModel)]="analysisCalls[algorithm.name]?.inputs[input.name]" >
-                      <option [ngValue]="item" *ngFor="let item of (cube$|async).model?.attributes|iterable">{{item |
-                        nestedProperty:'fullLabel'}}
-                      </option>
-                    </select>
+                  <div *ngIf="input.type==InputTypes.BABBAGE_FACT_RAW_DATA">
+                    <h4>Input: {{input.title}}</h4>
+
+                    <fact-request-builder [cube]="cube$|async" [(request)]="newAggregateRequest"></fact-request-builder>
                   </div>
-
-                  <div *ngIf="input.type==InputTypes.AGGREGATE_REF">
-                    <div class="col-sm-9 form-group">
-                      <select class="form-control col-sm-6" [(ngModel)]="analysisCalls[algorithm.name]?.inputs[input.name]">
-                        <option [ngValue]="item" *ngFor="let item of (cube$|async).model?.aggregates|iterable">{{item |
-                          nestedProperty:'label'}}
-                        </option>
-                      </select>
-                    </div>
-
-                  </div>
--->
-
-
 
                   <div class="row-fluid col-sm-12 well" *ngIf="input.type==InputTypes.PARAMETER" >
                     <h4>Input: parameter</h4>
@@ -65,42 +40,55 @@
                   </div>
 
 
+                  <div class="row-fluid col-sm-12 well" *ngIf="input.type==InputTypes.MEASURE_REF" >
+                    <h4>Input: measure {{input.title}}</h4>
+                    <div class="col-sm-12">
+                      <div class="col-sm-9 form-group">
+                        <select class="form-control col-sm-6" [(ngModel)]="analysisCalls[algorithm.name]?.inputs[input.name]">
+                          <option [ngValue]="item" *ngFor="let item of cube?.model?.measures|iterable">{{item |
+                            nestedProperty:'label'}}
+                          </option>
+                        </select>
+                      </div>
 
+                    </div>
 
+                  </div>
+                  <div class="row-fluid col-sm-12 well" *ngIf="input.type==InputTypes.ATTRIBUTE_REF" >
+                    <h4>Input: measure {{input.title}}</h4>
+                    <div class="col-sm-12">
+                      <div class="col-sm-9 form-group">
+                        <select class="form-control col-sm-6" [(ngModel)]="analysisCalls[algorithm.name]?.inputs[input.name]">
+                          <optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" label="{{dim.label}}">
+                            <option [ngValue]="item" *ngFor="let item of dim?.attributes|iterable">{{item |
+                              nestedProperty:'label'}}
+                            </option>
+                          </optgroup>
+                        </select>
+                      </div>
 
+                    </div>
 
+                  </div>
                 </div>
-
-
               </div>
 
               <div class="col-sm-8">
                 <div >
-                  Select an aggregate, a time-related drilldown and the prediction steps parameter from the left and click on the execute button on top right.
+                  {{algorithm.prompt}}
 
                   <md-spinner *ngIf="loading$|async"></md-spinner>
-                  <analytics-timeseries-output  class="col-sm-12" style="min-height: 500px;"   [data]="analysisCalls[algorithm.name]?.outputs['values']">
+
+                  <analytics-timeseries-output *ngIf="algorithm.name=='time_series'" class="col-sm-12" style="min-height: 500px;" [cube]="cube"  [analysisCall]="analysisCalls[algorithm.name]"  [data]="analysisCalls[algorithm.name]?.outputs['values']">
                   </analytics-timeseries-output>
+                  <analytics-descriptive-output *ngIf="algorithm.name=='descriptive_statistics'" [data]="analysisCalls[algorithm.name]?.outputs['values']"></analytics-descriptive-output>
                 </div>
               </div>
             </div>
-
-
-
-
-
-
-
-
           </md-card-content>
 
         </md-card>
-
-
       </div>
-
-
-
     </div>
   </md-card-content>
 

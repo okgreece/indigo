@@ -52,28 +52,33 @@ export class AcfChartVisualization extends AfterViewInit {
   @Input()
   set data(value: any) {
     this._data = value;
-
-
-    if(value)
-    this.init(value);
-
+    if (this._data)
+      this.init(this._data);
 
     this.ref.detectChanges();
   }
+
+  initialized:boolean = false;
+
   ngAfterViewInit(): void {
 
-    let that = this;
-
-
+    this.initialized = true;
+    if(this._data)
+      this.init(this.data);
   }
 
+  @Input()
+  public label_x: string;
 
+
+  @Input()
+  public label_y: string;
 
   @ViewChild('vizCanvas') vizCanvas:any;
  private _data: any;
 
   private generateBarChart(data: any) {
-    let margin = {top: 10, right: 10, bottom: 35, left: 35};
+    let margin = {top: 10, right: 10, bottom: 35, left: 45};
 
 
 
@@ -127,7 +132,6 @@ export class AcfChartVisualization extends AfterViewInit {
       return d["lag"]
     }));
     y.domain([-max, max]);
-
 
 
 
@@ -194,7 +198,7 @@ export class AcfChartVisualization extends AfterViewInit {
       .attr("x2", viewerWidth)
       .attr("y1", y(0))
       .attr("y2",y(0))
-      .style("stroke", "black");
+      .style('stroke', 'black');
 
 
     svg.append("rect")
@@ -205,6 +209,22 @@ export class AcfChartVisualization extends AfterViewInit {
       .style("stroke", "black")
       .style("fill", "none")
       .style("stroke-width", "1");
+
+
+    svg.append("text")
+      .attr("transform",
+        "translate(" + (viewerWidth/2) + " ," +
+        (viewerHeight + margin.top + 20) + ")")
+      .style("text-anchor", "middle")
+      .text(this.label_x);
+
+    svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left)
+      .attr("x",0 - (viewerHeight / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text(this.label_y);
 
    /* let line = d3.svg.line()
       .x(function(d:any) { return x(d.year); })
@@ -228,14 +248,14 @@ export class AcfChartVisualization extends AfterViewInit {
 
   }
 
-  parseTime = d3.timeParse("y");
+  parseTime = d3.timeParse('y');
 
   init(data: any) {
 
 
     let that = this;
 
-    d3.select(that.vizCanvas.nativeElement).html("");
+    d3.select(that.vizCanvas.nativeElement).html('');
 
     this.vizCanvas = this.elementRef;
 

@@ -25,12 +25,11 @@ import {Dimension} from "../../models/dimension";
 
 
 @Component({
-  moduleId: 'request-builder',
 
-  selector: 'request-builder',
+  selector: 'fact-request-builder',
   changeDetection: ChangeDetectionStrategy.Default, // ⇐⇐⇐
   encapsulation: ViewEncapsulation.None,
-  template: require('./request-builder.html'),
+  template: require('./fact-request-builder.html'),
   styles: [`
   ul.alt-list{padding:0; margin:10px 0}
     ul.alt-list li {
@@ -74,7 +73,7 @@ import {Dimension} from "../../models/dimension";
     }
   `]
 })
-export class RequestBuilder{
+export class FactRequestBuilder{
   get newAggregateAggregate(): Aggregate {
     return this._newAggregateAggregate;
   }
@@ -248,7 +247,7 @@ export class RequestBuilder{
   getMembers(attributeName:string) {
 
     let newCutDimension = _.filter(Array.from(this.cube.model.attributes.values()), function (attribute) {
-      return attribute.ref == attributeName;
+      return attribute.ref === attributeName;
     })[0].dimension;
     let that = this;
     this.rudolfCubesService.members(this.cube, newCutDimension).subscribe(response=> {
