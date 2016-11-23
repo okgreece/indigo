@@ -3,7 +3,7 @@
  */
 
 import * as _ from 'lodash';
-import {RudolfCubesService} from "../../services/rudolf-cubes";
+import {ApiCubesService} from "../../services/api-cubes";
 
 import {
   ChangeDetectionStrategy, ViewEncapsulation,
@@ -22,6 +22,7 @@ import {AggregateRequest} from "../../models/aggregate/aggregateRequest";
 import {AggregateNode} from "../../models/aggregate/aggregateNode";
 import {Cube} from "../../models/cube";
 import {Dimension} from "../../models/dimension";
+import {FactRequest} from "../../models/fact/factRequest";
 
 
 @Component({
@@ -74,17 +75,10 @@ import {Dimension} from "../../models/dimension";
   `]
 })
 export class FactRequestBuilder{
-  get newAggregateAggregate(): Aggregate {
-    return this._newAggregateAggregate;
-  }
-
-  set newAggregateAggregate(value: Aggregate) {
-    this._newAggregateAggregate = value;
-  }
 
 
   @Output()
-  public onRequestBuilt : EventEmitter<AggregateRequest> = new EventEmitter<AggregateRequest>();
+  public onRequestBuilt : EventEmitter<FactRequest> = new EventEmitter<FactRequest>();
 
   public get cube(){
     return this._cube;
@@ -102,90 +96,56 @@ export class FactRequestBuilder{
   @Output() requestChange = new EventEmitter();
 
 
-  public get request():AggregateRequest{
-    return this.newAggregateRequest;
+  public get request():FactRequest{
+    return this.newFactRequest;
   }
 
   @Input()
-  public set request(value:AggregateRequest){
+  public set request(value:FactRequest){
     let that = this;
-    that.newAggregateRequest = value;
+    that.newFactRequest = value;
   }
 
 
 
-  constructor(private rudolfCubesService:RudolfCubesService){
+  constructor(private rudolfCubesService:ApiCubesService){
 
   }
 
 
-  newAggregateRequest:AggregateRequest = new AggregateRequest();
-
-  addAggregateChild() {
+  newFactRequest:FactRequest = new FactRequest();
 
 
-    let aggregateNode = new AggregateNode();
-    aggregateNode.element = this.newAggregateRequest;
-    this.newAggregateRequest.cube = this.cube;
-    this.newAggregateRequest.page = this.newAggregatePageNumber;
-    this.newAggregateRequest.pageSize = this.newAggregatePageSize;
 
 
-    this.onRequestBuilt.emit(this.newAggregateRequest);
-    this.newAggregateRequest = new AggregateRequest;
-    this.newAggregateRequest.cube = this.cube;
-  }
 
 
-  addAggregate() {
-    let newAggregate = new AggregateParam();
-    newAggregate.column = this._newAggregateAggregate;
-    this.newAggregateRequest.aggregates.push(newAggregate);
-
-    this.requestChange.emit(this.request);
-
-
-  }
-
-
-  removeAggregate(aggregate: AggregateParam){
-    _.remove(this.newAggregateRequest.aggregates, aggregate);
-  }
 
   addCut() {
     let newCut = new Cut();
     newCut.column = this.newCutAttribute;
     newCut.transitivity = this.newCutTransitivity;
     newCut.value = this.newCutValueVal;
-    this.newAggregateRequest.cuts.push(newCut);
+    this.newFactRequest.cuts.push(newCut);
   }
 
 
   removeCut(cut: Cut){
-    _.remove(this.newAggregateRequest.cuts, cut);
-  }
-
-  addDrilldown() {
-    let newDrilldown = new Drilldown();
-    newDrilldown.column = this.newDrilldownAttribute;
-    this.newAggregateRequest.drilldowns.push(newDrilldown);
+    _.remove(this.newFactRequest.cuts, cut);
   }
 
 
-  removeDrilldown(drilldown: Drilldown){
-    _.remove(this.newAggregateRequest.drilldowns, drilldown);
-  }
 
   addSort() {
 
     let newSort = new Sort();
     newSort.column = this.newSortAttribute;
     newSort.direction = this.newSortDirection;
-    this.newAggregateRequest.sorts.push(newSort);
+    this.newFactRequest.sorts.push(newSort);
   }
 
   removeSort(sort: Sort){
-    _.remove(this.newAggregateRequest.sorts, sort);
+    _.remove(this.newFactRequest.sorts, sort);
   }
 
   selectedCutChanged($event: Attribute){
@@ -199,7 +159,8 @@ export class FactRequestBuilder{
   }
 
 
-  private _newAggregateAggregate:Aggregate ;
+
+
 
   newSortAttribute:Attribute;
 
@@ -214,8 +175,8 @@ export class FactRequestBuilder{
   newCustomValue: any;
 
   sortDirections:Map<string,SortDirection> = SortDirection.directions;
-  public newAggregatePageNumber: number = 0;
-  public newAggregatePageSize: number = 30;
+  public newFactPageNumber: number = 0;
+  public newFactPageSize: number = 30;
 
   setCutValue(member:string){
     this.newCutValueVal = member;
@@ -257,7 +218,6 @@ export class FactRequestBuilder{
         return member[attributeName];
       });
 
-      //this.store.dispatch(this.treeActions.replace(expresseionTree));
     });
     /* .catch(() => Observable.of(this.cubeActions.searchComplete([]));*/
 

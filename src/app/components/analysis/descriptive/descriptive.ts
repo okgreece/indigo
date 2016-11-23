@@ -13,6 +13,8 @@ import * as $ from 'jquery'
 import * as _ from 'lodash';
 
 import {Store} from "@ngrx/store";
+import {Cube} from "../../../models/cube";
+import {AnalysisCall} from "../../../models/analysis/analysisCall";
 
 @Component({
   selector: 'analytics-descriptive-output',
@@ -116,6 +118,12 @@ export class DescriptiveStatisticsOutputComponent extends AfterViewInit {
       this.ref.markForCheck();
     }, 5000);
   }
+
+  @Input()
+  public analysisCall: AnalysisCall;
+
+  @Input()
+  public cube: Cube;
 
 
 }

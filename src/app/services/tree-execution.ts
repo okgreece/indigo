@@ -5,7 +5,7 @@ import 'rxjs/add/operator/map';
 import { Injectable } from '@angular/core';
 import {Store} from "@ngrx/store";
 import {Observable} from 'rxjs/Observable';
-import {RudolfCubesService} from "./rudolf-cubes";
+import {ApiCubesService} from "./api-cubes";
 import {ExpressionNode} from "../models/expressionNode";
 import {AggregateNode} from "../models/aggregate/aggregateNode";
 import {ExpressionTree} from "../models/expressionTree";
@@ -18,7 +18,7 @@ import {ReplaceAction} from "../actions/tree";
 @Injectable()
 export class TreeExecution {
 
-  constructor(private rudolfCubesService: RudolfCubesService, private store:Store<State>) {}
+  constructor(private rudolfCubesService: ApiCubesService, private store:Store<State>) {}
 
     execute(expressionTree: ExpressionTree, rootNode:ExpressionNode){
       let that = this;

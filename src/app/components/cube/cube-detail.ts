@@ -14,7 +14,7 @@ import {NgChosenComponent} from "../ng-chosen";
 import {MdButton} from "@angular/material";
 @NgModule({
   imports:      [ CommonModule, FormsModule ],
-  declarations: [ MdButton , TreeBuilder, NgChosenComponent],
+  declarations: [ TreeBuilder, NgChosenComponent],
 
 })
 @Component({

@@ -26,7 +26,7 @@
                   <div *ngIf="input.type==InputTypes.BABBAGE_FACT_RAW_DATA">
                     <h4>Input: {{input.title}}</h4>
 
-                    <fact-request-builder [cube]="cube$|async" [(request)]="newAggregateRequest"></fact-request-builder>
+                    <fact-request-builder [cube]="cube$|async" [(request)]="newFactRequest"></fact-request-builder>
                   </div>
 
                   <div class="row-fluid col-sm-12 well" *ngIf="input.type==InputTypes.PARAMETER" >
@@ -44,8 +44,8 @@
                     <h4>Input: measure {{input.title}}</h4>
                     <div class="col-sm-12">
                       <div class="col-sm-9 form-group">
-                        <select class="form-control col-sm-6" [(ngModel)]="analysisCalls[algorithm.name]?.inputs[input.name]">
-                          <option [ngValue]="item" *ngFor="let item of cube?.model?.measures|iterable">{{item |
+                        <select  *ngIf="input.cardinality=='n'" (change)="setSelected($event.target, algorithm.name, input.name, cube.model.measures)"  multiple class="form-control col-sm-6" [(ngModel)]="analysisCalls[algorithm.name]?.inputs[input.name]">
+                          <option [ngValue]="item" [attr.data-key]="item |nestedProperty:'ref'" *ngFor="let item of cube?.model?.measures|iterable">{{item |
                             nestedProperty:'label'}}
                           </option>
                         </select>
@@ -81,7 +81,7 @@
 
                   <analytics-timeseries-output *ngIf="algorithm.name=='time_series'" class="col-sm-12" style="min-height: 500px;" [cube]="cube"  [analysisCall]="analysisCalls[algorithm.name]"  [data]="analysisCalls[algorithm.name]?.outputs['values']">
                   </analytics-timeseries-output>
-                  <analytics-descriptive-output *ngIf="algorithm.name=='descriptive_statistics'" [data]="analysisCalls[algorithm.name]?.outputs['values']"></analytics-descriptive-output>
+                  <analytics-descriptive-output *ngIf="algorithm.name=='descriptive_statistics'" [data]="analysisCalls[algorithm.name]?.outputs['values']" [cube]="cube"  [analysisCall]="analysisCalls[algorithm.name]"></analytics-descriptive-output>
                 </div>
               </div>
             </div>

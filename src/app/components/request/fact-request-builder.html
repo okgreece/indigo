@@ -2,7 +2,7 @@
   <h4>Filters</h4>
   <div class="col-sm-12">
     <ul class="alt-list">
-      <li *ngFor="let cut of newAggregateRequest.cuts">
+      <li *ngFor="let cut of newFactRequest.cuts">
         <div class="col-sm-2">
           <button md-mini-fab (click)="removeCut(cut)">
             <md-icon class="md-24">remove_circle</md-icon>
@@ -59,7 +59,7 @@
   <h4>Sorting</h4>
   <div class="col-sm-12">
     <ul class="alt-list">
-      <li *ngFor="let sort of newAggregateRequest.sorts">
+      <li *ngFor="let sort of newFactRequest.sorts">
         <div class="col-sm-2">
           <button md-mini-fab (click)="removeSort(sort)">
             <md-icon class="md-24">remove_circle</md-icon>
@@ -102,13 +102,13 @@
   <h4>Pagination</h4>
 
   <div class="col-sm-12 form-group">
-    <input class="form-control"  type="number" [(ngModel)]="newAggregatePageNumber"  placeholder="Page Number" align="end"/>
+    <input class="form-control"  type="number" [(ngModel)]="request.page"  placeholder="Page Number" align="end"/>
 
 
 
   </div>
   <div class="col-sm-12 form-group">
-    <input class="form-control"  type="number" [(ngModel)]="newAggregatePageSize" placeholder="Page Size" align="end"/>
+    <input class="form-control"  type="number" [(ngModel)]="request.pageSize" placeholder="Page Size" align="end"/>
 
 
 

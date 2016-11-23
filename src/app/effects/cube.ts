@@ -11,7 +11,7 @@ import { Observable } from 'rxjs/Observable';
 import { empty } from 'rxjs/observable/empty';
 import { of } from 'rxjs/observable/of';
 
-import { RudolfCubesService } from '../services/rudolf-cubes';
+import { ApiCubesService } from '../services/api-cubes';
 import * as cube from '../actions/cube/cube2';
 
 
@@ -31,7 +31,7 @@ import * as cube from '../actions/cube/cube2';
 
 @Injectable()
 export class CubeEffects {
-  constructor(private actions$: Actions, private rudolfCubes: RudolfCubesService) { }
+  constructor(private actions$: Actions, private rudolfCubes: ApiCubesService) { }
 
 
   @Effect()

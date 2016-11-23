@@ -9,13 +9,13 @@ import 'rxjs/add/operator/mergeMap'
 import 'rxjs/Subscription'
 import {AnalysisCall} from "../models/analysis/analysisCall";
 import {Algorithm} from "../models/analysis/algorithm";
-import {RudolfCubesService} from "./rudolf-cubes";
+import {ApiCubesService} from "./api-cubes";
 import {Subscription} from "rxjs";
 
 @Injectable()
 export class AnalysisService {
 
-  constructor(private http: Http, public rudolfService: RudolfCubesService) {
+  constructor(private http: Http, public rudolfService: ApiCubesService) {
   }
 
   execute(algorithm: Algorithm, call: AnalysisCall): Observable<any> {
@@ -282,11 +282,19 @@ export class AnalysisService {
   }
   descriptive(algorithm, call) {
     let that = this;
-
+debugger;
     let subscription = this.rudolfService.fact(call.inputs["json_data"]).map(function (json) {
       let body = new URLSearchParams();
       body.set('json_data', "'" + JSON.stringify(json) + "'");
-      body.set('amounts', "'" + call.inputs["amount"].ref + "'");
+      let amountColumnString = "";
+      if(call.inputs["amount"].length>1){
+        amountColumnString = `c(`+call.inputs["amount"].map(c=>{return '"'+c.ref+'"';}).join(",")+`)`;
+      }
+      else{
+        amountColumnString = call.inputs["amount"].ref;
+      }
+
+      body.set('amounts',   amountColumnString);
       body.set('dimensions', "'" + call.inputs["dimensions"].ref + "'");
 
       return that.http.post(algorithm.endpoint.toString() + "/print", body).map(res => {

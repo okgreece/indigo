@@ -15,7 +15,7 @@ import {State, getTree} from "../../reducers/index";
 import {Store} from "@ngrx/store";
 import {ExpressionNode} from "../../models/expressionNode";
 import {AggregateNode} from "../../models/aggregate/aggregateNode";
-import {RudolfCubesService} from "../../services/rudolf-cubes";
+import {ApiCubesService} from "../../services/api-cubes";
 import {TreeExecution} from "../../services/tree-execution";
 import {FuncNode, FuncType} from '../../models/func/funcNode'
 import * as _ from 'lodash';
@@ -140,7 +140,7 @@ export class TreeBuilder implements AfterViewInit {
               @MetadataAttribute('width') width: number,
               @MetadataAttribute('height') height: number,
               private store: Store<State>,
-              private rudolfCubesService: RudolfCubesService,
+              private rudolfCubesService: ApiCubesService,
               private treeExecution: TreeExecution, private zone: NgZone, private ref: ChangeDetectorRef) {
 
     this.width = width;

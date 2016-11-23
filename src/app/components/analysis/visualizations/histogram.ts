@@ -164,9 +164,9 @@ export class HistogramVisualization extends AfterViewInit {
       .enter().append("rect")
       .attr("class", "box")
       .attr("x", function(d:any) { return x(d.from); })
-      .attr("y", function(d:any) { return y( 0); })
-      .attr("width", function(d:any) { return x(Math.abs(d.to - d.from)); })
-      .attr("height", function(d:any) { return y(d.frequency); });
+      .attr("y", function(d:any) { return y( d.frequency); })
+      .attr("width", function(d:any) { return Math.abs(x(d.to) - x(d.from)); })
+      .attr("height", function(d:any) { return viewerHeight-  y(d.frequency); });
 
 
    /* svg.append("path")

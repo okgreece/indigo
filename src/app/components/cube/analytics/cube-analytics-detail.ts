@@ -199,6 +199,21 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
 
   }
 
+  public setSelected(eventTarget, algorithm_name, input_name, collection) {
+    this.analysisCalls[algorithm_name].inputs[input_name] = [];
+    for (let i = 0; i < eventTarget.options.length; i++) {
+
+      let optionElement = eventTarget.options[i];
+
+      if (optionElement.selected === true) {
+        let key = eventTarget.options[i].attributes['data-key'].value;
+        this.analysisCalls[algorithm_name].inputs[input_name].push(collection.get(key));
+
+      }
+    }
+    debugger;
+  }
+
   private prepareDescriptiveStatistics(algorithm: Algorithm) {
 
     this.newFactRequest.cube = this.cube;

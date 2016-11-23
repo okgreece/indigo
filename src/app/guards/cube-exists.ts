@@ -11,7 +11,7 @@ import { Router, CanActivate, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 
-import { RudolfCubesService } from '../services/rudolf-cubes';
+import { ApiCubesService } from '../services/api-cubes';
 import * as fromRoot from '../reducers';
 import * as cube from '../actions/cube/cube2';
 
@@ -25,7 +25,7 @@ import * as cube from '../actions/cube/cube2';
 export class CubeExistsGuard implements CanActivate {
   constructor(
     private store: Store<fromRoot.State>,
-    private rudolfCubes: RudolfCubesService,
+    private rudolfCubes: ApiCubesService,
     private router: Router
   ) { }
 

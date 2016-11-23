@@ -3,7 +3,7 @@
  */
 
 import * as _ from 'lodash';
-import {RudolfCubesService} from "../../services/rudolf-cubes";
+import {ApiCubesService} from "../../services/api-cubes";
 
 import {
   ChangeDetectionStrategy, ViewEncapsulation,
@@ -115,7 +115,7 @@ export class AggregateRequestBuilder{
 
 
 
-  constructor(private rudolfCubesService:RudolfCubesService){
+  constructor(private rudolfCubesService:ApiCubesService){
 
   }
 

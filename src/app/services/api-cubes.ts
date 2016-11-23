@@ -10,7 +10,7 @@ import { environment } from '../../environments/environment';
 import {FactRequest} from "../models/fact/factRequest";
 
 @Injectable()
-export class RudolfCubesService {
+export class ApiCubesService {
   private API_PATH:string = environment.apiUrl+"/api/"+
     environment.versionSuffix +"/cubes";
   private API_PACKAGES_PATH:string = environment.apiUrl+"/search/package";
@@ -65,6 +65,8 @@ export class RudolfCubesService {
     let params = new URLSearchParams();
     if(element.cuts.length>0) params.set("cut", cutString);
     if(element.sorts.length>0) params.set("order", orderString);
+    if(element.page) params.set("page", element.page.toString());
+    if(element.pageSize) params.set("pagesize", element.pageSize.toString());
 
     return this.http.get(`${this.API_PATH}/${element.cube.name}/facts`, {search:params})
       .map(res => {

@@ -27,7 +27,7 @@ import { GoogleBooksService } from './services/google-books';
 import { routes } from './routes';
 import { reducer } from './reducers';
 import { schema } from './db';
-import {RudolfCubesService} from "./services/rudolf-cubes";
+import {ApiCubesService} from "./services/api-cubes";
 import {CollectionCubePageComponent} from "./containers/cube/collection-page";
 import {ViewCubePageComponent} from "./containers/cube/view-cube-page";
 import {FindCubePageComponent} from "./containers/cube/find-cube-page";
@@ -113,7 +113,7 @@ import {APP_BASE_HREF} from '@angular/common';
     BookExistsGuard,
     CubeExistsGuard,
     GoogleBooksService,
-    RudolfCubesService,
+    ApiCubesService,
     TreeExecution,
     AlgorithmsService,
     AnalysisService,

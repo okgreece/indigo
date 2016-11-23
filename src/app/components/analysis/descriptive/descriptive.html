@@ -6,39 +6,45 @@
 
   <table class="text-center table table-bordered">
 
-
+    <thead>
+    <tr>
+      <th></th>
+      <th *ngFor="let item of analysisCall.inputs['amount']">{{item.label}}</th>
+    </tr>
+    </thead>
     <tbody *ngIf="data?.descriptives">
+
     <tr>
       <td>Minimum observed value</td>
-      <td>{{data?.descriptives.Min.amount[0]}}</td>
+      <td *ngFor="let item of analysisCall.inputs['amount']">{{data?.descriptives.Min[item.ref][0]}}</td>
     </tr>
 
     <tr>
       <td>Maximum observed value</td>
-      <td>{{data?.descriptives.Max.amount[0]}}</td>
+      <td *ngFor="let item of analysisCall.inputs['amount']">{{data?.descriptives.Max[item.ref][0]}}</td>
     </tr>
 
     <tr>
       <td>Range of values</td>
-      <td>{{data?.descriptives.Range.amount[0]}}</td>
+      <td *ngFor="let item of analysisCall.inputs['amount']">{{data?.descriptives.Range[item.ref][0]}}</td>
     </tr>
     <tr>
       <td>Mean</td>
-      <td>{{data?.descriptives.Mean.amount[0]}}</td>
+      <td *ngFor="let item of analysisCall.inputs['amount']">{{data?.descriptives.Mean[item.ref][0]}}</td>
     </tr>
     <tr>
       <td>Quantiles</td>
-      <td>25%: {{data?.descriptives.Quantiles.amount[0]}}, 75%: {{data?.descriptives.Quantiles.amount[1]}}</td>
+      <td *ngFor="let item of analysisCall.inputs['amount']">25%: {{data?.descriptives.Quantiles[item.ref][0]}}, 75%: {{data?.descriptives.Quantiles[item.ref][1]}}</td>
     </tr>
 
     <tr>
       <td>Variance</td>
-      <td>{{data?.descriptives.Variance.amount[0]}}</td>
+      <td *ngFor="let item of analysisCall.inputs['amount']">{{data?.descriptives.Variance[item.ref][0]}}</td>
     </tr>
 
     <tr>
       <td>Standard Deviation</td>
-      <td>{{data?.descriptives.StandardDeviation.amount[0]}}</td>
+      <td *ngFor="let item of analysisCall.inputs['amount']">{{data?.descriptives.StandardDeviation[item.ref][0]}}</td>
     </tr>
     <tr>
       <td>Skewness</td>

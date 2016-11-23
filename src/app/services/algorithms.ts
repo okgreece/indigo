@@ -62,28 +62,28 @@ export class AlgorithmsService {
 
 
     let raw_data_input = new Input();
-    raw_data_input.cardinality = 1;
+    raw_data_input.cardinality = "1";
     raw_data_input.type = InputTypes.BABBAGE_AGGREGATE_RAW_DATA;
     raw_data_input.name = 'json_data';
     raw_data_input.title = 'Data coming from an aggregation';
     raw_data_input.guess = false;
 
     let time_dimension_input = new Input();
-    time_dimension_input.cardinality = 1;
+    time_dimension_input.cardinality = "1";
     time_dimension_input.type = InputTypes.ATTRIBUTE_REF;
     time_dimension_input.name = 'time';
     time_dimension_input.title = "Time dimension";
     time_dimension_input.guess = true;
 
     let amount_aggregate_input = new Input();
-    amount_aggregate_input.cardinality = 1;
+    amount_aggregate_input.cardinality = "1";
     amount_aggregate_input.type = InputTypes.AGGREGATE_REF;
     amount_aggregate_input.name = "amount";
     amount_aggregate_input.title = "Amount aggregate";
     amount_aggregate_input.guess = true;
 
     let prediction_steps_input = new Input();
-    prediction_steps_input.cardinality = 1;
+    prediction_steps_input.cardinality = "1";
     prediction_steps_input.type = InputTypes.PARAMETER;
     prediction_steps_input.name = "prediction_steps";
     prediction_steps_input.title = "Prediction Steps";
@@ -100,7 +100,7 @@ export class AlgorithmsService {
 
     let json_output = new Output;
     json_output.name = "output";
-    json_output.cardinality =1 ;
+    json_output.cardinality = 1 ;
     json_output.type = OutputTypes.TABLE;
 
     timeSeriesAlgorithm.outputs.set(json_output.name, json_output);
@@ -123,21 +123,21 @@ export class AlgorithmsService {
 
 
     let raw_data_input = new Input();
-    raw_data_input.cardinality = 1;
+    raw_data_input.cardinality = "1";
     raw_data_input.type = InputTypes.BABBAGE_FACT_RAW_DATA;
     raw_data_input.name = "json_data";
     raw_data_input.title = "Tabular data";
     raw_data_input.guess = false;
 
     let what_dimension_input = new Input();
-    what_dimension_input.cardinality = 1;
+    what_dimension_input.cardinality = "1";
     what_dimension_input.type = InputTypes.ATTRIBUTE_REF;
     what_dimension_input.name = "dimensions";
     what_dimension_input.title = "Dimensions";
     what_dimension_input.guess = false;
 
     let to_what_dimension_input = new Input();
-    to_what_dimension_input.cardinality = 1;
+    to_what_dimension_input.cardinality = "1";
     to_what_dimension_input.type = InputTypes.ATTRIBUTE_REF;
     to_what_dimension_input.name = "to.what";
     to_what_dimension_input.title = "To what";
@@ -145,7 +145,7 @@ export class AlgorithmsService {
 
 
     let amount_aggregate_input = new Input();
-    amount_aggregate_input.cardinality = 1;
+    amount_aggregate_input.cardinality = "n";
     amount_aggregate_input.type = InputTypes.MEASURE_REF;
     amount_aggregate_input.name = "amount";
     amount_aggregate_input.title = "Amount measure";
