@@ -32,10 +32,6 @@ export type InCollectionInput = boolean;
 export type AddOutput = Cube;
 export type RemoveOutput = Cube;
 
-@NgModule({
-  declarations: [MdButton, TreeBuilder, NgChosenComponent, NgChosenComponent, JsonTreeComponent, MdToolbar, MdInput, NgIf, NgFor, MdButton, MdAnchor, MdIcon],
-
-})
 
 @Component({
   selector: 'cube-analytics-detail',

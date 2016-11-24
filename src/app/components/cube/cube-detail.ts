@@ -12,11 +12,7 @@ import {FormsModule} from "@angular/forms";
 import {CommonModule} from "@angular/common";
 import {NgChosenComponent} from "../ng-chosen";
 import {MdButton} from "@angular/material";
-@NgModule({
-  imports:      [ CommonModule, FormsModule ],
-  declarations: [ TreeBuilder, NgChosenComponent],
 
-})
 @Component({
   selector: 'bc-cube-detail',
   styles: [`
