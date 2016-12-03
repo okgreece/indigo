@@ -21,9 +21,8 @@ import { ViewBookPageComponent } from './containers/view-book-page';
 import { SelectedBookPageComponent } from './containers/selected-book-page';
 import { CollectionPageComponent } from './containers/collection-page';
 import { NotFoundPageComponent } from './containers/not-found-page';
-
+import {ColcadeModule} from 'angular2-colcade';
 import { GoogleBooksService } from './services/google-books';
-
 import { routes } from './routes';
 import { reducer } from './reducers';
 import { schema } from './db';
@@ -40,17 +39,21 @@ import {CubeAnalyticsPage} from "./containers/cube/cube-analytics";
 import {AnalysisService} from "./services/analysis";
 import {environment} from "../environments/environment";
 import {APP_BASE_HREF} from '@angular/common';
+import {CubeAnalyticsEmbedPage} from "./containers/cube/cube-analytics-embed-page";
 
 
 
 @NgModule({
   imports: [
+
     CommonModule,
     BrowserModule,
     MaterialModule.forRoot(),
     ComponentsModule,
-
     RouterModule.forRoot(routes, { useHash: true }),
+
+
+    ColcadeModule,
 
     /**
      * StoreModule.provideStore is imported once in the root module, accepting a reducer
@@ -105,6 +108,7 @@ import {APP_BASE_HREF} from '@angular/common';
     SelectedCubePageComponent,
     ViewCubePageComponent,
     CubeAnalyticsPage,
+    CubeAnalyticsEmbedPage,
     CollectionCubePageComponent,
     NotFoundPageComponent,
 

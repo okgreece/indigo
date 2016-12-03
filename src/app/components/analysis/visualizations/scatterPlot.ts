@@ -111,7 +111,6 @@ private _y_accessor: string;
       formatAsIs = function(x) { return x; };
 
     function formatAbbreviation(x) {
-      debugger;
       let v = Math.abs(x);
       return (v >= .9995e9 ? formatBillion
         : v >= .9995e6 ? formatMillion

@@ -285,7 +285,20 @@ export class AnalysisService {
 debugger;
     let subscription = this.rudolfService.fact(call.inputs["json_data"]).map(function (json) {
       let body = new URLSearchParams();
-      body.set('json_data', "'" + JSON.stringify(json) + "'");
+      body.set('json_data', "'"+ JSON.stringify(json)
+          //.replace(/[\\]/g, '\\\\')
+        //.replace(/[\"]/g, '\\\\"')
+        .replace(/\\\"/g, '\\\\"')
+       //.replace(/[\/]/g, '\\/')
+        .replace(/[\b]/g, '\\b')
+        .replace(/[\f]/g, '\\f')
+        .replace(/\\n/g, '\\\\n')
+        .replace(/\\r/g, '\\\\r')
+        .replace(/[\t]/g, '\\t')
+          .replace(/\"/g, '\\\"') +"'")
+
+
+      ;
       let amountColumnString = "";
       if(call.inputs["amount"].length>1){
         amountColumnString = `c(`+call.inputs["amount"].map(c=>{return '"'+c.ref+'"';}).join(",")+`)`;
@@ -296,6 +309,7 @@ debugger;
 
       body.set('amounts',   amountColumnString);
       body.set('dimensions', "'" + call.inputs["dimensions"].ref + "'");
+     // body.set('x', "'" + JSON.stringify(json) + "'");
 
       return that.http.post(algorithm.endpoint.toString() + "/print", body).map(res => {
         debugger;

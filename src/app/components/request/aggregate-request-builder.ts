@@ -72,6 +72,10 @@ import {Dimension} from "../../models/dimension";
     span.node-key {
       cursor: pointer;
     }
+    
+    .well{
+    background-color:#615f5f;
+    }
   `]
 })
 export class AggregateRequestBuilder{

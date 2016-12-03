@@ -35,7 +35,7 @@ import * as layout from '../actions/layout';
     }`],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <bc-layout>
+    <bc-layout *ngIf="!chromeless">
       <bc-sidenav [open]="showSidenav$ | async">
 <!--        <bc-nav-item (activate)="closeSidenav()" routerLink="/" icon="book" hint="View your book collection">
           My Collection
@@ -60,6 +60,12 @@ import * as layout from '../actions/layout';
 
       <router-outlet></router-outlet>
     </bc-layout>
+    
+    <div *ngIf="chromeless">
+          <router-outlet></router-outlet>
+
+    </div>
+    
   `
 })
 export class AppComponent {
@@ -78,6 +84,8 @@ export class AppComponent {
     this.viewContainerRef = viewContainerRef;
 
   }
+
+  public chromeless = false;
 
   closeSidenav() {
     /**

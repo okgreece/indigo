@@ -4,7 +4,7 @@
 import {
   ChangeDetectionStrategy, ViewEncapsulation,
   Component, Input, Directive, Attribute as MetadataAttribute, OnChanges, DoCheck, ElementRef, OnInit, SimpleChange,
-  AfterViewInit, ViewChild
+  AfterViewInit, ViewChild, Injector
 } from '@angular/core';
 import {Inject, NgZone, ChangeDetectorRef} from '@angular/core';
 import * as d3 from 'd3';
@@ -13,6 +13,7 @@ import * as $ from 'jquery'
 import * as _ from 'lodash';
 
 import {Store} from "@ngrx/store";
+import {AnalysisVisualization} from "../visualization";
 
 @Component({
   selector: 'analytics-acf-chart',
@@ -45,14 +46,14 @@ import {Store} from "@ngrx/store";
 
   `]
 })
-export class AcfChartVisualization extends AfterViewInit {
+export class AcfChartVisualization extends AnalysisVisualization implements AfterViewInit {
   get data(): any {
     return this._data;
   }
   @Input()
   set data(value: any) {
     this._data = value;
-    if (this._data)
+    if (this._data && this.initialized)
       this.init(this._data);
 
     this.ref.detectChanges();
@@ -79,7 +80,6 @@ export class AcfChartVisualization extends AfterViewInit {
 
   private generateBarChart(data: any) {
     let margin = {top: 10, right: 10, bottom: 35, left: 45};
-
 
 
     let viewerWidth = $(this.vizCanvas.nativeElement).width() - margin.left - margin.right;
@@ -269,19 +269,15 @@ export class AcfChartVisualization extends AfterViewInit {
 
 
 
-  type(d:any) {
+  type(d: any) {
   d.amount = +d.amount;
   return d;
   }
 
 
-  constructor( private elementRef: ElementRef,       private ref: ChangeDetectorRef) {
-    super();
-    setInterval(() => {
-      // the following is required, otherwise the view will not be updated
-      this.ref.markForCheck();
-    }, 5000);
-  }
+  constructor(elementRef: ElementRef,   ref: ChangeDetectorRef,  injector: Injector) {
+    super(elementRef, ref, injector);
+     }
 
 
 }

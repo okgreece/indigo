@@ -199,8 +199,22 @@
 
     </div>
     <div class="col-sm-6"><h4>ACF</h4>
-      <analytics-acf-chart class="col-sm-12" style="min-height: 250px;" [label_x]="'Lags'" [label_y]="'Autocorrelation'"
-                           [data]="data?.autocorrelation.acf.regular"></analytics-acf-chart>
+      <md-card>
+        <md-card-title-group align="center center" >
+
+          <md-card-title>Viz</md-card-title>
+          <button md-mini-fab [routerLink]="'/cube/analytics/' + cube.name+'/timeseries/embed/acf'">
+            <md-icon  color="primary"  class="md-24">share</md-icon>
+          </button>
+
+        </md-card-title-group>
+        <div class="row text-center">
+          <analytics-acf-chart class="col-sm-12" style="min-height: 250px;" [label_x]="'Lags'" [label_y]="'Autocorrelation'"
+                               [data]="data?.autocorrelation.acf.regular"></analytics-acf-chart>
+        </div>
+
+      </md-card>
+
     </div>
     <div class="col-sm-6"><h4>ACF residuals</h4>
       <analytics-acf-chart class="col-sm-12" style="min-height: 250px;" [label_x]="'Lags'" [label_y]="'Autocorrelation of residuals'"

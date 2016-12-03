@@ -12,6 +12,7 @@ import { NotFoundPageComponent } from './containers/not-found-page';
 import {CubeAnalyticsDetailComponent} from "./components/cube/analytics/cube-analytics-detail";
 import {CubeAnalyticsPage} from "./containers/cube/cube-analytics";
 import { CubeAnalyticsIndexComponent} from "./containers/cube/cube-analytics-index-page";
+import {CubeAnalyticsEmbedPage} from "./containers/cube/cube-analytics-embed-page";
 
 export const routes: Routes = [
   {
@@ -46,6 +47,13 @@ export const routes: Routes = [
     canActivate: [ CubeExistsGuard ],
     component: CubeAnalyticsPage
   },
+
+  {
+    path: 'cube/analytics/:id/:algorithm/embed/:part',
+    canActivate: [ CubeExistsGuard ],
+    component: CubeAnalyticsEmbedPage
+  },
+
   {
     path: 'cube/analytics/:id',
     canActivate: [ CubeExistsGuard ],

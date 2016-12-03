@@ -8,15 +8,27 @@ import {Observable} from "rxjs";
 import * as fromRoot from '../../../reducers';
 
 @Component({
-  selector: 'indigo-cube-preview-list',
+  selector: 'indigo-cube-analytics-preview-list',
   template: `
+<div class="card-container">
     <indigo-cube-analytics-preview *ngFor="let algorithm of algorithms" [cube]="cube" [algorithm]="algorithm"></indigo-cube-analytics-preview>
+
+</div>
   `,
   styles: [`
     :host {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
+    }
+        md-card {
+      margin: 0 16px 16px 0;
+      width: 350px;
+    }
+    
+    .card-container {
+      display: flex;
+      flex-direction: column;
     }
   `]
 })

@@ -7,11 +7,7 @@ import * as treeActions from "../../actions/tree";
 import {Store} from "@ngrx/store";
 import {State} from "../../reducers";
 import {Model} from "../../models/model";
-import {TreeBuilder} from "../tree/tree-builder";
-import {FormsModule} from "@angular/forms";
-import {CommonModule} from "@angular/common";
-import {NgChosenComponent} from "../ng-chosen";
-import {MdButton} from "@angular/material";
+
 
 @Component({
   selector: 'bc-cube-detail',
@@ -41,7 +37,7 @@ import {MdButton} from "@angular/material";
       padding-bottom: 75px;
     }
   `],
-  template: require('./analytics/cube-detail.html')
+  template: require('./cube-detail.html')
 
 
 })

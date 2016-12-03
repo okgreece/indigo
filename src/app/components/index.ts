@@ -3,6 +3,7 @@ import { MaterialModule } from '@angular/material';
 import { NgModule } from '@angular/core';
 import {ReactiveFormsModule, FormsModule} from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import {ColcadeModule } from 'angular2-colcade';
 
 import { BookAuthorsComponent } from './book-authors';
 import { BookDetailComponent } from './book-detail';
@@ -38,9 +39,13 @@ import {FactRequestBuilder} from "./request/fact-request-builder";
 import {FrequencyVisualization} from "./analysis/visualizations/frequencyChart";
 import {BoxPlotVisualization} from "./analysis/visualizations/boxPlot";
 import {HistogramVisualization} from "./analysis/visualizations/histogram";
+import {CubeEmbedAnalyticsComponent} from "./cube/analytics/embed/embed";
+import DynamicComponent from "./dynamic-component";
+import {MasonryModule} from "angular2-masonry";
 
 
 export const COMPONENTS = [
+  DynamicComponent,
   BookAuthorsComponent,
   BookDetailComponent,
   BookPreviewComponent,
@@ -73,7 +78,8 @@ export const COMPONENTS = [
   CubePreviewListComponent,
   CubePreviewComponent,
   CubeAnalyticsListComponent,
-  CubeAnalyticsPreviewComponent
+  CubeAnalyticsPreviewComponent,
+  CubeEmbedAnalyticsComponent
 ];
 
 
@@ -85,7 +91,8 @@ export const COMPONENTS = [
     RouterModule,
     PipesModule,
     FormsModule,
-    ModalModule
+    ModalModule,
+    MasonryModule,
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,

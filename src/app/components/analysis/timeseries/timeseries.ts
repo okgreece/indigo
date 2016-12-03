@@ -72,6 +72,21 @@ import {Cube} from "../../../models/cube";
 
 }
 
+svg{
+background: url("public/sprites/grid_paper.png");
+font-family: monospace;
+}
+
+svg text{
+font-family: monospace;
+}
+
+
+
+analytics-timeseries-output md-card{
+background: #303030;
+}
+
 
 
   `]
