@@ -17,8 +17,7 @@ import {ActivatedRoute} from '@angular/router';
   template: `
     <indigo-cube-analytics-embed [algorithmName]="algorithmName"
       [inCollection]="isCubeInCollection$ | async"
-      (add)="addToCollection($event)"
-      (remove)="removeFromCollection($event)">
+    >
     </indigo-cube-analytics-embed>
   `
 })

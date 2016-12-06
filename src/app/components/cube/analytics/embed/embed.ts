@@ -47,18 +47,16 @@ import {DynamicComponents} from "../../../dynamic-component";
   ],
 })
 export class CubeEmbedAnalyticsComponent {
-  @Input() algorithms: Algorithm[];
   componentData = null;
   cube$: Observable<Cube>;
   loading$: Observable<boolean>;
   cube: Cube;
   @Input() inCollection: InCollectionInput;
   private _algorithmName: Observable<string>;
-
+  @Input()
   get algorithmName(): Observable<string> {
     return this._algorithmName;
   }
-  @Input()
   set algorithmName(value: Observable<string>) {
     this._algorithmName = value;
 
