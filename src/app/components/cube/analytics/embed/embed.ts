@@ -7,13 +7,13 @@ import {AnalysisService} from "../../../../services/analysis";
 import {Observable} from 'rxjs';
 import * as fromRoot from '../../../../reducers';
 import EventEmitter = webdriver.EventEmitter;
-import {AddOutput, RemoveOutput, InCollectionInput} from "../cube-analytics-detail";
 import {DynamicHTMLModule} from "ng-dynamic";
 import {AcfChartVisualization} from "../../../analysis/visualizations/acfChart";
 import {ActivatedRoute} from "@angular/router";
 import {ApiCubesService} from "../../../../services/api-cubes";
 import {URLSearchParams} from "@angular/http";
 import {DynamicComponents} from "../../../dynamic-component";
+export type InCollectionInput = boolean;
 
 @Component({
   selector: 'indigo-cube-analytics-embed',
