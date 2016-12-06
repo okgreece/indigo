@@ -14,6 +14,12 @@ import { Component, Input } from '@angular/core';
     md-sidenav {
       width: 300px;
     }
+    
+    a:hover{
+   
+      text-decoration: none!important;
+    }
+    
   `]
 })
 export class SidenavComponent {

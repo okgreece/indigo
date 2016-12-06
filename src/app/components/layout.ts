@@ -8,24 +8,23 @@ import {Observable} from "rxjs";
 
 @Component({
   selector: 'bc-layout',
-  template: `
-    <md-sidenav-layout fullscreen>
-      
-        <bc-sidenav [open]="showSidenav$ | async">
+  template: `<md-sidenav-layout fullscreen>
+   
+  <bc-sidenav [open]="showSidenav$ | async">
 
-        <bc-nav-item (activate)="closeSidenav()" routerLink="/cube/find" icon="search" >
-          Browse Cubes
-        </bc-nav-item>
-       <button md-button #mybutton (click)="closeSidenav()">Close</button>
+    <bc-nav-item (activate)="closeSidenav()" routerLink="/cube/find" icon="search">
+      Browse Cubes
+    </bc-nav-item>
+    <button md-button #mybutton (click)="closeSidenav()">Close</button>
 
-      </bc-sidenav>
-      <bc-toolbar  (openMenu)="openSidenav()">
-        <span class="indigo">indigo</span>
+  </bc-sidenav>
+  <bc-toolbar class="indigo" (openMenu)="openSidenav()">
+    <span class="indigo">indigo</span>
 
-      </bc-toolbar>
-      <router-outlet></router-outlet>
+  </bc-toolbar>
+  <router-outlet></router-outlet>
 
-    </md-sidenav-layout>
+</md-sidenav-layout>
   `,
   styles: [`
 
@@ -57,13 +56,17 @@ import {Observable} from "rxjs";
     
    .indigo{
       font-family: 'Leckerli One', cursive;
-      color:white;
+      color:indigo;
+    }
+    
+   .md-button-wrapper{
+      color: indigo;
     }
   `]
 })
 export class LayoutComponent {
 
-  constructor(private store: Store<fromRoot.State>, viewContainerRef: ViewContainerRef, private route: ActivatedRoute,       private ref: ChangeDetectorRef){
+  constructor(private store: Store<fromRoot.State>, viewContainerRef: ViewContainerRef, private route: ActivatedRoute, private ref: ChangeDetectorRef) {
     this.showSidenav$ = this.store.let(fromRoot.getShowSidenav);
 
   }
