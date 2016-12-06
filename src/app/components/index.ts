@@ -49,6 +49,7 @@ import {MasonryModule} from "angular2-masonry";
 
 export const COMPONENTS = [
   DynamicComponent,
+  CubeEmbedAnalyticsComponent,
   BookAuthorsComponent,
   BookDetailComponent,
   BookPreviewComponent,
@@ -84,7 +85,6 @@ export const COMPONENTS = [
   CubePreviewComponent,
   CubeAnalyticsListComponent,
   CubeAnalyticsPreviewComponent,
-  CubeEmbedAnalyticsComponent
 ];
 
 

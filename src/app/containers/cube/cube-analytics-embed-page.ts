@@ -5,11 +5,11 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import * as cubeActions from '../../actions/cube/cube2';
 import * as fromRoot from '../../reducers';
-import {
-  InCollectionInput
-} from '../../components/cube/analytics/cube-analytics-detail';
+
 import {Cube} from '../../models/cube';
 import {ActivatedRoute} from '@angular/router';
+
+export type InCollectionInput = boolean;
 
 
 @Component({
