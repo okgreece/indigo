@@ -29,7 +29,10 @@ import {JsonNodeComponent} from "../lib/json-tree/json-node";
 import {CubeAnalyticsDetailComponent} from "./cube/analytics/cube-analytics-detail";
 import {LineChartVisualization} from "./analysis/visualizations/lineChart";
 import {TimeSeriesOutputComponent} from "./analysis/timeseries/timeseries";
-import {AcfChartVisualization} from "./analysis/visualizations/acfChart";
+import {
+  AcfChartVisualization, AcfChartVisualizationRegular,
+  AcfChartVisualizationResiduals
+} from "./analysis/visualizations/acfChart";
 import { CubeAnalyticsIndexComponent} from "../containers/cube/cube-analytics-index-page";
 import {CubeAnalyticsListComponent} from "./cube/analytics/cube-analytics-list";
 import {CubeAnalyticsPreviewComponent} from "./cube/analytics/cube-analytics-preview";
@@ -75,6 +78,8 @@ export const COMPONENTS = [
   TimeSeriesOutputComponent,
   DescriptiveStatisticsOutputComponent,
   AcfChartVisualization,
+  AcfChartVisualizationRegular,
+  AcfChartVisualizationResiduals,
   CubePreviewListComponent,
   CubePreviewComponent,
   CubeAnalyticsListComponent,

@@ -41,6 +41,8 @@
     "@ngrx/store-devtools": "^3.2.2",
     "@types/d3": "^4.2.38",
     "@types/jquery": "^2.0.33",
+    "@types/urijs": "^1.15.31",
+    "@types/valid-url": "^1.0.2",
     "angular2-colcade": "^0.1.0",
     "angular2-fontawesome": "~0.7.0",
     "angular2-masonry": "^0.3.0",
@@ -58,6 +60,8 @@
     "ts-helpers": "^1.1.1",
     "typescript": "^2.0.7",
     "underscore": "^1.8.3",
+    "urijs": "^1.18.3",
+    "valid-url": "^1.0.9",
     "zone.js": "^0.6.26"
   },
   "devDependencies": {

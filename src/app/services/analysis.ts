@@ -22,7 +22,7 @@ export class AnalysisService {
 
 
     if (algorithm.name === 'time_series') {
-     return this.timeseries(algorithm, call);
+     return this.timeseries(algorithm, call.parametrizeInputs());
 
     }
     else if (algorithm.name === 'descriptive_statistics') {
@@ -32,15 +32,15 @@ export class AnalysisService {
 
   }
 
-  timeseries(algorithm, call) {
+  timeseries(algorithm, inputs: URLSearchParams) {
     let that = this;
 
-    let subscription = this.rudolfService.aggregate(call.inputs["json_data"]).map(function (json) {
+    let subscription = this.rudolfService.aggregate(inputs.get("json_data")).map(function (json) {
       let body = new URLSearchParams();
       body.set('json_data', "'" + JSON.stringify(json) + "'");
-      body.set('amount', "'" + call.inputs["amount"] + "'");
-      body.set('time', "'" + call.inputs["time"] + "'");
-      body.set('prediction_steps', call.inputs["prediction_steps"]);
+      body.set('amount', "'" + inputs.get("amount") + "'");
+      body.set('time', "'" + inputs.get("time") + "'");
+      body.set('prediction_steps', inputs.get("prediction_steps"));
 
       return that.http.post(algorithm.endpoint.toString() + "/print", body).map(res => {
         debugger;
@@ -254,7 +254,7 @@ export class AnalysisService {
           decomposition: {
             trends: trends,
             remainders: remainders,
-            seasonals:seasonals,
+            seasonals: seasonals,
             time_fitted: time_fitted,
             time_residuals: time_residuals,
             fitted_residuals: fitted_residuals,

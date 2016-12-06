@@ -36,15 +36,13 @@ import {Dimension} from "../../models/dimension";
     ul.alt-list li {
       list-style-type: none;
       margin: .1rem 0;
-      padding: .1rem;
-      display: flex;
+    padding: .5rem 0;
+          display: flex;
       align-items: center;
-
-
-    }
-    ul.alt-list li:nth-child(odd) { background: #f8f8f8; }{
+    background: rgba(66, 66, 66, 0.3);
 
     }
+   
     
     a.action-anchor{
       cursor:pointer;

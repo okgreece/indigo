@@ -198,14 +198,14 @@
       <h3>Auto-correlation/Partial Auto-correlation</h3>
 
     </div>
-    <div class="col-sm-6"><h4>ACF</h4>
+    <div class="col-sm-6">
       <md-card>
         <md-card-title-group align="center center" >
 
-          <md-card-title>Viz</md-card-title>
-          <button md-mini-fab [routerLink]="'/cube/analytics/' + cube.name+'/timeseries/embed/acf'">
+          <md-card-title>ACF</md-card-title>
+          <a md-mini-fab [routerLink]="['/cube/analytics/'+cube.name+'/time_series/embed/analytics-acf-chart-regular']" [queryParams]="analysisCall.queryParams()">
             <md-icon  color="primary"  class="md-24">share</md-icon>
-          </button>
+          </a>
 
         </md-card-title-group>
         <div class="row text-center">
@@ -216,10 +216,28 @@
       </md-card>
 
     </div>
-    <div class="col-sm-6"><h4>ACF residuals</h4>
-      <analytics-acf-chart class="col-sm-12" style="min-height: 250px;" [label_x]="'Lags'" [label_y]="'Autocorrelation of residuals'"
-                           [data]="data?.autocorrelation.acf.residuals"></analytics-acf-chart>
+
+    <div class="col-sm-6">
+      <md-card>
+        <md-card-title-group align="center center" >
+
+          <md-card-title>ACF residuals</md-card-title>
+          <a md-mini-fab [routerLink]="['/cube/analytics/'+cube.name+'/time_series/embed/analytics-acf-chart-residuals']" [queryParams]="analysisCall.queryParams()">
+            <md-icon  color="primary"  class="md-24">share</md-icon>
+          </a>
+
+        </md-card-title-group>
+        <div class="row text-center">
+          <analytics-acf-chart class="col-sm-12" style="min-height: 250px;" [label_x]="'Lags'" [label_y]="'Autocorrelation of residuals'"
+                               [data]="data?.autocorrelation.acf.residuals"></analytics-acf-chart>
+        </div>
+
+      </md-card>
+
     </div>
+
+
+
     <div class="col-sm-6"><h4>PACF</h4>
       <analytics-acf-chart class="col-sm-12" style="min-height: 250px;" [label_y]="'Partial autocorrelation'" [label_x]="'Lags'"
                            [data]="data?.autocorrelation.pacf.regular"></analytics-acf-chart>
@@ -313,7 +331,7 @@
     <h3>Forecasts from {{data?.forecast.model}}</h3>
 
     <div class="col-sm-12">
-      <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'" [label_y]="cube.model.aggregates.get(analysisCall.inputs['amount']).label"
+      <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'" [label_y]="cube.model.aggregates.get(analysisCall.inputs['amount'].ref).label"
                             [values]="data?.forecast.values"></analytics-line-chart>
     </div>
 

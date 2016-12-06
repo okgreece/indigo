@@ -57,7 +57,7 @@ import {Cube} from '../../models/cube';
     margin-right: -16px;
     margin-top: -38px;
     border-top-right-radius: 2px;
-    opacity: .5;
+    opacity: .75;
     }
 
   `]

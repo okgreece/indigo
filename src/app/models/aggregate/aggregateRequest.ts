@@ -68,5 +68,9 @@ export class AggregateRequest implements Serializable<AggregateRequest>{
     return this;
   }
 
+  toURI(){
+
+  }
+
 
 }

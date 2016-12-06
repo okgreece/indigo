@@ -139,7 +139,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
   public OutputTypes = OutputTypes;
 
 
-  public constructor(private store: Store<fromRoot.State>, private algorithmsService: AlgorithmsService,  private ref: ChangeDetectorRef, private analysisService: AnalysisService,route: ActivatedRoute) {
+  public constructor(private store: Store<fromRoot.State>, private algorithmsService: AlgorithmsService,  private ref: ChangeDetectorRef, private analysisService: AnalysisService, route: ActivatedRoute) {
         setInterval(() => {
       // the following is required, otherwise the view will not be updated
       this.ref.markForCheck();
@@ -183,12 +183,12 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
     this.newAggregateRequest.cube = this.cube;
 
     if (dateTimeDimension !== undefined) {
-      this.analysisCalls[algorithm.name].inputs['time'] = dateTimeDimension.column.ref;
+      this.analysisCalls[algorithm.name].inputs['time'] = dateTimeDimension.column;
 
     }
 
     if (this.newAggregateRequest.aggregates.length > 0) {
-      this.analysisCalls[algorithm.name].inputs['amount'] = this.newAggregateRequest.aggregates[0].column.ref;
+      this.analysisCalls[algorithm.name].inputs['amount'] = this.newAggregateRequest.aggregates[0].column;
 
     }
     this.analysisCalls[algorithm.name].inputs['json_data'] = this.newAggregateRequest;

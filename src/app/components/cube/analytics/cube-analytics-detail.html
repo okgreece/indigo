@@ -18,7 +18,7 @@
             <div class="row">
               <div class="col-sm-4">
                 <div *ngFor="let input of algorithm.inputs|iterable" class="col-sm-12">
-                  <div *ngIf="input.type==InputTypes.BABBAGE_AGGREGATE_RAW_DATA">
+                  <div *ngIf="input.type==InputTypes.BABBAGE_AGGREGATE_RAW_DATA || input.type==InputTypes.BABBAGE_AGGREGATE_URI">
                     <h4>Input: {{input.title}}</h4>
 
                     <aggregate-request-builder [cube]="cube$|async" [(request)]="newAggregateRequest"></aggregate-request-builder>

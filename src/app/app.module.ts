@@ -21,7 +21,6 @@ import { ViewBookPageComponent } from './containers/view-book-page';
 import { SelectedBookPageComponent } from './containers/selected-book-page';
 import { CollectionPageComponent } from './containers/collection-page';
 import { NotFoundPageComponent } from './containers/not-found-page';
-import {ColcadeModule} from 'angular2-colcade';
 import { GoogleBooksService } from './services/google-books';
 import { routes } from './routes';
 import { reducer } from './reducers';
@@ -51,10 +50,6 @@ import {CubeAnalyticsEmbedPage} from "./containers/cube/cube-analytics-embed-pag
     MaterialModule.forRoot(),
     ComponentsModule,
     RouterModule.forRoot(routes, { useHash: true }),
-
-
-    ColcadeModule,
-
     /**
      * StoreModule.provideStore is imported once in the root module, accepting a reducer
      * function or object map of reducer functions. If passed an object of
@@ -121,7 +116,13 @@ import {CubeAnalyticsEmbedPage} from "./containers/cube/cube-analytics-embed-pag
     TreeExecution,
     AlgorithmsService,
     AnalysisService,
-    {provide: APP_BASE_HREF, useValue: environment.baseHref}
+    {provide: APP_BASE_HREF, useValue: environment.baseHref},
+    {
+      provide: 'chromeless',
+      useValue: () => {
+        return true;
+      }
+    }
   ],
   bootstrap: [
     AppComponent

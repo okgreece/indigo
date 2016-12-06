@@ -11,23 +11,23 @@ import {FactRequest} from "../models/fact/factRequest";
 
 @Injectable()
 export class ApiCubesService {
-  private API_PATH:string = environment.apiUrl+"/api/"+
+  private API_PATH: string = environment.apiUrl+"/api/"+
     environment.versionSuffix +"/cubes";
-  private API_PACKAGES_PATH:string = environment.apiUrl+"/search/package";
-  private API_PACKAGE_PATH:string = environment.apiUrl+"/api/"+environment.versionSuffix+"/info";
+  private API_PACKAGES_PATH: string = environment.apiUrl+"/search/package";
+  private API_PACKAGE_PATH: string = environment.apiUrl+"/api/"+environment.versionSuffix+"/info";
 
-  constructor(private http:Http) {
+  constructor(private http: Http) {
   }
 
-  searchCubes(queryTitle:string):Observable<any[]> {
+  searchCubes(queryTitle: string): Observable<any[]> {
     return this.http.get(`${this.API_PACKAGES_PATH}`)
       .map(res => res.json())
       ;
   }
 
-  retrieveCube(name:string):Observable<Cube> {
+  retrieveCube(name: string): Observable<Cube> {
     return this.http.get(`${this.API_PATH}/${name}/model`)
-      .map(res => res.json()).flatMap((cube)=>{
+      .map(res => res.json()).flatMap((cube) => {
         let fullCube = new Cube().deserialize(cube);
         let observables = [];
 
@@ -44,7 +44,7 @@ export class ApiCubesService {
       });
   }
 
-  retrievePackage(cube:Cube):Observable<Cube> {
+  retrievePackage(cube: Cube): Observable<Cube> {
     return this.http.get(`${this.API_PACKAGE_PATH}/${cube.name}/package`)
       .map(res => {
 
@@ -58,17 +58,17 @@ export class ApiCubesService {
       });
   }
 
-  fact(element:FactRequest):Observable<Cube> {
-    let orderString = element.sorts.map(s=>s.column.ref + ':' + s.direction.key).join('|');
-    let cutString = element.cuts.map(c=>c.column.ref+c.transitivity.key + ":" + c.value).join('|');
+  fact(element: FactRequest): Observable<Cube> {
+    let orderString = element.sorts.map(s => s.column.ref + ':' + s.direction.key).join('|');
+    let cutString = element.cuts.map(c => c.column.ref + c.transitivity.key + ':' + c.value).join('|');
 
     let params = new URLSearchParams();
-    if(element.cuts.length>0) params.set("cut", cutString);
-    if(element.sorts.length>0) params.set("order", orderString);
-    if(element.page) params.set("page", element.page.toString());
-    if(element.pageSize) params.set("pagesize", element.pageSize.toString());
+    if(element.cuts.length > 0) params.set('cut', cutString);
+    if(element.sorts.length > 0) params.set('order', orderString);
+    if(element.page) params.set('page', element.page.toString());
+    if(element.pageSize) params.set('pagesize', element.pageSize.toString());
 
-    return this.http.get(`${this.API_PATH}/${element.cube.name}/facts`, {search:params})
+    return this.http.get(`${this.API_PATH}/${element.cube.name}/facts`, {search: params})
       .map(res => {
         return res.json();
       })
@@ -76,19 +76,31 @@ export class ApiCubesService {
   }
 
 
-  aggregate(element:AggregateRequest):Observable<Cube> {
-    let drilldownString = element.drilldowns.map(d => d.column.ref).join('|');
-    let orderString = element.sorts.map(s=>s.column.ref + ':' + s.direction.key).join('|');
-    let cutString = element.cuts.map(c=>c.column.ref+c.transitivity.key + ":" + c.value).join('|');
-    let aggregatesString =  element.aggregates.map(a=>a.column.ref).join("|");
+  aggregateToURI(aggregateRequest: AggregateRequest){
+    let drilldownString = aggregateRequest.drilldowns.map(d => d.column.ref).join('|');
+    let orderString = aggregateRequest.sorts.map(s => s.column.ref + ':' + s.direction.key).join('|');
+    let cutString = aggregateRequest.cuts.map(c => c.column.ref + c.transitivity.key + ':' + c.value).join('|');
+    let aggregatesString =  aggregateRequest.aggregates.map(a => a.column.ref).join('|');
 
     let params = new URLSearchParams();
-    if(element.drilldowns.length>0) params.set("drilldown", drilldownString);
-    if(element.cuts.length>0) params.set("cut", cutString);
-    if(element.sorts.length>0) params.set("order", orderString);
-    if(element.aggregates.length>0) params.set("aggregates", aggregatesString);
+    if (aggregateRequest.drilldowns.length > 0) params.set('drilldown', drilldownString);
+    if (aggregateRequest.cuts.length > 0) params.set('cut', cutString);
+    if (aggregateRequest.sorts.length > 0) params.set('order', orderString);
+    if (aggregateRequest.aggregates.length > 0) params.set('aggregates', aggregatesString);
+    return `${this.API_PATH}/${aggregateRequest.cube.name}/aggregate?${params.toString()}`;
+  }
 
-    return this.http.get(`${this.API_PATH}/${element.cube.name}/aggregate`, {search:params})
+
+
+
+  aggregate(element: any): Observable<Cube> {
+    let url = '';
+    if (element instanceof AggregateRequest) {
+      url = this.aggregateToURI(element);
+    }
+    else url = element;
+
+    return this.http.get(url)
       .map(res => {
         return res.json();
       })

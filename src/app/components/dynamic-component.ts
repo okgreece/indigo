@@ -2,11 +2,26 @@
  * Created by larjo on 2/12/2016.
  */
 import {Component, Input, ViewContainerRef, ViewChild, ReflectiveInjector, ComponentFactoryResolver} from '@angular/core';
-import {AcfChartVisualization} from "./analysis/visualizations/acfChart";
+import {
+  AcfChartVisualization, AcfChartVisualizationRegular,
+  AcfChartVisualizationResiduals
+} from "./analysis/visualizations/acfChart";
 //http://blog.mgechev.com/2015/12/30/angular2-router-dynamic-route-config-definition-creation/
+
+
+export const DynamicComponents = {
+  'analytics-acf-chart-regular': AcfChartVisualizationRegular,
+  'analytics-acf-chart-residuals': AcfChartVisualizationResiduals
+
+};
+
+
+
+
+
 @Component({
   selector: 'dynamic-component',
-  entryComponents: [AcfChartVisualization], // Reference to the components must be here in order to dynamically create them
+  entryComponents: [AcfChartVisualizationRegular, AcfChartVisualizationResiduals], // Reference to the components must be here in order to dynamically create them
   template: `
     <div #dynamicComponentContainer></div>
   `,

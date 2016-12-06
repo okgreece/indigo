@@ -10,11 +10,15 @@ import EventEmitter = webdriver.EventEmitter;
 import {AddOutput, RemoveOutput, InCollectionInput} from "../cube-analytics-detail";
 import {DynamicHTMLModule} from "ng-dynamic";
 import {AcfChartVisualization} from "../../../analysis/visualizations/acfChart";
+import {ActivatedRoute} from "@angular/router";
+import {ApiCubesService} from "../../../../services/api-cubes";
+import {URLSearchParams} from "@angular/http";
+import {DynamicComponents} from "../../../dynamic-component";
 
 @Component({
   selector: 'indigo-cube-analytics-embed',
   template: `
-      <dynamic-component [componentData]="componentData"></dynamic-component>
+      <dynamic-component style="min-height: 250px; min-width: 250px;" [componentData]="componentData"></dynamic-component>
 
   `,
   styles: [`
@@ -23,6 +27,13 @@ import {AcfChartVisualization} from "../../../analysis/visualizations/acfChart";
       flex-wrap: wrap;
       justify-content: center;
     }
+    
+    analytics-acf-chart{
+      width: 250px;
+      height: 250px;
+    }
+    
+
   `]
 })
 
@@ -52,7 +63,7 @@ export class CubeEmbedAnalyticsComponent {
     this._algorithmName = value;
 
   }
-  constructor(private store: Store<fromRoot.State>, private algorithmsService: AlgorithmsService, @Inject(ElementRef) elementRef: ElementRef, private ref: ChangeDetectorRef){
+  constructor(private store: Store<fromRoot.State>, private algorithmsService: AlgorithmsService, @Inject(ElementRef) elementRef: ElementRef, private ref: ChangeDetectorRef, route: ActivatedRoute, apiService: ApiCubesService, analysisService: AnalysisService) {
     this.cube$ = store.let(fromRoot.getSelectedCube);
     this.loading$ = store.let(fromRoot.getExecutionLoading);
 
@@ -60,18 +71,33 @@ export class CubeEmbedAnalyticsComponent {
     this.cube$.subscribe(function (cube) {
       that.cube = cube;
 
-      let observable: Observable<Algorithm[]> =
-        that.algorithmsService.getCompatibleAlgorithms(cube);
+      let observable: Observable<Algorithm> =
+        that.algorithmsService.getAlgorithm(route.snapshot.params["algorithm"]);
 
-      observable.subscribe(function (algorithms: Algorithm[]) {
-        that.algorithms = algorithms;
+      observable.subscribe(function (algorithm: Algorithm) {
 
-        that.componentData = {
-          component: AcfChartVisualization,
-          inputs: {
-            data: {values:[2,3,1,1,34,5]}
+        route.queryParams.subscribe(function (params) {
+          let inputs = new URLSearchParams();
+          for (let param in params) {
+            inputs.append(param, params[param]);
           }
-        };
+
+
+          analysisService.timeseries(algorithm, inputs).subscribe(function (outputs) {
+            that.componentData = {
+              component: DynamicComponents[route.snapshot.params["part"]],
+              inputs: {
+                data: outputs
+              }
+            };
+          });
+        });
+
+
+
+
+
+
 
       });
 

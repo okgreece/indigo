@@ -23,7 +23,7 @@ import * as _ from 'lodash';
 import * as d3 from 'd3';
 import {ValueNode} from "../../models/value/valueNode";
 import {Value} from "../../models/value/val";
-import * as $ from 'jquery'
+import * as $ from 'jquery';
 import {ReplaceAction} from "../../actions/tree";
 import {AggregateRequest} from "../../models/aggregate/aggregateRequest";
 import {HierarchyPointNode} from "d3-hierarchy";

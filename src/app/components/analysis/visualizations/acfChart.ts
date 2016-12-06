@@ -50,6 +50,7 @@ export class AcfChartVisualization extends AnalysisVisualization implements Afte
   get data(): any {
     return this._data;
   }
+
   @Input()
   set data(value: any) {
     this._data = value;
@@ -59,12 +60,12 @@ export class AcfChartVisualization extends AnalysisVisualization implements Afte
     this.ref.detectChanges();
   }
 
-  initialized:boolean = false;
+  initialized: boolean = false;
 
   ngAfterViewInit(): void {
 
     this.initialized = true;
-    if(this._data)
+    if (this._data)
       this.init(this.data);
   }
 
@@ -75,8 +76,8 @@ export class AcfChartVisualization extends AnalysisVisualization implements Afte
   @Input()
   public label_y: string;
 
-  @ViewChild('vizCanvas') vizCanvas:any;
- private _data: any;
+  @ViewChild('vizCanvas') vizCanvas: any;
+  private _data: any;
 
   private generateBarChart(data: any) {
     let margin = {top: 10, right: 10, bottom: 35, left: 45};
@@ -90,35 +91,31 @@ export class AcfChartVisualization extends AnalysisVisualization implements Afte
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    let lags = data.values.map(function (d:any) {
+    let lags = data.values.map(function (d: any) {
       return d["lag"];
 
     });
 
-    let correlations = data.values.map(function (d:any) {
+    let correlations = data.values.map(function (d: any) {
       return d["correlation"];
 
     });
 
-    let allYs = correlations.map(function (c:any) {
+    let allYs = correlations.map(function (c: any) {
       return Math.abs(c);
     }); //clone
     allYs.push(Math.abs(data.interval_up));
     allYs.push(Math.abs(data.interval_low));
 
-    let max = 1.1*d3.max(allYs);
-
-
+    let max = 1.1 * d3.max(allYs);
 
 
     let x = d3.scaleBand()
       .rangeRound([0, viewerWidth])
-      .padding(0.9+(0.001*correlations.length));
+      .padding(0.9 + (0.001 * correlations.length));
 
     let y = d3.scaleLinear()
       .range([viewerHeight, 0]);
-
-
 
 
     let xAxis = d3.axisBottom(x);
@@ -127,12 +124,10 @@ export class AcfChartVisualization extends AnalysisVisualization implements Afte
       ;
 
 
-
-    x.domain(data.values.map(function (d:any) {
+    x.domain(data.values.map(function (d: any) {
       return d["lag"]
     }));
     y.domain([-max, max]);
-
 
 
     svg.html("");
@@ -161,22 +156,22 @@ export class AcfChartVisualization extends AnalysisVisualization implements Afte
       .enter().append("rect")
       .attr("class", "bar")
       .attr("fill", "black")
-      .attr("x", function (d:any) {
+      .attr("x", function (d: any) {
         return x(d["lag"]);
       })
       .attr("width", x.bandwidth())
-      .attr("y", function (d:any) {
-        if (d.correlation > 0){
+      .attr("y", function (d: any) {
+        if (d.correlation > 0) {
           return y(d.correlation);
         } else {
           return y(0);
         }
 
 
-
       })
-      .attr("height", function (d:any) {
-        return Math.abs(y(d.correlation) - y(0));      });
+      .attr("height", function (d: any) {
+        return Math.abs(y(d.correlation) - y(0));
+      });
 
 
     svg.append("svg:line")
@@ -197,7 +192,7 @@ export class AcfChartVisualization extends AnalysisVisualization implements Afte
       .attr("x1", 0)
       .attr("x2", viewerWidth)
       .attr("y1", y(0))
-      .attr("y2",y(0))
+      .attr("y2", y(0))
       .style('stroke', 'black');
 
 
@@ -213,7 +208,7 @@ export class AcfChartVisualization extends AnalysisVisualization implements Afte
 
     svg.append("text")
       .attr("transform",
-        "translate(" + (viewerWidth/2) + " ," +
+        "translate(" + (viewerWidth / 2) + " ," +
         (viewerHeight + margin.top + 20) + ")")
       .style("text-anchor", "middle")
       .text(this.label_x);
@@ -221,34 +216,31 @@ export class AcfChartVisualization extends AnalysisVisualization implements Afte
     svg.append("text")
       .attr("transform", "rotate(-90)")
       .attr("y", 0 - margin.left)
-      .attr("x",0 - (viewerHeight / 2))
+      .attr("x", 0 - (viewerHeight / 2))
       .attr("dy", "1em")
       .style("text-anchor", "middle")
       .text(this.label_y);
 
-   /* let line = d3.svg.line()
-      .x(function(d:any) { return x(d.year); })
-      .y(function(d:any) { return y(d.amount); });
+    /* let line = d3.svg.line()
+     .x(function(d:any) { return x(d.year); })
+     .y(function(d:any) { return y(d.amount); });
 
-    let lineUp80 = d3.svg.line()
-      .x(function(d:any) { return x(d.year); })
-      .y(function(d:any) { return y(d.up80); });
-    let lineUp95 = d3.svg.line()
-      .x(function(d:any) { return x(d.year); })
-      .y(function(d:any) { return y(d.up95); });
-    let lineLow80 = d3.svg.line()
-      .x(function(d:any) { return x(d.year); })
-      .y(function(d:any) { return y(d.low80); });
-    let lineLow95 = d3.svg.line()
-      .x(function(d:any) { return x(d.year); })
-      .y(function(d:any) { return y(d.low95); });*/
-
-
+     let lineUp80 = d3.svg.line()
+     .x(function(d:any) { return x(d.year); })
+     .y(function(d:any) { return y(d.up80); });
+     let lineUp95 = d3.svg.line()
+     .x(function(d:any) { return x(d.year); })
+     .y(function(d:any) { return y(d.up95); });
+     let lineLow80 = d3.svg.line()
+     .x(function(d:any) { return x(d.year); })
+     .y(function(d:any) { return y(d.low80); });
+     let lineLow95 = d3.svg.line()
+     .x(function(d:any) { return x(d.year); })
+     .y(function(d:any) { return y(d.low95); });*/
 
 
   }
 
-  parseTime = d3.timeParse('y');
 
   init(data: any) {
 
@@ -257,27 +249,60 @@ export class AcfChartVisualization extends AnalysisVisualization implements Afte
 
     d3.select(that.vizCanvas.nativeElement).html('');
 
-    this.vizCanvas = this.elementRef;
+//    this.vizCanvas = this.elementRef;
 
     this.generateBarChart(data);
 
 
-
-
   }
-
-
 
 
   type(d: any) {
-  d.amount = +d.amount;
-  return d;
+    d.amount = +d.amount;
+    return d;
   }
 
 
-  constructor(elementRef: ElementRef,   ref: ChangeDetectorRef,  injector: Injector) {
+  constructor(elementRef: ElementRef, ref: ChangeDetectorRef, injector: Injector) {
     super(elementRef, ref, injector);
-     }
 
+  }
+
+
+}
+
+
+@Component({
+  selector: 'analytics-acf-chart-regular',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  template: `<analytics-acf-chart [data]="data?.autocorrelation.acf.regular"></analytics-acf-chart>`
+})
+export class AcfChartVisualizationRegular  extends AnalysisVisualization {
+  @Input()
+  public data: any;
+
+  constructor(elementRef: ElementRef, ref: ChangeDetectorRef, injector: Injector) {
+    super(elementRef, ref, injector);
+
+  }
+
+}
+
+
+@Component({
+  selector: 'analytics-acf-chart-residuals',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  template: `<analytics-acf-chart [data]="data?.autocorrelation.acf.residuals"></analytics-acf-chart>`
+})
+export class AcfChartVisualizationResiduals  extends AnalysisVisualization {
+  @Input()
+  public data: any;
+
+  constructor(elementRef: ElementRef, ref: ChangeDetectorRef, injector: Injector) {
+    super(elementRef, ref, injector);
+
+  }
 
 }

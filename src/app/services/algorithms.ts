@@ -63,7 +63,7 @@ export class AlgorithmsService {
 
     let raw_data_input = new Input();
     raw_data_input.cardinality = "1";
-    raw_data_input.type = InputTypes.BABBAGE_AGGREGATE_RAW_DATA;
+    raw_data_input.type = InputTypes.BABBAGE_AGGREGATE_URI;
     raw_data_input.name = 'json_data';
     raw_data_input.title = 'Data coming from an aggregation';
     raw_data_input.guess = false;
