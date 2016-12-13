@@ -70,7 +70,7 @@ export class ApiCubesService {
       });
   }
 
-  fact(element: FactRequest): Observable<Cube> {
+  factToUri(element: FactRequest) {
     let orderString = element.sorts.map(s => s.column.ref + ':' + s.direction.key).join('|');
     let cutString = element.cuts.map(c => c.column.ref + c.transitivity.key + ':' + c.value).join('|');
 
@@ -79,14 +79,24 @@ export class ApiCubesService {
     if(element.sorts.length > 0) params.set('order', orderString);
     if(element.page) params.set('page', element.page.toString());
     if(element.pageSize) params.set('pagesize', element.pageSize.toString());
+    return `${this.API_PATH}/${element.cube.name}/facts?${params.toString()}`;
 
-    return this.http.get(`${this.API_PATH}/${element.cube.name}/facts`, {search: params})
+
+  }
+
+  fact(element: any): Observable<Cube> {
+    let url = '';
+    if (element instanceof FactRequest) {
+      url = this.factToUri(element);
+    }
+    else url = element;
+
+    return this.http.get(url)
       .map(res => {
         return res.json();
       })
       ;
   }
-
 
   aggregateToURI(aggregateRequest: AggregateRequest){
     let drilldownString = aggregateRequest.drilldowns.map(d => d.column.ref).join('|');

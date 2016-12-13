@@ -282,29 +282,18 @@ export class AnalysisService {
   }
   descriptive(algorithm, call) {
     let that = this;
-debugger;
-    let subscription = this.rudolfService.fact(call.inputs["json_data"]).map(function (json) {
       let body = new URLSearchParams();
-      body.set('json_data', "'"+ JSON.stringify(json)
-          //.replace(/[\\]/g, '\\\\')
-        //.replace(/[\"]/g, '\\\\"')
-        .replace(/\\\"/g, '\\\\"')
-       //.replace(/[\/]/g, '\\/')
-        .replace(/[\b]/g, '\\b')
-        .replace(/[\f]/g, '\\f')
-        .replace(/\\n/g, '\\\\n')
-        .replace(/\\r/g, '\\\\r')
-        .replace(/[\t]/g, '\\t')
-          .replace(/\"/g, '\\\"') +"'")
+      body.set('json_data', "'"+ this.rudolfService.factToUri(call.inputs["json_data"])+"'"
+      )
 
 
       ;
       let amountColumnString = "";
-      if(call.inputs["amount"].length>1){
-        amountColumnString = `c(`+call.inputs["amount"].map(c=>{return '"'+c.ref+'"';}).join(",")+`)`;
+      if(call.inputs["amounts"].length>1){
+        amountColumnString = `c(`+call.inputs["amounts"].map(c=>{return '"'+c.ref+'"';}).join(",")+`)`;
       }
       else{
-        amountColumnString = call.inputs["amount"].ref;
+        amountColumnString = "'"+call.inputs["amounts"][0].ref+"'";
       }
 
       body.set('amounts',   amountColumnString);
@@ -357,8 +346,6 @@ debugger;
       });
 
 
-    });
-    return subscription.switch();
   }
 
 

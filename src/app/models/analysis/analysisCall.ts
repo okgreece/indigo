@@ -8,6 +8,7 @@ import {InputTypes} from './input';
 import {URLSearchParams} from "@angular/http";
 import {ApiCubesService} from "../../services/api-cubes";
 import {Inject} from "@angular/core";
+import * as URI from 'urijs';
 import {environment} from "../../../environments/environment";
 import {AggregateRequest} from "../aggregate/aggregateRequest";
 /**
@@ -138,7 +139,7 @@ export class AnalysisCall {
   }
 
 
-  public deParametrizeInputs(parts: URLSearchParams) {
+  public deParametrizeInputs(parts: any) {
 
 
 
@@ -146,19 +147,19 @@ export class AnalysisCall {
 
     this.algorithm.inputs.forEach((input) => {
       debugger;
-      if (!parts.has(input.name))return;
+      if (!parts[input.name])return;
       switch (input.type) {
         case InputTypes.PARAMETER: {
 
           if (input.data_type === 'integer' || input.data_type === 'int') {
-            that.inputs[input.name] = parseInt(parts.get(input.name));
+            that.inputs[input.name] = parseInt(parts[input.name]);
 
           }
           else if (input.data_type === 'float' || input.data_type === 'double') {
-            that.inputs[input.name] = parseFloat(parts.get(input.name));
+            that.inputs[input.name] = parseFloat(parts[input.name]);
           }
           else {
-            that.inputs[input.name] = parts.get(input.name);
+            that.inputs[input.name] = parts[input.name];
           }
           break;
         }
@@ -177,7 +178,7 @@ export class AnalysisCall {
         }
         case InputTypes.BABBAGE_AGGREGATE_URI:
         case  InputTypes.BABBAGE_FACT_URI: {
-          let uri = parts.get(input.name);
+          let uri = parts[input.name];
           if (validURL.isUri(uri)) {
             that.inputs[input.name] = this.aggregateFromURI(uri);
           }
@@ -188,7 +189,7 @@ export class AnalysisCall {
         case InputTypes.BABBAGE_FACT_RAW_DATA:
         case InputTypes.BABBAGE_AGGREGATE_RAW_DATA:
         default : {
-          that.inputs[input.name] = parts.get(input.name);
+          that.inputs[input.name] = parts[input.name];
           break;
         }
 
@@ -202,8 +203,17 @@ export class AnalysisCall {
 
 
   private aggregateFromURI(uri: string) {
+
+    let parts =  new URI(uri).search(true);
+
+    let request = new AggregateRequest();
+
+    let aggregates = this.breakDownQueryParamParts(parts["aggregates"]);
+
     debugger;
-/*    let drilldownString = aggregateRequest.drilldowns.map(d => d.column.ref).join('|');
+
+
+    /*    let drilldownString = aggregateRequest.drilldowns.map(d => d.column.ref).join('|');
     let orderString = aggregateRequest.sorts.map(s => s.column.ref + ':' + s.direction.key).join('|');
     let cutString = aggregateRequest.cuts.map(c => c.column.ref + c.transitivity.key + ':' + c.value).join('|');
     let aggregatesString =  aggregateRequest.aggregates.map(a => a.column.ref).join('|');
@@ -214,5 +224,23 @@ export class AnalysisCall {
     if (aggregateRequest.sorts.length > 0) params.set('order', orderString);
     if (aggregateRequest.aggregates.length > 0) params.set('aggregates', aggregatesString);
     return `${this.API_PATH}/${aggregateRequest.cube.name}/aggregate?${params.toString()}`;*/
+  }
+
+
+  private breakDownQueryParamParts(queryParam){
+    const regex = /(\w*\.\w*)(\|)?/ug;
+    let m;
+
+    while ((m = regex.exec(queryParam)) !== null) {
+      // This is necessary to avoid infinite loops with zero-width matches
+      if (m.index === regex.lastIndex) {
+        regex.lastIndex++;
+      }
+
+      // The result can be accessed through the `m`-variable.
+      m.forEach((match, groupIndex) => {
+        console.log(`Found match, group ${groupIndex}: ${match}`);
+      });
+    }
   }
 }

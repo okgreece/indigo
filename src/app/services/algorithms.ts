@@ -147,7 +147,7 @@ export class AlgorithmsService {
     let amount_aggregate_input = new Input();
     amount_aggregate_input.cardinality = "n";
     amount_aggregate_input.type = InputTypes.MEASURE_REF;
-    amount_aggregate_input.name = "amount";
+    amount_aggregate_input.name = "amounts";
     amount_aggregate_input.title = "Amount measure";
     amount_aggregate_input.guess = false;
 
