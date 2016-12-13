@@ -7,7 +7,7 @@ export class Aggregate implements Serializable<Aggregate>{
   serialize(input: Aggregate): Object {
     return this;
   }
-  deserialize(input:any):Aggregate {
+  deserialize(input: any): Aggregate {
 
     this.ref = input.ref;
     this.measure = input.measure;

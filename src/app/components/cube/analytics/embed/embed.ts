@@ -1,18 +1,16 @@
-import {Component, Input, Inject, ElementRef, ChangeDetectorRef, Output, NgModule} from '@angular/core';
+import {Component, Input, Inject, ElementRef, ChangeDetectorRef} from '@angular/core';
 import { Cube } from '../../../../models/cube';
-import {Algorithm} from "../../../../models/analysis/algorithm";
+import {Algorithm} from '../../../../models/analysis/algorithm';
 import {Store} from '@ngrx/store';
-import {AlgorithmsService} from "../../../../services/algorithms";
-import {AnalysisService} from "../../../../services/analysis";
+import {AlgorithmsService} from '../../../../services/algorithms';
+import {AnalysisService} from '../../../../services/analysis';
 import {Observable} from 'rxjs';
 import * as fromRoot from '../../../../reducers';
-import EventEmitter = webdriver.EventEmitter;
-import {DynamicHTMLModule} from "ng-dynamic";
-import {AcfChartVisualization} from "../../../analysis/visualizations/acfChart";
-import {ActivatedRoute} from "@angular/router";
-import {ApiCubesService} from "../../../../services/api-cubes";
-import {URLSearchParams} from "@angular/http";
-import {DynamicComponents} from "../../../dynamic-component";
+import {AcfChartVisualization} from '../../../analysis/visualizations/acfChart';
+import {ActivatedRoute} from '@angular/router';
+import {ApiCubesService} from '../../../../services/api-cubes';
+import {URLSearchParams} from '@angular/http';
+import {DynamicComponents} from '../../../dynamic-component';
 export type InCollectionInput = boolean;
 
 @Component({
@@ -37,16 +35,7 @@ export type InCollectionInput = boolean;
   `]
 })
 
-@NgModule({
-  imports: [
-    DynamicHTMLModule.forRoot({
-      components: [
-        { component: AcfChartVisualization, selector: 'analytics-acf-chart' },
-      ]
-    })
-  ],
-})
-export class CubeEmbedAnalyticsComponent {
+export class CubeAnalyticsEmbedComponent {
   componentData = null;
   cube$: Observable<Cube>;
   loading$: Observable<boolean>;

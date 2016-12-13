@@ -138,4 +138,81 @@ export class AnalysisCall {
   }
 
 
+  public deParametrizeInputs(parts: URLSearchParams) {
+
+
+
+    let that = this;
+
+    this.algorithm.inputs.forEach((input) => {
+      debugger;
+      if (!parts.has(input.name))return;
+      switch (input.type) {
+        case InputTypes.PARAMETER: {
+
+          if (input.data_type === 'integer' || input.data_type === 'int') {
+            that.inputs[input.name] = parseInt(parts.get(input.name));
+
+          }
+          else if (input.data_type === 'float' || input.data_type === 'double') {
+            that.inputs[input.name] = parseFloat(parts.get(input.name));
+          }
+          else {
+            that.inputs[input.name] = parts.get(input.name);
+          }
+          break;
+        }
+        case InputTypes.AGGREGATE_REF: {
+          that.inputs[input.name] = Array.from(that.cube.model.aggregates.values()).filter(a => a.ref === parts[input.name])[0];
+          break;
+
+        }
+        case InputTypes.ATTRIBUTE_REF: {
+          that.inputs[input.name] = Array.from(that.cube.model.attributes.values()).filter(a => a.ref === parts[input.name])[0];
+          break;
+        }
+        case InputTypes.MEASURE_REF: {
+          that.inputs[input.name] = Array.from(that.cube.model.measures.values()).filter(a => a.ref === parts[input.name])[0];
+          break;
+        }
+        case InputTypes.BABBAGE_AGGREGATE_URI:
+        case  InputTypes.BABBAGE_FACT_URI: {
+          let uri = parts.get(input.name);
+          if (validURL.isUri(uri)) {
+            that.inputs[input.name] = this.aggregateFromURI(uri);
+          }
+          break;
+        }
+        case InputTypes.RAW_DATA_URI:
+        case InputTypes.RAW_DATA:
+        case InputTypes.BABBAGE_FACT_RAW_DATA:
+        case InputTypes.BABBAGE_AGGREGATE_RAW_DATA:
+        default : {
+          that.inputs[input.name] = parts.get(input.name);
+          break;
+        }
+
+
+      }
+
+    });
+    return parts;
+
+  }
+
+
+  private aggregateFromURI(uri: string) {
+    debugger;
+/*    let drilldownString = aggregateRequest.drilldowns.map(d => d.column.ref).join('|');
+    let orderString = aggregateRequest.sorts.map(s => s.column.ref + ':' + s.direction.key).join('|');
+    let cutString = aggregateRequest.cuts.map(c => c.column.ref + c.transitivity.key + ':' + c.value).join('|');
+    let aggregatesString =  aggregateRequest.aggregates.map(a => a.column.ref).join('|');
+
+    let params = new URLSearchParams();
+    if (aggregateRequest.drilldowns.length > 0) params.set('drilldown', drilldownString);
+    if (aggregateRequest.cuts.length > 0) params.set('cut', cutString);
+    if (aggregateRequest.sorts.length > 0) params.set('order', orderString);
+    if (aggregateRequest.aggregates.length > 0) params.set('aggregates', aggregatesString);
+    return `${this.API_PATH}/${aggregateRequest.cube.name}/aggregate?${params.toString()}`;*/
+  }
 }

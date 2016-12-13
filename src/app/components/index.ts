@@ -3,7 +3,6 @@ import { MaterialModule } from '@angular/material';
 import { NgModule } from '@angular/core';
 import {ReactiveFormsModule, FormsModule} from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import {ColcadeModule } from 'angular2-colcade';
 
 import { BookAuthorsComponent } from './book-authors';
 import { BookDetailComponent } from './book-detail';
@@ -16,40 +15,39 @@ import { SidenavComponent } from './sidenav';
 import { ToolbarComponent } from './toolbar';
 
 import { PipesModule } from '../pipes';
-import {CubeDetailComponent} from "./cube/cube-detail";
-import {CubePreviewComponent} from "./cube/cube-preview";
-import {CubePreviewListComponent} from "./cube/cube-preview-list";
-import {CubeSearchComponent} from "./cube/cube-search";
-import {TreeBuilder} from "./tree/tree-builder";
-import {BarChartVisualization} from "./tree/visualizations/barchart";
-import {AggregateRequestBuilder} from "./request/aggregate-request-builder";
-import {JsonTreeComponent} from "../lib/json-tree/json-tree";
-import {ModalModule} from "ng2-bootstrap";
-import {JsonNodeComponent} from "../lib/json-tree/json-node";
-import {CubeAnalyticsDetailComponent} from "./cube/analytics/cube-analytics-detail";
-import {LineChartVisualization} from "./analysis/visualizations/lineChart";
-import {TimeSeriesOutputComponent} from "./analysis/timeseries/timeseries";
+import {CubeDetailComponent} from './cube/cube-detail';
+import {CubePreviewComponent} from './cube/cube-preview';
+import {CubePreviewListComponent} from './cube/cube-preview-list';
+import {CubeSearchComponent} from './cube/cube-search';
+import {TreeBuilder} from './tree/tree-builder';
+import {BarChartVisualization} from './tree/visualizations/barchart';
+import {AggregateRequestBuilder} from './request/aggregate-request-builder';
+import {JsonTreeComponent} from '../lib/json-tree/json-tree';
+import {ModalModule} from 'ng2-bootstrap';
+import {JsonNodeComponent} from '../lib/json-tree/json-node';
+import {CubeAnalyticsDetailComponent} from './cube/analytics/cube-analytics-detail';
+import {LineChartVisualization} from './analysis/visualizations/lineChart';
+import {TimeSeriesOutputComponent} from './analysis/timeseries/timeseries';
 import {
   AcfChartVisualization, AcfChartVisualizationRegular,
   AcfChartVisualizationResiduals
-} from "./analysis/visualizations/acfChart";
-import { CubeAnalyticsIndexComponent} from "../containers/cube/cube-analytics-index-page";
-import {CubeAnalyticsListComponent} from "./cube/analytics/cube-analytics-list";
-import {CubeAnalyticsPreviewComponent} from "./cube/analytics/cube-analytics-preview";
-import {ScatterPlotVisualization} from "./analysis/visualizations/scatterPlot";
-import {DescriptiveStatisticsOutputComponent} from "./analysis/descriptive/descriptive";
-import {FactRequestBuilder} from "./request/fact-request-builder";
-import {FrequencyVisualization} from "./analysis/visualizations/frequencyChart";
-import {BoxPlotVisualization} from "./analysis/visualizations/boxPlot";
-import {HistogramVisualization} from "./analysis/visualizations/histogram";
-import {CubeEmbedAnalyticsComponent} from "./cube/analytics/embed/embed";
-import DynamicComponent from "./dynamic-component";
-import {MasonryModule} from "angular2-masonry";
+} from './analysis/visualizations/acfChart';
+import { CubeAnalyticsIndexComponent} from '../containers/cube/cube-analytics-index-page';
+import {CubeAnalyticsListComponent} from './cube/analytics/cube-analytics-list';
+import {CubeAnalyticsPreviewComponent} from './cube/analytics/cube-analytics-preview';
+import {ScatterPlotVisualization} from './analysis/visualizations/scatterPlot';
+import {DescriptiveStatisticsOutputComponent} from './analysis/descriptive/descriptive';
+import {FactRequestBuilder} from './request/fact-request-builder';
+import {FrequencyVisualization} from './analysis/visualizations/frequencyChart';
+import {BoxPlotVisualization} from './analysis/visualizations/boxPlot';
+import {HistogramVisualization} from './analysis/visualizations/histogram';
+import DynamicComponent from './dynamic-component';
+import {MasonryModule} from 'angular2-masonry';
+import {CubeAnalyticsEmbedComponent} from "./cube/analytics/embed/embed";
 
 
 export const COMPONENTS = [
   DynamicComponent,
-  CubeEmbedAnalyticsComponent,
   BookAuthorsComponent,
   BookDetailComponent,
   BookPreviewComponent,
@@ -85,6 +83,7 @@ export const COMPONENTS = [
   CubePreviewComponent,
   CubeAnalyticsListComponent,
   CubeAnalyticsPreviewComponent,
+  CubeAnalyticsEmbedComponent
 ];
 
 

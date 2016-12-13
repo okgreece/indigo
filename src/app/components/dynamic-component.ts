@@ -3,10 +3,10 @@
  */
 import {Component, Input, ViewContainerRef, ViewChild, ReflectiveInjector, ComponentFactoryResolver} from '@angular/core';
 import {
-  AcfChartVisualization, AcfChartVisualizationRegular,
+  AcfChartVisualizationRegular,
   AcfChartVisualizationResiduals
-} from "./analysis/visualizations/acfChart";
-//http://blog.mgechev.com/2015/12/30/angular2-router-dynamic-route-config-definition-creation/
+} from './analysis/visualizations/acfChart';
+// http://blog.mgechev.com/2015/12/30/angular2-router-dynamic-route-config-definition-creation/
 
 
 export const DynamicComponents = {

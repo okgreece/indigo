@@ -39,7 +39,6 @@ console.log('`Tree Builder` component loaded asynchronously');
   selector: 'bc-tree-builder',
   changeDetection: ChangeDetectionStrategy.OnPush, // ⇐⇐⇐
   encapsulation: ViewEncapsulation.None,
-  //template: `<div></div>`,
   template: require('./tree-builder.html'),
   styles: [`
      .node {

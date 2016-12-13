@@ -44,6 +44,18 @@ export class ApiCubesService {
       });
   }
 
+  retrieveCubeLight(name: string): Observable<Cube> {
+    return this.http.get(`${this.API_PATH}/${name}/model`)
+      .map(res => res.json()).flatMap((cube) => {
+        let observables = [];
+         observables.push(this.retrievePackage(cube));
+
+        return Observable.forkJoin(observables, function () {
+          return cube;
+        });
+      });
+  }
+
   retrievePackage(cube: Cube): Observable<Cube> {
     return this.http.get(`${this.API_PACKAGE_PATH}/${cube.name}/package`)
       .map(res => {

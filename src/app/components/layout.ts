@@ -56,11 +56,11 @@ import {Observable} from "rxjs";
     
    .indigo{
       font-family: 'Leckerli One', cursive;
-      color:indigo;
+      color:#29367f;
     }
     
    .md-button-wrapper{
-      color: indigo;
+      color: #29367f;
     }
   `]
 })

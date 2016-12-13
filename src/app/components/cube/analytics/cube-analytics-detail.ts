@@ -1,15 +1,11 @@
 import {
-  Component, Input, Output, EventEmitter, NgModule, ChangeDetectorRef,
+  Component, Input, Output, EventEmitter, ChangeDetectorRef,
   ChangeDetectionStrategy, AfterViewInit
 } from '@angular/core';
-import {NgIf, NgFor} from '@angular/common';
 import * as fromRoot from '../../../reducers';
 import {Cube} from '../../../models/cube';
-import {TreeBuilder} from '../../tree/tree-builder';
 import {Store} from '@ngrx/store';
-import {NgChosenComponent} from '../../ng-chosen';
-import {JsonTreeComponent} from '../../../lib/json-tree/json-tree';
-import {MdButton, MdToolbar, MdInput, MdAnchor, MdIcon} from '@angular/material';
+
 import {AlgorithmsService} from '../../../services/algorithms';
 import {Algorithm} from '../../../models/analysis/algorithm';
 import {Observable} from 'rxjs/Observable';
@@ -20,8 +16,9 @@ import {OutputTypes} from '../../../models/analysis/output';
 import {AggregateRequest} from '../../../models/aggregate/aggregateRequest';
 import {Attribute} from '../../../models/attribute';
 import * as execution from '../../../actions/execution';
-import {ActivatedRoute} from "@angular/router";
-import {FactRequest} from "../../../models/fact/factRequest";
+import {ActivatedRoute} from '@angular/router';
+import {FactRequest} from '../../../models/fact/factRequest';
+import {URLSearchParams} from '@angular/http';
 
 /**
  * Tip: Export type aliases for your component's inputs and outputs. Until we
@@ -63,11 +60,7 @@ export type RemoveOutput = Cube;
       margin:2px;
     
     }
-    
-    
-    md-toolbar.md-primary button{
-      color:black;
-    }
+
     
   `]
 })
@@ -86,9 +79,8 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
       observable.subscribe(function (algorithm: Algorithm) {
         that.algorithm = algorithm;
         that.analysisCalls[algorithm.name] = new AnalysisCall(algorithm, that.cube);
+        that.analysisCalls[algorithm.name].deParametrizeInputs(that.route.snapshot.queryParams);
       });
-
-
     });
 
 
@@ -139,8 +131,9 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
   public OutputTypes = OutputTypes;
 
 
-  public constructor(private store: Store<fromRoot.State>, private algorithmsService: AlgorithmsService,  private ref: ChangeDetectorRef, private analysisService: AnalysisService, route: ActivatedRoute) {
-        setInterval(() => {
+  public constructor(private store: Store<fromRoot.State>, private algorithmsService: AlgorithmsService,  private ref: ChangeDetectorRef, private analysisService: AnalysisService, private route: ActivatedRoute) {
+
+    setInterval(() => {
       // the following is required, otherwise the view will not be updated
       this.ref.markForCheck();
     }, 5000);

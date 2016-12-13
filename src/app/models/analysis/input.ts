@@ -22,7 +22,7 @@ export const InputTypes = {
 export class Input {
 
   name: string;
-  cardinality: string = "1";
+  cardinality: string = '1';
   type: string;
   title: string;
   data_type: string;
