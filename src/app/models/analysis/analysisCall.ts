@@ -5,12 +5,16 @@ import {Attribute} from '../attribute';
 import {Measure} from '../measure';
 import * as validURL from 'valid-url';
 import {InputTypes} from './input';
-import {URLSearchParams} from "@angular/http";
-import {ApiCubesService} from "../../services/api-cubes";
-import {Inject} from "@angular/core";
+import {URLSearchParams} from '@angular/http';
 import * as URI from 'urijs';
-import {environment} from "../../../environments/environment";
-import {AggregateRequest} from "../aggregate/aggregateRequest";
+import {environment} from '../../../environments/environment';
+import {AggregateRequest} from '../aggregate/aggregateRequest';
+import {Cut} from '../cut';
+import {AggregateParam} from '../aggregateParam';
+import {Sort} from '../sort';
+import {Drilldown} from '../drilldown';
+import {FactRequest} from '../fact/factRequest';
+import {SortDirection} from "../sortDirection";
 /**
  * Created by larjo on 13/10/2016.
  */
@@ -19,12 +23,11 @@ export class AnalysisCall {
   public inputs: any = {};
   public outputs: any = {};
 
-  private API_PATH: string = environment.apiUrl+"/api/"+
-    environment.versionSuffix +"/cubes";
-  aggregateToURI(aggregateRequest: AggregateRequest){
+  private API_PATH: string = environment.apiUrl + '/api/' +  environment.versionSuffix + '/cubes';
+  aggregateToURI(aggregateRequest: AggregateRequest) {
     let drilldownString = aggregateRequest.drilldowns.map(d => d.column.ref).join('|');
     let orderString = aggregateRequest.sorts.map(s => s.column.ref + ':' + s.direction.key).join('|');
-    let cutString = aggregateRequest.cuts.map(c => c.column.ref + c.transitivity.key + ':' + c.value).join('|');
+    let cutString = aggregateRequest.cuts.map(c => {debugger; return c.column.ref + c.transitivity.key + ':' + c.value; }).join('|');
     let aggregatesString =  aggregateRequest.aggregates.map(a => a.column.ref).join('|');
 
     let params = new URLSearchParams();
@@ -38,24 +41,76 @@ export class AnalysisCall {
 
   public constructor(public algorithm: Algorithm, public cube: Cube) {
 
-    if (algorithm.inputs.entries()) {
-      algorithm.inputs.forEach((value) => {
-        this.inputs[value.name] = null;
-
-      });
-
-      this.outputs['json'] = null;
-    }
+    this.init();
 
 
   }
+
+  public init() {
+    let that = this;
+
+    this.algorithm.inputs.forEach((input) => {
+      switch (input.type) {
+        case InputTypes.PARAMETER: {
+
+          if (input.data_type === 'integer' || input.data_type === 'int') {
+            that.inputs[input.name] = input.default_value ? input.default_value : 0;
+
+          }
+          else if (input.data_type === 'float' || input.data_type === 'double') {
+            that.inputs[input.name] = input.default_value ? input.default_value : 0;
+          }
+          else {
+            that.inputs[input.name] = input.default_value ? input.default_value : '';
+          }
+          break;
+        }
+        case InputTypes.AGGREGATE_REF: {
+          that.inputs[input.name] = null;
+          break;
+
+        }
+        case InputTypes.ATTRIBUTE_REF: {
+          that.inputs[input.name] = null;
+          break;
+        }
+        case InputTypes.MEASURE_REF: {
+          that.inputs[input.name] = null;
+          break;
+        }
+        case InputTypes.BABBAGE_AGGREGATE_URI: {
+          that.inputs[input.name] = new AggregateRequest();
+          that.inputs[input.name].cube = that.cube;
+          break;
+        }
+        case  InputTypes.BABBAGE_FACT_URI: {
+          that.inputs[input.name] = new FactRequest;
+          that.inputs[input.name].cube = that.cube;
+          break;
+        }
+        case InputTypes.RAW_DATA_URI:
+        case InputTypes.RAW_DATA:
+        case InputTypes.BABBAGE_FACT_RAW_DATA:
+        case InputTypes.BABBAGE_AGGREGATE_RAW_DATA:
+        default : {
+          that.inputs[input.name] = {};
+          break;
+        }
+
+
+      }
+
+    });
+
+  }
+
 
 
   public get query(){
     return this.parametrizeInputs().toString();
   }
 
-  queryParams(){
+  queryParams() {
     let map = {};
     this.parametrizeInputs().paramsMap.forEach((value: string[], key: string) => {
       map[key] = value;
@@ -70,7 +125,7 @@ export class AnalysisCall {
     let that = this;
 
     this.algorithm.inputs.forEach((input) => {
-      if(!that.inputs[input.name])return;
+      if (!that.inputs[input.name])return;
       switch (input.type) {
         case InputTypes.PARAMETER: {
 
@@ -138,15 +193,23 @@ export class AnalysisCall {
 
   }
 
+  public get valid(): boolean {
+    let isValid: boolean = true;
+    let that = this;
+    this.algorithm.inputs.forEach((input) => {
+        isValid = isValid && ((input.required  && !!that.inputs[input.name]) || (input.required && input.guess) || (!input.required));
+        if (input.type === InputTypes.BABBAGE_AGGREGATE_URI) {
+          isValid = isValid && ((<AggregateRequest> that.inputs[input.name]).drilldowns.length > 0);
+        }
+    });
+    return isValid;
+  }
 
   public deParametrizeInputs(parts: any) {
-
-
 
     let that = this;
 
     this.algorithm.inputs.forEach((input) => {
-      debugger;
       if (!parts[input.name])return;
       switch (input.type) {
         case InputTypes.PARAMETER: {
@@ -177,10 +240,17 @@ export class AnalysisCall {
           break;
         }
         case InputTypes.BABBAGE_AGGREGATE_URI:
-        case  InputTypes.BABBAGE_FACT_URI: {
+        {
           let uri = parts[input.name];
           if (validURL.isUri(uri)) {
             that.inputs[input.name] = this.aggregateFromURI(uri);
+          }
+          break;
+        }
+        case  InputTypes.BABBAGE_FACT_URI: {
+          let uri = parts[input.name];
+          if (validURL.isUri(uri)) {
+            that.inputs[input.name] = this.factsFromURI(uri);
           }
           break;
         }
@@ -208,39 +278,107 @@ export class AnalysisCall {
 
     let request = new AggregateRequest();
 
-    let aggregates = this.breakDownQueryParamParts(parts["aggregates"]);
+    if (parts['aggregates']) {
+      let aggregates = this.breakDownQueryParamParts(parts['aggregates']);
+      request.aggregates = aggregates.map(aggregate => {
+        let agg = new AggregateParam();
+        agg.column =  this.cube.model.aggregates.get(aggregate);
+        return agg;
+      });
 
-    debugger;
+    }
+    if (parts['cut']) {
+      let that = this;
+      let cuts = this.breakDownQueryParamParts(parts['cut']);
+      request.cuts = cuts.map(cutSet => {
+        let cutParts = cutSet.split(':');
+        let cut = new Cut();
+        cut.column = that.cube.model.attributes.get(cutParts[0]);
+        cut.value = cutParts[1];
+        return cut;
+      });
 
-
-    /*    let drilldownString = aggregateRequest.drilldowns.map(d => d.column.ref).join('|');
-    let orderString = aggregateRequest.sorts.map(s => s.column.ref + ':' + s.direction.key).join('|');
-    let cutString = aggregateRequest.cuts.map(c => c.column.ref + c.transitivity.key + ':' + c.value).join('|');
-    let aggregatesString =  aggregateRequest.aggregates.map(a => a.column.ref).join('|');
-
-    let params = new URLSearchParams();
-    if (aggregateRequest.drilldowns.length > 0) params.set('drilldown', drilldownString);
-    if (aggregateRequest.cuts.length > 0) params.set('cut', cutString);
-    if (aggregateRequest.sorts.length > 0) params.set('order', orderString);
-    if (aggregateRequest.aggregates.length > 0) params.set('aggregates', aggregatesString);
-    return `${this.API_PATH}/${aggregateRequest.cube.name}/aggregate?${params.toString()}`;*/
-  }
-
-
-  private breakDownQueryParamParts(queryParam){
-    const regex = /(\w*\.\w*)(\|)?/ug;
-    let m;
-
-    while ((m = regex.exec(queryParam)) !== null) {
-      // This is necessary to avoid infinite loops with zero-width matches
-      if (m.index === regex.lastIndex) {
-        regex.lastIndex++;
-      }
-
-      // The result can be accessed through the `m`-variable.
-      m.forEach((match, groupIndex) => {
-        console.log(`Found match, group ${groupIndex}: ${match}`);
+    }
+    if (parts['order']) {
+      let orders = this.breakDownQueryParamParts(parts['order']);
+      request.sorts =  orders.map(sortSet => {
+        let sort = new Sort();
+        let sortParts = sortSet.split(':');
+        sort.column = this.cube.model.attributes.get(sortParts[0]);
+        sort.direction = SortDirection.parse(sortParts[1]);
+        return sort;
       });
     }
+    if (parts['drilldown']) {
+      let drilldowns = this.breakDownQueryParamParts(parts['drilldown']);
+      request.drilldowns =  drilldowns.map(attribute => {
+        let drilldown = new Drilldown;
+        drilldown.column = this.cube.model.attributes.get(attribute);
+        return drilldown;
+      });
+
+    }
+
+    return request;
+
+
+
+  }
+
+  private factsFromURI(uri: string) {
+
+    let parts =  new URI(uri).search(true);
+
+    let request = new AggregateRequest();
+
+    if (parts['aggregates']) {
+      let aggregates = this.breakDownQueryParamParts(parts['aggregates']);
+      request.aggregates = aggregates.map(aggregate => {
+        let agg = new AggregateParam();
+        agg.column =  this.cube.model.aggregates.get(aggregate);
+        return agg;
+      });
+
+    }
+    if (parts['cut']) {
+      let that = this;
+      let cuts = this.breakDownQueryParamParts(parts['cut']);
+      request.cuts = cuts.map(cutSet => {
+        let cutParts = cutSet.split(':');
+        let cut = new Cut();
+        cut.column = that.cube.model.attributes.get(cutParts[0]);
+        cut.value = cutParts[1];
+        return cut;
+      });
+
+    }
+    if (parts['order']) {
+      let orders = this.breakDownQueryParamParts(parts['order']);
+      request.sorts =  orders.map(sortSet => {
+        let sort = new Sort();
+        let sortParts = sortSet.split(':');
+        sort.column = this.cube.model.attributes.get(sortParts[0]);
+        sort.direction = SortDirection.parse(sortParts[1]);
+        return sort;
+      });
+    }
+    if (parts['drilldown']) {
+      let drilldowns = this.breakDownQueryParamParts(parts['drilldown']);
+      request.drilldowns =  drilldowns.map(attribute => {
+        let drilldown = new Drilldown;
+        drilldown.column = this.cube.model.attributes.get(attribute);
+        return drilldown;
+      });
+
+    }
+
+    return request;
+
+
+
+  }
+
+  private  breakDownQueryParamParts(queryParam) {
+    return queryParam.split('|');
   }
 }

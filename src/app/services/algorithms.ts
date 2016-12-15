@@ -67,6 +67,7 @@ export class AlgorithmsService {
     raw_data_input.name = 'json_data';
     raw_data_input.title = 'Data coming from an aggregation';
     raw_data_input.guess = false;
+    raw_data_input.required = true;
 
     let time_dimension_input = new Input();
     time_dimension_input.cardinality = "1";
@@ -74,6 +75,7 @@ export class AlgorithmsService {
     time_dimension_input.name = 'time';
     time_dimension_input.title = "Time dimension";
     time_dimension_input.guess = true;
+    time_dimension_input.required = true;
 
     let amount_aggregate_input = new Input();
     amount_aggregate_input.cardinality = "1";
@@ -81,6 +83,7 @@ export class AlgorithmsService {
     amount_aggregate_input.name = "amount";
     amount_aggregate_input.title = "Amount aggregate";
     amount_aggregate_input.guess = true;
+    amount_aggregate_input.required = true;
 
     let prediction_steps_input = new Input();
     prediction_steps_input.cardinality = "1";
@@ -90,6 +93,7 @@ export class AlgorithmsService {
     prediction_steps_input.data_type = "number";
     prediction_steps_input.default_value = 4;
     prediction_steps_input.guess = false;
+    prediction_steps_input.required = false;
 
 
     timeSeriesAlgorithm.inputs.set(raw_data_input.name, raw_data_input);

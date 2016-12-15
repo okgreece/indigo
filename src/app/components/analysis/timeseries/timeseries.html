@@ -203,7 +203,7 @@
         <md-card-title-group align="center center" >
 
           <md-card-title>ACF</md-card-title>
-          <a md-mini-fab [routerLink]="['/cube/analytics/'+cube.name+'/time_series/embed/analytics-acf-chart-regular']" [queryParams]="analysisCall.queryParams()">
+          <a md-mini-fab [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/embed/analytics-acf-chart-regular']" [queryParams]="analysisCall.queryParams()">
             <md-icon  color="primary"  class="md-24">share</md-icon>
           </a>
 
@@ -222,7 +222,7 @@
         <md-card-title-group align="center center" >
 
           <md-card-title>ACF residuals</md-card-title>
-          <a md-mini-fab [routerLink]="['/cube/analytics/'+cube.name+'/time_series/embed/analytics-acf-chart-residuals']" [queryParams]="analysisCall.queryParams()">
+          <a md-mini-fab [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/embed/analytics-acf-chart-residuals']" [queryParams]="analysisCall.queryParams()">
             <md-icon  color="primary"  class="md-24">share</md-icon>
           </a>
 
@@ -331,7 +331,7 @@
     <h3>Forecasts from {{data?.forecast.model}}</h3>
 
     <div class="col-sm-12">
-      <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'" [label_y]="cube.model.aggregates.get(analysisCall.inputs['amount'].ref).label"
+      <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'" [label_y]="analysisCall.cube.model.aggregates.get(analysisCall.inputs['amount'].ref).label"
                             [values]="data?.forecast.values"></analytics-line-chart>
     </div>
 

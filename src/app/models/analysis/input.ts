@@ -28,5 +28,6 @@ export class Input {
   data_type: string;
   default_value: any;
   guess: boolean;
+  required: boolean;
 
 }

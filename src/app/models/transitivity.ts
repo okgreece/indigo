@@ -19,12 +19,12 @@ export class Transitivity implements Serializable<Transitivity>{
 
 
 
-  public constructor( ){
+  public constructor( ) {
 
   }
 
-  public key:string;
-  public label:string;
+  public key: string;
+  public label: string;
 
   public static staticFactory(): Transitivity[]{
     let transitivities = [];

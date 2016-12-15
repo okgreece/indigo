@@ -1,15 +1,13 @@
 <md-card>
-
-
   <md-card-content>
     <div class="col-sm-12">
       <div class="col-sm-12">
-        <md-card  >
+        <md-card>
           <md-card-content *ngIf="algorithm">
             <p>
               <md-toolbar color="primary">
-                  <h4>{{ (cube$|async).pckg.title }}: {{ algorithm.title }}</h4>
-                <button md-tooltip="Execute" style="margin-left: auto" md-mini-fab (click)="execute(algorithm)">
+                <h4>{{ (cube$|async).pckg.title }}: {{ algorithm.title }}</h4>
+                <button md-tooltip="Execute" style="margin-left: auto" [disabled]="'false'" md-mini-fab [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series']" [queryParams]="analysisCall.queryParams()">
 
                   <md-icon class="md-24">play_circle_outline</md-icon>
                 </button>
@@ -18,34 +16,41 @@
             <div class="row">
               <div class="col-sm-4">
                 <div *ngFor="let input of algorithm.inputs|iterable" class="col-sm-12">
-                  <div *ngIf="input.type==InputTypes.BABBAGE_AGGREGATE_RAW_DATA || input.type==InputTypes.BABBAGE_AGGREGATE_URI">
+                  <div
+                    *ngIf="input.type==InputTypes.BABBAGE_AGGREGATE_RAW_DATA || input.type==InputTypes.BABBAGE_AGGREGATE_URI">
                     <h4>Input: {{input.title}}</h4>
 
-                    <aggregate-request-builder [cube]="cube$|async" [(request)]="newAggregateRequest"></aggregate-request-builder>
+                    <aggregate-request-builder *ngIf="analysisCall?.inputs[input.name]" [cube]="cube$|async"
+                                               [(request)]="analysisCall?.inputs[input.name]"></aggregate-request-builder>
                   </div>
                   <div *ngIf="input.type==InputTypes.BABBAGE_FACT_RAW_DATA">
                     <h4>Input: {{input.title}}</h4>
 
-                    <fact-request-builder [cube]="cube$|async" [(request)]="newFactRequest"></fact-request-builder>
+                    <fact-request-builder [cube]="cube$|async" [(request)]="analysisCall[input.name]"></fact-request-builder>
                   </div>
 
-                  <div class="row-fluid col-sm-12 well" *ngIf="input.type==InputTypes.PARAMETER" >
+                  <div class="row-fluid col-sm-12 well" *ngIf="input.type==InputTypes.PARAMETER">
                     <h4>Input: parameter</h4>
                     <div class="col-sm-12">
 
-                      <input  class="form-control"  value="{{input.default_value}}"  placeholder="{{input.title}}" type="{{input.data_type}}" [(ngModel)]="analysisCalls[algorithm.name]?.inputs[input.name]">
+                      <input class="form-control" value="{{input.default_value}}" placeholder="{{input.title}}"
+                             type="{{input.data_type}}" [(ngModel)]="analysisCall?.inputs[input.name]">
 
                     </div>
 
                   </div>
 
 
-                  <div class="row-fluid col-sm-12 well" *ngIf="input.type==InputTypes.MEASURE_REF" >
+                  <div class="row-fluid col-sm-12 well" *ngIf="input.type==InputTypes.MEASURE_REF">
                     <h4>Input: measure {{input.title}}</h4>
                     <div class="col-sm-12">
                       <div class="col-sm-9 form-group">
-                        <select  *ngIf="input.cardinality=='n'" (change)="setSelected($event.target, algorithm.name, input.name, cube.model.measures)"  multiple class="form-control col-sm-6" [(ngModel)]="analysisCalls[algorithm.name]?.inputs[input.name]">
-                          <option [ngValue]="item" [attr.data-key]="item |nestedProperty:'ref'" *ngFor="let item of cube?.model?.measures|iterable">{{item |
+                        <select *ngIf="input.cardinality=='n'"
+                                (change)="setSelected($event.target, input.name, cube.model.measures)"
+                                multiple class="form-control col-sm-6"
+                                [(ngModel)]="analysisCall?.inputs[input.name]">
+                          <option [ngValue]="item" [attr.data-key]="item |nestedProperty:'ref'"
+                                  *ngFor="let item of cube?.model?.measures|iterable">{{item |
                             nestedProperty:'label'}}
                           </option>
                         </select>
@@ -54,11 +59,12 @@
                     </div>
 
                   </div>
-                  <div class="row-fluid col-sm-12 well" *ngIf="input.type==InputTypes.ATTRIBUTE_REF" >
+                  <div class="row-fluid col-sm-12 well" *ngIf="input.type==InputTypes.ATTRIBUTE_REF">
                     <h4>Input: measure {{input.title}}</h4>
                     <div class="col-sm-12">
                       <div class="col-sm-9 form-group">
-                        <select class="form-control col-sm-6" [(ngModel)]="analysisCalls[algorithm.name]?.inputs[input.name]">
+                        <select class="form-control col-sm-6"
+                                [(ngModel)]="analysisCall?.inputs[input.name]">
                           <optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" label="{{dim.label}}">
                             <option [ngValue]="item" *ngFor="let item of dim?.attributes|iterable">{{item |
                               nestedProperty:'label'}}
@@ -74,14 +80,19 @@
               </div>
 
               <div class="col-sm-8">
-                <div >
+                <div>
                   {{algorithm.prompt}}
 
                   <md-spinner *ngIf="loading$|async"></md-spinner>
 
-                  <analytics-timeseries-output *ngIf="algorithm.name=='time_series'" class="col-sm-12" style="min-height: 500px;" [cube]="cube"  [analysisCall]="analysisCalls[algorithm.name]"  [data]="analysisCalls[algorithm.name]?.outputs['values']">
+                  <analytics-timeseries-output *ngIf="algorithm.name=='time_series'" class="col-sm-12"
+                                               style="min-height: 500px;" [cube]="cube"
+                                               [analysisCall]="analysisCall"
+                                               [data]="analysisCall?.outputs['values']">
                   </analytics-timeseries-output>
-                  <analytics-descriptive-output *ngIf="algorithm.name=='descriptive_statistics'" [data]="analysisCalls[algorithm.name]?.outputs['values']" [cube]="cube"  [analysisCall]="analysisCalls[algorithm.name]"></analytics-descriptive-output>
+                  <analytics-descriptive-output *ngIf="algorithm.name=='descriptive_statistics'"
+                                                [data]="analysisCall?.outputs['values']" [cube]="cube"
+                                                [analysisCall]="analysisCall"></analytics-descriptive-output>
                 </div>
               </div>
             </div>
@@ -91,7 +102,6 @@
       </div>
     </div>
   </md-card-content>
-
 
 
 </md-card>

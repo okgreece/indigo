@@ -12,13 +12,10 @@ import {Observable} from 'rxjs/Observable';
 import {InputTypes} from '../../../models/analysis/input';
 import {AnalysisCall} from '../../../models/analysis/analysisCall';
 import {AnalysisService} from '../../../services/analysis';
-import {OutputTypes} from '../../../models/analysis/output';
-import {AggregateRequest} from '../../../models/aggregate/aggregateRequest';
 import {Attribute} from '../../../models/attribute';
 import * as execution from '../../../actions/execution';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router, NavigationEnd} from '@angular/router';
 import {FactRequest} from '../../../models/fact/factRequest';
-import {URLSearchParams} from '@angular/http';
 
 /**
  * Tip: Export type aliases for your component's inputs and outputs. Until we
@@ -70,18 +67,6 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
     this.loading$ = this.store.let(fromRoot.getExecutionLoading);
 
 
-    let that = this;
-    this.cube$.subscribe(function (cube) {
-      that.cube = cube;
-
-      let observable: Observable<Algorithm> = that.algorithmName.flatMap(name => that.algorithmsService.getAlgorithm(name));
-      that.algorithmsService.getAlgorithm(that.algorithmName);
-      observable.subscribe(function (algorithm: Algorithm) {
-        that.algorithm = algorithm;
-        that.analysisCalls[algorithm.name] = new AnalysisCall(algorithm, that.cube);
-        that.analysisCalls[algorithm.name].deParametrizeInputs(that.route.snapshot.queryParams);
-      });
-    });
 
 
   }
@@ -93,12 +78,12 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
     this._algorithmName = value;
 
   }
-  get analysisCalls() {
-    return this._analysisCalls;
+  get analysisCall() {
+    return this._analysisCall;
   }
 
-  set analysisCalls(value) {
-    this._analysisCalls = value;
+  set analysisCall(value) {
+    this._analysisCall = value;
   }
 
   get algorithm(): Algorithm {
@@ -128,21 +113,41 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
   @Output() remove = new EventEmitter<RemoveOutput>();
   loading$: Observable<boolean>;
   public InputTypes = InputTypes;
-  public OutputTypes = OutputTypes;
 
 
-  public constructor(private store: Store<fromRoot.State>, private algorithmsService: AlgorithmsService,  private ref: ChangeDetectorRef, private analysisService: AnalysisService, private route: ActivatedRoute) {
+  public constructor(private store: Store<fromRoot.State>, private algorithmsService: AlgorithmsService,  private ref: ChangeDetectorRef, private analysisService: AnalysisService, private route: ActivatedRoute, private router: Router) {
 
     setInterval(() => {
       // the following is required, otherwise the view will not be updated
       this.ref.markForCheck();
     }, 5000);
 
+    router.events.subscribe((val) => {
+      this.cube$ = this.store.let(fromRoot.getSelectedCube);
+      this.loading$ = this.store.let(fromRoot.getExecutionLoading);
 
+
+      let that = this;
+      this.cube$.subscribe(function (cube) {
+        that.cube = cube;
+
+        let observable: Observable<Algorithm> = that.algorithmName.flatMap(name => that.algorithmsService.getAlgorithm(name));
+        that.algorithmsService.getAlgorithm(that.algorithmName);
+        observable.subscribe(function (algorithm: Algorithm) {
+          that.algorithm = algorithm;
+          let call = new AnalysisCall(algorithm, that.cube);
+          call.deParametrizeInputs(that.route.snapshot.queryParams);
+          that.analysisCall = call;
+          debugger;
+          if (call.valid) that.execute(that.algorithm);
+
+        });
+      });
+    });
   }
 
 
-  private _analysisCalls = {};
+  private _analysisCall: AnalysisCall;
 
   private _algorithm: Algorithm;
 
@@ -160,80 +165,73 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
   }
 
 
-  public buildAggregateRequest(): void {
-
-
-  }
 
   public canExecute() {
 
 
   }
 
-  private prepareTimeSeries(algorithm: Algorithm) {
-    let dateTimeDimension = this.newAggregateRequest.drilldowns.find(drilldown => this.isDateTime(drilldown.column));
+  private prepareTimeSeries() {
+    let dateTimeDimension = this.analysisCall.inputs['json_data'].drilldowns.find(drilldown => this.isDateTime(drilldown.column));
 
-    this.newAggregateRequest.cube = this.cube;
+    this.analysisCall.inputs['json_data'].cube = this.cube;
 
     if (dateTimeDimension !== undefined) {
-      this.analysisCalls[algorithm.name].inputs['time'] = dateTimeDimension.column;
+      this.analysisCall.inputs['time'] = dateTimeDimension.column;
 
     }
 
-    if (this.newAggregateRequest.aggregates.length > 0) {
-      this.analysisCalls[algorithm.name].inputs['amount'] = this.newAggregateRequest.aggregates[0].column;
+    if (this.analysisCall.inputs['json_data'].aggregates.length > 0) {
+      this.analysisCall.inputs['amount'] = this.analysisCall.inputs['json_data'].aggregates[0].column;
 
     }
-    this.analysisCalls[algorithm.name].inputs['json_data'] = this.newAggregateRequest;
 
   }
 
-  public setSelected(eventTarget, algorithm_name, input_name, collection) {
-    this.analysisCalls[algorithm_name].inputs[input_name] = [];
+  public setSelected(eventTarget, input_name, collection) {
+    this.analysisCall.inputs[input_name] = [];
     for (let i = 0; i < eventTarget.options.length; i++) {
 
       let optionElement = eventTarget.options[i];
 
       if (optionElement.selected === true) {
         let key = eventTarget.options[i].attributes['data-key'].value;
-        this.analysisCalls[algorithm_name].inputs[input_name].push(collection.get(key));
+        this.analysisCall.inputs[input_name].push(collection.get(key));
 
       }
     }
-    debugger;
   }
 
-  private prepareDescriptiveStatistics(algorithm: Algorithm) {
+  private prepareDescriptiveStatistics() {
 
     this.newFactRequest.cube = this.cube;
 
 
-    this.analysisCalls[algorithm.name].inputs['json_data'] = this.newFactRequest;
+    this.analysisCall.inputs['json_data'] = this.newFactRequest;
 
   }
 
   public execute(algorithm: Algorithm) {
 
     if (algorithm.name === 'time_series')
-      this.prepareTimeSeries(algorithm);
+      this.prepareTimeSeries();
 
     if (algorithm.name === 'descriptive_statistics')
-      this.prepareDescriptiveStatistics(algorithm);
+      this.prepareDescriptiveStatistics();
 
 
 
     let that = this;
     this.store.dispatch(new execution.ExecuteAction(null));
 
-    this.analysisService.execute(algorithm, this.analysisCalls[algorithm.name])
+    this.analysisService.execute(algorithm, this.analysisCall)
       .subscribe(function (values) {
-        that.analysisCalls[algorithm.name].outputs['values'] = values;
+        that.analysisCall.outputs['values'] = values;
         that.ref.detectChanges();
         that.store.dispatch(new execution.ExecuteCompleteAction(null));
     });
   }
 
-  newAggregateRequest = new AggregateRequest;
   newFactRequest = new FactRequest;
 
 

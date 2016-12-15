@@ -88,6 +88,15 @@ background: none;
   `]
 })
 export class TimeSeriesOutputComponent extends AfterViewInit {
+
+  @Input()
+  get analysisCall(): AnalysisCall {
+    return this._analysisCall;
+  }
+
+  set analysisCall(value: AnalysisCall) {
+    this._analysisCall = value;
+  }
   get data(): any {
     return this._data;
   }
@@ -106,8 +115,7 @@ export class TimeSeriesOutputComponent extends AfterViewInit {
       this.init();
   }
 
-  @Input()
-  public analysisCall: AnalysisCall;
+  private _analysisCall: AnalysisCall;
 
   @Input()
   public cube: Cube;
