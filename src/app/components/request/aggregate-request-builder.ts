@@ -8,7 +8,7 @@ import {ApiCubesService} from '../../services/api-cubes';
 import {
   ChangeDetectionStrategy, ViewEncapsulation,
   Component, Input, Output,
- EventEmitter, ChangeDetectorRef
+  EventEmitter, ChangeDetectorRef
 } from '@angular/core';
 import {Aggregate} from '../../models/aggregate';
 import {Sort} from '../../models/sort';
@@ -31,48 +31,51 @@ import {Cube} from '../../models/cube';
   encapsulation: ViewEncapsulation.None,
   template: require('./aggreegate-request-builder.html'),
   styles: [`
-  ul.alt-list{padding:0; margin:10px 0}
-    ul.alt-list li {
-      list-style-type: none;
-      margin: .1rem 0;
-    padding: .5rem 0;
-          display: flex;
-      align-items: center;
-    background: rgba(66, 66, 66, 0.3);
+ul.alt-list {
+  padding: 0;
+  margin: 10px 0
+}
 
-    }
-   
-    
-    a.action-anchor{
-      cursor:pointer;
-      margin: auto 10px ;
-    
-    }
-    
-    .md-tab-label{
-      min-width:max-content!important;
-    
-    }
-    
-    md-toolbar-row [md-mini-fab]{
-      margin:2px;
-    
-    }
-    
-    .md-tab-body-wrapper{
-    
-      max-height:700px;
-      overflow-y:auto!important;
-    
-    }
-    
-    span.node-key {
-      cursor: pointer;
-    }
-    
-    .well{
-    background-color:#615f5f;
-    }
+ul.alt-list li {
+  list-style-type: none;
+  margin: .1rem 0;
+  padding: .5rem 0;
+  display: flex;
+  align-items: center;
+  background: rgba(66, 66, 66, 0.3);
+
+}
+
+a.action-anchor {
+  cursor: pointer;
+  margin: auto 10px;
+
+}
+
+.md-tab-label {
+  min-width: max-content !important;
+
+}
+
+md-toolbar-row [md-mini-fab] {
+  margin: 2px;
+
+}
+
+.md-tab-body-wrapper {
+
+  max-height: 700px;
+  overflow-y: auto !important;
+
+}
+
+span.node-key {
+  cursor: pointer;
+}
+
+.well {
+  background-color: #615f5f;
+}
   `]
 })
 export class AggregateRequestBuilder {
@@ -88,17 +91,17 @@ export class AggregateRequestBuilder {
   @Output()
   public onRequestBuilt: EventEmitter<AggregateRequest> = new EventEmitter<AggregateRequest>();
 
-  public get cube(){
+  public get cube() {
     return this._cube;
   }
 
   @Input()
-  public set cube(value: Cube){
+  public set cube(value: Cube) {
     let that = this;
     that._cube = value;
   }
-  _cube: Cube;
 
+  _cube: Cube;
 
 
   @Output() requestChange = new EventEmitter();
@@ -113,7 +116,6 @@ export class AggregateRequestBuilder {
     let that = this;
     that.newAggregateRequest = value;
   }
-
 
 
   constructor(private ref: ChangeDetectorRef, private rudolfCubesService: ApiCubesService) {
@@ -205,7 +207,7 @@ export class AggregateRequestBuilder {
   }
 
 
-  private _newAggregateAggregate: Aggregate ;
+  private _newAggregateAggregate: Aggregate;
 
   newSortAttribute: Attribute;
 
@@ -226,6 +228,7 @@ export class AggregateRequestBuilder {
   setCutValue(member: string) {
     this.newCutValueVal = member;
   }
+
   members: Map<string, Map<string, Object>> = new Map<string, Map<string, Object>>();
 
   cutMembers: string[] = [];
@@ -241,7 +244,7 @@ export class AggregateRequestBuilder {
     this.rudolfCubesService.members(this.cube, attribute.dimension).subscribe(response => {
       that.members.set(attribute.ref, response);
 
-      that.cutMembers = _.map(Array.from(response.values()), function(member){
+      that.cutMembers = _.map(Array.from(response.values()), function (member) {
         return member[attribute.ref];
       }).filter(function (value) {
         return value && (search === '' || search === undefined || search === null || value.indexOf(search) > -1);
@@ -259,7 +262,7 @@ export class AggregateRequestBuilder {
     this.rudolfCubesService.members(this.cube, newCutDimension).subscribe(response => {
       that.members.set(newCutDimension.ref, response);
 
-      that.cutMembers = _.map(Array.from(response.values()), function(member){
+      that.cutMembers = _.map(Array.from(response.values()), function (member) {
         return member[attributeName];
       });
 

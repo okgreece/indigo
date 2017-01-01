@@ -7,7 +7,7 @@
             <p>
               <md-toolbar color="primary">
                 <h4>{{ (cube$|async).pckg.title }}: {{ algorithm.title }}</h4>
-                <button md-tooltip="Execute" style="margin-left: auto" [disabled]="'false'" md-mini-fab [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series']" [queryParams]="analysisCall.queryParams()">
+                <button md-tooltip="Execute" style="margin-left: auto" [disabled]="'false'" md-mini-fab [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/'+ algorithm.name]" [queryParams]="analysisCall.queryParams()">
 
                   <md-icon class="md-24">play_circle_outline</md-icon>
                 </button>
@@ -23,10 +23,10 @@
                     <aggregate-request-builder *ngIf="analysisCall?.inputs[input.name]" [cube]="cube$|async"
                                                [(request)]="analysisCall?.inputs[input.name]"></aggregate-request-builder>
                   </div>
-                  <div *ngIf="input.type==InputTypes.BABBAGE_FACT_RAW_DATA">
+                  <div *ngIf="input.type==InputTypes.BABBAGE_FACT_RAW_DATA || input.type==InputTypes.BABBAGE_FACT_URI">
                     <h4>Input: {{input.title}}</h4>
 
-                    <fact-request-builder [cube]="cube$|async" [(request)]="analysisCall[input.name]"></fact-request-builder>
+                    <fact-request-builder *ngIf="analysisCall?.inputs[input.name]" [cube]="cube$|async" [(request)]="analysisCall?.inputs[input.name]"></fact-request-builder>
                   </div>
 
                   <div class="row-fluid col-sm-12 well" *ngIf="input.type==InputTypes.PARAMETER">
@@ -63,13 +63,27 @@
                     <h4>Input: measure {{input.title}}</h4>
                     <div class="col-sm-12">
                       <div class="col-sm-9 form-group">
-                        <select class="form-control col-sm-6"
+                        <select *ngIf="input.cardinality=='1'" class="form-control col-sm-6"
                                 [(ngModel)]="analysisCall?.inputs[input.name]">
                           <optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" label="{{dim.label}}">
                             <option [ngValue]="item" *ngFor="let item of dim?.attributes|iterable">{{item |
                               nestedProperty:'label'}}
                             </option>
                           </optgroup>
+                        </select>
+
+                        <select *ngIf="input.cardinality=='n'"
+                                (change)="setSelected($event.target, input.name, cube.model.attributes)"
+                                multiple class="form-control col-sm-6"
+                                [(ngModel)]="analysisCall?.inputs[input.name]">
+
+                          <optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" label="{{dim.label}}">
+                            <option [ngValue]="item" [attr.data-key]="item |nestedProperty:'ref'" *ngFor="let item of dim?.attributes|iterable">{{item |
+                              nestedProperty:'label'}}
+                            </option>
+                          </optgroup>
+
+
                         </select>
                       </div>
 

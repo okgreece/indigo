@@ -273,7 +273,7 @@ export class AcfChartVisualization extends AnalysisVisualization implements Afte
 
 
 @Component({
-  selector: 'analytics-acf-chart-regular',
+  selector: 'analytics-acf-chart-timeseries-regular',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   template: `<analytics-acf-chart [data]="data?.autocorrelation.acf.regular"></analytics-acf-chart>`
@@ -291,12 +291,48 @@ export class AcfChartVisualizationRegular  extends AnalysisVisualization {
 
 
 @Component({
-  selector: 'analytics-acf-chart-residuals',
+  selector: 'analytics-acf-chart-timeseries-residuals',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   template: `<analytics-acf-chart [data]="data?.autocorrelation.acf.residuals"></analytics-acf-chart>`
 })
 export class AcfChartVisualizationResiduals  extends AnalysisVisualization {
+  @Input()
+  public data: any;
+
+  constructor(elementRef: ElementRef, ref: ChangeDetectorRef, injector: Injector) {
+    super(elementRef, ref, injector);
+
+  }
+
+}
+
+
+@Component({
+  selector: 'analytics-pacf-chart-timeseries-regular',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  template: `<analytics-acf-chart [data]="data?.autocorrelation.pacf.regular"></analytics-acf-chart>`
+})
+export class PacfChartVisualizationRegular  extends AnalysisVisualization {
+  @Input()
+  public data: any;
+
+  constructor(elementRef: ElementRef, ref: ChangeDetectorRef, injector: Injector) {
+    super(elementRef, ref, injector);
+
+  }
+
+}
+
+
+@Component({
+  selector: 'analytics-pacf-chart-timeseries-residuals',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  template: `<analytics-acf-chart [data]="data?.autocorrelation.pacf.residuals"></analytics-acf-chart>`
+})
+export class PacfChartVisualizationResiduals  extends AnalysisVisualization {
   @Input()
   public data: any;
 

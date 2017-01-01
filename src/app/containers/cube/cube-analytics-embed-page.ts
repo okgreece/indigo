@@ -16,8 +16,7 @@ export type InCollectionInput = boolean;
   selector: 'cube-analytics-embed-page',
   template: `
     <indigo-cube-analytics-embed [algorithmName]="algorithmName"
-      [inCollection]="isCubeInCollection$ | async" 
-    >
+      [inCollection]="isCubeInCollection$ | async">
     </indigo-cube-analytics-embed>
   `
 })

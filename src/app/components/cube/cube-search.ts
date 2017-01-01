@@ -42,6 +42,8 @@ import {Component, Output, Input, EventEmitter, AfterViewInit} from '@angular/co
     md-spinner.show {
       opacity: 1.0;
     }
+    
+  
   `]
 })
 export class CubeSearchComponent implements AfterViewInit{

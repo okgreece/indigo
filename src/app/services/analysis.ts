@@ -2,15 +2,12 @@ import 'rxjs/add/operator/map';
 import {Injectable} from '@angular/core';
 import {Http, URLSearchParams} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
-import {Cube} from "../models/cube";
-import {AggregateRequest} from "../models/aggregate/aggregateRequest";
-import {Dimension} from "../models/dimension";
-import 'rxjs/add/operator/mergeMap'
-import 'rxjs/Subscription'
-import {AnalysisCall} from "../models/analysis/analysisCall";
-import {Algorithm} from "../models/analysis/algorithm";
-import {ApiCubesService} from "./api-cubes";
-import {Subscription} from "rxjs";
+
+import 'rxjs/add/operator/mergeMap';
+import 'rxjs/Subscription';
+import {AnalysisCall} from '../models/analysis/analysisCall';
+import {Algorithm} from '../models/analysis/algorithm';
+import {ApiCubesService} from './api-cubes';
 
 @Injectable()
 export class AnalysisService {
@@ -18,28 +15,28 @@ export class AnalysisService {
   constructor(private http: Http, public apiService: ApiCubesService) {
   }
 
-  execute(algorithm: Algorithm, call: AnalysisCall): Observable<any> {
+  execute(algorithm: Algorithm, inputs): Observable<any> {
 
 
     if (algorithm.name === 'time_series') {
-      return this.timeseries(algorithm, call.parametrizeInputs());
+      return this.timeseries(algorithm, inputs);
 
     }
     else if (algorithm.name === 'descriptive_statistics') {
-      return this.descriptive(algorithm, call);
+      return this.descriptive(algorithm, inputs);
     }
 
 
   }
 
-  timeseries(algorithm, inputs: URLSearchParams) {
+  timeseries(algorithm, inputs) {
     let that = this;
-
+debugger;
     let body = new URLSearchParams();
-    body.set('amount', "'" + inputs.get('amount') + "'");
-    body.set('time', "'" + inputs.get('time') + "'");
-    body.set('prediction_steps', inputs.get('prediction_steps'));
-    body.set('json_data', "'" + inputs.get('json_data') + "'");
+    body.set('amount', "'" + inputs['amount'] + "'");
+    body.set('time', "'" + inputs['time'] + "'");
+    body.set('prediction_steps', inputs['prediction_steps']);
+    body.set('json_data', "'" + inputs['json_data'] + "'");
 
     return that.http.post(algorithm.endpoint.toString() + '/print', body).map(res => {
       debugger;
@@ -219,33 +216,33 @@ export class AnalysisService {
 
       return {
         forecast: {
-          values: values, model: forecasts["ts.model"][0]
+          values: values, model: forecasts['ts.model'][0]
         },
         autocorrelation: {
           acf: {
             regular: {
               values: acfValues,
-              interval_up: acfRegular["confidence.interval.up"][0],
-              interval_low: acfRegular["confidence.interval.low"][0]
+              interval_up: acfRegular['confidence.interval.up'][0],
+              interval_low: acfRegular['confidence.interval.low'][0]
 
             },
             residuals: {
               values: acfResValues,
-              interval_up: acfResiduals["confidence.interval.up"][0],
-              interval_low: acfResiduals["confidence.interval.low"][0]
+              interval_up: acfResiduals['confidence.interval.up'][0],
+              interval_low: acfResiduals['confidence.interval.low'][0]
             },
           },
 
           pacf: {
             regular: {
               values: pacfValues,
-              interval_up: pacfRegular["confidence.interval.up"][0],
-              interval_low: pacfRegular["confidence.interval.low"][0]
+              interval_up: pacfRegular['confidence.interval.up'][0],
+              interval_low: pacfRegular['confidence.interval.low'][0]
             },
             residuals: {
               values: pacfResValues,
-              interval_up: pacfResiduals["confidence.interval.up"][0],
-              interval_low: pacfResiduals["confidence.interval.low"][0]
+              interval_up: pacfResiduals['confidence.interval.up'][0],
+              interval_low: pacfResiduals['confidence.interval.low'][0]
             }
           }
         },
@@ -277,40 +274,35 @@ export class AnalysisService {
 
   }
 
-  descriptive(algorithm, call) {
+  descriptive(algorithm, inputs) {
     let that = this;
     let body = new URLSearchParams();
-    body.set('json_data', "'" + this.apiService.factToUri(call.inputs["json_data"]) + "'"
-    )
+    body.set('json_data', '\'' + inputs['json_data'] + '\'')
 
 
     ;
-    let amountColumnString = "";
-    if (call.inputs["amounts"].length > 1) {
-      amountColumnString = `c(` + call.inputs["amounts"].map(c => {
-          return '"' + c.ref + '"';
-        }).join(",") + `)`;
-    }
-    else {
-      amountColumnString = "'" + call.inputs["amounts"][0].ref + "'";
-    }
+
+
+    let amountColumnString = '\'' + inputs['amounts'] + '\'';
+
+    let dimensionColumnString = '\'' + inputs['dimensions'] + '\'';
 
     body.set('amounts', amountColumnString);
-    body.set('dimensions', "'" + call.inputs["dimensions"].ref + "'");
+    body.set('dimensions', dimensionColumnString);
     // body.set('x', "'" + JSON.stringify(json) + "'");
 
-    return that.http.post(algorithm.endpoint.toString() + "/print", body).map(res => {
+    return that.http.post(algorithm.endpoint.toString() + '/print', body).map(res => {
       debugger;
       let response = res.json();
 
-      let dimension = call.inputs["dimensions"].ref;
+      let dimension = inputs['dimensions'].ref;
       let descriptives = response.descriptives;
       let frequencies: any = [];
       for (let i = 0; i < response.frequencies.frequencies.length; i++) {
         let val = {
-          frequency: response.frequencies.frequencies[i][dimension],
-          label: response.frequencies.frequencies[i]["_row"],
-          relative: response.frequencies["relative.frequencies"][i][dimension]
+          frequency: response.frequencies.frequencies[i]['freq'],
+          label: response.frequencies.frequencies[i]['_row'],
+          relative: response.frequencies['relative.frequencies'][i]
         };
 
         frequencies.push(val);
@@ -322,7 +314,7 @@ export class AnalysisService {
       let boxplotkeys = Object.keys(boxplotResponse);
       for (let i = 0; i < boxplotkeys.length; i++) {
         let boxPlot = boxplotResponse[boxplotkeys[i]];
-        boxPlot["label"] = boxplotkeys[i];
+        boxPlot['label'] = boxplotkeys[i];
         boxplots.push(boxPlot);
       }
 
@@ -332,7 +324,7 @@ export class AnalysisService {
       let histogramKeys = Object.keys(hist);
       for (let i = 0; i < histogramKeys.length; i++) {
         let histogram = hist[histogramKeys[i]];
-        histogram["label"] = histogramKeys[i];
+        histogram['label'] = histogramKeys[i];
         histograms.push(histogram);
       }
 

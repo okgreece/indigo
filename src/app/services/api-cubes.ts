@@ -75,10 +75,10 @@ export class ApiCubesService {
     let cutString = element.cuts.map(c => c.column.ref + c.transitivity.key + ':' + c.value).join('|');
 
     let params = new URLSearchParams();
-    if(element.cuts.length > 0) params.set('cut', cutString);
-    if(element.sorts.length > 0) params.set('order', orderString);
-    if(element.page) params.set('page', element.page.toString());
-    if(element.pageSize) params.set('pagesize', element.pageSize.toString());
+    if (element.cuts.length > 0) params.set('cut', cutString);
+    if (element.sorts.length > 0) params.set('order', orderString);
+    if (element.page) params.set('page', element.page.toString());
+    if (element.pageSize) params.set('pagesize', element.pageSize.toString());
     return `${this.API_PATH}/${element.cube.name}/facts?${params.toString()}`;
 
 
@@ -129,9 +129,9 @@ export class ApiCubesService {
       ;
   }
 
-  _membersCache:Map<string,Map<string,Object>> = new Map<string,Map<string,Object>>();
+  _membersCache: Map<string, Map<string, Object>> = new Map<string, Map<string, Object>>();
 
-  members(cube:Cube, dimension:Dimension):Observable<Map<string,Object>> {
+  members(cube: Cube, dimension: Dimension): Observable <Map<string, Object>> {
     ///
     // http://next.openspending.org/api/3/cubes/1c95cb52b1d32ee8537fafd2fe1a945d%3Adouala2015/members/economic_classification_2
     let that = this;

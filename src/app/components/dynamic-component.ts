@@ -4,14 +4,31 @@
 import {Component, Input, ViewContainerRef, ViewChild, ReflectiveInjector, ComponentFactoryResolver} from '@angular/core';
 import {
   AcfChartVisualizationRegular,
-  AcfChartVisualizationResiduals
+  AcfChartVisualizationResiduals, PacfChartVisualizationResiduals, PacfChartVisualizationRegular
 } from './analysis/visualizations/acfChart';
+import {
+  LineChartTrends, LineChartRemainders, LineChartFittingResiduals,
+  LineChartFittingTimeFitted, LineChartTimeSeriesForecast
+} from "./analysis/visualizations/lineChart";
+import {
+  ScatterPlotTimeseriesDecompositionFittedResiduals,
+  ScatterPlotTimeseriesFittingFittedResiduals
+} from "./analysis/visualizations/scatterPlot";
 // http://blog.mgechev.com/2015/12/30/angular2-router-dynamic-route-config-definition-creation/
 
 
 export const DynamicComponents = {
-  'analytics-acf-chart-regular': AcfChartVisualizationRegular,
-  'analytics-acf-chart-residuals': AcfChartVisualizationResiduals
+  'analytics-acf-chart-timeseries-regular': AcfChartVisualizationRegular,
+  'analytics-acf-chart-timeseries-residuals': AcfChartVisualizationResiduals,
+  'analytics-pacf-chart-timeseries-regular': PacfChartVisualizationRegular,
+  'analytics-pacf-chart-timeseries-residuals': PacfChartVisualizationResiduals,
+  'analytics-line-chart-timeseries-trends': LineChartTrends,
+  'analytics-line-chart-timeseries-remainders': LineChartRemainders,
+  'analytics-scatter-plot-timeseries-decomposition-fitted-residuals': ScatterPlotTimeseriesDecompositionFittedResiduals,
+  'analytics-scatter-plot-timeseries-fitting-fitted-residuals': ScatterPlotTimeseriesFittingFittedResiduals,
+  'analytics-line-chart-timeseries-fitting-residuals': LineChartFittingResiduals,
+  'analytics-line-chart-timeseries-fitting-time-fitted': LineChartFittingTimeFitted,
+  'analytics-line-chart-timeseries-forecast': LineChartTimeSeriesForecast
 
 };
 
@@ -21,7 +38,7 @@ export const DynamicComponents = {
 
 @Component({
   selector: 'dynamic-component',
-  entryComponents: [AcfChartVisualizationRegular, AcfChartVisualizationResiduals], // Reference to the components must be here in order to dynamically create them
+  entryComponents: [AcfChartVisualizationRegular, AcfChartVisualizationResiduals, LineChartTrends, LineChartRemainders, ScatterPlotTimeseriesDecompositionFittedResiduals, PacfChartVisualizationResiduals, PacfChartVisualizationRegular, ScatterPlotTimeseriesFittingFittedResiduals, LineChartFittingResiduals, LineChartFittingTimeFitted, LineChartTimeSeriesForecast], // Reference to the components must be here in order to dynamically create them
   template: `
     <div #dynamicComponentContainer></div>
   `,

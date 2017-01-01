@@ -72,7 +72,21 @@ import {AnalysisCall} from "../../../models/analysis/analysisCall";
 
 }
 
+svg {
+  background: url("public/sprites/grid_paper.png");
+  font-family: monospace;
+}
 
+svg text {
+  font-family: monospace;
+}
+
+analytics-descriptive-output md-card {
+  background: #303030;
+}
+md-spinner svg{
+background: none;
+}
 
   `]
 })
@@ -118,10 +132,16 @@ export class DescriptiveStatisticsOutputComponent extends AfterViewInit {
       this.ref.markForCheck();
     }, 5000);
   }
-
   @Input()
-  public analysisCall: AnalysisCall;
+  get analysisCall(): AnalysisCall {
+    return this._analysisCall;
+  }
 
+  set analysisCall(value: AnalysisCall) {
+    this._analysisCall = value;
+  }
+
+  private _analysisCall: AnalysisCall;
   @Input()
   public cube: Cube;
 

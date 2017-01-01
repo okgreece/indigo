@@ -72,6 +72,10 @@ import {FactRequest} from "../../models/fact/factRequest";
     span.node-key {
       cursor: pointer;
     }
+    .well {
+  background-color: #615f5f;
+}
+    
   `]
 })
 export class FactRequestBuilder{
@@ -85,35 +89,35 @@ export class FactRequestBuilder{
   }
 
   @Input()
-  public set cube(value:Cube){
+  public set cube(value: Cube){
     let that = this;
     that._cube = value;
   }
-  _cube:Cube;
+  _cube: Cube;
 
 
 
   @Output() requestChange = new EventEmitter();
 
 
-  public get request():FactRequest{
+  public get request(): FactRequest{
     return this.newFactRequest;
   }
 
   @Input()
-  public set request(value:FactRequest){
+  public set request(value: FactRequest){
     let that = this;
     that.newFactRequest = value;
   }
 
 
 
-  constructor(private rudolfCubesService:ApiCubesService){
+  constructor(private rudolfCubesService: ApiCubesService){
 
   }
 
 
-  newFactRequest:FactRequest = new FactRequest();
+  newFactRequest: FactRequest = new FactRequest();
 
 
 

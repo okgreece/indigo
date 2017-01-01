@@ -57,7 +57,9 @@ export type RemoveOutput = Cube;
       margin:2px;
     
     }
-
+ .well {
+  background-color: #615f5f;
+}
     
   `]
 })
@@ -138,7 +140,6 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
           let call = new AnalysisCall(algorithm, that.cube);
           call.deParametrizeInputs(that.route.snapshot.queryParams);
           that.analysisCall = call;
-          debugger;
           if (call.valid) that.execute(that.algorithm);
 
         });
@@ -224,7 +225,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
     let that = this;
     this.store.dispatch(new execution.ExecuteAction(null));
 
-    this.analysisService.execute(algorithm, this.analysisCall)
+    this.analysisService.execute(algorithm, this.analysisCall.queryParams())
       .subscribe(function (values) {
         that.analysisCall.outputs['values'] = values;
         that.ref.detectChanges();

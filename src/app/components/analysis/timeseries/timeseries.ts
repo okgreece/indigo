@@ -83,6 +83,9 @@ md-spinner svg{
 background: none;
 }
 
+md-card{
+margin:5px;
+}
 
 
   `]
@@ -97,6 +100,9 @@ export class TimeSeriesOutputComponent extends AfterViewInit {
   set analysisCall(value: AnalysisCall) {
     this._analysisCall = value;
   }
+
+  private _analysisCall: AnalysisCall;
+
   get data(): any {
     return this._data;
   }
@@ -115,7 +121,6 @@ export class TimeSeriesOutputComponent extends AfterViewInit {
       this.init();
   }
 
-  private _analysisCall: AnalysisCall;
 
   @Input()
   public cube: Cube;

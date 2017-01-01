@@ -26,16 +26,22 @@ import {JsonTreeComponent} from '../lib/json-tree/json-tree';
 import {ModalModule} from 'ng2-bootstrap';
 import {JsonNodeComponent} from '../lib/json-tree/json-node';
 import {CubeAnalyticsDetailComponent} from './cube/analytics/cube-analytics-detail';
-import {LineChartVisualization} from './analysis/visualizations/lineChart';
+import {
+  LineChartVisualization, LineChartTrends, LineChartRemainders,
+  LineChartFittingResiduals, LineChartFittingTimeFitted, LineChartTimeSeriesForecast
+} from './analysis/visualizations/lineChart';
 import {TimeSeriesOutputComponent} from './analysis/timeseries/timeseries';
 import {
   AcfChartVisualization, AcfChartVisualizationRegular,
-  AcfChartVisualizationResiduals
+  AcfChartVisualizationResiduals, PacfChartVisualizationRegular, PacfChartVisualizationResiduals
 } from './analysis/visualizations/acfChart';
 import { CubeAnalyticsIndexComponent} from '../containers/cube/cube-analytics-index-page';
 import {CubeAnalyticsListComponent} from './cube/analytics/cube-analytics-list';
 import {CubeAnalyticsPreviewComponent} from './cube/analytics/cube-analytics-preview';
-import {ScatterPlotVisualization} from './analysis/visualizations/scatterPlot';
+import {
+  ScatterPlotVisualization, ScatterPlotTimeseriesDecompositionFittedResiduals,
+  ScatterPlotTimeseriesFittingFittedResiduals
+} from './analysis/visualizations/scatterPlot';
 import {DescriptiveStatisticsOutputComponent} from './analysis/descriptive/descriptive';
 import {FactRequestBuilder} from './request/fact-request-builder';
 import {FrequencyVisualization} from './analysis/visualizations/frequencyChart';
@@ -44,6 +50,7 @@ import {HistogramVisualization} from './analysis/visualizations/histogram';
 import DynamicComponent from './dynamic-component';
 import {MasonryModule} from 'angular2-masonry';
 import {CubeAnalyticsEmbedComponent} from "./cube/analytics/embed/embed";
+import LineString = GeoJSON.LineString;
 
 
 export const COMPONENTS = [
@@ -79,11 +86,20 @@ export const COMPONENTS = [
   AcfChartVisualization,
   AcfChartVisualizationRegular,
   AcfChartVisualizationResiduals,
+  LineChartTrends,
+  LineChartRemainders,
+  ScatterPlotTimeseriesDecompositionFittedResiduals,
+  ScatterPlotTimeseriesFittingFittedResiduals,
+  LineChartFittingResiduals,
+  LineChartFittingTimeFitted,
+  PacfChartVisualizationRegular,
+  PacfChartVisualizationResiduals,
   CubePreviewListComponent,
   CubePreviewComponent,
   CubeAnalyticsListComponent,
   CubeAnalyticsPreviewComponent,
-  CubeAnalyticsEmbedComponent
+  CubeAnalyticsEmbedComponent,
+  LineChartTimeSeriesForecast
 ];
 
 

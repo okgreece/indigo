@@ -59,7 +59,7 @@ export class CubeAnalyticsEmbedComponent {
       that.cube = cube;
 
       let observable: Observable<Algorithm> =
-        that.algorithmsService.getAlgorithm(route.snapshot.params["algorithm"]);
+        that.algorithmsService.getAlgorithm(route.snapshot.params['algorithm']);
 
       observable.subscribe(function (algorithm: Algorithm) {
 
@@ -70,9 +70,9 @@ export class CubeAnalyticsEmbedComponent {
           }
 
 
-          analysisService.timeseries(algorithm, inputs).subscribe(function (outputs) {
+          analysisService.execute(algorithm, params).subscribe(function (outputs) {
             that.componentData = {
-              component: DynamicComponents[route.snapshot.params["part"]],
+              component: DynamicComponents[route.snapshot.params['part']],
               inputs: {
                 data: outputs
               }

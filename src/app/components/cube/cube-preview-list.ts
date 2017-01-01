@@ -18,6 +18,9 @@ import { Cube } from '../../models/cube';
       margin: 0 auto;
 
   }
+  
+  
+  
   `]
 })
 export class CubePreviewListComponent {
