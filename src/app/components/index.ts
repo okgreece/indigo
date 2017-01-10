@@ -44,9 +44,9 @@ import {
 } from './analysis/visualizations/scatterPlot';
 import {DescriptiveStatisticsOutputComponent} from './analysis/descriptive/descriptive';
 import {FactRequestBuilder} from './request/fact-request-builder';
-import {FrequencyVisualization} from './analysis/visualizations/frequencyChart';
-import {BoxPlotVisualization} from './analysis/visualizations/boxPlot';
-import {HistogramVisualization} from './analysis/visualizations/histogram';
+import {FrequencyVisualization, FrequencyChartDescriptive} from './analysis/visualizations/frequencyChart';
+import {BoxPlotVisualization, BoxPlotDescriptive} from './analysis/visualizations/boxPlot';
+import {HistogramVisualization, HistogramDescriptive} from './analysis/visualizations/histogram';
 import DynamicComponent from './dynamic-component';
 import {MasonryModule} from 'angular2-masonry';
 import {CubeAnalyticsEmbedComponent} from "./cube/analytics/embed/embed";
@@ -94,12 +94,15 @@ export const COMPONENTS = [
   LineChartFittingTimeFitted,
   PacfChartVisualizationRegular,
   PacfChartVisualizationResiduals,
+  BoxPlotDescriptive,
   CubePreviewListComponent,
   CubePreviewComponent,
   CubeAnalyticsListComponent,
   CubeAnalyticsPreviewComponent,
   CubeAnalyticsEmbedComponent,
-  LineChartTimeSeriesForecast
+  LineChartTimeSeriesForecast,
+  FrequencyChartDescriptive,
+  HistogramDescriptive
 ];
 
 

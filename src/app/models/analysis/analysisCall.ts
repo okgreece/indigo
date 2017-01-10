@@ -29,7 +29,6 @@ export class AnalysisCall {
     let drilldownString = aggregateRequest.drilldowns.map(d => d.column.ref).join('|');
     let orderString = aggregateRequest.sorts.map(s => s.column.ref + ':' + s.direction.key).join('|');
     let cutString = aggregateRequest.cuts.map(c => {
-      debugger;
       return c.column.ref + c.transitivity.key + ':' + c.value;
     }).join('|');
     let aggregatesString = aggregateRequest.aggregates.map(a => a.column.ref).join('|');
@@ -45,7 +44,6 @@ export class AnalysisCall {
   factsToURI(factRequest: FactRequest) {
     let orderString = factRequest.sorts.map(s => s.column.ref + ':' + s.direction.key).join('|');
     let cutString = factRequest.cuts.map(c => {
-      debugger;
       return c.column.ref + c.transitivity.key + ':' + c.value;
     }).join('|');
 
@@ -101,7 +99,6 @@ export class AnalysisCall {
         }
         case  InputTypes.BABBAGE_FACT_URI: {
           that.inputs[input.name] = new FactRequest();
-          debugger;
           that.inputs[input.name].cube = that.cube;
           break;
         }

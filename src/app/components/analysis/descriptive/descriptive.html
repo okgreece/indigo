@@ -60,14 +60,60 @@
 
 
   <div class="col-sm-12">
-    <analytics-frequency-chart class="col-sm-12"  style="min-height: 500px;"  [label_y]="Frequency" [label_x]="Dimension" [data]="data.frequencies"></analytics-frequency-chart>
+
+    <md-card>
+      <md-card-title-group align="center center" >
+
+        <md-card-title>Frequency chart</md-card-title>
+        <a md-mini-fab [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/descriptive_statistics/embed/analytics-frequency-chart-descriptive']" [queryParams]="analysisCall.queryParams()">
+          <md-icon  color="primary"  class="md-24">share</md-icon>
+        </a>
+
+      </md-card-title-group>
+      <div class="row text-center">
+        <analytics-frequency-chart class="col-sm-12"  style="min-height: 500px;"  [label_y]="Frequency" [label_x]="Dimension" [data]="data?.frequencies"></analytics-frequency-chart>
+
+      </div>
+
+    </md-card>
+
   </div>
 
   <div class="col-sm-12">
-    <analytics-box-plot class="col-sm-12"  style="min-height: 500px;"  [label_y]="Frequency" [label_x]="Dimension" [data]="data.boxplot"></analytics-box-plot>
+    <md-card>
+      <md-card-title-group align="center center" >
+
+        <md-card-title>Box plot</md-card-title>
+        <a md-mini-fab [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/descriptive_statistics/embed/analytics-box-plot-descriptive']" [queryParams]="analysisCall.queryParams()">
+          <md-icon  color="primary"  class="md-24">share</md-icon>
+        </a>
+
+      </md-card-title-group>
+      <div class="row text-center">
+        <analytics-box-plot class="col-sm-12"  style="min-height: 500px;"  [label_y]="Frequency" [label_x]="Dimension" [data]="data.boxplot"></analytics-box-plot>
+      </div>
+
+    </md-card>
+
   </div>
   <div class="col-sm-12">
-    <analytics-histogram *ngFor="let item of data.histogram" class="col-sm-12"  style="min-height: 500px;"  [label_y]="Frequency" [label_x]="Dimension" [values]="item"></analytics-histogram>
+    <md-card>
+      <md-card-title-group align="center center" >
+
+        <md-card-title>Histogram</md-card-title>
+        <a md-mini-fab [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/descriptive_statistics/embed/analytics-histogram-chart-descriptive']" [queryParams]="analysisCall.queryParams()">
+          <md-icon  color="primary"  class="md-24">share</md-icon>
+        </a>
+
+      </md-card-title-group>
+      <div class="row text-center">
+        <analytics-histogram *ngFor="let item of data?.histogram" class="col-sm-12"  style="min-height: 500px;"  [label_y]="Frequency" [label_x]="Dimension" [values]="item"></analytics-histogram>
+      </div>
+
+    </md-card>
+
+
+
   </div>
 
 

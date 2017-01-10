@@ -295,12 +295,12 @@ debugger;
       debugger;
       let response = res.json();
 
-      let dimension = inputs['dimensions'].ref;
+      let dimension = inputs['dimensions'];
       let descriptives = response.descriptives;
       let frequencies: any = [];
       for (let i = 0; i < response.frequencies.frequencies.length; i++) {
         let val = {
-          frequency: response.frequencies.frequencies[i]['freq'],
+          frequency: response.frequencies.frequencies[i][dimension],
           label: response.frequencies.frequencies[i]['_row'],
           relative: response.frequencies['relative.frequencies'][i]
         };

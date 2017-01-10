@@ -3,13 +3,14 @@
  */
 import {
   ChangeDetectionStrategy, ViewEncapsulation,
-  Component, Input,  ElementRef,
-  AfterViewInit, ViewChild
+  Component, Input, ElementRef,
+  AfterViewInit, ViewChild, Injector
 } from '@angular/core';
 import { ChangeDetectorRef} from '@angular/core';
 import * as d3 from 'd3';
 import * as $ from 'jquery';
 import * as _ from 'lodash';
+import {AnalysisVisualization} from "../visualization";
 
 
 @Component({
@@ -21,7 +22,7 @@ import * as _ from 'lodash';
 
   
  .axis path,
-.axis line {
+.axis .line {
   fill: none;
   stroke: #000;
   shape-rendering: crispEdges;
@@ -153,20 +154,25 @@ export class HistogramVisualization extends AfterViewInit {
       .style("text-anchor", "end")
       .text("Amount");
 
-    svg.append("path")
-      .datum(lineData)
-      .attr("class", "line")
-      .attr("d", line);
-
 
     svg.selectAll(".box")
       .data(boxData)
       .enter().append("rect")
+      .style("fill", "#FDA500")
+      .style("stroke", "black")
       .attr("class", "box")
       .attr("x", function(d:any) { return x(d.from); })
       .attr("y", function(d:any) { return y( d.frequency); })
       .attr("width", function(d:any) { return Math.abs(x(d.to) - x(d.from)); })
       .attr("height", function(d:any) { return viewerHeight-  y(d.frequency); });
+
+
+
+    svg.append("path")
+      .datum(lineData)
+      .attr("class", "line")
+      .attr("d", line);
+
 
 
    /* svg.append("path")
@@ -222,7 +228,7 @@ export class HistogramVisualization extends AfterViewInit {
 
     d3.select(that.vizCanvas.nativeElement).html("");
 
-    this.vizCanvas = this.elementRef;
+  //  this.vizCanvas = this.elementRef;
 
     this.generateBarChart(values);
 
@@ -244,5 +250,40 @@ export class HistogramVisualization extends AfterViewInit {
     }, 5000);
   }
 
+
+}
+
+
+@Component({
+  selector: 'analytics-histogram-chart-descriptive',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  template: `   <analytics-histogram *ngFor="let item of data.histogram"   [label_y]="Frequency" [label_x]="Dimension" [values]="item"></analytics-histogram>`,
+  styles: [`
+
+
+  
+  .line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+
+
+  `]
+})
+export class HistogramDescriptive  extends AnalysisVisualization {
+  @Input()
+  public data: any;
+
+  constructor(elementRef: ElementRef, ref: ChangeDetectorRef, injector: Injector) {
+    super(elementRef, ref, injector);
+
+  }
 
 }

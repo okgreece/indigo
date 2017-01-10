@@ -4,7 +4,7 @@
 import {
   ChangeDetectionStrategy, ViewEncapsulation,
   Component, Input, Directive, Attribute as MetadataAttribute, OnChanges, DoCheck, ElementRef, OnInit, SimpleChange,
-  AfterViewInit, ViewChild
+  AfterViewInit, ViewChild, Injector
 } from '@angular/core';
 import {Inject, NgZone, ChangeDetectorRef} from '@angular/core';
 import * as d3 from 'd3';
@@ -13,6 +13,7 @@ import * as $ from 'jquery'
 import * as _ from 'lodash';
 
 import {Store} from "@ngrx/store";
+import {AnalysisVisualization} from "../visualization";
 
 @Component({
   selector: 'analytics-frequency-chart',
@@ -40,9 +41,6 @@ import {Store} from "@ngrx/store";
     stroke-dasharray: 5,5; 
 }
 
-.bar {
-  fill: steelblue;
-}
 
 .bar:hover {
   fill: brown;
@@ -88,7 +86,7 @@ export class FrequencyVisualization extends AfterViewInit {
   @ViewChild('vizCanvas') vizCanvas:any;
  private _data: any;
 
-  private generateBarChart(data: any) {
+  private generateChart(data: any) {
     let margin = {top: 10, right: 10, bottom: 105, left: 45};
 
     let viewerWidth = $(this.vizCanvas.nativeElement).width() - margin.left - margin.right;
@@ -99,6 +97,7 @@ export class FrequencyVisualization extends AfterViewInit {
       ;
 
 
+    let sum = data.reduce(function (a, b) { return a + b.frequency; }, 0);
 
     let x = d3.scaleBand().rangeRound([0, viewerWidth]).padding(0.1),
       y = d3.scaleLinear().rangeRound([viewerHeight, 0]);
@@ -109,10 +108,11 @@ export class FrequencyVisualization extends AfterViewInit {
 
 
       x.domain(data.map(function(d:any) { return d.label; }));
-      y.domain([0, d3.max(data, function(d:any) { return d.relative; })]);
+      y.domain([0, 1]);
 
 
-      debugger;
+    let color = d3.scaleOrdinal(d3.schemeCategory10);
+
 
       g.append("g")
         .attr("class", "axis axis--x")
@@ -121,9 +121,11 @@ export class FrequencyVisualization extends AfterViewInit {
         .selectAll("text")
         .attr("y", 0)
         .attr("x", 9)
-        .attr("dy", ".35em")
+        .attr("dy", "1em")
+/*
         .attr("transform", "rotate(45)")
-        .style("text-anchor", "start")
+*/
+        .style("text-anchor", "middle")
         .call(this.wrap, x.bandwidth());
 
 
@@ -142,9 +144,10 @@ export class FrequencyVisualization extends AfterViewInit {
         .enter().append("rect")
         .attr("class", "bar")
         .attr("x", function(d:any) { return x(d.label); })
-        .attr("y", function(d:any) { return y(d.relative); })
+        .attr("y", function(d:any) { return y(d.frequency/sum); })
+        .style("fill", function(d:any) { return color(x(d.label).toString()); } )
         .attr("width", x.bandwidth())
-        .attr("height", function(d:any) { return viewerHeight - y(d.relative); });
+        .attr("height", function(d:any) { return viewerHeight - y(d.frequency/sum); });
 
     let yTextPadding = 10;
     g.selectAll(".bartext")
@@ -157,9 +160,9 @@ export class FrequencyVisualization extends AfterViewInit {
       .attr("x", function(d:any) { return x(d.label) + x.bandwidth()/2; })
 
       .attr("y", function(d:any) {
-        return y(d.relative) + yTextPadding;
+        return y(d.frequency/sum) + yTextPadding;
       })
-      .text(function(d:any){
+      .text(function(d: any){
         return d.frequency;
       });
 
@@ -174,9 +177,9 @@ export class FrequencyVisualization extends AfterViewInit {
 
     d3.select(that.vizCanvas.nativeElement).html('');
 
-    this.vizCanvas = this.elementRef;
+    //this.vizCanvas = this.elementRef;
 
-    this.generateBarChart(data);
+    this.generateChart(data);
 
 
 
@@ -221,5 +224,30 @@ export class FrequencyVisualization extends AfterViewInit {
     }, 5000);
   }
 
+
+}
+
+
+
+@Component({
+  selector: 'analytics-frequency-chart-descriptive',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  template: `    <analytics-frequency-chart  style="min-height: 500px;"  [label_y]="Frequency" [label_x]="Dimension" [data]="data?.frequencies"></analytics-frequency-chart>`,
+  styles: [`
+
+
+
+
+  `]
+})
+export class FrequencyChartDescriptive  extends AnalysisVisualization {
+  @Input()
+  public data: any;
+
+  constructor(elementRef: ElementRef, ref: ChangeDetectorRef, injector: Injector) {
+    super(elementRef, ref, injector);
+
+  }
 
 }

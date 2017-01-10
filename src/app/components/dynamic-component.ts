@@ -14,6 +14,9 @@ import {
   ScatterPlotTimeseriesDecompositionFittedResiduals,
   ScatterPlotTimeseriesFittingFittedResiduals
 } from "./analysis/visualizations/scatterPlot";
+import {FrequencyChartDescriptive} from "./analysis/visualizations/frequencyChart";
+import {HistogramDescriptive} from "./analysis/visualizations/histogram";
+import {BoxPlotDescriptive} from "./analysis/visualizations/boxPlot";
 // http://blog.mgechev.com/2015/12/30/angular2-router-dynamic-route-config-definition-creation/
 
 
@@ -28,7 +31,10 @@ export const DynamicComponents = {
   'analytics-scatter-plot-timeseries-fitting-fitted-residuals': ScatterPlotTimeseriesFittingFittedResiduals,
   'analytics-line-chart-timeseries-fitting-residuals': LineChartFittingResiduals,
   'analytics-line-chart-timeseries-fitting-time-fitted': LineChartFittingTimeFitted,
-  'analytics-line-chart-timeseries-forecast': LineChartTimeSeriesForecast
+  'analytics-line-chart-timeseries-forecast': LineChartTimeSeriesForecast,
+  'analytics-frequency-chart-descriptive': FrequencyChartDescriptive,
+  'analytics-histogram-chart-descriptive': HistogramDescriptive,
+  'analytics-box-plot-descriptive': BoxPlotDescriptive
 
 };
 
@@ -38,7 +44,7 @@ export const DynamicComponents = {
 
 @Component({
   selector: 'dynamic-component',
-  entryComponents: [AcfChartVisualizationRegular, AcfChartVisualizationResiduals, LineChartTrends, LineChartRemainders, ScatterPlotTimeseriesDecompositionFittedResiduals, PacfChartVisualizationResiduals, PacfChartVisualizationRegular, ScatterPlotTimeseriesFittingFittedResiduals, LineChartFittingResiduals, LineChartFittingTimeFitted, LineChartTimeSeriesForecast], // Reference to the components must be here in order to dynamically create them
+  entryComponents: [AcfChartVisualizationRegular, AcfChartVisualizationResiduals, LineChartTrends, LineChartRemainders, ScatterPlotTimeseriesDecompositionFittedResiduals, PacfChartVisualizationResiduals, PacfChartVisualizationRegular, ScatterPlotTimeseriesFittingFittedResiduals, LineChartFittingResiduals, LineChartFittingTimeFitted, LineChartTimeSeriesForecast, FrequencyChartDescriptive, HistogramDescriptive, BoxPlotDescriptive], // Reference to the components must be here in order to dynamically create them
   template: `
     <div #dynamicComponentContainer></div>
   `,
