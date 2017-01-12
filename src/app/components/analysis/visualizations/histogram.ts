@@ -90,7 +90,6 @@ export class HistogramVisualization extends AfterViewInit {
       });
     }
 
-    debugger;
 
 
     let max = d3.max([d3.max(data.counts), d3.max(data["normal.curve"])]);

@@ -31,7 +31,6 @@ export class AnalysisService {
 
   timeseries(algorithm, inputs) {
     let that = this;
-debugger;
     let body = new URLSearchParams();
     body.set('amount', "'" + inputs['amount'] + "'");
     body.set('time', "'" + inputs['time'] + "'");
@@ -39,7 +38,6 @@ debugger;
     body.set('json_data', "'" + inputs['json_data'] + "'");
 
     return that.http.post(algorithm.endpoint.toString() + '/print', body).map(res => {
-      debugger;
       let response = res.json();
       let forecasts = response["forecasts"];
       let values: any = [];
@@ -332,7 +330,6 @@ debugger;
         histogram['label'] = histogramKeys[i];
         histograms.push(histogram);
       }
-      debugger;
 
       return {
         descriptives: descriptives,

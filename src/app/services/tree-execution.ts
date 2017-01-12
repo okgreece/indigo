@@ -25,7 +25,6 @@ export class TreeExecution {
       if(rootNode instanceof AggregateNode){
         let observable = this.rudolfCubesService.aggregate(rootNode.element).share();
         observable.subscribe(response=>{
-          debugger;
           rootNode.value = response;
           rootNode.executed = true;
           that.store.dispatch(new ReplaceAction(expressionTree));

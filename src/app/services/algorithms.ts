@@ -34,7 +34,6 @@ export class AlgorithmsService {
 
         let response = res.json();
 
-        debugger;
 
         let algorithms = [];
         for (let algorithmName of response.algos) {
@@ -80,7 +79,6 @@ export class AlgorithmsService {
 
             let algorithm = new Algorithm().deserialize(response);
 
-          debugger;
 
           return algorithm;
         });

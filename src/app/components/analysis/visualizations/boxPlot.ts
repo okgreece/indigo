@@ -123,7 +123,6 @@ export class BoxPlotVisualization extends AfterViewInit {
 
 
 
-      debugger;
 
       g.append("g")
         .attr("class", "axis axis--x")

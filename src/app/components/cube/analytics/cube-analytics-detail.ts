@@ -139,7 +139,6 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
           let call = new AnalysisCall(algorithm, that.cube);
           call.deParametrizeInputs(that.route.snapshot.queryParams);
           that.analysisCall = call;
-          debugger;
           if (call.valid) that.execute(that.algorithm);
 
         });
