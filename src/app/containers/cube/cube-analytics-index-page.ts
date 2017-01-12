@@ -24,7 +24,7 @@ import {ActivatedRoute} from "@angular/router";
 export class CubeAnalyticsIndexComponent {
 
   isCubeInCollection$: Observable<InCollectionInput>;
-  cube:Cube;
+  cube: Cube;
 
   constructor(private store: Store<fromRoot.State>, route: ActivatedRoute) {
     route.params

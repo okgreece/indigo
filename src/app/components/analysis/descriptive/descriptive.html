@@ -4,7 +4,7 @@
 
   <h3>Statistical measures</h3>
 
-  <table class="text-center table table-bordered">
+  <table class="table table-bordered">
 
     <thead>
     <tr>
@@ -34,7 +34,12 @@
     </tr>
     <tr>
       <td>Quantiles</td>
-      <td *ngFor="let item of analysisCall.inputs['amounts']">25%: {{data?.descriptives.Quantiles[item.ref][0]}}, 75%: {{data?.descriptives.Quantiles[item.ref][1]}}</td>
+      <td *ngFor="let item of analysisCall.inputs['amounts']">
+        <ul>
+          <li>25%: {{data?.descriptives.Quantiles[item.ref][0]}}</li>
+          <li>75%: {{data?.descriptives.Quantiles[item.ref][1]}}</li>
+        </ul>
+      </td>
     </tr>
 
     <tr>
@@ -65,13 +70,13 @@
       <md-card-title-group align="center center" >
 
         <md-card-title>Frequency chart</md-card-title>
-        <a md-mini-fab [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/descriptive_statistics/embed/analytics-frequency-chart-descriptive']" [queryParams]="analysisCall.queryParams()">
+        <a target="_blank" md-mini-fab [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/descriptive_statistics/embed/analytics-frequency-chart-descriptive']" [queryParams]="analysisCall.queryParams()">
           <md-icon  color="primary"  class="md-24">share</md-icon>
         </a>
 
       </md-card-title-group>
-      <div class="row text-center">
-        <analytics-frequency-chart class="col-sm-12"  style="min-height: 500px;"  [label_y]="Frequency" [label_x]="Dimension" [data]="data?.frequencies"></analytics-frequency-chart>
+      <div *ngFor="let item of data?.frequencies|iterable"  class="row text-center">
+        <analytics-frequency-chart class="col-sm-12"  style="min-height: 500px;"  [label_y]="Frequency" [label_x]="Dimension" [data]="item"></analytics-frequency-chart>
 
       </div>
 
@@ -84,7 +89,7 @@
       <md-card-title-group align="center center" >
 
         <md-card-title>Box plot</md-card-title>
-        <a md-mini-fab [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/descriptive_statistics/embed/analytics-box-plot-descriptive']" [queryParams]="analysisCall.queryParams()">
+        <a target="_blank" md-mini-fab [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/descriptive_statistics/embed/analytics-box-plot-descriptive']" [queryParams]="analysisCall.queryParams()">
           <md-icon  color="primary"  class="md-24">share</md-icon>
         </a>
 
@@ -101,7 +106,7 @@
       <md-card-title-group align="center center" >
 
         <md-card-title>Histogram</md-card-title>
-        <a md-mini-fab [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/descriptive_statistics/embed/analytics-histogram-chart-descriptive']" [queryParams]="analysisCall.queryParams()">
+        <a target="_blank" md-mini-fab [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/descriptive_statistics/embed/analytics-histogram-chart-descriptive']" [queryParams]="analysisCall.queryParams()">
           <md-icon  color="primary"  class="md-24">share</md-icon>
         </a>
 

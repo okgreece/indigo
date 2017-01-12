@@ -12,6 +12,8 @@ import * as fromRoot from '../../../reducers';
   template: `
 <div class="card-container">
     <indigo-cube-analytics-preview *ngFor="let algorithm of algorithms" [cube]="cube" [algorithm]="algorithm"></indigo-cube-analytics-preview>
+    <hr/>
+    <indigo-cube-analytics-preview *ngFor="let algorithm of actualAlgorithms" [cube]="cube" [algorithm]="algorithm"></indigo-cube-analytics-preview>
 
 </div>
   `,
@@ -34,6 +36,7 @@ import * as fromRoot from '../../../reducers';
 })
 export class CubeAnalyticsListComponent {
   @Input() algorithms: Algorithm[];
+  @Input() actualAlgorithms: Algorithm[];
 
   cube$: Observable<Cube>;
   loading$: Observable<boolean>;
@@ -52,14 +55,18 @@ export class CubeAnalyticsListComponent {
 
       observable.subscribe(function (algorithms: Algorithm[]) {
         that.algorithms = algorithms;
+      });
 
 
 
-      })
+      let observable2: Observable<Algorithm[]> =
+        that.algorithmsService.getActualCompatibleAlgorithms(cube);
 
+      observable2.subscribe(function (algorithms: Algorithm[]) {
+        that.actualAlgorithms = algorithms;
+      });
 
     });
-
 
     setInterval(() => {
       // the following is required, otherwise the view will not be updated

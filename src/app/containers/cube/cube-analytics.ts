@@ -28,6 +28,7 @@ export class CubeAnalyticsPage {
   algorithmName: Observable<string> = new Observable<string>();
   constructor(private store: Store<fromRoot.State>, route: ActivatedRoute) {
     this.algorithmName = route.params.select<string>('algorithm');
+    debugger;
     route.params
       .select<string>('id')
       .map(id => new cubeActions.SelectAction(id))

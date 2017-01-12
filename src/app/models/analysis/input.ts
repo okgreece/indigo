@@ -30,4 +30,21 @@ export class Input {
   guess: boolean;
   required: boolean;
 
+  deserialize(data: any): Input {
+
+
+    this.name = data.name;
+    this.title = data.title;
+    this.cardinality = data.cardinality;
+    this.guess = data.guess;
+    this.default_value = data.default_value;
+    this.required = data.required;
+    this.data_type = data.data_type;
+    this.type = InputTypes[data.type];
+
+
+    return this;
+  }
+
 }
+

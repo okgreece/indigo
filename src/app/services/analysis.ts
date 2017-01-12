@@ -18,7 +18,7 @@ export class AnalysisService {
   execute(algorithm: Algorithm, inputs): Observable<any> {
 
 
-    if (algorithm.name === 'time_series') {
+    if (algorithm.name === 'time_series' || algorithm.name === 'TimeSeries') {
       return this.timeseries(algorithm, inputs);
 
     }
@@ -292,21 +292,26 @@ debugger;
     // body.set('x', "'" + JSON.stringify(json) + "'");
 
     return that.http.post(algorithm.endpoint.toString() + '/print', body).map(res => {
-      debugger;
       let response = res.json();
 
       let dimension = inputs['dimensions'];
       let descriptives = response.descriptives;
-      let frequencies: any = [];
-      for (let i = 0; i < response.frequencies.frequencies.length; i++) {
-        let val = {
-          frequency: response.frequencies.frequencies[i][dimension],
-          label: response.frequencies.frequencies[i]['_row'],
-          relative: response.frequencies['relative.frequencies'][i]
-        };
+      let frequencyKeys = Object.keys(response.frequencies.frequencies);
+      let frequencies: any = {};
+      for (let i = 0; i < frequencyKeys.length; i++) {
+        frequencies[frequencyKeys[i]] = [];
+        for (let j = 0; j < response.frequencies.frequencies[frequencyKeys[i]].length; j++) {
 
-        frequencies.push(val);
+          let val = {
+            frequency: response.frequencies.frequencies[frequencyKeys[i]][j]['Freq'],
+            label: response.frequencies.frequencies[frequencyKeys[i]][j]['Var1'],
+            relative: response.frequencies['relative.frequencies'][frequencyKeys[i]][j]
+          };
+          frequencies[frequencyKeys[i]].push(val);
+        }
       }
+
+
 
 
       let boxplotResponse = response.boxplot;
@@ -327,6 +332,7 @@ debugger;
         histogram['label'] = histogramKeys[i];
         histograms.push(histogram);
       }
+      debugger;
 
       return {
         descriptives: descriptives,

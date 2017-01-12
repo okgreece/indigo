@@ -3,8 +3,8 @@
  */
 import {
   ChangeDetectionStrategy, ViewEncapsulation,
-  Component, Input,   ElementRef,
-  AfterViewInit, ViewChild
+  Component, Input, ElementRef,
+  AfterViewInit, ViewChild, NgModule
 } from '@angular/core';
 import {Inject, NgZone, ChangeDetectorRef} from '@angular/core';
 import * as d3 from 'd3';
@@ -15,6 +15,8 @@ import * as _ from 'lodash';
 import {Store} from "@ngrx/store";
 import {Cube} from "../../../models/cube";
 import {AnalysisCall} from "../../../models/analysis/analysisCall";
+import {IterablePipe} from "../../../pipes/mapToIterable";
+
 
 @Component({
   selector: 'analytics-descriptive-output',
@@ -87,6 +89,9 @@ analytics-descriptive-output md-card {
 md-spinner svg{
 background: none;
 }
+md-card{
+margin:5px;
+}
 
   `]
 })
@@ -94,6 +99,8 @@ export class DescriptiveStatisticsOutputComponent extends AfterViewInit {
   get data(): any {
     return this._data;
   }
+
+
   @Input()
   set data(value: any) {
     this._data = value;

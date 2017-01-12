@@ -14,7 +14,7 @@ import {AnalysisCall} from '../../../models/analysis/analysisCall';
 import {AnalysisService} from '../../../services/analysis';
 import {Attribute} from '../../../models/attribute';
 import * as execution from '../../../actions/execution';
-import {ActivatedRoute, Router, NavigationEnd} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {FactRequest} from '../../../models/fact/factRequest';
 
 /**
@@ -133,13 +133,13 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
       this.cube$.subscribe(function (cube) {
         that.cube = cube;
 
-        let observable: Observable<Algorithm> = that.algorithmName.flatMap(name => that.algorithmsService.getAlgorithm(name));
-        that.algorithmsService.getAlgorithm(that.algorithmName);
+        let observable: Observable<Algorithm> = that.algorithmName.flatMap(name => that.algorithmsService.getAlgorithm(name, cube));
         observable.subscribe(function (algorithm: Algorithm) {
           that.algorithm = algorithm;
           let call = new AnalysisCall(algorithm, that.cube);
           call.deParametrizeInputs(that.route.snapshot.queryParams);
           that.analysisCall = call;
+          debugger;
           if (call.valid) that.execute(that.algorithm);
 
         });

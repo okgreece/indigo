@@ -8,5 +8,6 @@ export const environment = {
   apiUrl: 'http://next.openspending.org',
   DAMUrl: 'http://okfnrg.math.auth.gr/ocpu/',
   versionSuffix: '3',
-  baseHref: 'indigo/'
+  baseHref: 'indigo/',
+  DAMbase: 'http://192.168.2.101:5000'
 };

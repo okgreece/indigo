@@ -59,7 +59,7 @@ export class CubeAnalyticsEmbedComponent {
       that.cube = cube;
 
       let observable: Observable<Algorithm> =
-        that.algorithmsService.getAlgorithm(route.snapshot.params['algorithm']);
+        that.algorithmsService.getAlgorithm(route.snapshot.params['algorithm'], cube);
 
       observable.subscribe(function (algorithm: Algorithm) {
 

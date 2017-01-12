@@ -11,6 +11,7 @@ import {environment} from '../../environments/environment';
 
 @Injectable()
 export class AlgorithmsService {
+  private API_DAM_PATH: string = environment.DAMbase + '/cubes';
 
   constructor(private http: Http) {
   }
@@ -23,6 +24,32 @@ export class AlgorithmsService {
 
 
   }
+
+  getActualCompatibleAlgorithms(cube: Cube): Observable<Algorithm[]> {
+    let that = this;
+
+
+    return this.http.get(`${this.API_DAM_PATH}/${cube.name}/algo`)
+      .map(res => {
+
+        let response = res.json();
+
+        debugger;
+
+        let algorithms = [];
+        for (let algorithmName of response.algos) {
+           let algorithm = new Algorithm();
+           algorithm.name = algorithmName;
+           algorithm.title = algorithmName;
+           algorithms.push(algorithm);
+        }
+        return algorithms;
+      });
+
+
+  }
+
+
   getTimeSeriesAlgorithm(): Observable<Algorithm> {
     let that = this;
     return Observable.create(function (observer: any) {
@@ -37,13 +64,30 @@ export class AlgorithmsService {
     });
   }
 
-  getAlgorithm(name): Observable<Algorithm> {
+  getAlgorithm(name, cube: Cube): Observable<Algorithm> {
     switch (name) {
       case 'time_series':
         return this.getTimeSeriesAlgorithm();
       case 'descriptive_statistics':
         return this.getDescriptiveStatisticsAlgorithm();
+      default:
+        return  this.http.get(`${this.API_DAM_PATH}/algo/${name}`)
+        .map(res => {
+
+          let response = res.json();
+
+
+
+            let algorithm = new Algorithm().deserialize(response);
+
+          debugger;
+
+          return algorithm;
+        });
+
+
     }
+
   }
 
 
