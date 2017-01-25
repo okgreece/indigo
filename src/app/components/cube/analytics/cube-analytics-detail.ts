@@ -234,5 +234,11 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
 
   newFactRequest = new FactRequest;
 
+  aggregateShown = true;
+
+
+  toggleAggregate() {
+    this.aggregateShown = !this.aggregateShown;
+  }
 
 }

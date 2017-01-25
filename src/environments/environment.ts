@@ -5,9 +5,9 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://next.openspending.org',
-  DAMUrl: 'http://okfnrg.math.auth.gr/ocpu/',
+  apiUrl: 'http://ws307.math.auth.gr/rudolf/public',
+  openCpuEndpoint: 'http://okfnrg.math.auth.gr/ocpu/',
   versionSuffix: '3',
   baseHref: 'indigo/',
-  DAMbase: 'http://192.168.2.101:5000'
+  damBaseUrl: 'http://192.168.1.65:5000'
 };

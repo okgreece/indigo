@@ -18,9 +18,11 @@
                 <div *ngFor="let input of algorithm.inputs|iterable" class="col-sm-12">
                   <div
                     *ngIf="input.type==InputTypes.BABBAGE_AGGREGATE_RAW_DATA || input.type==InputTypes.BABBAGE_AGGREGATE_URI">
-                    <h4>Input: {{input.title}}</h4>
+                    <h4>Input: {{input.title}}
+                      <md-button-toggle (change)="toggleAggregate()" [checked]="aggregateShown">Show</md-button-toggle> 
+                    </h4>
 
-                    <aggregate-request-builder *ngIf="analysisCall?.inputs[input.name]" [cube]="cube$|async"
+                    <aggregate-request-builder *ngIf="analysisCall?.inputs[input.name]&&aggregateShown" [cube]="cube$|async"
                                                [(request)]="analysisCall?.inputs[input.name]"></aggregate-request-builder>
                   </div>
                   <div *ngIf="input.type==InputTypes.BABBAGE_FACT_RAW_DATA || input.type==InputTypes.BABBAGE_FACT_URI">

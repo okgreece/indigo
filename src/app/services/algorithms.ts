@@ -11,7 +11,7 @@ import {environment} from '../../environments/environment';
 
 @Injectable()
 export class AlgorithmsService {
-  private API_DAM_PATH: string = environment.DAMbase + '/cubes';
+  private API_DAM_PATH: string = environment.damBaseUrl + '/cubes';
 
   constructor(private http: Http) {
   }
@@ -141,7 +141,7 @@ export class AlgorithmsService {
     timeSeriesAlgorithm.outputs.set(json_output.name, json_output);
 
     timeSeriesAlgorithm.method = RequestMethod.Post;
-    timeSeriesAlgorithm.endpoint = new URL(environment.DAMUrl + '/library/TimeSeries.OBeu/R/open_spending.ts');
+    timeSeriesAlgorithm.endpoint = new URL(environment.openCpuEndpoint + '/library/TimeSeries.OBeu/R/open_spending.ts');
     timeSeriesAlgorithm.prompt = 'Select an aggregate, a time-related drilldown and the prediction steps parameter from the left and click on the execute button on top right.';
 
 
@@ -206,7 +206,7 @@ export class AlgorithmsService {
     descriptiveStatisticsAlgorithm.outputs.set(json_output.name, json_output);
 
     descriptiveStatisticsAlgorithm.method = RequestMethod.Post;
-    descriptiveStatisticsAlgorithm.endpoint = new URL(environment.DAMUrl + '/library/DescriptiveStats.OBeu/R/open_spending.ds');
+    descriptiveStatisticsAlgorithm.endpoint = new URL(environment.openCpuEndpoint + '/library/DescriptiveStats.OBeu/R/open_spending.ds');
 
 
     return descriptiveStatisticsAlgorithm;
