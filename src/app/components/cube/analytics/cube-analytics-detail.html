@@ -26,7 +26,14 @@
                                                [(request)]="analysisCall?.inputs[input.name]"></aggregate-request-builder>
                   </div>
                   <div *ngIf="input.type==InputTypes.BABBAGE_FACT_RAW_DATA || input.type==InputTypes.BABBAGE_FACT_URI">
-                    <h4>Input: {{input.title}} <md-button-toggle (change)="toggleFacts()" [checked]="factsShown">Expand</md-button-toggle>
+                    <h4>Input: {{input.title}} <md-button-toggle (change)="toggleFacts()" [checked]="factsShown">
+
+                      <md-icon class="md-24">visibility</md-icon>
+                    </md-button-toggle>
+                      <button md-tooltip="Execute" style="margin-left: auto" [disabled]="'false'" md-mini-fab>
+
+                        <md-icon class="md-24">directions run</md-icon>
+                      </button>
                     </h4>
 
                     <fact-request-builder *ngIf="analysisCall?.inputs[input.name]&&factsShown" [cube]="cube$|async" [(request)]="analysisCall?.inputs[input.name]"></fact-request-builder>

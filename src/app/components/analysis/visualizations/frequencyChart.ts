@@ -96,7 +96,7 @@ export class FrequencyVisualization extends AfterViewInit {
       .attr("height", viewerHeight + margin.top + margin.bottom)
       ;
 
-
+debugger;
     let sum = data.reduce(function (a, b) { return a + b.frequency; }, 0);
 
     let x = d3.scaleBand().rangeRound([0, viewerWidth]).padding(0.1),
@@ -233,7 +233,7 @@ export class FrequencyVisualization extends AfterViewInit {
   selector: 'analytics-frequency-chart-descriptive',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  template: `    <analytics-frequency-chart  style="min-height: 500px;"  [label_y]="Frequency" [label_x]="Dimension" [data]="data?.frequencies"></analytics-frequency-chart>`,
+  template: `<analytics-frequency-chart *ngFor="let item of data?.frequencies|iterable"   style="min-height: 500px;"  [label_y]="Frequency" [label_x]="Dimension" [data]="item"></analytics-frequency-chart>`,
   styles: [`
 
 
