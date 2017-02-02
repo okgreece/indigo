@@ -1,6 +1,6 @@
 import {
   Component, Input, Output, EventEmitter, ChangeDetectorRef,
-  ChangeDetectionStrategy, AfterViewInit
+  ChangeDetectionStrategy, AfterViewInit, NgModule
 } from '@angular/core';
 import * as fromRoot from '../../../reducers';
 import {Cube} from '../../../models/cube';
@@ -16,6 +16,7 @@ import {Attribute} from '../../../models/attribute';
 import * as execution from '../../../actions/execution';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FactRequest} from '../../../models/fact/factRequest';
+import {MdDialog, MdDialogRef} from "@angular/material";
 
 /**
  * Tip: Export type aliases for your component's inputs and outputs. Until we
@@ -63,6 +64,8 @@ export type RemoveOutput = Cube;
     
   `]
 })
+
+
 export class CubeAnalyticsDetailComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.cube$ = this.store.let(fromRoot.getSelectedCube);
@@ -117,7 +120,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
   public InputTypes = InputTypes;
 
 
-  public constructor(private store: Store<fromRoot.State>, private algorithmsService: AlgorithmsService,  private ref: ChangeDetectorRef, private analysisService: AnalysisService, private route: ActivatedRoute, private router: Router) {
+  public constructor(private store: Store<fromRoot.State>, private algorithmsService: AlgorithmsService,  private ref: ChangeDetectorRef, private analysisService: AnalysisService, private route: ActivatedRoute, private router: Router, public dialog: MdDialog) {
 
     setInterval(() => {
       // the following is required, otherwise the view will not be updated
@@ -170,6 +173,14 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
 
 
   }
+
+  openDialog() {
+    let dialogRef = this.dialog.open(DialogResultExampleDialog);
+    dialogRef.afterClosed().subscribe(result => {
+      this.selectedOption = result;
+    });
+  }
+  selectedOption: string;
 
   private prepareTimeSeries() {
     let dateTimeDimension = this.analysisCall.inputs['json_data'].drilldowns.find(drilldown => this.isDateTime(drilldown.column));
@@ -245,4 +256,33 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
     this.factsShown = !this.factsShown;
   }
 
+}
+
+
+@Component({
+  selector: 'dialog-result-example-dialog',
+template: `<div><h1>Preview Data</h1></div>
+<div><table>
+  <thead>
+  <tr><th>col1</th><th>col2</th><th>col3</th></tr>
+  
+  </thead>
+  <tbody>
+  <tr>
+    <td>data1</td>
+    <td>data2</td>
+    <td>data3</td>
+  </tr>
+  </tbody>
+  
+</table></div>
+
+
+`
+/*
+  templateUrl: './dialog-result-example-dialog.html',
+*/
+})
+export class DialogResultExampleDialog {
+  constructor(public dialogRef: MdDialogRef<DialogResultExampleDialog>) {}
 }
