@@ -39,7 +39,7 @@ import {environment} from '../environments/environment';
 import {APP_BASE_HREF} from '@angular/common';
 import {CubeAnalyticsEmbedPage} from './containers/cube/cube-analytics-embed-page';
 import {CubeExistsLightGuard} from "./guards/cube-exists-light";
-import {DialogResultExampleDialog} from "./components/cube/analytics/cube-analytics-detail";
+import {AggregatePreviewDialog, FactsPreviewDialog} from "./components/cube/analytics/cube-analytics-detail";
 
 
 
@@ -107,7 +107,8 @@ import {DialogResultExampleDialog} from "./components/cube/analytics/cube-analyt
     CollectionCubePageComponent,
     NotFoundPageComponent,
     CubeAnalyticsEmbedPage,
-    DialogResultExampleDialog
+    FactsPreviewDialog,
+    AggregatePreviewDialog
   ],
   providers: [
     BookExistsGuard,
@@ -123,7 +124,7 @@ import {DialogResultExampleDialog} from "./components/cube/analytics/cube-analyt
   bootstrap: [
     AppComponent
   ],
-  entryComponents: [DialogResultExampleDialog],
+  entryComponents: [FactsPreviewDialog, AggregatePreviewDialog],
 
 })
 export class AppModule {

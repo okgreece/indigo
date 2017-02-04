@@ -17,6 +17,9 @@ import * as execution from '../../../actions/execution';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FactRequest} from '../../../models/fact/factRequest';
 import {MdDialog, MdDialogRef} from "@angular/material";
+import {ApiCubesService} from "../../../services/api-cubes";
+import {IterablePipe} from "../../../pipes/mapToIterable";
+import {PipesModule} from "../../../pipes/index";
 
 /**
  * Tip: Export type aliases for your component's inputs and outputs. Until we
@@ -38,30 +41,34 @@ export type RemoveOutput = Cube;
       justify-content: center;
       margin: 30px 0;
     }
-  
+
     md-card-title {
       margin-left: 10px;
     }
+
     img {
       max-width: 100%;
       margin-left: 5px;
     }
+
     md-card-content {
       margin-top: 15px;
       margin-bottom: 125px;
     }
+
     md-card-footer {
       padding-bottom: 75px;
     }
-    
-     md-toolbar-row [md-mini-fab]{
-      margin:2px;
-    
+
+    md-toolbar-row [md-mini-fab] {
+      margin: 2px;
+
     }
- .well {
-  background-color: #615f5f;
-}
-    
+
+    .well {
+      background-color: #615f5f;
+    }
+
   `]
 })
 
@@ -72,17 +79,18 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
     this.loading$ = this.store.let(fromRoot.getExecutionLoading);
 
 
-
-
   }
+
   get algorithmName(): Observable<string> {
     return this._algorithmName;
   }
+
   @Input()
   set algorithmName(value: Observable<string>) {
     this._algorithmName = value;
 
   }
+
   get analysisCall() {
     return this._analysisCall;
   }
@@ -120,7 +128,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
   public InputTypes = InputTypes;
 
 
-  public constructor(private store: Store<fromRoot.State>, private algorithmsService: AlgorithmsService,  private ref: ChangeDetectorRef, private analysisService: AnalysisService, private route: ActivatedRoute, private router: Router, public dialog: MdDialog) {
+  public constructor(private store: Store<fromRoot.State>, private algorithmsService: AlgorithmsService, private ref: ChangeDetectorRef, private analysisService: AnalysisService, private route: ActivatedRoute, private router: Router, public dialog: MdDialog, public apiCubesService: ApiCubesService) {
 
     setInterval(() => {
       // the following is required, otherwise the view will not be updated
@@ -168,19 +176,48 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
   }
 
 
-
   public canExecute() {
 
 
   }
 
-  openDialog() {
-    let dialogRef = this.dialog.open(DialogResultExampleDialog);
-    dialogRef.afterClosed().subscribe(result => {
-      this.selectedOption = result;
+  openFactsDialog(input) {
+
+    let that = this;
+    this.apiCubesService.fact(this.analysisCall.inputs[input.name]).subscribe(function (json) {
+      let dialogRef = that.dialog.open(FactsPreviewDialog);
+      dialogRef.componentInstance['json'] = json;
+      dialogRef.componentInstance['request'] = that.analysisCall.inputs[input.name];
+      dialogRef.componentInstance['cube'] = that.cube;
+
+
+/*      dialogRef.afterClosed().subscribe(result => {
+        that.selectedOption = result;
+      });*/
     });
+
+
   }
-  selectedOption: string;
+
+  openAggregateDialog(input) {
+
+    let that = this;
+    this.apiCubesService.aggregate(this.analysisCall.inputs[input.name]).subscribe(function (json) {
+      let dialogRef = that.dialog.open(AggregatePreviewDialog);
+      dialogRef.componentInstance['json'] = json;
+      dialogRef.componentInstance['request'] = that.analysisCall.inputs[input.name];
+      dialogRef.componentInstance['cube'] = that.cube;
+
+
+/*      dialogRef.afterClosed().subscribe(result => {
+        that.selectedOption = result;
+      });*/
+    });
+
+
+  }
+
+
 
   private prepareTimeSeries() {
     let dateTimeDimension = this.analysisCall.inputs['json_data'].drilldowns.find(drilldown => this.isDateTime(drilldown.column));
@@ -231,7 +268,6 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
       this.prepareDescriptiveStatistics();
 
 
-
     let that = this;
     this.store.dispatch(new execution.ExecuteAction(null));
 
@@ -240,7 +276,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
         that.analysisCall.outputs['values'] = values;
         that.ref.detectChanges();
         that.store.dispatch(new execution.ExecuteCompleteAction(null));
-    });
+      });
   }
 
   newFactRequest = new FactRequest;
@@ -252,6 +288,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
   toggleAggregate() {
     this.aggregateShown = !this.aggregateShown;
   }
+
   toggleFacts() {
     this.factsShown = !this.factsShown;
   }
@@ -260,29 +297,94 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
 
 
 @Component({
-  selector: 'dialog-result-example-dialog',
-template: `<div><h1>Preview Data</h1></div>
-<div><table>
-  <thead>
-  <tr><th>col1</th><th>col2</th><th>col3</th></tr>
-  
-  </thead>
-  <tbody>
-  <tr>
-    <td>data1</td>
-    <td>data2</td>
-    <td>data3</td>
-  </tr>
-  </tbody>
-  
-</table></div>
+  selector: 'facts-preview-dialog',
+  template: `
+    <div style="color: white"><h1>Facts preview ({{json.data.length}} records)</h1></div>
+    <div style="max-height: 400px; overflow: scroll; background: white">
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th *ngFor="let col of json.fields">
+            <span *ngIf="cube.model.attributes.get(col)">{{cube.model.attributes.get(col)?.dimension.label}} - {{cube.model.attributes.get(col)?.label}}</span>
+            <span *ngIf="cube.model.measures.get(col)">{{cube.model.measures.get(col)?.label}}</span>
+            
+          
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of json.data">
+          <td *ngFor="let col of json.fields">{{item[col]}}</td>
+        </tr>
+        </tbody>
+
+      </table>
+    </div>
 
 
-`
-/*
-  templateUrl: './dialog-result-example-dialog.html',
-*/
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush
+  /*
+   templateUrl: './facts-preview-dialog.html',
+   */
 })
-export class DialogResultExampleDialog {
-  constructor(public dialogRef: MdDialogRef<DialogResultExampleDialog>) {}
+
+@NgModule({
+  imports: [
+
+    PipesModule,
+
+  ],
+
+})
+export class FactsPreviewDialog {
+  constructor(public dialogRef: MdDialogRef<FactsPreviewDialog>) {
+  }
+}
+
+
+@Component({
+  selector: 'aggregate-preview-dialog',
+  template: `
+    <div style="color: white"><h1>Aggregate preview ({{json.cells.length}} results)</h1></div>
+    <div style="max-height: 400px; overflow: scroll; background: white">
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th *ngFor="let col of json.attributes">
+            <span *ngIf="cube.model.attributes.get(col)">{{cube.model.attributes.get(col)?.dimension.label}} - {{cube.model.attributes.get(col)?.label}}</span>
+
+          </th>
+          <th *ngFor="let col of json.aggregates">
+            <span *ngIf="cube.model.aggregates.get(col)">{{cube.model.aggregates.get(col)?.label}}</span>
+
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of json.cells">
+          <td *ngFor="let col of json.attributes">{{item[col]}}</td>
+          <td *ngFor="let col of json.aggregates">{{item[col]}}</td>
+        </tr>
+        </tbody>
+
+      </table>
+    </div>
+
+
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+
+@NgModule({
+  imports: [
+
+    PipesModule,
+
+  ],
+
+})
+export class AggregatePreviewDialog {
+  constructor(public dialogRef: MdDialogRef<AggregatePreviewDialog>) {
+  }
 }

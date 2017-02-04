@@ -78,7 +78,7 @@ import {FactRequest} from "../../models/fact/factRequest";
     
   `]
 })
-export class FactRequestBuilder{
+export class FactRequestBuilder {
 
 
   @Output()
@@ -185,11 +185,11 @@ export class FactRequestBuilder{
   setCutValue(member:string){
     this.newCutValueVal = member;
   }
-  members:Map<string, Map<string,Object>> = new Map<string, Map<string,Object>>();
+  members: Map<string, Map<string,Object>> = new Map<string, Map<string,Object>>();
 
   cutMembers:string[]=[];
 
-  transitivities:Transitivity[] = Transitivity.staticFactory();
+  transitivities: Transitivity[] = Transitivity.staticFactory();
 
   newCutTransitivity: Transitivity = this.transitivities[0];
 

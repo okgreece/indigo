@@ -84,7 +84,7 @@ export class ApiCubesService {
 
   }
 
-  fact(element: any): Observable<Cube> {
+  fact(element: any): Observable<any> {
     let url = '';
     if (element instanceof FactRequest) {
       url = this.factToUri(element);
