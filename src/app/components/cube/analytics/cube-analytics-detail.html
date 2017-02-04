@@ -6,7 +6,12 @@
           <md-card-content *ngIf="algorithm">
             <p>
               <md-toolbar color="primary">
-                <h4>{{ (cube$|async).pckg.title }}: {{ algorithm.title }}</h4>
+
+                <h4> <button md-tooltip="Back" style="margin-left: auto" [disabled]="'false'" md-mini-fab
+                             [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/']">
+
+                  <md-icon class="md-24">arrow_back</md-icon>
+                </button>{{ (cube$|async).pckg.title }}: {{ algorithm.title }}</h4>
                 <button md-tooltip="Execute" style="margin-left: auto" [disabled]="'false'" md-mini-fab
                         [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/'+ algorithm.name]"
                         [queryParams]="analysisCall.queryParams()">
