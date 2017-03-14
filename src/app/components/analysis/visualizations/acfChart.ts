@@ -19,7 +19,7 @@ import {AnalysisVisualization} from "../visualization";
   selector: 'analytics-acf-chart',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  template: require('./acfChart.html'),
+  templateUrl: './acfChart.html',
   styles: [`
 
   

@@ -17,7 +17,7 @@ import {AnalysisVisualization} from '../visualization';
   selector: 'analytics-scatter-plot',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  template: require('./scatterPlot.html'),
+  templateUrl: './scatterPlot.html',
   styles: [`
 
   
@@ -277,7 +277,7 @@ export class ScatterPlotVisualization extends AfterViewInit {
 
 .line {
   fill: none;
-  stroke: steelblue;
+  stroke: #82bf5e;
   stroke-width: 2px;
 }
 
@@ -307,7 +307,7 @@ export class ScatterPlotVisualization extends AfterViewInit {
 
 .lineLow80 {
   fill: none;
-  stroke: yellow;
+  stroke: gold;
   stroke-width: 2px;
   stroke-dasharray: 5, 5;
 
@@ -357,7 +357,7 @@ export class ScatterPlotTimeseriesDecompositionFittedResiduals extends AnalysisV
 
 .line {
   fill: none;
-  stroke: steelblue;
+  stroke: #82bf5e;
   stroke-width: 2px;
 }
 
@@ -387,7 +387,7 @@ export class ScatterPlotTimeseriesDecompositionFittedResiduals extends AnalysisV
 
 .lineLow80 {
   fill: none;
-  stroke: yellow;
+  stroke: gold;
   stroke-width: 2px;
   stroke-dasharray: 5, 5;
 

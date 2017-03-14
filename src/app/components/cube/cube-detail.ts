@@ -37,7 +37,7 @@ import {Model} from "../../models/model";
       padding-bottom: 75px;
     }
   `],
-  template: require('./cube-detail.html')
+  templateUrl: './cube-detail.html'
 
 
 })
@@ -71,7 +71,7 @@ export class CubeDetailComponent {
 
   get id() {
 
-    return this.cube?this.cube.id:"";
+    return this.cube ? this.cube.id : "";
   }
 
   get name() {

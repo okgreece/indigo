@@ -17,7 +17,7 @@ import {AnalysisVisualization} from "../visualization";
   selector: 'analytics-line-chart',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  template: require('./lineChart.html'),
+  templateUrl: './lineChart.html',
   styles: [`
 
   
@@ -320,7 +320,7 @@ export class LineChartVisualization extends AfterViewInit {
 
 .line {
   fill: none;
-  stroke: steelblue;
+  stroke: #82bf5e;
   stroke-width: 2px;
 }
 
@@ -350,7 +350,7 @@ export class LineChartVisualization extends AfterViewInit {
 
 .lineLow80 {
   fill: none;
-  stroke: yellow;
+  stroke: gold;
   stroke-width: 1.5px;
   stroke-dasharray: 5, 5;
 
@@ -396,7 +396,7 @@ export class LineChartTrends  extends AnalysisVisualization {
 
 .line {
   fill: none;
-  stroke: steelblue;
+  stroke: #82bf5e;
   stroke-width: 2px;
 }
 
@@ -426,7 +426,7 @@ export class LineChartTrends  extends AnalysisVisualization {
 
 .lineLow80 {
   fill: none;
-  stroke: yellow;
+  stroke: gold;
   stroke-width: 1.5px;
   stroke-dasharray: 5, 5;
 
@@ -475,7 +475,7 @@ export class LineChartRemainders  extends AnalysisVisualization {
 
 .line {
   fill: none;
-  stroke: steelblue;
+  stroke: #82bf5e;
   stroke-width: 2px;
 }
 
@@ -505,7 +505,7 @@ export class LineChartRemainders  extends AnalysisVisualization {
 
 .lineLow80 {
   fill: none;
-  stroke: yellow;
+  stroke: gold;
   stroke-width: 1.5px;
   stroke-dasharray: 5, 5;
 
@@ -554,7 +554,7 @@ export class LineChartFittingResiduals  extends AnalysisVisualization {
 
 .line {
   fill: none;
-  stroke: steelblue;
+  stroke: #82bf5e;
   stroke-width: 2px;
 }
 
@@ -584,7 +584,7 @@ export class LineChartFittingResiduals  extends AnalysisVisualization {
 
 .lineLow80 {
   fill: none;
-  stroke: yellow;
+  stroke: gold;
   stroke-width: 1.5px;
   stroke-dasharray: 5, 5;
 
@@ -635,7 +635,7 @@ export class LineChartFittingTimeFitted  extends AnalysisVisualization {
 
 .line {
   fill: none;
-  stroke: steelblue;
+  stroke: #82bf5e;
   stroke-width: 2px;
 }
 
@@ -665,7 +665,7 @@ export class LineChartFittingTimeFitted  extends AnalysisVisualization {
 
 .lineLow80 {
   fill: none;
-  stroke: yellow;
+  stroke: gold;
   stroke-width: 1.5px;
   stroke-dasharray: 5, 5;
 

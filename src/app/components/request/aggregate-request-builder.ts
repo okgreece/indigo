@@ -29,7 +29,7 @@ import {Cube} from '../../models/cube';
   selector: 'aggregate-request-builder',
   changeDetection: ChangeDetectionStrategy.Default, // ⇐⇐⇐
   encapsulation: ViewEncapsulation.None,
-  template: require('./aggreegate-request-builder.html'),
+  templateUrl: './aggreegate-request-builder.html',
   styles: [`
 ul.alt-list {
   padding: 0;

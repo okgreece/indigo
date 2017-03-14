@@ -30,7 +30,7 @@ import {FactRequest} from "../../models/fact/factRequest";
   selector: 'fact-request-builder',
   changeDetection: ChangeDetectionStrategy.Default, // ⇐⇐⇐
   encapsulation: ViewEncapsulation.None,
-  template: require('./fact-request-builder.html'),
+  templateUrl: './fact-request-builder.html',
   styles: [`
   ul.alt-list{padding:0; margin:10px 0}
     ul.alt-list li {

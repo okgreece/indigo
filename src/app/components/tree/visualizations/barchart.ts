@@ -6,7 +6,6 @@ import {
 } from '@angular/core';
 import {Inject,  ChangeDetectorRef} from '@angular/core';
 import * as d3 from 'd3';
-import Timer = NodeJS.Timer;
 import {ExpressionTree} from "../../../models/expressionTree";
 import {Store} from "@ngrx/store";
 import {ExpressionNode} from "../../../models/expressionNode";
@@ -23,7 +22,7 @@ declare let $: JQueryStatic;
   selector: 'barchart',
   changeDetection: ChangeDetectionStrategy.OnPush, // ⇐⇐⇐
   encapsulation: ViewEncapsulation.None,
-  template: require('../visualization.html'),
+  templateUrl: '../visualization.html',
   styles: [`
 
   

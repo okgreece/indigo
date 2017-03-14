@@ -23,6 +23,7 @@ export class Input {
 
   name: string;
   cardinality: string = '1';
+  description: string;
   type: string;
   title: string;
   data_type: string;

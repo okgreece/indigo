@@ -7,7 +7,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { DBModule } from '@ngrx/db';
 import { RouterStoreModule } from '@ngrx/router-store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { MaterialModule } from '@angular/material';
+import {MaterialModule, MaterialRootModule} from '@angular/material';
 
 import { ComponentsModule } from './components';
 import { BookEffects } from './effects/book';
@@ -40,7 +40,11 @@ import {APP_BASE_HREF} from '@angular/common';
 import {CubeAnalyticsEmbedPage} from './containers/cube/cube-analytics-embed-page';
 import {CubeExistsLightGuard} from "./guards/cube-exists-light";
 import {AggregatePreviewDialog, FactsPreviewDialog} from "./components/cube/analytics/cube-analytics-detail";
-
+import {FlexLayoutModule} from "@angular/flex-layout";
+import 'hammerjs';
+import {FlexDirective} from "@angular/flex-layout/flexbox/api/flex";
+import {NgxDatatableModule} from "@swimlane/ngx-datatable";
+import { CovalentCoreModule } from '@covalent/core';
 
 
 @NgModule({
@@ -48,9 +52,11 @@ import {AggregatePreviewDialog, FactsPreviewDialog} from "./components/cube/anal
 
     CommonModule,
     BrowserModule,
-    MaterialModule.forRoot(),
+    MaterialRootModule,
+    FlexLayoutModule,
     ComponentsModule,
     RouterModule.forRoot(routes, { useHash: true }),
+
     /**
      * StoreModule.provideStore is imported once in the root module, accepting a reducer
      * function or object map of reducer functions. If passed an object of
@@ -108,7 +114,7 @@ import {AggregatePreviewDialog, FactsPreviewDialog} from "./components/cube/anal
     NotFoundPageComponent,
     CubeAnalyticsEmbedPage,
     FactsPreviewDialog,
-    AggregatePreviewDialog
+    AggregatePreviewDialog,
   ],
   providers: [
     BookExistsGuard,

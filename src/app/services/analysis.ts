@@ -37,8 +37,11 @@ export class AnalysisService {
     body.set('prediction_steps', inputs['prediction_steps']);
     body.set('json_data', "'" + inputs['json_data'] + "'");
 
-    return that.http.post(algorithm.endpoint.toString() + '/print', body).map(res => {
+    return that.http.post(algorithm.endpoint.toString() , body).map(res => {
       let response = res.json();
+
+      debugger;
+
       let forecasts = response["forecasts"];
       let values: any = [];
       for (let i = 0; i < forecasts.data_year.length; i++) {

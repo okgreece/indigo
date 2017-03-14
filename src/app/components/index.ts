@@ -23,7 +23,6 @@ import {TreeBuilder} from './tree/tree-builder';
 import {BarChartVisualization} from './tree/visualizations/barchart';
 import {AggregateRequestBuilder} from './request/aggregate-request-builder';
 import {JsonTreeComponent} from '../lib/json-tree/json-tree';
-import {ModalModule} from 'ng2-bootstrap';
 import {JsonNodeComponent} from '../lib/json-tree/json-node';
 import {CubeAnalyticsDetailComponent} from './cube/analytics/cube-analytics-detail';
 import {
@@ -49,8 +48,10 @@ import {BoxPlotVisualization, BoxPlotDescriptive} from './analysis/visualization
 import {HistogramVisualization, HistogramDescriptive} from './analysis/visualizations/histogram';
 import DynamicComponent from './dynamic-component';
 import {MasonryModule} from 'angular2-masonry';
-import {CubeAnalyticsEmbedComponent} from "./cube/analytics/embed/embed";
+import {CubeAnalyticsEmbedComponent} from './cube/analytics/embed/embed';
 import LineString = GeoJSON.LineString;
+import {FlexLayoutModule} from '@angular/flex-layout';
+
 
 
 export const COMPONENTS = [
@@ -114,8 +115,8 @@ export const COMPONENTS = [
     RouterModule,
     PipesModule,
     FormsModule,
-    ModalModule,
     MasonryModule,
+    FlexLayoutModule
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,

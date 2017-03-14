@@ -1,6 +1,5 @@
 import {Cube} from "../../models/cube";
 import {Observable} from "rxjs/Rx";
-import {ModalDirective} from 'ng2-bootstrap/ng2-bootstrap';
 
 import {
   ChangeDetectionStrategy, ViewEncapsulation,
@@ -9,7 +8,7 @@ import {
 } from '@angular/core';
 import {Inject, NgZone, ChangeDetectorRef} from '@angular/core';
 
-import Timer = NodeJS.Timer;
+
 import {ExpressionTree} from "../../models/expressionTree";
 import {State, getTree} from "../../reducers/index";
 import {Store} from "@ngrx/store";
@@ -39,7 +38,7 @@ console.log('`Tree Builder` component loaded asynchronously');
   selector: 'bc-tree-builder',
   changeDetection: ChangeDetectionStrategy.OnPush, // ⇐⇐⇐
   encapsulation: ViewEncapsulation.None,
-  template: require('./tree-builder.html'),
+  templateUrl: './tree-builder.html',
   styles: [`
      .node {
       cursor: pointer;
@@ -133,7 +132,7 @@ export class TreeBuilder implements AfterViewInit {
   expressionTreeInstance: ExpressionTree;
   length: number;
   @ViewChild('drawingCanvas') drawingCanvas;
-  @ViewChild('jsonModal') jsonModal: ModalDirective;
+  @ViewChild('jsonModal') jsonModal: any;
 
   constructor(@Inject(ElementRef) elementRef: ElementRef,
               @MetadataAttribute('width') width: number,
@@ -539,7 +538,7 @@ export class TreeBuilder implements AfterViewInit {
 
   }
 
-  @ViewChild('childModal') public childModal: ModalDirective;
+  @ViewChild('childModal') public childModal: any;
 
   public showChildModal(): void {
     this.editableExpressionTreeInstance = JSON.stringify(this.expressionTreeInstance);

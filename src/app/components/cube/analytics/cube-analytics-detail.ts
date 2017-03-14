@@ -34,8 +34,17 @@ export type RemoveOutput = Cube;
 @Component({
   selector: 'cube-analytics-detail',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: require('./cube-analytics-detail.html'),
+  templateUrl: './cube-analytics-detail.html',
   styles: [`
+
+    .indigo-icon {
+      padding: 0 14px;
+    }
+
+
+    .example-spacer {
+      flex: 1 1 auto;
+    }
     :host {
       display: flex;
       justify-content: center;
@@ -43,7 +52,14 @@ export type RemoveOutput = Cube;
     }
 
     md-card-title {
-      margin-left: 10px;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      margin-bottom: 0;
+    }
+
+    .mat-button-toggle-checked {
+      background-color: transparent;
     }
 
     img {
@@ -68,6 +84,18 @@ export type RemoveOutput = Cube;
     .well {
       background-color: #615f5f;
     }
+    
+    
+    md-card.input-card md-card-header{
+      background: #82BF5E;
+    }
+
+
+
+    md-card.input-card {
+      background: dimgray;
+    }
+    
 
   `]
 })
@@ -150,6 +178,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
           let call = new AnalysisCall(algorithm, that.cube);
           call.deParametrizeInputs(that.route.snapshot.queryParams);
           that.analysisCall = call;
+          debugger;
           if (call.valid) that.execute(that.algorithm);
 
         });

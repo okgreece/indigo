@@ -19,7 +19,7 @@ import {AnalysisVisualization} from "../visualization";
   selector: 'analytics-box-plot',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  template: require('./boxPlot.html'),
+  templateUrl: './boxPlot.html',
   styles: [`
 
   

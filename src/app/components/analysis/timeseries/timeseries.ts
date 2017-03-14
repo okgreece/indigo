@@ -15,7 +15,7 @@ import {Cube} from '../../../models/cube';
   selector: 'analytics-timeseries-output',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  template: require('./timeseries.html'),
+  templateUrl: './timeseries.html',
   styles: [`
 .axis path,
 .axis line {
@@ -30,7 +30,7 @@ import {Cube} from '../../../models/cube';
 
 .line {
   fill: none;
-  stroke: steelblue;
+  stroke: #82bf5e;
   stroke-width: 2px;
 }
 
@@ -60,14 +60,14 @@ import {Cube} from '../../../models/cube';
 
 .lineLow80 {
   fill: none;
-  stroke: yellow;
+  stroke: gold;
   stroke-width: 1.5px;
   stroke-dasharray: 5, 5;
 
 }
 
 svg {
-  background: url("public/sprites/grid_paper.png");
+  background: url("src/public/sprites/grid_paper.png");
   font-family: monospace;
 }
 
@@ -127,7 +127,7 @@ export class TimeSeriesOutputComponent extends AfterViewInit {
 
 
 
-  @ViewChild('container') container:any;
+  @ViewChild('container') container: any;
 
 
  private _data: any;

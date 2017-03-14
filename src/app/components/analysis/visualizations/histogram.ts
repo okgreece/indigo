@@ -17,7 +17,7 @@ import {AnalysisVisualization} from "../visualization";
   selector: 'analytics-histogram',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  template: require('./histogram.html'),
+  templateUrl: './histogram.html',
   styles: [`
 
   
@@ -74,26 +74,26 @@ export class HistogramVisualization extends AfterViewInit {
 
 
     let lineData = [];
-    for(let i=0;i<data.cuts.length; i++){
+    for (let i = 0; i < data.cuts.length; i++) {
       lineData.push({
-        x: data.cuts[i],
-        y: data["normal.curve"][i]
+        x: data["normal.curve.x"][i],
+        y: data["normal.curve.y"][i]
       });
     }
 
     let boxData = [];
-    for(let i=0;i<data.counts.length; i++){
+    for(let i=0;i<data.density.length; i++){
       boxData.push({
         from: data.cuts[i],
         to: data.cuts[i + 1],
-        frequency : data.counts[i]
+        frequency : data.density[i]
       });
     }
 
 
 
-    let max = d3.max([d3.max(data.counts), d3.max(data["normal.curve"])]);
-    let min = d3.min([d3.min(data.counts), d3.min(data["normal.curve"])]);
+    let max = d3.max([d3.max(data.density), d3.max(data["normal.curve.y"])]);
+    let min = d3.min([d3.min(data.density), d3.min(data["normal.curve.y"])]);
 
     let x_max = d3.max(data.cuts);
     let x_min = d3.min(data.cuts);
@@ -264,7 +264,7 @@ export class HistogramVisualization extends AfterViewInit {
   
   .line {
   fill: none;
-  stroke: #000;
+  stroke: #82bf5e;
   shape-rendering: crispEdges;
 }
 

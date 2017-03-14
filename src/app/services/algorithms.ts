@@ -11,7 +11,7 @@ import {environment} from '../../environments/environment';
 
 @Injectable()
 export class AlgorithmsService {
-  private API_DAM_PATH: string = environment.damBaseUrl + '/cubes';
+  private API_DAM_PATH: string = environment.DAMUrl + '/cubes';
 
   constructor(private http: Http) {
   }
@@ -93,6 +93,7 @@ export class AlgorithmsService {
     let timeSeriesAlgorithm = new Algorithm();
     timeSeriesAlgorithm.title = 'Time Series';
     timeSeriesAlgorithm.name = 'time_series';
+    timeSeriesAlgorithm.description = 'Time series analysis comprises methods for analyzing time series data in order to extract meaningful statistics and other characteristics of the data. Time series forecasting is the use of a model to predict future values based on previously observed values. While regression analysis is often employed in such a way as to test theories that the current values of one or more independent time series affect the current value of another time series, this type of analysis of time series is not called "time series analysis", which focuses on comparing values of a single time series or multiple dependent time series at different points in time.';
 
     let raw_data_input = new Input();
     raw_data_input.cardinality = '1';
@@ -100,6 +101,7 @@ export class AlgorithmsService {
     raw_data_input.name = 'json_data';
     raw_data_input.title = 'Data coming from an aggregation';
     raw_data_input.guess = false;
+    raw_data_input.description = 'This is the aggregated data that will be sent to the time series algorithm. You need to select at least a year-related drilldown and an amount-related aggregate.';
     raw_data_input.required = true;
 
     let time_dimension_input = new Input();
@@ -107,6 +109,7 @@ export class AlgorithmsService {
     time_dimension_input.type = InputTypes.ATTRIBUTE_REF;
     time_dimension_input.name = 'time';
     time_dimension_input.title = 'Time dimension';
+    time_dimension_input.description = 'This is the time dimension that should exist in the aggregation result.';
     time_dimension_input.guess = true;
     time_dimension_input.required = true;
 
@@ -115,6 +118,7 @@ export class AlgorithmsService {
     amount_aggregate_input.type = InputTypes.AGGREGATE_REF;
     amount_aggregate_input.name = 'amount';
     amount_aggregate_input.title = 'Amount aggregate';
+    amount_aggregate_input.description = 'This is the amount aggregate that should exist in the aggregation result';
     amount_aggregate_input.guess = true;
     amount_aggregate_input.required = true;
 
@@ -123,6 +127,7 @@ export class AlgorithmsService {
     prediction_steps_input.type = InputTypes.PARAMETER;
     prediction_steps_input.name = 'prediction_steps';
     prediction_steps_input.title = 'Prediction Steps';
+    prediction_steps_input.description = 'The number of time steps you want to get prediction for.';
     prediction_steps_input.data_type = 'number';
     prediction_steps_input.default_value = 4;
     prediction_steps_input.guess = false;
@@ -141,8 +146,8 @@ export class AlgorithmsService {
     timeSeriesAlgorithm.outputs.set(json_output.name, json_output);
 
     timeSeriesAlgorithm.method = RequestMethod.Post;
-    timeSeriesAlgorithm.endpoint = new URL(environment.openCpuEndpoint + '/library/TimeSeries.OBeu/R/open_spending.ts');
-    timeSeriesAlgorithm.prompt = 'Select an aggregate, a time-related drilldown and the prediction steps parameter from the left and click on the execute button on top right.';
+    timeSeriesAlgorithm.endpoint = new URL(environment.openCpuEndpoint + '/library/TimeSeries.OBeu/R/open_spending.ts/print');
+    timeSeriesAlgorithm.prompt = 'Build an aggregate, with a time-related drilldown and then enter the prediction steps parameter from the left and click on the execute button on top right.';
 
 
     return timeSeriesAlgorithm;
@@ -155,6 +160,7 @@ export class AlgorithmsService {
     let descriptiveStatisticsAlgorithm = new Algorithm();
     descriptiveStatisticsAlgorithm.title = 'Descriptive Statistics';
     descriptiveStatisticsAlgorithm.name = 'descriptive_statistics';
+    descriptiveStatisticsAlgorithm.description = 'Descriptive statistics provide simple summaries about the sample and about the observations that have been made. Such summaries may be either quantitative, i.e. summary statistics, or visual, i.e. simple-to-understand graphs. These summaries may either form the basis of the initial description of the data as part of a more extensive statistical analysis, or they may be sufficient in and of themselves for a particular investigation.';
 
 
     let raw_data_input = new Input();

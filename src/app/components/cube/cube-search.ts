@@ -10,7 +10,10 @@ import {Component, Output, Input, EventEmitter, AfterViewInit} from '@angular/co
     <md-card>
       <md-card-title>Find a Cube</md-card-title>
       <md-card-content>
-        <md-input placeholder="Search for a cube" [value]="query" (keyup)="search.emit($event.target.value)"></md-input>
+        <md-input-container>
+          <input mdInput placeholder="Search for a cube" [value]="query" (keyup)="search.emit($event.target.value)"/>
+        </md-input-container>
+       
         <md-spinner [class.show]="searching"></md-spinner>
       </md-card-content>
     </md-card>

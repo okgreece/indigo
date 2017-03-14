@@ -19,7 +19,7 @@ import {AnalysisVisualization} from "../visualization";
   selector: 'analytics-frequency-chart',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  template: require('./frequencyChart.html'),
+  templateUrl: './frequencyChart.html',
   styles: [`
 
   

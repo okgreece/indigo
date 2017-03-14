@@ -8,7 +8,7 @@ import {Observable} from "rxjs";
 
 @Component({
   selector: 'bc-layout',
-  template: `<md-sidenav-layout fullscreen>
+  template: `<md-sidenav-container fullscreen>
    
   <bc-sidenav [open]="showSidenav$ | async">
 
@@ -24,7 +24,7 @@ import {Observable} from "rxjs";
   </bc-toolbar>
   <router-outlet></router-outlet>
 
-</md-sidenav-layout>
+</md-sidenav-container>
   `,
   styles: [`
 

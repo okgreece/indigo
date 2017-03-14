@@ -20,7 +20,7 @@ const initialState: State = {
   selectedCubeId: null,
 };
 
-export function reducer(state = initialState, action: cube.Actions | collection.Actions): State {
+export function reducer(state = initialState, action: cube.Actions | collection.Actions | any): State {
   switch (action.type) {
     case cube.ActionTypes.SEARCH_COMPLETE:
     case collection.ActionTypes.LOAD_SUCCESS: {

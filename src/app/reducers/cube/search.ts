@@ -63,5 +63,6 @@ export function getQuery(state$: Observable<State>) {
 
 export function getLoading(state$: Observable<State>) {
   return state$.select(state => {
-    return state.loading
-  });}
+    return state.loading;
+  });
+}

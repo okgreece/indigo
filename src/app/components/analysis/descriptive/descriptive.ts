@@ -22,7 +22,7 @@ import {IterablePipe} from "../../../pipes/mapToIterable";
   selector: 'analytics-descriptive-output',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  template: require('./descriptive.html'),
+  templateUrl: './descriptive.html',
   styles: [`
 
   
@@ -39,7 +39,7 @@ import {IterablePipe} from "../../../pipes/mapToIterable";
 
 .line {
   fill: none;
-  stroke: steelblue;
+  stroke: #82bf5e;
   stroke-width: 1.5px;
 }
 
@@ -68,14 +68,14 @@ import {IterablePipe} from "../../../pipes/mapToIterable";
 }
 .lineLow80 {
   fill: none;
-  stroke: yellow;
+  stroke: gold;
   stroke-width: 1.5px;
     stroke-dasharray: 5,5; 
 
 }
 
 svg {
-  background: url("public/sprites/grid_paper.png");
+  background: url("src/public/sprites/grid_paper.png");
   font-family: monospace;
 }
 
@@ -106,7 +106,7 @@ export class DescriptiveStatisticsOutputComponent extends AfterViewInit {
     this._data = value;
 
 
-    if(value)
+    if (value)
     this.init(value);
 
 
@@ -118,7 +118,7 @@ export class DescriptiveStatisticsOutputComponent extends AfterViewInit {
 
   }
 
-  @ViewChild('container') container:any;
+  @ViewChild('container') container: any;
 
 
   private _data: any;

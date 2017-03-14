@@ -18,8 +18,9 @@ import * as _ from 'lodash';
 import {Store} from "@ngrx/store";
 @Component({
 
-  template: require('./visualizations/acfChart.html')})
-export class AnalysisVisualization{
+  templateUrl: './visualizations/acfChart.html'}
+  )
+export class AnalysisVisualization {
 
   protected data;
 

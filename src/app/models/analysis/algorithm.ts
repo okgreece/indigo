@@ -12,6 +12,7 @@ export class Algorithm {
   outputs: Map<string, Output> = new Map<string, Output>();
   name: string;
   title: string;
+  description: string;
 
   visualizations: Array<Type<any> | any[]>;
 
@@ -47,7 +48,7 @@ export class Algorithm {
     this.title = data.algorithm.title;
     this.prompt = data.algorithm.prompt;
     this.method = data.algorithm.method;
-    this.endpoint = environment[data.algorithm.endpoint[0]] + data.algorithm.endpoint[1];
+    this.endpoint = new URL(environment[data.algorithm.endpoint[0]] + '/' + data.algorithm.name);
 
 
     return this;

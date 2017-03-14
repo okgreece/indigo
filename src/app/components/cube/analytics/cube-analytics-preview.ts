@@ -4,46 +4,81 @@ import {Cube} from '../../../models/cube';
 
 @Component({
   selector: 'indigo-cube-analytics-preview',
-  template: `<md-card>
-  <md-card-title-group>
-    <md-card-title>{{ algorithm.title }}</md-card-title>
-  </md-card-title-group>
-  <div class="row text-center">
-    <button [routerLink]="'/cube/analytics/' + cubeId+ '/'+algorithm.name" color="primary" md-raised-button>Run
-    </button>
-  </div>
+  template: `
+    <md-card class="algo-card">
+      <md-card-header class="">
+        <md-card-title>{{ algorithm.title }}</md-card-title>
+        <span class="indigo-spacer"></span>
 
-</md-card>
+        <button md-tooltip="Build execution" md-icon-button [routerLink]="'/cube/analytics/' + cubeId+ '/'+algorithm.name">
+          <md-icon>play_circle_outline
+          </md-icon>
+        </button>
+
+
+      </md-card-header>
+      <md-card-content>
+        <p>
+          {{algorithm.description}}
+
+        </p>
+      </md-card-content>
+    </md-card>
 
   `,
   styles: [`
     md-card {
       width: 400px;
-      height: 300px;
       margin: 15px;
+      background: dimgray;
     }
+
     md-card-title {
       margin-right: 10px;
     }
+
     a {
       color: inherit;
       text-decoration: none;
     }
+
     img {
       width: 60px;
       min-width: 60px;
       margin-left: 5px;
     }
+
     md-card-content {
       margin-top: 15px;
+      text-align: justify;
     }
+
     span {
       display: inline-block;
       font-size: 13px;
     }
+
     md-card-footer {
       padding: 0 25px 25px;
     }
+
+    :host {
+      display: flex;
+      justify-content: center;
+      margin: 30px 0;
+    }
+
+    md-card-title {
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      margin-bottom: 0;
+    }
+
+    md-card.algo-card md-card-header {
+      background: #82BF5E;
+    }
+
   `]
 })
 export class CubeAnalyticsPreviewComponent {
@@ -51,7 +86,7 @@ export class CubeAnalyticsPreviewComponent {
   @Input() cube: Cube;
 
 
-  get cubeId(){
+  get cubeId() {
     //debugger;
     return this.cube.name;
   }
