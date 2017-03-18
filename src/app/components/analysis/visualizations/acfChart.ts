@@ -92,18 +92,18 @@ export class AcfChartVisualization extends AnalysisVisualization implements Afte
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     let lags = data.values.map(function (d: any) {
-      return d["lag"];
+      return d['lag'];
 
     });
 
     let correlations = data.values.map(function (d: any) {
-      return d["correlation"];
+      return d['correlation'];
 
     });
 
-    let allYs = correlations.map(function (c: any) {
+    let allYs:any = correlations.map(function (c: any) {
       return Math.abs(c);
-    }); //clone
+    }); // clone
     allYs.push(Math.abs(data.interval_up));
     allYs.push(Math.abs(data.interval_low));
 
