@@ -146,7 +146,7 @@ export class ScatterPlotVisualization extends AfterViewInit {
 
 
     // Scale the range of the data
-    x.domain(d3.extent(data, function (d:any) {
+    x.domain(d3.extent<number>(data, function (d: any) {
       return d[that._x_accessor];
     }));
     y.domain([d3.min(data, function (d) {
