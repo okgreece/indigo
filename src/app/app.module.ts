@@ -43,7 +43,6 @@ import {AggregatePreviewDialog, FactsPreviewDialog} from "./components/cube/anal
 import {FlexLayoutModule} from "@angular/flex-layout";
 import 'hammerjs';
 import {FlexDirective} from "@angular/flex-layout/flexbox/api/flex";
-import {NgxDatatableModule} from "@swimlane/ngx-datatable";
 import { CovalentCoreModule } from '@covalent/core';
 
 
