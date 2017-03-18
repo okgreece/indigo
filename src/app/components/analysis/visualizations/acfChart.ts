@@ -101,7 +101,7 @@ export class AcfChartVisualization extends AnalysisVisualization implements Afte
 
     });
 
-    let allYs:any = correlations.map(function (c: any) {
+    let allYs: number[] = correlations.map(function (c: any) {
       return Math.abs(c);
     }); // clone
     allYs.push(Math.abs(data.interval_up));
