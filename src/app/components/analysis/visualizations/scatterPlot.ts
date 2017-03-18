@@ -145,15 +145,19 @@ export class ScatterPlotVisualization extends AfterViewInit {
         'translate(' + margin.left + ',' + margin.top + ')');
 
 
-    // Scale the range of the data
-    x.domain(d3.extent<number>(data, function (d: any) {
+    let xis: number[] = data.map(function (d: any) {
       return d[that._x_accessor];
-    }));
-    y.domain([d3.min(data, function (d) {
+    });
+
+
+    let yis: number[] = data.map(function (d: any) {
       return d[that._y_accessor];
-    }), d3.max(data, function (d) {
-      return d[that._y_accessor];
-    })]);
+    });
+
+
+    // Scale the range of the data
+    x.domain(d3.extent(xis));
+    y.domain(d3.extent(yis));
 
 
     // Add the scatterplot

@@ -157,19 +157,20 @@ export class LineChartVisualization extends AfterViewInit {
 
 
 
-    let svg = d3.select(this.vizCanvas.nativeElement).append("svg")
-      .attr("width", viewerWidth + margin.left + margin.right)
-      .attr("height", viewerHeight + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    let svg = d3.select(this.vizCanvas.nativeElement).append('svg')
+      .attr('width', viewerWidth + margin.left + margin.right)
+      .attr('height', viewerHeight + margin.top + margin.bottom)
+      .append('g')
+      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-
-    x.domain(d3.extent(data, function (d: any) {
+    let years = data.map(function (d: any) {
       return d.year;
-    }));
+    }) as number[];
+
+    x.domain(d3.extent(years));
     y.domain([min, max]);
 
-    svg.append("g")
+    svg.append('g')
       .attr("class", "x axis")
       .attr("transform", "translate(0," + viewerHeight + ")")
       .call(xAxis)

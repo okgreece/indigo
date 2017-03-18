@@ -119,9 +119,7 @@ export class BoxPlotVisualization extends AfterViewInit {
 
 
       x.domain(data.map(function(d:any) { return d.label; }));
-      y.domain([d3.min(data, function(d:any) { return d3.min([d["lo.whisker"]]); }), d3.max(data, function(d:any) {return d3.max([d["up.whisker"]]); })]);
-
-
+      y.domain([d3.min(data, function(d: any) { return d['lo.whisker'] as number; }) , d3.max(data, function(d: any) {return d['up.whisker'] as number; }) ]);
 
 
       g.append("g")

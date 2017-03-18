@@ -92,11 +92,11 @@ export class HistogramVisualization extends AfterViewInit {
 
 
 
-    let max = d3.max([d3.max(data.density), d3.max(data["normal.curve.y"])]);
-    let min = d3.min([d3.min(data.density), d3.min(data["normal.curve.y"])]);
+    let max: number = d3.max([d3.max(data.density as number[]), d3.max(data['normal.curve.y'] as number[])]);
+    let min: number = d3.min([d3.min(data.density as number[]) , d3.min(data['normal.curve.y'] as number[]) ]);
 
-    let x_max = d3.max(data.cuts);
-    let x_min = d3.min(data.cuts);
+    let x_max: number = d3.max(data.cuts as number[]);
+    let x_min: number = d3.min(data.cuts as number[]);
 
     let x = d3.scaleLinear()
       .range([0, viewerWidth]);
@@ -104,7 +104,7 @@ export class HistogramVisualization extends AfterViewInit {
     let y = d3.scaleLinear()
       .range([viewerHeight, 0]);
 
-    let xAxis = d3.axisBottom(x).tickFormat(d3.format("d"))
+    let xAxis = d3.axisBottom(x).tickFormat(d3.format('d'))
       /*.tickFormat(function(d){
        return d3.time.format('%Y')(new Date(d));
        })*/;
