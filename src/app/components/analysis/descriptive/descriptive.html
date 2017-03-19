@@ -15,7 +15,7 @@
           <thead>
           <tr>
             <th>Statistical Measure</th>
-            <th *ngFor="let item of analysisCall.inputs['amounts']">{{item.label}}</th>
+            <th *ngFor="let item of analysisCall.inputs['amounts']">{{item.label}} ({{item.currency}})</th>
           </tr>
           </thead>
           <tbody *ngIf="data?.descriptives">
@@ -42,8 +42,8 @@
             <td>Quantiles</td>
             <td *ngFor="let item of analysisCall.inputs['amounts']">
               <ul>
-                <li>25%: {{data?.descriptives.Quantiles[item.ref][0]}}</li>
-                <li>75%: {{data?.descriptives.Quantiles[item.ref][1]}}</li>
+                <li style="display: inline-block">25%: {{data?.descriptives.Quantiles[item.ref][0]}}</li>
+                <li style="display: inline-block">75%: {{data?.descriptives.Quantiles[item.ref][1]}}</li>
               </ul>
             </td>
           </tr>
@@ -92,10 +92,11 @@
       </md-card-title-group>
       <div class="text-center">
 
+        <div *ngFor="let item of data?.frequencies|iterablepairs" class="text-center">
 
-        <div *ngFor="let item of data?.frequencies|iterable" class="row text-center">
-          <analytics-frequency-chart class="col-sm-12" style="min-height: 500px;" [label_y]="Frequency"
-                                     [label_x]="Dimension" [data]="item"></analytics-frequency-chart>
+
+          <analytics-frequency-chart class="col-sm-12" style="min-height: 500px;" [label_y]="'Relative Frequency (%)'"
+                                     [label_x]="analysisCall.cube.model.attributes.get(item.key).fullLabel" [data]="item.value"  ></analytics-frequency-chart>
 
         </div>
 

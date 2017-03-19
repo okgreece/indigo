@@ -14,12 +14,13 @@ import {AnalysisCall} from '../../../models/analysis/analysisCall';
 import {AnalysisService} from '../../../services/analysis';
 import {Attribute} from '../../../models/attribute';
 import * as execution from '../../../actions/execution';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {FactRequest} from '../../../models/fact/factRequest';
-import {MdDialog, MdDialogRef} from "@angular/material";
-import {ApiCubesService} from "../../../services/api-cubes";
-import {IterablePipe} from "../../../pipes/mapToIterable";
-import {PipesModule} from "../../../pipes/index";
+import {MdDialog, MdDialogRef} from '@angular/material';
+import {ApiCubesService} from '../../../services/api-cubes';
+import {IterablePipe} from '../../../pipes/mapToIterable';
+import {IterablePairsPipe} from '../../../pipes/mapToPairsIterable';
+import {PipesModule} from '../../../pipes/index';
 
 /**
  * Tip: Export type aliases for your component's inputs and outputs. Until we
@@ -163,26 +164,30 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
       this.ref.markForCheck();
     }, 5000);
 
-    router.events.subscribe((val) => {
-      this.cube$ = this.store.let(fromRoot.getSelectedCube);
-      this.loading$ = this.store.let(fromRoot.getExecutionLoading);
+    router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd){
+        this.cube$ = this.store.let(fromRoot.getSelectedCube);
+        this.loading$ = this.store.let(fromRoot.getExecutionLoading);
 
-
-      let that = this;
-      this.cube$.subscribe(function (cube) {
-        that.cube = cube;
-
-        let observable: Observable<Algorithm> = that.algorithmName.flatMap(name => that.algorithmsService.getAlgorithm(name, cube));
-        observable.subscribe(function (algorithm: Algorithm) {
-          that.algorithm = algorithm;
-          let call = new AnalysisCall(algorithm, that.cube);
-          call.deParametrizeInputs(that.route.snapshot.queryParams);
-          that.analysisCall = call;
+        debugger;
+        let that = this;
+        this.cube$.subscribe(function (cube) {
+          that.cube = cube;
           debugger;
-          if (call.valid) that.execute(that.algorithm);
+          let observable: Observable<Algorithm> = that.algorithmName.flatMap(name => that.algorithmsService.getAlgorithm(name, that.cube));
+          observable.subscribe(function (algorithm: Algorithm) {
+            that.algorithm = algorithm;
+            let call = new AnalysisCall(algorithm, that.cube);
+            call.deParametrizeInputs(that.route.snapshot.queryParams);
+            that.analysisCall = call;
+            debugger;
+            if (call.valid) that.execute(that.algorithm);
 
+          });
         });
-      });
+      }
+
+
     });
   }
 

@@ -69,7 +69,7 @@ export class HistogramVisualization extends AfterViewInit {
     let margin = {top: 20, right: 40, bottom: 50, left: 50};
 
 
-    let viewerWidth = $(this.vizCanvas.nativeElement).width() - margin.left - margin.right;
+    let viewerWidth = $(this.vizCanvas.nativeElement).width() - margin.left - margin.right -50;
     let viewerHeight = $(this.vizCanvas.nativeElement).height() - margin.top - margin.bottom;
 
 

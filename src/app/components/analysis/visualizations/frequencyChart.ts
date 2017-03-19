@@ -83,20 +83,19 @@ export class FrequencyVisualization extends AfterViewInit {
   @Input()
   public label_y: string;
 
-  @ViewChild('vizCanvas') vizCanvas:any;
+  @ViewChild('freqVizCanvas') vizCanvas:any;
  private _data: any;
 
   private generateChart(data: any) {
     let margin = {top: 10, right: 10, bottom: 105, left: 45};
 
-    let viewerWidth = $(this.vizCanvas.nativeElement).width() - margin.left - margin.right;
+    let viewerWidth = $(this.vizCanvas.nativeElement).width() - margin.left - margin.right - 50;
     let viewerHeight = $(this.vizCanvas.nativeElement).height() - margin.top - margin.bottom;
     let svg = d3.select(this.vizCanvas.nativeElement).append("svg")
       .attr("width", viewerWidth + margin.left + margin.right)
       .attr("height", viewerHeight + margin.top + margin.bottom)
       ;
 
-debugger;
     let sum = data.reduce(function (a, b) { return a + b.frequency; }, 0);
 
     let x = d3.scaleBand().rangeRound([0, viewerWidth]).padding(0.1),
@@ -149,6 +148,24 @@ debugger;
         .attr("width", x.bandwidth())
         .attr("height", function(d:any) { return viewerHeight - y(d.frequency/sum); });
 
+    // text label for the x axis
+    g.append("text")
+      .attr("transform",
+        "translate(" + (viewerWidth/2) + " ," +
+        (viewerHeight + margin.top + 20) + ")")
+      .style("text-anchor", "middle")
+      .text(this.label_x);
+
+
+    g.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left)
+      .attr("x",0 - (viewerHeight / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text(this.label_y);
+
+
     let yTextPadding = 10;
     g.selectAll(".bartext")
       .data(data)
@@ -176,8 +193,6 @@ debugger;
     let that = this;
 
     d3.select(that.vizCanvas.nativeElement).html('');
-
-    //this.vizCanvas = this.elementRef;
 
     this.generateChart(data);
 

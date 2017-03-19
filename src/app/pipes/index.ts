@@ -5,6 +5,7 @@ import { EllipsisPipe } from './ellipsis';
 import { IterablePipe } from './mapToIterable';
 import { NestedPropertyPipe } from './nestedProperty';
 import { MyPrettyJsonPipe } from './prettyjson';
+import {IterablePairsPipe} from './mapToPairsIterable';
 
 
 export const PIPES = [
@@ -12,7 +13,8 @@ export const PIPES = [
   EllipsisPipe,
   IterablePipe,
   NestedPropertyPipe,
-  MyPrettyJsonPipe
+  MyPrettyJsonPipe,
+  IterablePairsPipe
 ];
 
 @NgModule({

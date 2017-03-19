@@ -38,12 +38,11 @@ import {AnalysisService} from './services/analysis';
 import {environment} from '../environments/environment';
 import {APP_BASE_HREF} from '@angular/common';
 import {CubeAnalyticsEmbedPage} from './containers/cube/cube-analytics-embed-page';
-import {CubeExistsLightGuard} from "./guards/cube-exists-light";
-import {AggregatePreviewDialog, FactsPreviewDialog} from "./components/cube/analytics/cube-analytics-detail";
-import {FlexLayoutModule} from "@angular/flex-layout";
+import {CubeExistsLightGuard} from './guards/cube-exists-light';
+import {AggregatePreviewDialog, FactsPreviewDialog} from './components/cube/analytics/cube-analytics-detail';
+import {FlexLayoutModule} from '@angular/flex-layout';
 import 'hammerjs';
-import {FlexDirective} from "@angular/flex-layout/flexbox/api/flex";
-import { CovalentCoreModule } from '@covalent/core';
+
 
 
 @NgModule({
