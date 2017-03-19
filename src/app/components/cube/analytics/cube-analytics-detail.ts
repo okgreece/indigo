@@ -165,7 +165,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
     }, 5000);
 
     router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd){
+      if (event instanceof NavigationEnd) {
         this.cube$ = this.store.let(fromRoot.getSelectedCube);
         this.loading$ = this.store.let(fromRoot.getExecutionLoading);
 

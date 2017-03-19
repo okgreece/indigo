@@ -13,9 +13,9 @@ import {Observable} from "rxjs";
   <bc-sidenav [open]="showSidenav$ | async">
 
     <bc-nav-item (activate)="closeSidenav()" routerLink="/cube/find" icon="search">
-      Browse Cubes
+      Browse Datasets
     </bc-nav-item>
-    <button md-button #mybutton (click)="closeSidenav()">Close</button>
+    <button md-button #mybutton (click)="closeSidenav()">Close menu</button>
 
   </bc-sidenav>
   <bc-toolbar class="indigo" (openMenu)="openSidenav()">

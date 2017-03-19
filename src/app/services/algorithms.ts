@@ -168,14 +168,16 @@ export class AlgorithmsService {
     raw_data_input.type = InputTypes.BABBAGE_FACT_URI;
     raw_data_input.name = 'json_data';
     raw_data_input.title = 'Tabular data';
+    raw_data_input.description = 'These are the raw budget facts that will be sent for analysis. By default, all dimensions are included.'
     raw_data_input.guess = false;
 
     let what_dimension_input = new Input();
     what_dimension_input.cardinality = 'n';
     what_dimension_input.type = InputTypes.ATTRIBUTE_REF;
     what_dimension_input.name = 'dimensions';
-    what_dimension_input.title = 'Dimensions';
+    what_dimension_input.title = 'Analyzed dimensions';
     what_dimension_input.required = true;
+    what_dimension_input.description = 'Select a specific dimension for further frequency analysis. If a dimension contains empty values, it should not be selected for further analysis.';
     what_dimension_input.guess = false;
 
   /*  let to_what_dimension_input = new Input();
@@ -191,6 +193,7 @@ export class AlgorithmsService {
     amount_aggregate_input.cardinality = 'n';
     amount_aggregate_input.type = InputTypes.MEASURE_REF;
     amount_aggregate_input.name = 'amounts';
+    amount_aggregate_input.description = 'This is the measure that will be used for the descriptive statistics analysis.';
     amount_aggregate_input.title = 'Amount measure';
     amount_aggregate_input.guess = false;
     amount_aggregate_input.required = true;
@@ -202,6 +205,7 @@ export class AlgorithmsService {
     descriptiveStatisticsAlgorithm.inputs.set(what_dimension_input.name, what_dimension_input);
 //    descriptiveStatisticsAlgorithm.inputs.set(to_what_dimension_input.name, to_what_dimension_input);
     descriptiveStatisticsAlgorithm.inputs.set(amount_aggregate_input.name, amount_aggregate_input);
+    descriptiveStatisticsAlgorithm.prompt = 'Build an budget facts subset, by selecting at least the dimension that is to be analyzed.';
 
 
     let json_output = new Output;
@@ -213,9 +217,9 @@ export class AlgorithmsService {
 
     descriptiveStatisticsAlgorithm.method = RequestMethod.Post;
     descriptiveStatisticsAlgorithm.endpoint = new URL(environment.openCpuEndpoint + '/library/DescriptiveStats.OBeu/R/open_spending.ds');
-
-
     return descriptiveStatisticsAlgorithm;
+
+
 
   }
 

@@ -8,13 +8,13 @@ import {Component, Output, Input, EventEmitter, AfterViewInit} from '@angular/co
   selector: 'indigo-cube-search',
   template: `
     <md-card>
-      <md-card-title>Find a Cube</md-card-title>
+      <md-card-title>Find a Dataset</md-card-title>
       <md-card-content>
         <md-input-container>
-          <input mdInput placeholder="Search for a cube" [value]="query" (keyup)="search.emit($event.target.value)"/>
+          <input mdInput placeholder="Search for a dataset" [value]="query" (keyup)="search.emit($event.target.value)"/>
         </md-input-container>
        
-        <md-spinner [class.show]="searching"></md-spinner>
+        <md-spinner *ngIf="searching" [class.show]="searching"></md-spinner>
       </md-card-content>
     </md-card>
   `,
@@ -26,7 +26,8 @@ import {Component, Output, Input, EventEmitter, AfterViewInit} from '@angular/co
     }
 
     md-input {
-      width: 300px;
+      display: flex;
+      justify-content: center;
     }
 
     md-card-spinner {

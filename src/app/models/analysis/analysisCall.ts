@@ -38,6 +38,8 @@ export class AnalysisCall {
     if (aggregateRequest.cuts.length > 0) params.set('cut', cutString);
     if (aggregateRequest.sorts.length > 0) params.set('order', orderString);
     if (aggregateRequest.aggregates.length > 0) params.set('aggregates', aggregatesString);
+    if (aggregateRequest.pageSize > 0) params.set('pagesize', aggregateRequest.pageSize.toString());
+    if (aggregateRequest.page > 0) params.set('page', aggregateRequest.page.toString());
     return `${this.API_PATH}/${aggregateRequest.cube.name}/aggregate?${params.toString()}`;
   }
 
@@ -50,6 +52,8 @@ export class AnalysisCall {
     let params = new URLSearchParams();
     if (factRequest.cuts.length > 0) params.set('cut', cutString);
     if (factRequest.sorts.length > 0) params.set('order', orderString);
+    if (factRequest.pageSize > 0) params.set('pagesize', factRequest.pageSize.toString());
+    if (factRequest.page > 0) params.set('page', factRequest.page.toString());
     return `${this.API_PATH}/${factRequest.cube.name}/facts?${params.toString()}`;
   }
 
@@ -359,6 +363,13 @@ export class AnalysisCall {
 
     }
 
+    if (parts['pagesize']) {
+      request.pageSize = parseInt(parts['pagesize']);
+    }
+    if (parts['page']) {
+      request.pageSize = parseInt(parts['page']);
+    }
+
     return request;
 
 
@@ -398,6 +409,12 @@ export class AnalysisCall {
     }
 
 
+    if (parts['pagesize']) {
+      request.pageSize = parseInt(parts['pagesize']);
+    }
+    if (parts['page']) {
+      request.pageSize = parseInt(parts['page']);
+    }
     return request;
 
 

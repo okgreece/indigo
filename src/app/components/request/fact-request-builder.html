@@ -102,13 +102,13 @@
   <h4>Pagination</h4>
 
   <div class="col-sm-12 form-group">
-    <input class="form-control"  type="number" [(ngModel)]="request.page"  placeholder="Page Number" align="end"/>
+    <input class="form-control" title="Page number"  type="number" (ngModelChange)="factPageNumberChanged($event)" [(ngModel)]="newFactPageNumber"  placeholder="Page Number" align="end"/>
 
 
 
   </div>
   <div class="col-sm-12 form-group">
-    <input class="form-control"  type="number" [(ngModel)]="request.pageSize" placeholder="Page Size" align="end"/>
+    <input class="form-control" title="Page size" type="number" (ngModelChange)="factPageSizeChanged($event)" [(ngModel)]="newFactPageSize" placeholder="Page Size" align="end"/>
 
 
 

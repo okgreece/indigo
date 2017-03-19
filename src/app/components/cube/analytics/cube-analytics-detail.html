@@ -55,7 +55,7 @@
 
                 <button
                   *ngIf="input.type==InputTypes.BABBAGE_AGGREGATE_RAW_DATA || input.type==InputTypes.BABBAGE_AGGREGATE_URI"
-                  (click)="openAggregateDialog(input)" md-tooltip="Execute" md-icon-button>
+                  (click)="openAggregateDialog(input)" md-tooltip="View data" md-icon-button>
                   <md-icon>directions run</md-icon>
                 </button>
 
@@ -65,7 +65,7 @@
 
 
                 <button *ngIf="input.type==InputTypes.BABBAGE_FACT_RAW_DATA || input.type==InputTypes.BABBAGE_FACT_URI"
-                        (click)="openFactsDialog(input)" md-tooltip="Execute" md-icon-button>
+                        (click)="openFactsDialog(input)" md-tooltip="View data" md-icon-button>
 
                   <md-icon>directions run</md-icon>
                 </button>
@@ -81,6 +81,10 @@
                     <md-chip md-tooltip="Drilldown"  color="accent" selected="true" *ngFor="let drilldown of analysisCall?.inputs[input.name].drilldowns|iterable">
                       {{drilldown.column.dimension.label}}.{{drilldown.column.label}}</md-chip>
                     <md-chip md-tooltip="Filter"  color="primary" selected="true" *ngFor="let cut of analysisCall?.inputs[input.name].cuts|iterable">{{cut.column.dimension.label}}.{{cut.column.label}}: {{cut.value}}</md-chip>
+                    <md-chip md-tooltip="Page number"  color="primary" selected="true">Page number: {{analysisCall?.inputs[input.name].page}}</md-chip>
+                    <md-chip md-tooltip="Page size"  color="primary" selected="true">Page size: {{analysisCall?.inputs[input.name].pageSize}}</md-chip>
+
+
 
                   </md-chip-list>
 
@@ -90,6 +94,20 @@
                                              [(request)]="analysisCall?.inputs[input.name]"></aggregate-request-builder>
                 </div>
                 <div *ngIf="input.type==InputTypes.BABBAGE_FACT_RAW_DATA || input.type==InputTypes.BABBAGE_FACT_URI">
+
+
+
+                  <md-chip-list *ngIf="analysisCall?.inputs[input.name]&&!factsShown">
+
+                    <md-chip md-tooltip="Filter"  color="primary" selected="true" *ngFor="let cut of analysisCall?.inputs[input.name].cuts|iterable">{{cut.column.dimension.label}}.{{cut.column.label}}: {{cut.value}}</md-chip>
+                    <md-chip md-tooltip="Page number"  color="primary" selected="true">Page number: {{analysisCall?.inputs[input.name].page}}</md-chip>
+                    <md-chip md-tooltip="Page size"  color="primary" selected="true">Page size: {{analysisCall?.inputs[input.name].pageSize}}</md-chip>
+
+
+
+                  </md-chip-list>
+
+
 
                   <fact-request-builder *ngIf="analysisCall?.inputs[input.name]&&factsShown" [cube]="cube$|async"
                                         [(request)]="analysisCall?.inputs[input.name]"></fact-request-builder>
