@@ -14,8 +14,16 @@ import { Cube } from '../../models/cube';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <indigo-cube-search [query]="searchQuery$ | async" [searching]="loading$ | async" (search)="search($event)"></indigo-cube-search>
-    <bc-cube-preview-list [cubes]="cubes$ | async"></bc-cube-preview-list>
-  `
+    <indigo-cube-preview-list [cubes]="cubes$ | async"></indigo-cube-preview-list>
+  `,
+  styles:[`
+  indigo-cube-preview-list{
+  margin-top:20px;
+  display: block;
+  }
+
+
+`]
 })
 export class FindCubePageComponent {
   searchQuery$: Observable<string>;

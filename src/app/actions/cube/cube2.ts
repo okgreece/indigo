@@ -34,7 +34,7 @@ export class SearchAction implements Action {
 export class SearchCompleteAction implements Action {
   type = ActionTypes.SEARCH_COMPLETE;
 
-  constructor(public payload: any[]) {
+  constructor(public payload: any[]|any) {
 
   }
 

@@ -16,7 +16,7 @@ const initialState: State = {
   ids: []
 };
 
-export function reducer(state = initialState, action: collection.Actions): State {
+export function reducer(state = initialState, action: collection.Actions | any): State {
   switch (action.type) {
     case collection.ActionTypes.LOAD: {
       return Object.assign({}, state, {

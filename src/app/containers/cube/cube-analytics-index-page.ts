@@ -18,13 +18,13 @@ import {ActivatedRoute} from "@angular/router";
   selector: 'cube-analytics-index-page',
 
   template: `
-   <indigo-cube-preview-list></indigo-cube-preview-list>
+   <indigo-cube-analytics-preview-list></indigo-cube-analytics-preview-list>
   `
 })
 export class CubeAnalyticsIndexComponent {
 
   isCubeInCollection$: Observable<InCollectionInput>;
-  cube:Cube;
+  cube: Cube;
 
   constructor(private store: Store<fromRoot.State>, route: ActivatedRoute) {
     route.params

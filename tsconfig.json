@@ -22,7 +22,8 @@
       "hammerjs",
       "jquery",
       "d3",
-      "lodash"
+      "lodash",
+      "URI"
     ]
   },
   "awesomeTypescriptLoaderOptions": {

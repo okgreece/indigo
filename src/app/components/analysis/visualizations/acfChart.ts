@@ -4,7 +4,7 @@
 import {
   ChangeDetectionStrategy, ViewEncapsulation,
   Component, Input, Directive, Attribute as MetadataAttribute, OnChanges, DoCheck, ElementRef, OnInit, SimpleChange,
-  AfterViewInit, ViewChild
+  AfterViewInit, ViewChild, Injector
 } from '@angular/core';
 import {Inject, NgZone, ChangeDetectorRef} from '@angular/core';
 import * as d3 from 'd3';
@@ -13,12 +13,13 @@ import * as $ from 'jquery'
 import * as _ from 'lodash';
 
 import {Store} from "@ngrx/store";
+import {AnalysisVisualization} from "../visualization";
 
 @Component({
   selector: 'analytics-acf-chart',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  template: require('./acfChart.html'),
+  templateUrl: './acfChart.html',
   styles: [`
 
   
@@ -45,25 +46,26 @@ import {Store} from "@ngrx/store";
 
   `]
 })
-export class AcfChartVisualization extends AfterViewInit {
+export class AcfChartVisualization extends AnalysisVisualization implements AfterViewInit {
   get data(): any {
     return this._data;
   }
+
   @Input()
   set data(value: any) {
     this._data = value;
-    if (this._data)
+    if (this._data && this.initialized)
       this.init(this._data);
 
     this.ref.detectChanges();
   }
 
-  initialized:boolean = false;
+  initialized: boolean = false;
 
   ngAfterViewInit(): void {
 
     this.initialized = true;
-    if(this._data)
+    if (this._data)
       this.init(this.data);
   }
 
@@ -74,12 +76,11 @@ export class AcfChartVisualization extends AfterViewInit {
   @Input()
   public label_y: string;
 
-  @ViewChild('vizCanvas') vizCanvas:any;
- private _data: any;
+  @ViewChild('vizCanvas') vizCanvas: any;
+  private _data: any;
 
   private generateBarChart(data: any) {
     let margin = {top: 10, right: 10, bottom: 35, left: 45};
-
 
 
     let viewerWidth = $(this.vizCanvas.nativeElement).width() - margin.left - margin.right;
@@ -90,35 +91,31 @@ export class AcfChartVisualization extends AfterViewInit {
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    let lags = data.values.map(function (d:any) {
-      return d["lag"];
+    let lags = data.values.map(function (d: any) {
+      return d['lag'];
 
     });
 
-    let correlations = data.values.map(function (d:any) {
-      return d["correlation"];
+    let correlations = data.values.map(function (d: any) {
+      return d['correlation'];
 
     });
 
-    let allYs = correlations.map(function (c:any) {
+    let allYs: number[] = correlations.map(function (c: any) {
       return Math.abs(c);
-    }); //clone
+    }); // clone
     allYs.push(Math.abs(data.interval_up));
     allYs.push(Math.abs(data.interval_low));
 
-    let max = 1.1*d3.max(allYs);
-
-
+    let max = 1.1 * d3.max(allYs);
 
 
     let x = d3.scaleBand()
       .rangeRound([0, viewerWidth])
-      .padding(0.9+(0.001*correlations.length));
+      .padding(0.9 + (0.001 * correlations.length));
 
     let y = d3.scaleLinear()
       .range([viewerHeight, 0]);
-
-
 
 
     let xAxis = d3.axisBottom(x);
@@ -127,12 +124,10 @@ export class AcfChartVisualization extends AfterViewInit {
       ;
 
 
-
-    x.domain(data.values.map(function (d:any) {
+    x.domain(data.values.map(function (d: any) {
       return d["lag"]
     }));
     y.domain([-max, max]);
-
 
 
     svg.html("");
@@ -161,22 +156,22 @@ export class AcfChartVisualization extends AfterViewInit {
       .enter().append("rect")
       .attr("class", "bar")
       .attr("fill", "black")
-      .attr("x", function (d:any) {
+      .attr("x", function (d: any) {
         return x(d["lag"]);
       })
       .attr("width", x.bandwidth())
-      .attr("y", function (d:any) {
-        if (d.correlation > 0){
+      .attr("y", function (d: any) {
+        if (d.correlation > 0) {
           return y(d.correlation);
         } else {
           return y(0);
         }
 
 
-
       })
-      .attr("height", function (d:any) {
-        return Math.abs(y(d.correlation) - y(0));      });
+      .attr("height", function (d: any) {
+        return Math.abs(y(d.correlation) - y(0));
+      });
 
 
     svg.append("svg:line")
@@ -197,7 +192,7 @@ export class AcfChartVisualization extends AfterViewInit {
       .attr("x1", 0)
       .attr("x2", viewerWidth)
       .attr("y1", y(0))
-      .attr("y2",y(0))
+      .attr("y2", y(0))
       .style('stroke', 'black');
 
 
@@ -213,7 +208,7 @@ export class AcfChartVisualization extends AfterViewInit {
 
     svg.append("text")
       .attr("transform",
-        "translate(" + (viewerWidth/2) + " ," +
+        "translate(" + (viewerWidth / 2) + " ," +
         (viewerHeight + margin.top + 20) + ")")
       .style("text-anchor", "middle")
       .text(this.label_x);
@@ -221,34 +216,31 @@ export class AcfChartVisualization extends AfterViewInit {
     svg.append("text")
       .attr("transform", "rotate(-90)")
       .attr("y", 0 - margin.left)
-      .attr("x",0 - (viewerHeight / 2))
+      .attr("x", 0 - (viewerHeight / 2))
       .attr("dy", "1em")
       .style("text-anchor", "middle")
       .text(this.label_y);
 
-   /* let line = d3.svg.line()
-      .x(function(d:any) { return x(d.year); })
-      .y(function(d:any) { return y(d.amount); });
+    /* let line = d3.svg.line()
+     .x(function(d:any) { return x(d.year); })
+     .y(function(d:any) { return y(d.amount); });
 
-    let lineUp80 = d3.svg.line()
-      .x(function(d:any) { return x(d.year); })
-      .y(function(d:any) { return y(d.up80); });
-    let lineUp95 = d3.svg.line()
-      .x(function(d:any) { return x(d.year); })
-      .y(function(d:any) { return y(d.up95); });
-    let lineLow80 = d3.svg.line()
-      .x(function(d:any) { return x(d.year); })
-      .y(function(d:any) { return y(d.low80); });
-    let lineLow95 = d3.svg.line()
-      .x(function(d:any) { return x(d.year); })
-      .y(function(d:any) { return y(d.low95); });*/
-
-
+     let lineUp80 = d3.svg.line()
+     .x(function(d:any) { return x(d.year); })
+     .y(function(d:any) { return y(d.up80); });
+     let lineUp95 = d3.svg.line()
+     .x(function(d:any) { return x(d.year); })
+     .y(function(d:any) { return y(d.up95); });
+     let lineLow80 = d3.svg.line()
+     .x(function(d:any) { return x(d.year); })
+     .y(function(d:any) { return y(d.low80); });
+     let lineLow95 = d3.svg.line()
+     .x(function(d:any) { return x(d.year); })
+     .y(function(d:any) { return y(d.low95); });*/
 
 
   }
 
-  parseTime = d3.timeParse('y');
 
   init(data: any) {
 
@@ -257,31 +249,96 @@ export class AcfChartVisualization extends AfterViewInit {
 
     d3.select(that.vizCanvas.nativeElement).html('');
 
-    this.vizCanvas = this.elementRef;
+//    this.vizCanvas = this.elementRef;
 
     this.generateBarChart(data);
 
 
+  }
 
+
+  type(d: any) {
+    d.amount = +d.amount;
+    return d;
+  }
+
+
+  constructor(elementRef: ElementRef, ref: ChangeDetectorRef, injector: Injector) {
+    super(elementRef, ref, injector);
 
   }
 
 
+}
 
 
-  type(d:any) {
-  d.amount = +d.amount;
-  return d;
+@Component({
+  selector: 'analytics-acf-chart-timeseries-regular',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  template: `<analytics-acf-chart [data]="data?.autocorrelation.acf.regular"></analytics-acf-chart>`
+})
+export class AcfChartVisualizationRegular  extends AnalysisVisualization {
+  @Input()
+  public data: any;
+
+  constructor(elementRef: ElementRef, ref: ChangeDetectorRef, injector: Injector) {
+    super(elementRef, ref, injector);
+
   }
 
+}
 
-  constructor( private elementRef: ElementRef,       private ref: ChangeDetectorRef) {
-    super();
-    setInterval(() => {
-      // the following is required, otherwise the view will not be updated
-      this.ref.markForCheck();
-    }, 5000);
+
+@Component({
+  selector: 'analytics-acf-chart-timeseries-residuals',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  template: `<analytics-acf-chart [data]="data?.autocorrelation.acf.residuals"></analytics-acf-chart>`
+})
+export class AcfChartVisualizationResiduals  extends AnalysisVisualization {
+  @Input()
+  public data: any;
+
+  constructor(elementRef: ElementRef, ref: ChangeDetectorRef, injector: Injector) {
+    super(elementRef, ref, injector);
+
   }
 
+}
+
+
+@Component({
+  selector: 'analytics-pacf-chart-timeseries-regular',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  template: `<analytics-acf-chart [data]="data?.autocorrelation.pacf.regular"></analytics-acf-chart>`
+})
+export class PacfChartVisualizationRegular  extends AnalysisVisualization {
+  @Input()
+  public data: any;
+
+  constructor(elementRef: ElementRef, ref: ChangeDetectorRef, injector: Injector) {
+    super(elementRef, ref, injector);
+
+  }
+
+}
+
+
+@Component({
+  selector: 'analytics-pacf-chart-timeseries-residuals',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  template: `<analytics-acf-chart [data]="data?.autocorrelation.pacf.residuals"></analytics-acf-chart>`
+})
+export class PacfChartVisualizationResiduals  extends AnalysisVisualization {
+  @Input()
+  public data: any;
+
+  constructor(elementRef: ElementRef, ref: ChangeDetectorRef, injector: Injector) {
+    super(elementRef, ref, injector);
+
+  }
 
 }

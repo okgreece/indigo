@@ -18,11 +18,11 @@ const initialState: State = {
 
 };
 
-export  function reducer(state = initialState, action: execution.Actions): State {
+export  function reducer(state = initialState, action: execution.Actions|any): State {
   switch (action.type) {
     case ActionTypes.EXECUTE:
     {
-      const execution: AnalysisCall = action.payload;
+      const execution: AnalysisCall = action.execution;
 
       return {
         execution: null, loading: true
@@ -64,6 +64,6 @@ export function getExecution(state$: Observable<State>) {
 export function getLoading(state$: Observable<State>) {
   return state$.select(state => {
 
-    return state.loading
+    return state.loading;
   });
 }

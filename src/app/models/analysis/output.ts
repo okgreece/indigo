@@ -12,11 +12,23 @@ export const OutputTypes = {
 
 
 
-export class Output{
+export class Output {
 
   name: string;
-  cardinality: number=1;
+  cardinality: number= 1;
   type: string;
 
+
+  deserialize(data: any): Output {
+
+
+    this.name = data.name;
+    this.cardinality = data.cardinality;
+
+    this.type = OutputTypes[data.type];
+
+
+    return this;
+  }
 
 }

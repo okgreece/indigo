@@ -3,20 +3,21 @@
  */
 import {
   ChangeDetectionStrategy, ViewEncapsulation,
-  Component, Input,  ElementRef,
-  AfterViewInit, ViewChild
+  Component, Input, ElementRef,
+  AfterViewInit, ViewChild, Injector
 } from '@angular/core';
 import { ChangeDetectorRef} from '@angular/core';
 import * as d3 from 'd3';
 import * as $ from 'jquery'
 import * as _ from 'lodash';
+import {AnalysisVisualization} from "../visualization";
 
 
 @Component({
   selector: 'analytics-line-chart',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  template: require('./lineChart.html'),
+  templateUrl: './lineChart.html',
   styles: [`
 
   
@@ -69,7 +70,7 @@ export class LineChartVisualization extends AfterViewInit {
   @Input()
   public label_y: string;
   private generateBarChart(data: any) {
-    let margin = {top: 20, right: 40, bottom: 50, left: 50};
+    let margin = {top: 20, right: 40, bottom: 50, left: 75};
 
 
     let viewerWidth = $(this.vizCanvas.nativeElement).width() - margin.left - margin.right;
@@ -95,7 +96,6 @@ export class LineChartVisualization extends AfterViewInit {
       formatAsIs = function(x) { return x; };
 
     function formatAbbreviation(x) {
-      debugger;
       let v = Math.abs(x);
       return (v >= .9995e9 ? formatBillion
         : v >= .9995e6 ? formatMillion
@@ -157,19 +157,20 @@ export class LineChartVisualization extends AfterViewInit {
 
 
 
-    let svg = d3.select(this.vizCanvas.nativeElement).append("svg")
-      .attr("width", viewerWidth + margin.left + margin.right)
-      .attr("height", viewerHeight + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    let svg = d3.select(this.vizCanvas.nativeElement).append('svg')
+      .attr('width', viewerWidth + margin.left + margin.right)
+      .attr('height', viewerHeight + margin.top + margin.bottom)
+      .append('g')
+      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-
-    x.domain(d3.extent(data, function (d: any) {
+    let years = data.map(function (d: any) {
       return d.year;
-    }));
+    }) as number[];
+
+    x.domain(d3.extent(years));
     y.domain([min, max]);
 
-    svg.append("g")
+    svg.append('g')
       .attr("class", "x axis")
       .attr("transform", "translate(0," + viewerHeight + ")")
       .call(xAxis)
@@ -187,7 +188,7 @@ export class LineChartVisualization extends AfterViewInit {
       .attr("transform", "rotate(-90)")
       .attr("y", 6)
       .attr("dy", ".71em")
-      .attr("dx", "-0.71em")
+      .attr("dx", "-0.91em")
       .style("text-anchor", "end")
       .text("Amount");
 
@@ -273,7 +274,7 @@ export class LineChartVisualization extends AfterViewInit {
 
     d3.select(that.vizCanvas.nativeElement).html("");
 
-    this.vizCanvas = this.elementRef;
+   // this.vizCanvas = this.elementRef;
 
     this.generateBarChart(values);
 
@@ -295,5 +296,398 @@ export class LineChartVisualization extends AfterViewInit {
     }, 5000);
   }
 
+
+}
+
+
+@Component({
+  selector: 'analytics-line-chart-timeseries-trends',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  template: `<analytics-line-chart [values]="data?.decomposition.trends"></analytics-line-chart>`,
+  styles: [`
+
+  
+ .axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: #82bf5e;
+  stroke-width: 2px;
+}
+
+.lineUp80 {
+  fill: none;
+  stroke: orange;
+  stroke-width: 2px;
+  stroke-dasharray: 5, 5;
+
+}
+
+.lineUp95 {
+  fill: none;
+  stroke: red;
+  stroke-width: 2px;
+  stroke-dasharray: 5, 5;
+
+}
+
+.lineLow95 {
+  fill: none;
+  stroke: green;
+  stroke-width: 2px;
+  stroke-dasharray: 5, 5;
+
+}
+
+.lineLow80 {
+  fill: none;
+  stroke: gold;
+  stroke-width: 1.5px;
+  stroke-dasharray: 5, 5;
+
+}
+
+
+svg text {
+  font-family: monospace;
+}
+
+
+
+  `]
+})
+export class LineChartTrends  extends AnalysisVisualization {
+  @Input()
+  public data: any;
+
+  constructor(elementRef: ElementRef, ref: ChangeDetectorRef, injector: Injector) {
+    super(elementRef, ref, injector);
+
+  }
+
+}
+@Component({
+  selector: 'analytics-line-chart-timeseries-remainders',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  template: `<analytics-line-chart [values]="data?.decomposition.remainders"></analytics-line-chart>`,
+  styles: [`
+
+  
+ .axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: #82bf5e;
+  stroke-width: 2px;
+}
+
+.lineUp80 {
+  fill: none;
+  stroke: orange;
+  stroke-width: 2px;
+  stroke-dasharray: 5, 5;
+
+}
+
+.lineUp95 {
+  fill: none;
+  stroke: red;
+  stroke-width: 2px;
+  stroke-dasharray: 5, 5;
+
+}
+
+.lineLow95 {
+  fill: none;
+  stroke: green;
+  stroke-width: 2px;
+  stroke-dasharray: 5, 5;
+
+}
+
+.lineLow80 {
+  fill: none;
+  stroke: gold;
+  stroke-width: 1.5px;
+  stroke-dasharray: 5, 5;
+
+}
+
+
+svg text {
+  font-family: monospace;
+}
+
+
+
+  `]
+})
+export class LineChartRemainders  extends AnalysisVisualization {
+  @Input()
+  public data: any;
+
+  constructor(elementRef: ElementRef, ref: ChangeDetectorRef, injector: Injector) {
+    super(elementRef, ref, injector);
+
+  }
+
+}
+
+
+@Component({
+  selector: 'analytics-line-chart-timeseries-fitting-residuals',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  template: `<analytics-line-chart  [label_x]="'Time (years)'" [label_y]="'Residual Values'"
+                            [values]="data?.fitting.time_residuals"></analytics-line-chart>`,
+  styles: [`
+
+  
+ .axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: #82bf5e;
+  stroke-width: 2px;
+}
+
+.lineUp80 {
+  fill: none;
+  stroke: orange;
+  stroke-width: 2px;
+  stroke-dasharray: 5, 5;
+
+}
+
+.lineUp95 {
+  fill: none;
+  stroke: red;
+  stroke-width: 2px;
+  stroke-dasharray: 5, 5;
+
+}
+
+.lineLow95 {
+  fill: none;
+  stroke: green;
+  stroke-width: 2px;
+  stroke-dasharray: 5, 5;
+
+}
+
+.lineLow80 {
+  fill: none;
+  stroke: gold;
+  stroke-width: 1.5px;
+  stroke-dasharray: 5, 5;
+
+}
+
+
+svg text {
+  font-family: monospace;
+}
+
+
+
+  `]
+})
+export class LineChartFittingResiduals  extends AnalysisVisualization {
+  @Input()
+  public data: any;
+
+  constructor(elementRef: ElementRef, ref: ChangeDetectorRef, injector: Injector) {
+    super(elementRef, ref, injector);
+
+  }
+
+}
+
+
+@Component({
+  selector: 'analytics-line-chart-timeseries-fitting-time-fitted',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  template: `<analytics-line-chart [label_x]="'Time (years)'" [label_y]="'Fitted Values'"
+                            [values]="data?.fitting.time_fitted"></analytics-line-chart>`,
+  styles: [`
+
+  
+ .axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: #82bf5e;
+  stroke-width: 2px;
+}
+
+.lineUp80 {
+  fill: none;
+  stroke: orange;
+  stroke-width: 2px;
+  stroke-dasharray: 5, 5;
+
+}
+
+.lineUp95 {
+  fill: none;
+  stroke: red;
+  stroke-width: 2px;
+  stroke-dasharray: 5, 5;
+
+}
+
+.lineLow95 {
+  fill: none;
+  stroke: green;
+  stroke-width: 2px;
+  stroke-dasharray: 5, 5;
+
+}
+
+.lineLow80 {
+  fill: none;
+  stroke: gold;
+  stroke-width: 1.5px;
+  stroke-dasharray: 5, 5;
+
+}
+
+
+svg text {
+  font-family: monospace;
+}
+
+
+
+  `]
+})
+export class LineChartFittingTimeFitted  extends AnalysisVisualization {
+  @Input()
+  public data: any;
+
+  constructor(elementRef: ElementRef, ref: ChangeDetectorRef, injector: Injector) {
+    super(elementRef, ref, injector);
+
+  }
+
+}
+
+
+
+
+@Component({
+  selector: 'analytics-line-chart-timeseries-forecast',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  template: `   <analytics-line-chart [label_x]="'Time (years)'" [label_y]="'Amount'"
+                                [values]="data?.forecast.values"></analytics-line-chart>`,
+  styles: [`
+
+  
+ .axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: #82bf5e;
+  stroke-width: 2px;
+}
+
+.lineUp80 {
+  fill: none;
+  stroke: orange;
+  stroke-width: 2px;
+  stroke-dasharray: 5, 5;
+
+}
+
+.lineUp95 {
+  fill: none;
+  stroke: red;
+  stroke-width: 2px;
+  stroke-dasharray: 5, 5;
+
+}
+
+.lineLow95 {
+  fill: none;
+  stroke: green;
+  stroke-width: 2px;
+  stroke-dasharray: 5, 5;
+
+}
+
+.lineLow80 {
+  fill: none;
+  stroke: gold;
+  stroke-width: 1.5px;
+  stroke-dasharray: 5, 5;
+
+}
+
+
+svg text {
+  font-family: monospace;
+}
+
+
+
+  `]
+})
+export class LineChartTimeSeriesForecast  extends AnalysisVisualization {
+  @Input()
+  public data: any;
+
+  constructor(elementRef: ElementRef, ref: ChangeDetectorRef, injector: Injector) {
+    super(elementRef, ref, injector);
+
+  }
 
 }

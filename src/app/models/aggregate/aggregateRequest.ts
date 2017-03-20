@@ -8,7 +8,7 @@ import {Serializable} from "../iserializeable";
 /**
  * Created by larjo_000 on 27/6/2016.
  */
-export class AggregateRequest implements Serializable<AggregateRequest>{
+export class AggregateRequest implements Serializable<AggregateRequest> {
   serialize(input: AggregateRequest): Object {
     return undefined;
   }
@@ -18,12 +18,12 @@ export class AggregateRequest implements Serializable<AggregateRequest>{
   drilldowns: Drilldown[] = [];
   cuts: Cut[] = [];
   cube: Cube;
-  pageSize :number= 30;
-  page : number= 0;
+  pageSize: number= 30;
+  page: number= 0;
 
 
 
-  deserialize(input:any):AggregateRequest {
+  deserialize(input: any): AggregateRequest {
 
     let sorts = [];
 
@@ -35,27 +35,27 @@ export class AggregateRequest implements Serializable<AggregateRequest>{
 
 
 
-    for(let sort of input.sorts){
-      sorts.push(new Sort().deserialize(sort))
+    for (let sort of input.sorts){
+      sorts.push(new Sort().deserialize(sort));
     }
     this.sorts = sorts;
 
 
-    for(let aggregate of input.aggregates){
-      aggregates.push(new AggregateParam().deserialize(aggregate))
+    for (let aggregate of input.aggregates){
+      aggregates.push(new AggregateParam().deserialize(aggregate));
     }
     this.aggregates = aggregates;
 
 
-    for(let drilldown of input.drilldowns){
-      drilldowns.push(new Drilldown().deserialize(drilldown))
+    for (let drilldown of input.drilldowns){
+      drilldowns.push(new Drilldown().deserialize(drilldown));
     }
     this.drilldowns = drilldowns;
 
 
 
-    for(let cut of input.cuts){
-      cuts.push(new Cut().deserialize(cut))
+    for (let cut of input.cuts){
+      cuts.push(new Cut().deserialize(cut));
     }
     this.cuts = cuts;
 
@@ -66,6 +66,10 @@ export class AggregateRequest implements Serializable<AggregateRequest>{
 
 
     return this;
+  }
+
+  toURI() {
+
   }
 
 

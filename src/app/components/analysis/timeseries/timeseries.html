@@ -1,308 +1,542 @@
-<div class="col-sm-12" *ngIf="data" #container>
+<div *ngIf="data&&analysisCall" #container>
+
+  <div fxLayout="row">
+      <md-card fxFlex="100%" class="output-card">
+        <md-card-title-group align="center center">
+
+          <md-card-title>Decomposition</md-card-title>
 
 
-  <h3>Decomposition</h3>
+        </md-card-title-group>
+        <div class="text-center">
 
-  <table class="text-center table table-bordered">
-    <thead>
-    <tr>
-      <th colspan="2">STL general information</th>
-    </tr>
+          <table class="text-center table table-bordered">
+            <thead>
+            <tr>
+              <th colspan="2">STL general information</th>
+            </tr>
 
-    </thead>
-    <tbody *ngIf="data?.decomposition.seasonal">
-    <tr>
-      <td>Window</td>
-      <td>{{data?.decomposition.general.win?data?.decomposition.general.win[0]:""}}</td>
-    </tr>
-    <tr>
-      <td>Degree of Fit</td>
-      <td>{{data?.decomposition.general["stl.degree"][0]}}</td>
-    </tr>
-
-
-    </tbody>
-
-    <tbody *ngIf="data?.decomposition.seasonal==false">
-    <tr>
-      <td>Degree of Fit</td>
-      <td>{{data?.decomposition.general["stl.degree"][0]}}</td>
-    </tr>
-    <tr>
-      <td>Effective Degrees of Freedom</td>
-      <td>{{data?.decomposition.general["degfr"][0]}}</td>
-    </tr>
-    <tr>
-      <td>Fitted Degrees of Freedom</td>
-      <td>{{data?.decomposition.general["degfr.fitted"][0]}}</td>
-    </tr>
-
-    </tbody>
-  </table>
+            </thead>
+            <tbody *ngIf="data?.decomposition.seasonal">
+            <tr>
+              <td>Window</td>
+              <td>{{data?.decomposition.general.win?data?.decomposition.general.win[0]:""}}</td>
+            </tr>
+            <tr>
+              <td>Degree of Fit</td>
+              <td>{{data?.decomposition.general["stl.degree"][0]}}</td>
+            </tr>
 
 
-  <div class="col-sm-6"><h4 class="text-center">Trends</h4>
-    <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'" [label_y]="'Trend component'"
-                          [values]="data?.decomposition.trends"></analytics-line-chart>
-  </div>
+            </tbody>
 
-  <div class="col-sm-6"><h4 class="text-center">Remainders</h4>
-    <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'" [label_y]="'Remainder Component'"
-                          [values]="data?.decomposition.remainders"></analytics-line-chart>
-  </div>
+            <tbody *ngIf="data?.decomposition.seasonal==false">
+            <tr>
+              <td>Degree of Fit</td>
+              <td>{{data?.decomposition.general["stl.degree"][0]}}</td>
+            </tr>
+            <tr>
+              <td>Effective Degrees of Freedom</td>
+              <td>{{data?.decomposition.general["degfr"][0]}}</td>
+            </tr>
+            <tr>
+              <td>Fitted Degrees of Freedom</td>
+              <td>{{data?.decomposition.general["degfr.fitted"][0]}}</td>
+            </tr>
 
-  <div class="col-sm-12"><h4 class="text-center">Fitted - Residuals</h4>
-    <analytics-scatter-plot [x_accessor]="'year'" [y_accessor]="'amount'" class="col-sm-12" style="min-height: 500px;" [label_x]="'Fitted Values'" [label_y]="'Residual Values'"
-                            [values]="data?.decomposition.fitted_residuals"></analytics-scatter-plot>
+            </tbody>
+          </table>
+
+        </div>
+
+      </md-card>
+
   </div>
 
 
-<!--
-  <div class="col-sm-4"><h4 class="text-center">Time - Residuals</h4>
-    <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'" [label_y]="'Residual Values'"
-                          [values]="data?.decomposition.time_residuals"></analytics-line-chart>
+  <div fxLayout="row">
+
+
+    <md-card fxFlex="50%" class="output-card">
+      <md-card-title-group align="center center">
+
+        <md-card-title>Trends</md-card-title>
+        <a target="_blank" md-icon-button
+           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/embed/analytics-line-chart-timeseries-trends']"
+           [queryParams]="analysisCall.queryParams()">
+          <md-icon color="primary">share</md-icon>
+        </a>
+
+      </md-card-title-group>
+      <div class="text-center">
+        <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'"
+                              [label_y]="'Trend component'"
+                              [values]="data?.decomposition.trends"></analytics-line-chart>
+      </div>
+
+    </md-card>
+    <md-card fxFlex="50%" class="output-card">
+      <md-card-title-group align="center center">
+
+        <md-card-title>Remainders</md-card-title>
+        <a target="_blank" md-icon-button
+           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/embed/analytics-line-chart-timeseries-remainders']"
+           [queryParams]="analysisCall.queryParams()">
+          <md-icon color="primary">share</md-icon>
+        </a>
+
+      </md-card-title-group>
+      <div class="text-center">
+
+        <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'"
+                              [label_y]="'Remainder Component'"
+                              [values]="data?.decomposition.remainders"></analytics-line-chart>
+      </div>
+
+    </md-card>
+
+
   </div>
 
-  <div class="col-sm-4"><h4 class="text-center">Time - Fitted</h4>
-    <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'" [label_y]="'Fitted Values'"
-                          [values]="data?.decomposition.time_fitted"></analytics-line-chart>
+
+  <div fxLayout="row">
+
+    <md-card fxFlex="50%" class="output-card">
+      <md-card-title-group align="center center">
+
+        <md-card-title>Fitted - Residuals</md-card-title>
+        <a target="_blank" md-icon-button
+           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/embed/analytics-scatter-plot-timeseries-decomposition-fitted-residuals']"
+           [queryParams]="analysisCall.queryParams()">
+          <md-icon color="primary">share</md-icon>
+        </a>
+
+      </md-card-title-group>
+      <div class="text-center">
+
+        <analytics-scatter-plot [x_accessor]="'year'" [y_accessor]="'amount'" class="col-sm-12"
+                                style="min-height: 500px;" [label_x]="'Fitted Values'" [label_y]="'Residual Values'"
+                                [values]="data?.decomposition.fitted_residuals"></analytics-scatter-plot>
+
+      </div>
+
+    </md-card>
+
+    <md-card fxFlex="50%" class="output-card">
+      <md-card-title-group align="center center">
+
+        <md-card-title>Compare</md-card-title>
+
+
+      </md-card-title-group>
+      <div class="text-center">
+
+        <table class="text-center table table-bordered">
+
+          <tbody *ngIf="data?.decomposition.seasonal">
+          <tr>
+            <td>ARIMA Orders</td>
+            <td>{{data?.decomposition.compare["arima.order"][0]}}</td>
+          </tr>
+          <tr>
+            <td>ARIMA Coefficients</td>
+            <td>{{data?.decomposition.compare["arima.coef"][0]}}</td>
+          </tr>
+          <tr>
+            <td>Coefficients Standard Error</td>
+            <td>{{data?.decomposition.compare["arima.coef.se"][0]}}</td>
+          </tr>
+          <tr>
+            <td>Estimated Coefficients Variance</td>
+            <td>{{data?.decomposition.compare["covariance.coef"][0]}}</td>
+          </tr>
+          <tr>
+            <td>Residuals Variance</td>
+            <td>{{data?.decomposition.compare["resid.variance"][0]}}</td>
+          </tr>
+          <tr>
+            <td>Not used Observations</td>
+            <td>{{data?.decomposition.compare["not.used.obs"].join(",")}}</td>
+          </tr>
+          <tr>
+            <td>Used Observations</td>
+            <td>{{data?.decomposition.compare["used.obs"].join(",")}}</td>
+          </tr>
+          <tr>
+            <td>Log-Likelihood</td>
+            <td>{{data?.decomposition.compare["loglik"][0]}}</td>
+          </tr>
+          <tr>
+            <td>Akaike information criterion</td>
+            <td>{{data?.decomposition.compare["aic"][0]}}</td>
+          </tr>
+
+          <tr>
+            <td>Bayesian information criterion</td>
+            <td>{{data?.decomposition.compare["bic"][0]}}</td>
+          </tr>
+          <tr>
+            <td>Corrected Akaike information criterion</td>
+            <td>{{data?.decomposition.compare["aicc"][0]}}</td>
+          </tr>
+
+
+          </tbody>
+
+          <tbody *ngIf="data?.decomposition.seasonal==false">
+          <tr>
+            <td>Residuals Variance</td>
+            <td>{{data?.decomposition.compare["resid.variance"][0]}}</td>
+          </tr>
+
+          <tr>
+            <td>Used Observations</td>
+            <td>{{data?.decomposition.compare["used.obs"].join(",")}}</td>
+          </tr>
+          <tr>
+            <td>Log-Likelihood</td>
+            <td>{{data?.decomposition.compare["loglik"][0]}}</td>
+          </tr>
+          <tr>
+            <td>Akaike information criterion</td>
+            <td>{{data?.decomposition.compare["aic"][0]}}</td>
+          </tr>
+
+          <tr>
+            <td>Bayesian information criterion</td>
+            <td>{{data?.decomposition.compare["bic"][0]}}</td>
+          </tr>
+          <tr>
+            <td>Generalized cross validation</td>
+            <td>{{data?.decomposition.compare["gcv"][0]}}</td>
+          </tr>
+
+
+          </tbody>
+        </table>
+
+
+      </div>
+
+    </md-card>
+
   </div>
--->
 
 
-  <table class="text-center table table-bordered">
-    <thead>
-    <tr>
-      <th colspan="2">Compare</th>
-    </tr>
-
-    </thead>
-    <tbody *ngIf="data?.decomposition.seasonal">
-    <tr>
-      <td>ARIMA Orders</td>
-      <td>{{data?.decomposition.compare["arima.order"][0]}}</td>
-    </tr>
-    <tr>
-      <td>ARIMA Coefficients</td>
-      <td>{{data?.decomposition.compare["arima.coef"][0]}}</td>
-    </tr>
-    <tr>
-      <td>Coefficients Standard Error</td>
-      <td>{{data?.decomposition.compare["arima.coef.se"][0]}}</td>
-    </tr>
-    <tr>
-      <td>Estimated Coefficients Variance</td>
-      <td>{{data?.decomposition.compare["covariance.coef"][0]}}</td>
-    </tr>
-    <tr>
-      <td>Residuals Variance</td>
-      <td>{{data?.decomposition.compare["resid.variance"][0]}}</td>
-    </tr>
-    <tr>
-      <td>Not used Observations</td>
-      <td>{{data?.decomposition.compare["not.used.obs"].join(",")}}</td>
-    </tr>
-    <tr>
-      <td>Used Observations</td>
-      <td>{{data?.decomposition.compare["used.obs"].join(",")}}</td>
-    </tr>
-    <tr>
-      <td>Log-Likelihood</td>
-      <td>{{data?.decomposition.compare["loglik"][0]}}</td>
-    </tr>
-    <tr>
-      <td>Akaike information criterion</td>
-      <td>{{data?.decomposition.compare["aic"][0]}}</td>
-    </tr>
-
-    <tr>
-      <td>Bayesian information criterion</td>
-      <td>{{data?.decomposition.compare["bic"][0]}}</td>
-    </tr>
-    <tr>
-      <td>Corrected Akaike information criterion</td>
-      <td>{{data?.decomposition.compare["aicc"][0]}}</td>
-    </tr>
-
-
-    </tbody>
-
-    <tbody *ngIf="data?.decomposition.seasonal==false">
-    <tr>
-      <td>Residuals Variance</td>
-      <td>{{data?.decomposition.compare["resid.variance"][0]}}</td>
-    </tr>
-
-    <tr>
-      <td>Used Observations</td>
-      <td>{{data?.decomposition.compare["used.obs"].join(",")}}</td>
-    </tr>
-    <tr>
-      <td>Log-Likelihood</td>
-      <td>{{data?.decomposition.compare["loglik"][0]}}</td>
-    </tr>
-    <tr>
-      <td>Akaike information criterion</td>
-      <td>{{data?.decomposition.compare["aic"][0]}}</td>
-    </tr>
-
-    <tr>
-      <td>Bayesian information criterion</td>
-      <td>{{data?.decomposition.compare["bic"][0]}}</td>
-    </tr>
-    <tr>
-      <td>Generalized cross validation</td>
-      <td>{{data?.decomposition.compare["gcv"][0]}}</td>
-    </tr>
-
-
-    </tbody>
-  </table>
-
-
-
-  <hr class="col-sm-12"/>
-
-
-  <div class="col-sm-12">
-    <h3>Model Fitting</h3>
-
-
-    <table class="text-center table table-bordered">
-      <thead>
-      <tr>
-        <th colspan="2">Model</th>
-      </tr>
-
-      </thead>
-      <tbody >
-      <tr>
-        <td>ARIMA Orders</td>
-        <td>{{data?.fitting.model["arima.order"][0]}}</td>
-      </tr>
-      <tr>
-        <td>ARIMA Coefficients</td>
-        <td>{{data?.fitting.model["arima.coef"][0]}}</td>
-      </tr>
-      <tr>
-        <td>Coefficients Standard Error</td>
-        <td>{{data?.fitting.model["arima.coef.se"][0]}}</td>
-      </tr>
-
-
-      </tbody>
-
-
-    </table>
-    <div class="col-sm-12">
-      <h3>Auto-correlation/Partial Auto-correlation</h3>
-
-    </div>
-    <div class="col-sm-6"><h4>ACF</h4>
-      <analytics-acf-chart class="col-sm-12" style="min-height: 250px;" [label_x]="'Lags'" [label_y]="'Autocorrelation'"
-                           [data]="data?.autocorrelation.acf.regular"></analytics-acf-chart>
-    </div>
-    <div class="col-sm-6"><h4>ACF residuals</h4>
-      <analytics-acf-chart class="col-sm-12" style="min-height: 250px;" [label_x]="'Lags'" [label_y]="'Autocorrelation of residuals'"
-                           [data]="data?.autocorrelation.acf.residuals"></analytics-acf-chart>
-    </div>
-    <div class="col-sm-6"><h4>PACF</h4>
-      <analytics-acf-chart class="col-sm-12" style="min-height: 250px;" [label_y]="'Partial autocorrelation'" [label_x]="'Lags'"
-                           [data]="data?.autocorrelation.pacf.regular"></analytics-acf-chart>
-    </div>
-    <div class="col-sm-6"><h4>PACF residuals</h4>
-      <analytics-acf-chart class="col-sm-12" style="min-height: 250px;" [label_y]="'Partial autocorrelation of residuals'" [label_x]="'Lags'"
-                           [data]="data?.autocorrelation.pacf.residuals"></analytics-acf-chart>
-    </div>
-    <hr class="col-sm-12"/>
-
-
-    <div class="col-sm-4"><h4 class="text-center">Fitted - Residuals</h4>
-      <analytics-scatter-plot class="col-sm-12" style="min-height: 500px;" [values]="data?.fitting.fitted_residuals" [label_x]="'Fitted Values'" [label_y]="'Residual Values'"
-                              [x_accessor]="'year'" [y_accessor]="'amount'"></analytics-scatter-plot>
-    </div>
-
-
+  <!--
     <div class="col-sm-4"><h4 class="text-center">Time - Residuals</h4>
       <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'" [label_y]="'Residual Values'"
-                            [values]="data?.fitting.time_residuals"></analytics-line-chart>
+                            [values]="data?.decomposition.time_residuals"></analytics-line-chart>
     </div>
 
     <div class="col-sm-4"><h4 class="text-center">Time - Fitted</h4>
       <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'" [label_y]="'Fitted Values'"
-                            [values]="data?.fitting.time_fitted"></analytics-line-chart>
+                            [values]="data?.decomposition.time_fitted"></analytics-line-chart>
+    </div>
+  -->
+
+
+  <div fxLayout="row">
+    <md-card fxFlex="30%" class="output-card">
+      <md-card-title-group align="center center">
+
+        <md-card-title>Auto-correlation/Partial Auto-correlation</md-card-title>
+
+
+      </md-card-title-group>
+      <div class="text-center">
+
+        <table class="text-center table table-bordered">
+          <thead>
+          <tr>
+            <th colspan="2">Model</th>
+          </tr>
+
+          </thead>
+          <tbody>
+          <tr>
+            <td>ARIMA Orders</td>
+            <td>{{data?.fitting.model["arima.order"][0]}}</td>
+          </tr>
+          <tr>
+            <td>ARIMA Coefficients</td>
+            <td>{{data?.fitting.model["arima.coef"][0]}}</td>
+          </tr>
+          <tr>
+            <td>Coefficients Standard Error</td>
+            <td>{{data?.fitting.model["arima.coef.se"][0]}}</td>
+          </tr>
+
+
+          </tbody>
+
+
+        </table>
+
+      </div>
+
+    </md-card>
+
+
+
+    <div fxFlex="35%">
+      <md-card class="output-card">
+        <md-card-title-group align="center center">
+
+          <md-card-title>ACF</md-card-title>
+          <a target="_blank" md-icon-button
+             [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/embed/analytics-acf-chart-timeseries-regular']"
+             [queryParams]="analysisCall.queryParams()">
+            <md-icon color="primary">share</md-icon>
+          </a>
+
+        </md-card-title-group>
+        <div class="row text-center">
+          <analytics-acf-chart class="col-sm-12" style="min-height: 250px;" [label_x]="'Lags'"
+                               [label_y]="'Autocorrelation'"
+                               [data]="data?.autocorrelation.acf.regular"></analytics-acf-chart>
+        </div>
+
+      </md-card>
     </div>
 
+    <div fxFlex="35%">
+      <md-card class="output-card">
+        <md-card-title-group align="center center">
+
+          <md-card-title>ACF residuals</md-card-title>
+          <a target="_blank" md-icon-button
+             [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/embed/analytics-acf-chart-timeseries-residuals']"
+             [queryParams]="analysisCall.queryParams()">
+            <md-icon color="primary">share</md-icon>
+          </a>
+
+        </md-card-title-group>
+        <div class="row text-center">
+          <analytics-acf-chart class="col-sm-12" style="min-height: 250px;" [label_x]="'Lags'"
+                               [label_y]="'Autocorrelation of residuals'"
+                               [data]="data?.autocorrelation.acf.residuals"></analytics-acf-chart>
+        </div>
+
+      </md-card>
+    </div>
+  </div>
 
 
-
-    <table class="text-center table table-bordered">
-      <thead>
-      <tr>
-        <th colspan="2">Compare</th>
-      </tr>
-
-      </thead>
-      <tbody >
-
-      <tr>
-        <td>Variance Coefficient</td>
-        <td>{{data?.fitting.compare["variance.coef"][0]}}</td>
-      </tr>
-      <tr>
-        <td>Residuals Variance</td>
-        <td>{{data?.fitting.compare["resid.variance"][0]}}</td>
-      </tr>
-      <tr>
-        <td>Not used Observations</td>
-        <td>{{data?.fitting.compare["not.used.obs"].join(",")}}</td>
-      </tr>
-      <tr>
-        <td>Used observations</td>
-        <td>{{data?.fitting.compare["used.obs"].join(",")}}</td>
-      </tr>
-      <tr>
-        <td>Log-Likelihood</td>
-        <td>{{data?.fitting.compare["loglik"][0]}}</td>
-      </tr>
-      <tr>
-        <td>Akaike information criterion</td>
-        <td>{{data?.fitting.compare["aic"][0]}}</td>
-      </tr>
-
-      <tr>
-        <td>Bayesian information criterion</td>
-        <td>{{data?.fitting.compare["bic"][0]}}</td>
-      </tr>
-      <tr>
-        <td>Corrected Akaike information criterion</td>
-        <td>{{data?.fitting.compare["aicc"][0]}}</td>
-      </tr>
+  <div fxLayout="row">
 
 
-      </tbody>
+    <div fxFlex="50%">
+      <md-card class="output-card">
+        <md-card-title-group align="center center">
+
+          <md-card-title>PACF</md-card-title>
+          <a target="_blank" md-icon-button
+             [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/embed/analytics-pacf-chart-timeseries-regular']"
+             [queryParams]="analysisCall.queryParams()">
+            <md-icon color="primary">share</md-icon>
+          </a>
+
+        </md-card-title-group>
+        <div class="row text-center">
 
 
-    </table>
+          <analytics-acf-chart class="col-sm-12" style="min-height: 250px;" [label_y]="'Partial autocorrelation'"
+                               [label_x]="'Lags'"
+                               [data]="data?.autocorrelation.pacf.regular"></analytics-acf-chart>
+
+        </div>
+
+      </md-card>
+
+    </div>
+    <div fxFlex="50%">
+      <md-card class="output-card">
+        <md-card-title-group align="center center">
+
+          <md-card-title>PACF Residuals</md-card-title>
+          <a target="_blank" md-icon-button
+             [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/embed/analytics-pacf-chart-timeseries-residuals']"
+             [queryParams]="analysisCall.queryParams()">
+            <md-icon color="primary">share</md-icon>
+          </a>
+
+        </md-card-title-group>
+        <div class="row text-center">
+
+          <analytics-acf-chart class="col-sm-12" style="min-height: 250px;"
+                               [label_y]="'Partial autocorrelation of residuals'" [label_x]="'Lags'"
+                               [data]="data?.autocorrelation.pacf.residuals"></analytics-acf-chart>
+
+        </div>
+
+      </md-card>
+
+    </div>
+
+  </div>
+  <div fxLayout="row">
+
+    <md-card fxFlex="33%" class="output-card">
+      <md-card-title-group align="center center">
+
+        <md-card-title>Fitted - Residuals</md-card-title>
+        <a target="_blank" md-icon-button
+           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/embed/analytics-scatter-plot-timeseries-fitting-fitted-residuals']"
+           [queryParams]="analysisCall.queryParams()">
+          <md-icon color="primary">share</md-icon>
+        </a>
+
+      </md-card-title-group>
+      <div class="text-center">
+
+
+        <analytics-scatter-plot class="col-sm-12" style="min-height: 500px;" [values]="data?.fitting.fitted_residuals"
+                                [label_x]="'Fitted Values'" [label_y]="'Residual Values'"
+                                [x_accessor]="'year'" [y_accessor]="'amount'"></analytics-scatter-plot>
+      </div>
+
+    </md-card>
+
+    <md-card  fxFlex="33%"  class="output-card">
+      <md-card-title-group align="center center">
+
+        <md-card-title>Time - Residuals</md-card-title>
+        <a target="_blank" md-icon-button
+           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/embed/analytics-line-chart-timeseries-fitting-residuals']"
+           [queryParams]="analysisCall.queryParams()">
+          <md-icon color="primary">share</md-icon>
+        </a>
+
+      </md-card-title-group>
+      <div class="row text-center">
+
+
+        <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'"
+                              [label_y]="'Residual Values'"
+                              [values]="data?.fitting.time_residuals"></analytics-line-chart>
+      </div>
+
+    </md-card>
+
+    <md-card  fxFlex="33%" class="output-card">
+      <md-card-title-group align="center center">
+
+        <md-card-title>Time - Fitted</md-card-title>
+        <a target="_blank" md-icon-button
+           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/embed/analytics-line-chart-timeseries-fitting-time-fitted']"
+           [queryParams]="analysisCall.queryParams()">
+          <md-icon color="primary">share</md-icon>
+        </a>
+
+      </md-card-title-group>
+      <div class="row text-center">
+
+
+        <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'"
+                              [label_y]="'Fitted Values'"
+                              [values]="data?.fitting.time_fitted"></analytics-line-chart>
+      </div>
+
+    </md-card>
+
+
+  </div>
+
+
+  <div fxLayout="row">
+
+
+    <md-card fxFlex="100%" class="output-card">
+      <md-card-title-group align="center center">
+
+        <md-card-title>Compare</md-card-title>
+        <a target="_blank" md-icon-button
+           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/embed/analytics-scatter-plot-timeseries-fitting-fitted-residuals']"
+           [queryParams]="analysisCall.queryParams()">
+          <md-icon color="primary">share</md-icon>
+        </a>
+
+      </md-card-title-group>
+      <div class="text-center">
+
+
+        <table class="text-center table table-bordered">
+
+          <tbody>
+
+          <tr>
+            <td>Variance Coefficient</td>
+            <td>{{data?.fitting.compare["variance.coef"][0]}}</td>
+          </tr>
+          <tr>
+            <td>Residuals Variance</td>
+            <td>{{data?.fitting.compare["resid.variance"][0]}}</td>
+          </tr>
+          <tr>
+            <td>Not used Observations</td>
+            <td>{{data?.fitting.compare["not.used.obs"].join(",")}}</td>
+          </tr>
+          <tr>
+            <td>Used observations</td>
+            <td>{{data?.fitting.compare["used.obs"].join(",")}}</td>
+          </tr>
+          <tr>
+            <td>Log-Likelihood</td>
+            <td>{{data?.fitting.compare["loglik"][0]}}</td>
+          </tr>
+          <tr>
+            <td>Akaike information criterion</td>
+            <td>{{data?.fitting.compare["aic"][0]}}</td>
+          </tr>
+
+          <tr>
+            <td>Bayesian information criterion</td>
+            <td>{{data?.fitting.compare["bic"][0]}}</td>
+          </tr>
+          <tr>
+            <td>Corrected Akaike information criterion</td>
+            <td>{{data?.fitting.compare["aicc"][0]}}</td>
+          </tr>
+
+
+          </tbody>
+
+
+        </table>
+      </div>
+
+    </md-card>
 
 
 
 
   </div>
-  <hr class="col-sm-12"/>
 
 
+  <div fxLayout="row">
+    <md-card fxFlex="100%" class="output-card">
+      <md-card-title-group align="center center">
+
+        <md-card-title>Forecasts from {{data?.forecast.model}}</md-card-title>
+        <a target="_blank" md-icon-button
+           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/embed/analytics-line-chart-timeseries-forecast']"
+           [queryParams]="analysisCall.queryParams()">
+          <md-icon color="primary">share</md-icon>
+        </a>
+
+      </md-card-title-group>
+      <div class=" text-center">
 
 
-  <div class="col-sm-12">
+        <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'"
+                              [label_y]="analysisCall.cube.model.aggregates.get(analysisCall.inputs['amount'].ref).label"
+                              [values]="data?.forecast.values"></analytics-line-chart>
+      </div>
 
-    <h3>Forecasts from {{data?.forecast.model}}</h3>
-
-    <div class="col-sm-12">
-      <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'" [label_y]="cube.model.aggregates.get(analysisCall.inputs['amount']).label"
-                            [values]="data?.forecast.values"></analytics-line-chart>
-    </div>
+    </md-card>
 
   </div>
+
 
 </div>

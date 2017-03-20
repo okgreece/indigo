@@ -3,20 +3,21 @@
  */
 import {
   ChangeDetectionStrategy, ViewEncapsulation,
-  Component, Input,  ElementRef,
-  AfterViewInit, ViewChild
+  Component, Input, ElementRef,
+  AfterViewInit, ViewChild, Injector
 } from '@angular/core';
-import { ChangeDetectorRef} from '@angular/core';
+import {ChangeDetectorRef} from '@angular/core';
 import * as d3 from 'd3';
-import * as $ from 'jquery'
+import * as $ from 'jquery';
 import * as _ from 'lodash';
+import {AnalysisVisualization} from '../visualization';
 
 
 @Component({
   selector: 'analytics-scatter-plot',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  template: require('./scatterPlot.html'),
+  templateUrl: './scatterPlot.html',
   styles: [`
 
   
@@ -43,17 +44,21 @@ export class ScatterPlotVisualization extends AfterViewInit {
   get y_accessor(): string {
     return this._y_accessor;
   }
+
   @Input()
   set y_accessor(value: string) {
     this._y_accessor = value;
   }
+
   get x_accessor(): string {
     return this._x_accessor;
   }
+
   @Input()
   set x_accessor(value: string) {
     this._x_accessor = value;
   }
+
   get values(): any {
     return this._values;
   }
@@ -66,9 +71,8 @@ export class ScatterPlotVisualization extends AfterViewInit {
   @Input()
   public label_y: string;
 
- private _x_accessor: string;
-private _y_accessor: string;
-
+  private _x_accessor: string;
+  private _y_accessor: string;
 
 
   @Input()
@@ -88,7 +92,6 @@ private _y_accessor: string;
       this.init(this.values);
 
 
-
   }
 
 
@@ -99,24 +102,31 @@ private _y_accessor: string;
   private generateBarChart(data: any) {
 
     let that = this;
-    let margin = {top: 20, right: 40, bottom: 50, left: 50};
+    let margin = {top: 20, right: 40, bottom: 60, left: 80};
 
 
     let viewerWidth = $(this.vizCanvas.nativeElement).width() - margin.left - margin.right;
     let viewerHeight = $(this.vizCanvas.nativeElement).height() - margin.top - margin.bottom;
-    let formatNumber = d3.format(".2n"),
-      formatBillion = function(x) { return formatNumber(x / 1e9) + "B"; },
-      formatMillion = function(x) { return formatNumber(x / 1e6) + "M"; },
-      formatThousand = function(x) { return formatNumber(x / 1e3) + "k"; },
-      formatAsIs = function(x) { return x; };
+    let formatNumber = d3.format('.2n'),
+      formatBillion = function (x) {
+        return formatNumber(x / 1e9) + 'B';
+      },
+      formatMillion = function (x) {
+        return formatNumber(x / 1e6) + 'M';
+      },
+      formatThousand = function (x) {
+        return formatNumber(x / 1e3) + 'k';
+      },
+      formatAsIs = function (x) {
+        return x;
+      };
 
     function formatAbbreviation(x) {
-      debugger;
       let v = Math.abs(x);
       return (v >= .9995e9 ? formatBillion
         : v >= .9995e6 ? formatMillion
-        : v >= .9995e3 ? formatThousand
-        : formatAsIs)(x);
+          : v >= .9995e3 ? formatThousand
+            : formatAsIs)(x);
     }
 
 
@@ -127,86 +137,90 @@ private _y_accessor: string;
 // append the svg obgect to the body of the page
 // appends a 'group' element to 'svg'
 // moves the 'group' element to the top left margin
-    let svg = d3.select(this.vizCanvas.nativeElement).append("svg")
-      .attr("width", viewerWidth + margin.left + margin.right)
-      .attr("height", viewerHeight + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform",
-        "translate(" + margin.left + "," + margin.top + ")");
+    let svg = d3.select(this.vizCanvas.nativeElement).append('svg')
+      .attr('width', viewerWidth + margin.left + margin.right)
+      .attr('height', viewerHeight + margin.top + margin.bottom)
+      .append('g')
+      .attr('transform',
+        'translate(' + margin.left + ',' + margin.top + ')');
+
+
+    let xis: number[] = data.map(function (d: any) {
+      return d[that._x_accessor];
+    });
+
+
+    let yis: number[] = data.map(function (d: any) {
+      return d[that._y_accessor];
+    });
 
 
     // Scale the range of the data
-    x.domain(d3.extent(data, function(d) { return d[that._x_accessor]; }));
-    y.domain([d3.min(data, function(d) { return d[that._y_accessor]; }), d3.max(data, function(d) { return d[that._y_accessor]; })]);
-
+    x.domain(d3.extent(xis));
+    y.domain(d3.extent(yis));
 
 
     // Add the scatterplot
-    svg.selectAll("dot")
+    svg.selectAll('dot')
       .data(data)
-      .enter().append("circle")
-      .attr("r", 3)
-      .attr("cx", function(d) {
+      .enter().append('circle')
+      .attr('r', 3)
+      .attr('cx', function (d) {
         return x(d[that._x_accessor]);
       })
-      .attr("cy", function(d) { return y(
-        d[that._y_accessor]);
+      .attr('cy', function (d) {
+        return y(
+          d[that._y_accessor]);
 
       });
 
     // Add the X Axis
-    svg.append("g")
-      .attr("transform", "translate(0," + viewerHeight + ")")
+    svg.append('g')
+      .attr('transform', 'translate(0,' + viewerHeight + ')')
       .call(d3.axisBottom(x).tickFormat(formatAbbreviation))
-      .selectAll("text")
-      .attr("y", 0)
-      .attr("x", 9)
-      .attr("dy", ".35em")
-      .attr("transform", "rotate(45)")
-      .style("text-anchor", "start");
+      .selectAll('text')
+      .attr('y', 0)
+      .attr('x', 9)
+      .attr('dy', '.35em')
+      .attr('transform', 'rotate(45)')
+      .style('text-anchor', 'start');
 
     // Add the Y Axis
-    svg.append("g")
+    svg.append('g')
       .call(d3.axisLeft(y).tickFormat(formatAbbreviation));
 
 
-
-    svg.append("rect")
-      .attr("x", 0)
-      .attr("y", 0)
+    svg.append('rect')
+      .attr('x', 0)
+      .attr('y', 0)
       .attr('height', viewerHeight)
-      .attr("width", viewerWidth)
-      .style("stroke", "black")
-      .style("fill", "none")
-      .style("stroke-width", "1");
+      .attr('width', viewerWidth)
+      .style('stroke', 'black')
+      .style('fill', 'none')
+      .style('stroke-width', '1');
 
-    svg.append("svg:line")
-      .attr("x1", 0)
-      .attr("x2", viewerWidth)
-      .attr("y1", y(0))
-      .attr("y2", y(0))
-      .style("stroke", "black");
+    svg.append('svg:line')
+      .attr('x1', 0)
+      .attr('x2', viewerWidth)
+      .attr('y1', y(0))
+      .attr('y2', y(0))
+      .style('stroke', 'black');
 
 
-
-    svg.append("text")
-      .attr("transform",
-        "translate(" + (viewerWidth/2) + " ," +
-        (viewerHeight + margin.top + 20) + ")")
-      .style("text-anchor", "middle")
+    svg.append('text')
+      .attr('transform',
+        'translate(' + (viewerWidth / 2) + ' ,' +
+        (viewerHeight + margin.top + margin.bottom / 2 ) + ')')
+      .style('text-anchor', 'middle')
       .text(this.label_x);
 
-    svg.append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 0 - margin.left)
-      .attr("x",0 - (viewerHeight / 2))
-      .attr("dy", "1em")
-      .style("text-anchor", "middle")
+    svg.append('text')
+      .attr('transform', 'rotate(-90)')
+      .attr('y', 0 - margin.left)
+      .attr('x', 0 - (viewerHeight / 2))
+      .attr('dy', '1em')
+      .style('text-anchor', 'middle')
       .text(this.label_y);
-
-
-
-
 
 
   }
@@ -217,9 +231,9 @@ private _y_accessor: string;
 
     let that = this;
 
-    d3.select(that.vizCanvas.nativeElement).html("");
+    d3.select(that.vizCanvas.nativeElement).html('');
 
-    this.vizCanvas = this.elementRef;
+    //  this.vizCanvas = this.elementRef;
 
     this.generateBarChart(values);
 
@@ -243,3 +257,163 @@ private _y_accessor: string;
 
 
 }
+
+
+@Component({
+  selector: 'analytics-scatter-plot-timeseries-decomposition-fitted-residuals',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  template: `<analytics-scatter-plot [x_accessor]="'year'" [y_accessor]="'amount'"  style="min-height: 500px;" [label_x]="'Fitted Values'" [label_y]="'Residual Values'"
+                                [values]="data?.decomposition.fitted_residuals"></analytics-scatter-plot>`,
+  styles: [`
+
+  
+ .axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: #82bf5e;
+  stroke-width: 2px;
+}
+
+.lineUp80 {
+  fill: none;
+  stroke: orange;
+  stroke-width: 2px;
+  stroke-dasharray: 5, 5;
+
+}
+
+.lineUp95 {
+  fill: none;
+  stroke: red;
+  stroke-width: 2px;
+  stroke-dasharray: 5, 5;
+
+}
+
+.lineLow95 {
+  fill: none;
+  stroke: green;
+  stroke-width: 2px;
+  stroke-dasharray: 5, 5;
+
+}
+
+.lineLow80 {
+  fill: none;
+  stroke: gold;
+  stroke-width: 2px;
+  stroke-dasharray: 5, 5;
+
+}
+
+
+svg text {
+  font-family: monospace;
+}
+
+
+
+  `]
+})
+export class ScatterPlotTimeseriesDecompositionFittedResiduals extends AnalysisVisualization {
+  @Input()
+  public data: any;
+
+  constructor(elementRef: ElementRef, ref: ChangeDetectorRef, injector: Injector) {
+    super(elementRef, ref, injector);
+
+  }
+
+}
+
+
+
+@Component({
+  selector: 'analytics-scatter-plot-timeseries-fitting-fitted-residuals',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  template: `<analytics-scatter-plot  style="min-height: 500px;" [values]="data?.fitting.fitted_residuals" [label_x]="'Fitted Values'" [label_y]="'Residual Values'"
+                              [x_accessor]="'year'" [y_accessor]="'amount'"></analytics-scatter-plot>`,
+  styles: [`
+
+  
+ .axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: #82bf5e;
+  stroke-width: 2px;
+}
+
+.lineUp80 {
+  fill: none;
+  stroke: orange;
+  stroke-width: 2px;
+  stroke-dasharray: 5, 5;
+
+}
+
+.lineUp95 {
+  fill: none;
+  stroke: red;
+  stroke-width: 2px;
+  stroke-dasharray: 5, 5;
+
+}
+
+.lineLow95 {
+  fill: none;
+  stroke: green;
+  stroke-width: 2px;
+  stroke-dasharray: 5, 5;
+
+}
+
+.lineLow80 {
+  fill: none;
+  stroke: gold;
+  stroke-width: 2px;
+  stroke-dasharray: 5, 5;
+
+}
+
+
+svg text {
+  font-family: monospace;
+}
+
+
+
+  `]
+})
+export class ScatterPlotTimeseriesFittingFittedResiduals extends AnalysisVisualization {
+  @Input()
+  public data: any;
+
+  constructor(elementRef: ElementRef, ref: ChangeDetectorRef, injector: Injector) {
+    super(elementRef, ref, injector);
+
+  }
+
+}
+

@@ -3,8 +3,8 @@
  */
 import {
   ChangeDetectionStrategy, ViewEncapsulation,
-  Component, Input,   ElementRef,
-  AfterViewInit, ViewChild
+  Component, Input, ElementRef,
+  AfterViewInit, ViewChild, NgModule
 } from '@angular/core';
 import {Inject, NgZone, ChangeDetectorRef} from '@angular/core';
 import * as d3 from 'd3';
@@ -15,12 +15,14 @@ import * as _ from 'lodash';
 import {Store} from "@ngrx/store";
 import {Cube} from "../../../models/cube";
 import {AnalysisCall} from "../../../models/analysis/analysisCall";
+import {IterablePipe} from "../../../pipes/mapToIterable";
+
 
 @Component({
   selector: 'analytics-descriptive-output',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  template: require('./descriptive.html'),
+  templateUrl: './descriptive.html',
   styles: [`
 
   
@@ -37,7 +39,7 @@ import {AnalysisCall} from "../../../models/analysis/analysisCall";
 
 .line {
   fill: none;
-  stroke: steelblue;
+  stroke: #82bf5e;
   stroke-width: 1.5px;
 }
 
@@ -66,13 +68,30 @@ import {AnalysisCall} from "../../../models/analysis/analysisCall";
 }
 .lineLow80 {
   fill: none;
-  stroke: yellow;
+  stroke: gold;
   stroke-width: 1.5px;
     stroke-dasharray: 5,5; 
 
 }
 
+svg {
+  background: url("src/public/sprites/grid_paper.png");
+  font-family: monospace;
+}
 
+svg text {
+  font-family: monospace;
+}
+
+analytics-descriptive-output md-card {
+  background: #303030;
+}
+md-spinner svg{
+background: none;
+}
+md-card{
+margin:5px;
+}
 
   `]
 })
@@ -80,12 +99,14 @@ export class DescriptiveStatisticsOutputComponent extends AfterViewInit {
   get data(): any {
     return this._data;
   }
+
+
   @Input()
   set data(value: any) {
     this._data = value;
 
 
-    if(value)
+    if (value)
     this.init(value);
 
 
@@ -97,7 +118,7 @@ export class DescriptiveStatisticsOutputComponent extends AfterViewInit {
 
   }
 
-  @ViewChild('container') container:any;
+  @ViewChild('container') container: any;
 
 
   private _data: any;
@@ -118,10 +139,16 @@ export class DescriptiveStatisticsOutputComponent extends AfterViewInit {
       this.ref.markForCheck();
     }, 5000);
   }
-
   @Input()
-  public analysisCall: AnalysisCall;
+  get analysisCall(): AnalysisCall {
+    return this._analysisCall;
+  }
 
+  set analysisCall(value: AnalysisCall) {
+    this._analysisCall = value;
+  }
+
+  private _analysisCall: AnalysisCall;
   @Input()
   public cube: Cube;
 

@@ -15,7 +15,7 @@ import { Cube } from '../../models/cube';
       <md-card-title>My Collection</md-card-title>
     </md-card>
 
-    <bc-cube-preview-list [cubes]="cubes$ | async"></bc-cube-preview-list>
+    <indigo-cube-preview-list [cubes]="cubes$ | async"></indigo-cube-preview-list>
   `,
   /**
    * Container components are permitted to have just enough styles

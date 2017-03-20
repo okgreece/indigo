@@ -3,26 +3,26 @@
  */
 
 import * as _ from 'lodash';
-import {ApiCubesService} from "../../services/api-cubes";
+import {ApiCubesService} from '../../services/api-cubes';
 
 import {
   ChangeDetectionStrategy, ViewEncapsulation,
-  Component, Input, Output,Directive, Attribute as MetadataAttribute, OnChanges, DoCheck, ElementRef, OnInit, SimpleChange,
+  Component, Input, Output, OnChanges, DoCheck, ElementRef, OnInit, SimpleChange,
   AfterViewInit, ViewChild, EventEmitter
 } from '@angular/core';
-import {Aggregate} from "../../models/aggregate";
-import {Sort} from "../../models/sort";
-import {Attribute} from "../../models/attribute";
-import {SortDirection} from "../../models/sortDirection";
-import {Transitivity} from "../../models/transitivity";
-import {Drilldown} from "../../models/drilldown";
-import {Cut} from "../../models/cut";
-import {AggregateParam} from "../../models/aggregateParam";
-import {AggregateRequest} from "../../models/aggregate/aggregateRequest";
-import {AggregateNode} from "../../models/aggregate/aggregateNode";
-import {Cube} from "../../models/cube";
-import {Dimension} from "../../models/dimension";
-import {FactRequest} from "../../models/fact/factRequest";
+import {Aggregate} from '../../models/aggregate';
+import {Sort} from '../../models/sort';
+import {Attribute} from '../../models/attribute';
+import {SortDirection} from '../../models/sortDirection';
+import {Transitivity} from '../../models/transitivity';
+import {Drilldown} from '../../models/drilldown';
+import {Cut} from '../../models/cut';
+import {AggregateParam} from '../../models/aggregateParam';
+import {AggregateRequest} from '../../models/aggregate/aggregateRequest';
+import {AggregateNode} from '../../models/aggregate/aggregateNode';
+import {Cube} from '../../models/cube';
+import {Dimension} from '../../models/dimension';
+import {FactRequest} from '../../models/fact/factRequest';
 
 
 @Component({
@@ -30,7 +30,7 @@ import {FactRequest} from "../../models/fact/factRequest";
   selector: 'fact-request-builder',
   changeDetection: ChangeDetectionStrategy.Default, // ⇐⇐⇐
   encapsulation: ViewEncapsulation.None,
-  template: require('./fact-request-builder.html'),
+  templateUrl: './fact-request-builder.html',
   styles: [`
   ul.alt-list{padding:0; margin:10px 0}
     ul.alt-list li {
@@ -72,48 +72,52 @@ import {FactRequest} from "../../models/fact/factRequest";
     span.node-key {
       cursor: pointer;
     }
+    .well {
+  background-color: #615f5f;
+}
+    
   `]
 })
-export class FactRequestBuilder{
+export class FactRequestBuilder {
 
 
   @Output()
-  public onRequestBuilt : EventEmitter<FactRequest> = new EventEmitter<FactRequest>();
+  public onRequestBuilt: EventEmitter<FactRequest> = new EventEmitter<FactRequest>();
 
   public get cube(){
     return this._cube;
   }
 
   @Input()
-  public set cube(value:Cube){
+  public set cube(value: Cube){
     let that = this;
     that._cube = value;
   }
-  _cube:Cube;
+  _cube: Cube;
 
 
 
   @Output() requestChange = new EventEmitter();
 
 
-  public get request():FactRequest{
+  public get request(): FactRequest{
     return this.newFactRequest;
   }
 
   @Input()
-  public set request(value:FactRequest){
+  public set request(value: FactRequest){
     let that = this;
     that.newFactRequest = value;
   }
 
 
 
-  constructor(private rudolfCubesService:ApiCubesService){
+  constructor(private rudolfCubesService: ApiCubesService) {
 
   }
 
 
-  newFactRequest:FactRequest = new FactRequest();
+  newFactRequest: FactRequest = new FactRequest();
 
 
 
@@ -130,7 +134,7 @@ export class FactRequestBuilder{
   }
 
 
-  removeCut(cut: Cut){
+  removeCut(cut: Cut) {
     _.remove(this.newFactRequest.cuts, cut);
   }
 
@@ -144,17 +148,17 @@ export class FactRequestBuilder{
     this.newFactRequest.sorts.push(newSort);
   }
 
-  removeSort(sort: Sort){
+  removeSort(sort: Sort) {
     _.remove(this.newFactRequest.sorts, sort);
   }
 
-  selectedCutChanged($event: Attribute){
-    this.newCutValueVal = "";
+  selectedCutChanged($event: Attribute) {
+    this.newCutValueVal = '';
     this.newCutAttribute = $event;
     this.getMembers($event.ref);
   }
 
-  selectedCutValChanged(search:string){
+  selectedCutValChanged(search: string) {
     this.searchMembers(this.newCutAttribute, search);
   }
 
@@ -162,56 +166,63 @@ export class FactRequestBuilder{
 
 
 
-  newSortAttribute:Attribute;
+  newSortAttribute: Attribute;
 
-  newDrilldownAttribute:Attribute;
+  newDrilldownAttribute: Attribute;
 
-  newCutAttribute:Attribute;
+  newCutAttribute: Attribute;
 
-  newCutValueVal:string;
+  newCutValueVal: string;
 
-  newSortDirection:SortDirection;
+  newSortDirection: SortDirection;
 
-  newCustomValue: any;
 
-  sortDirections:Map<string,SortDirection> = SortDirection.directions;
+  sortDirections: Map<string, SortDirection> = SortDirection.directions;
   public newFactPageNumber: number = 0;
   public newFactPageSize: number = 30;
 
-  setCutValue(member:string){
+  setCutValue(member: string) {
     this.newCutValueVal = member;
   }
-  members:Map<string, Map<string,Object>> = new Map<string, Map<string,Object>>();
+  members: Map<string, Map<string, Object>> = new Map<string, Map<string, Object>>();
 
-  cutMembers:string[]=[];
+  cutMembers: string[]= [];
 
-  transitivities:Transitivity[] = Transitivity.staticFactory();
+  transitivities: Transitivity[] = Transitivity.staticFactory();
 
   newCutTransitivity: Transitivity = this.transitivities[0];
 
 
-  searchMembers(attribute:Attribute, search: string){
-    if(!attribute) return;
+  searchMembers(attribute: Attribute, search: string) {
+    if (!attribute) return;
     let that = this;
-    this.rudolfCubesService.members(this.cube, attribute.dimension).subscribe(response=> {
+    this.rudolfCubesService.members(this.cube, attribute.dimension).subscribe(response => {
       that.members.set(attribute.ref, response);
 
       that.cutMembers = _.map(Array.from(response.values()), function(member){
         return member[attribute.ref];
       }).filter(function (value) {
-        return value&& (search==""|| search==undefined || search==null || value.indexOf(search)>-1);
+        return value && (search === '' || search === undefined || search == null || value.indexOf(search) > -1);
       });
 
     });
   }
 
-  getMembers(attributeName:string) {
+  factPageNumberChanged(value) {
+    this.newFactRequest.page = value;
+  }
+
+  factPageSizeChanged(value) {
+    this.newFactRequest.pageSize = value;
+  }
+
+  getMembers(attributeName: string) {
 
     let newCutDimension = _.filter(Array.from(this.cube.model.attributes.values()), function (attribute) {
       return attribute.ref === attributeName;
     })[0].dimension;
     let that = this;
-    this.rudolfCubesService.members(this.cube, newCutDimension).subscribe(response=> {
+    this.rudolfCubesService.members(this.cube, newCutDimension).subscribe(response => {
       that.members.set(newCutDimension.ref, response);
 
       that.cutMembers = _.map(Array.from(response.values()), function(member){
@@ -219,7 +230,6 @@ export class FactRequestBuilder{
       });
 
     });
-    /* .catch(() => Observable.of(this.cubeActions.searchComplete([]));*/
 
   }
 

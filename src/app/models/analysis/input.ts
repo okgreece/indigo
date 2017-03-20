@@ -22,11 +22,30 @@ export const InputTypes = {
 export class Input {
 
   name: string;
-  cardinality: string = "1";
+  cardinality: string = '1';
+  description: string;
   type: string;
   title: string;
   data_type: string;
   default_value: any;
   guess: boolean;
+  required: boolean;
+
+  deserialize(data: any): Input {
+
+
+    this.name = data.name;
+    this.title = data.title;
+    this.cardinality = data.cardinality;
+    this.guess = data.guess;
+    this.default_value = data.default_value;
+    this.required = data.required;
+    this.data_type = data.data_type;
+    this.type = InputTypes[data.type];
+
+
+    return this;
+  }
 
 }
+

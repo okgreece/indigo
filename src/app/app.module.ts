@@ -1,14 +1,13 @@
-import {NgModule, ViewContainerRef,} from '@angular/core';
+import {NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
-
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { DBModule } from '@ngrx/db';
 import { RouterStoreModule } from '@ngrx/router-store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { MaterialModule } from '@angular/material';
+import {MaterialModule, MaterialRootModule} from '@angular/material';
 
 import { ComponentsModule } from './components';
 import { BookEffects } from './effects/book';
@@ -21,35 +20,39 @@ import { ViewBookPageComponent } from './containers/view-book-page';
 import { SelectedBookPageComponent } from './containers/selected-book-page';
 import { CollectionPageComponent } from './containers/collection-page';
 import { NotFoundPageComponent } from './containers/not-found-page';
-
 import { GoogleBooksService } from './services/google-books';
-
 import { routes } from './routes';
 import { reducer } from './reducers';
 import { schema } from './db';
-import {ApiCubesService} from "./services/api-cubes";
-import {CollectionCubePageComponent} from "./containers/cube/collection-page";
-import {ViewCubePageComponent} from "./containers/cube/view-cube-page";
-import {FindCubePageComponent} from "./containers/cube/find-cube-page";
-import {SelectedCubePageComponent} from "./containers/cube/selected-cube-page";
-import {CubeExistsGuard} from "./guards/cube-exists";
-import {CubeEffects} from "./effects/cube";
-import {TreeExecution} from "./services/tree-execution";
-import {AlgorithmsService} from "./services/algorithms";
-import {CubeAnalyticsPage} from "./containers/cube/cube-analytics";
-import {AnalysisService} from "./services/analysis";
-import {environment} from "../environments/environment";
+import {ApiCubesService} from './services/api-cubes';
+import {CollectionCubePageComponent} from './containers/cube/collection-page';
+import {ViewCubePageComponent} from './containers/cube/view-cube-page';
+import {FindCubePageComponent} from './containers/cube/find-cube-page';
+import {SelectedCubePageComponent} from './containers/cube/selected-cube-page';
+import {CubeExistsGuard} from './guards/cube-exists';
+import {CubeEffects} from './effects/cube';
+import {TreeExecution} from './services/tree-execution';
+import {AlgorithmsService} from './services/algorithms';
+import {CubeAnalyticsPage} from './containers/cube/cube-analytics';
+import {AnalysisService} from './services/analysis';
+import {environment} from '../environments/environment';
 import {APP_BASE_HREF} from '@angular/common';
+import {CubeAnalyticsEmbedPage} from './containers/cube/cube-analytics-embed-page';
+import {CubeExistsLightGuard} from './guards/cube-exists-light';
+import {AggregatePreviewDialog, FactsPreviewDialog} from './components/cube/analytics/cube-analytics-detail';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import 'hammerjs';
 
 
 
 @NgModule({
   imports: [
+
     CommonModule,
     BrowserModule,
-    MaterialModule.forRoot(),
+    MaterialRootModule,
+    FlexLayoutModule,
     ComponentsModule,
-
     RouterModule.forRoot(routes, { useHash: true }),
 
     /**
@@ -107,21 +110,26 @@ import {APP_BASE_HREF} from '@angular/common';
     CubeAnalyticsPage,
     CollectionCubePageComponent,
     NotFoundPageComponent,
-
+    CubeAnalyticsEmbedPage,
+    FactsPreviewDialog,
+    AggregatePreviewDialog,
   ],
   providers: [
     BookExistsGuard,
     CubeExistsGuard,
+    CubeExistsLightGuard,
     GoogleBooksService,
     ApiCubesService,
     TreeExecution,
     AlgorithmsService,
     AnalysisService,
-    {provide: APP_BASE_HREF, useValue: environment.baseHref}
+    {provide: APP_BASE_HREF, useValue: environment.baseHref},
   ],
   bootstrap: [
     AppComponent
-  ]
+  ],
+  entryComponents: [FactsPreviewDialog, AggregatePreviewDialog],
+
 })
 export class AppModule {
   public environment = environment;

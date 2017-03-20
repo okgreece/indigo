@@ -1,14 +1,11 @@
-import {Sort} from "../sort";
-import {Aggregate} from "../aggregate";
-import {Drilldown} from "../drilldown";
-import {Cut} from "../cut";
-import {Cube} from "../cube";
-import {AggregateParam} from "../aggregateParam";
-import {Serializable} from "../iserializeable";
+import {Sort} from '../sort';
+import {Cut} from '../cut';
+import {Cube} from '../cube';
+import {Serializable} from '../iserializeable';
 /**
  * Created by larjo_000 on 27/6/2016.
  */
-export class FactRequest implements Serializable<FactRequest>{
+export class FactRequest implements Serializable<FactRequest> {
   serialize(input: FactRequest): Object {
     return undefined;
   }

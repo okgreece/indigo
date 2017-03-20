@@ -5,6 +5,50 @@
   <title>Indigo</title>
   <base href="/">
 
+  <style>
+    #content {
+      width: 100%;
+      /* Full Width */
+      height: 1px;
+      margin: 1px auto;
+      background: #000;
+    }
+
+    .expand {
+      width: 100%;
+      height: 4px;
+      margin: 1px 0;
+      background: #00a321;
+      position: absolute;
+      box-shadow: 0px 0px 10px 1px rgba(0, 163, 33, 0.7);
+
+      /*adjust speed here */
+      -moz-animation: fullexpand 1.5s ease-out;
+      -webkit-animation: fullexpand 1.5s ease-out;
+    }
+
+    /* Full Width Animation Bar */
+
+    @-moz-keyframes fullexpand {
+      0% {
+        width: 0px;
+      }
+      100% {
+        width: 100%;
+      }
+    }
+
+    @-webkit-keyframes fullexpand {
+      0% {
+        width: 0px;
+      }
+      100% {
+        width: 100%;
+      }
+
+    }
+  </style>
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <link href='https://fonts.googleapis.com/css?family=Leckerli+One' rel='stylesheet' type='text/css'>
@@ -13,6 +57,14 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-  <indigo-app>Loading...</indigo-app>
+<router-outlet name="embed"></router-outlet>
+
+<indigo-app>
+  <div id="content">
+    <span class="expand">Loading...</span>
+  </div>
+</indigo-app>
+
 </body>
+
 </html>

@@ -3,25 +3,26 @@
  */
 import {
   ChangeDetectionStrategy, ViewEncapsulation,
-  Component, Input,  ElementRef,
-  AfterViewInit, ViewChild
+  Component, Input, ElementRef,
+  AfterViewInit, ViewChild, Injector
 } from '@angular/core';
 import { ChangeDetectorRef} from '@angular/core';
 import * as d3 from 'd3';
 import * as $ from 'jquery';
 import * as _ from 'lodash';
+import {AnalysisVisualization} from "../visualization";
 
 
 @Component({
   selector: 'analytics-histogram',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  template: require('./histogram.html'),
+  templateUrl: './histogram.html',
   styles: [`
 
   
  .axis path,
-.axis line {
+.axis .line {
   fill: none;
   stroke: #000;
   shape-rendering: crispEdges;
@@ -68,35 +69,34 @@ export class HistogramVisualization extends AfterViewInit {
     let margin = {top: 20, right: 40, bottom: 50, left: 50};
 
 
-    let viewerWidth = $(this.vizCanvas.nativeElement).width() - margin.left - margin.right;
+    let viewerWidth = $(this.vizCanvas.nativeElement).width() - margin.left - margin.right -50;
     let viewerHeight = $(this.vizCanvas.nativeElement).height() - margin.top - margin.bottom;
 
 
     let lineData = [];
-    for(let i=0;i<data.cuts.length; i++){
+    for (let i = 0; i < data.cuts.length; i++) {
       lineData.push({
-        x: data.cuts[i],
-        y: data["normal.curve"][i]
+        x: data["normal.curve.x"][i],
+        y: data["normal.curve.y"][i]
       });
     }
 
     let boxData = [];
-    for(let i=0;i<data.counts.length; i++){
+    for(let i=0;i<data.density.length; i++){
       boxData.push({
         from: data.cuts[i],
         to: data.cuts[i + 1],
-        frequency : data.counts[i]
+        frequency : data.density[i]
       });
     }
 
-    debugger;
 
 
-    let max = d3.max([d3.max(data.counts), d3.max(data["normal.curve"])]);
-    let min = d3.min([d3.min(data.counts), d3.min(data["normal.curve"])]);
+    let max: number = d3.max([d3.max(data.density as number[]), d3.max(data['normal.curve.y'] as number[])]);
+    let min: number = d3.min([d3.min(data.density as number[]) , d3.min(data['normal.curve.y'] as number[]) ]);
 
-    let x_max = d3.max(data.cuts);
-    let x_min = d3.min(data.cuts);
+    let x_max: number = d3.max(data.cuts as number[]);
+    let x_min: number = d3.min(data.cuts as number[]);
 
     let x = d3.scaleLinear()
       .range([0, viewerWidth]);
@@ -104,7 +104,7 @@ export class HistogramVisualization extends AfterViewInit {
     let y = d3.scaleLinear()
       .range([viewerHeight, 0]);
 
-    let xAxis = d3.axisBottom(x).tickFormat(d3.format("d"))
+    let xAxis = d3.axisBottom(x).tickFormat(d3.format('d'))
       /*.tickFormat(function(d){
        return d3.time.format('%Y')(new Date(d));
        })*/;
@@ -153,20 +153,25 @@ export class HistogramVisualization extends AfterViewInit {
       .style("text-anchor", "end")
       .text("Amount");
 
-    svg.append("path")
-      .datum(lineData)
-      .attr("class", "line")
-      .attr("d", line);
-
 
     svg.selectAll(".box")
       .data(boxData)
       .enter().append("rect")
+      .style("fill", "#FDA500")
+      .style("stroke", "black")
       .attr("class", "box")
       .attr("x", function(d:any) { return x(d.from); })
       .attr("y", function(d:any) { return y( d.frequency); })
       .attr("width", function(d:any) { return Math.abs(x(d.to) - x(d.from)); })
       .attr("height", function(d:any) { return viewerHeight-  y(d.frequency); });
+
+
+
+    svg.append("path")
+      .datum(lineData)
+      .attr("class", "line")
+      .attr("d", line);
+
 
 
    /* svg.append("path")
@@ -222,7 +227,7 @@ export class HistogramVisualization extends AfterViewInit {
 
     d3.select(that.vizCanvas.nativeElement).html("");
 
-    this.vizCanvas = this.elementRef;
+  //  this.vizCanvas = this.elementRef;
 
     this.generateBarChart(values);
 
@@ -244,5 +249,40 @@ export class HistogramVisualization extends AfterViewInit {
     }, 5000);
   }
 
+
+}
+
+
+@Component({
+  selector: 'analytics-histogram-chart-descriptive',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  template: `   <analytics-histogram *ngFor="let item of data.histogram"   [label_y]="Frequency" [label_x]="Dimension" [values]="item"></analytics-histogram>`,
+  styles: [`
+
+
+  
+  .line {
+  fill: none;
+  stroke: #82bf5e;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+
+
+  `]
+})
+export class HistogramDescriptive  extends AnalysisVisualization {
+  @Input()
+  public data: any;
+
+  constructor(elementRef: ElementRef, ref: ChangeDetectorRef, injector: Injector) {
+    super(elementRef, ref, injector);
+
+  }
 
 }

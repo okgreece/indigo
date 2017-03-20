@@ -4,7 +4,7 @@
 import {
   ChangeDetectionStrategy, ViewEncapsulation,
   Component, Input, Directive, Attribute as MetadataAttribute, OnChanges, DoCheck, ElementRef, OnInit, SimpleChange,
-  AfterViewInit, ViewChild
+  AfterViewInit, ViewChild, Injector
 } from '@angular/core';
 import {Inject, NgZone, ChangeDetectorRef} from '@angular/core';
 import * as d3 from 'd3';
@@ -13,12 +13,13 @@ import * as $ from 'jquery'
 import * as _ from 'lodash';
 
 import {Store} from "@ngrx/store";
+import {AnalysisVisualization} from "../visualization";
 
 @Component({
   selector: 'analytics-box-plot',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  template: require('./boxPlot.html'),
+  templateUrl: './boxPlot.html',
   styles: [`
 
   
@@ -54,6 +55,11 @@ import {Store} from "@ngrx/store";
 
 .axis--x path {
   display: none;
+}
+
+.median{
+stroke-width: 3px;
+stroke: green;
 }
 
 
@@ -105,7 +111,7 @@ export class BoxPlotVisualization extends AfterViewInit {
 
 
     let x = d3.scaleBand().rangeRound([0, viewerWidth]).padding(0.1),
-      y = d3.scaleLinear().rangeRound([ viewerHeight,0 ]);
+      y = d3.scaleLinear().rangeRound([viewerHeight, 0]);
 
     let g = svg.append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -113,11 +119,8 @@ export class BoxPlotVisualization extends AfterViewInit {
 
 
       x.domain(data.map(function(d:any) { return d.label; }));
-      y.domain([d3.min(data, function(d:any) { return d3.min([d["lo.whisker"]]); }), d3.max(data, function(d:any) {return d3.max([d["up.whisker"]]); })]);
+      y.domain([d3.min(data, function(d: any) { return d['lo.whisker'] as number; }) , d3.max(data, function(d: any) {return d['up.whisker'] as number; }) ]);
 
-
-
-      debugger;
 
       g.append("g")
         .attr("class", "axis axis--x")
@@ -146,45 +149,45 @@ export class BoxPlotVisualization extends AfterViewInit {
         .data(data)
         .enter().append("rect")
         .attr("class", "box")
-        .attr("x", function(d:any) { return x(d.label); })
+        .attr("x", function(d:any) { return x(d.label) + (x.bandwidth() - viewerHeight - y( d["box.width"][0])) / 2; })
         .attr("y", function(d:any) { return y( d["up.hinge"]); })
-        .attr("width", x.bandwidth())
+        .attr("width", function(d:any) { return viewerHeight + y( d["box.width"][0]); })
         .attr("height", function(d:any) { return Math.abs(y( d["up.hinge"]) -  y(d["lo.hinge"])); });
 
     g.selectAll(".median")
       .data(data)
       .enter().append("svg:line")
       .attr("class", "median")
-      .attr("x1", function(d:any) { return x(d.label); })
-      .attr("x2", function(d:any) { return x(d.label) + x.bandwidth(); })
+      .attr("x1", function(d:any) { return x(d.label) + (x.bandwidth() - viewerHeight - y( d["box.width"][0])) / 2;})
+      .attr("x2", function(d:any) { return x(d.label) + (x.bandwidth() - viewerHeight - y( d["box.width"][0])) / 2 + viewerHeight + y( d["box.width"][0]);})
       .attr("y1", function(d:any) { return y( d["median"]); })
-      .attr("y2", function(d:any) { return y( d["median"]); }) .style("stroke", "black");
+      .attr("y2", function(d:any) { return y( d["median"]); });
 
     g.selectAll(".upconnect")
       .data(data)
       .enter().append("svg:line")
       .attr("class", "upconnect")
-      .attr("x1", function(d:any) { return x(d.label)+ x.bandwidth()/2; })
-      .attr("x2", function(d:any) { return x(d.label) + x.bandwidth()/2; })
-      .attr("y1", function(d:any) { return y( d["up.hinge"]); })
-      .attr("y2", function(d:any) { return y( d["up.whisker"]); }) .style("stroke", "black");
+      .attr("x1", function(d:any) { return x(d.label) + x.bandwidth() / 2; })
+      .attr("x2", function(d:any) { return x(d.label) + x.bandwidth() / 2; })
+      .attr("y1", function(d:any) { return y( d['up.hinge']); })
+      .attr("y2", function(d:any) { return y( d['up.whisker']); }) .style('stroke', 'black');
 
     g.selectAll(".loconnect")
       .data(data)
       .enter().append("svg:line")
       .attr("class", "loconnect")
-      .attr("x1", function(d:any) { return x(d.label)+ x.bandwidth()/2; })
-      .attr("x2", function(d:any) { return x(d.label) + x.bandwidth()/2; })
-      .attr("y1", function(d:any) { return y( d["lo.hinge"]); })
-      .attr("y2", function(d:any) { return y( d["lo.whisker"]); }) .style("stroke", "black");
+      .attr("x1", function(d:any) { return x(d.label) + x.bandwidth() / 2; })
+      .attr("x2", function(d:any) { return x(d.label) + x.bandwidth() / 2; })
+      .attr("y1", function(d:any) { return y( d['lo.hinge']); })
+      .attr("y2", function(d:any) { return y( d['lo.whisker']); }) .style('stroke', 'black');
 
 
     g.selectAll(".upwhisker")
       .data(data)
       .enter().append("svg:line")
       .attr("class", "upwhisker")
-      .attr("x1", function(d:any) { return x(d.label) + .3 * x.bandwidth(); })
-      .attr("x2", function(d:any) { return x(d.label) + .7 * x.bandwidth(); })
+      .attr("x1", function(d:any) { return  (x.bandwidth() - viewerHeight - y( d["box.width"][0])) /2   +  .7 * ( viewerHeight + y( d["box.width"][0]) );})
+      .attr("x2", function(d:any) { return  (x.bandwidth() - viewerHeight - y( d["box.width"][0])) /2   +  1.3 * ( viewerHeight + y( d["box.width"][0]) );})
       .attr("y1", function(d:any) { return y( d["up.whisker"]); })
       .attr("y2", function(d:any) { return y( d["up.whisker"]); }) .style("stroke", "black");
 
@@ -192,12 +195,19 @@ export class BoxPlotVisualization extends AfterViewInit {
       .data(data)
       .enter().append("svg:line")
       .attr("class", "lowhisker")
-      .attr("x1", function(d:any) { return x(d.label) + .3 * x.bandwidth(); })
-      .attr("x2", function(d:any) { return x(d.label) + .7 * x.bandwidth(); })
-      .attr("y1", function(d:any) { return y( d["lo.whisker"]); })
+    .attr("x1", function(d:any) { return  (x.bandwidth() - viewerHeight - y( d["box.width"][0])) /2   +  .7 * ( viewerHeight + y( d["box.width"][0]) );})
+    .attr("x2", function(d:any) { return  (x.bandwidth() - viewerHeight - y( d["box.width"][0])) /2   +  1.3 * ( viewerHeight + y( d["box.width"][0]) );})
+    .attr("y1", function(d:any) { return y( d["lo.whisker"]); })
       .attr("y2", function(d:any) { return y( d["lo.whisker"]); }) .style("stroke", "black");
 
-
+    g.append("rect")
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("height", viewerHeight)
+      .attr("width", viewerWidth)
+      .style("stroke", "black")
+      .style("fill", "none")
+      .style("stroke-width", "1");
   }
 
 
@@ -208,7 +218,7 @@ export class BoxPlotVisualization extends AfterViewInit {
 
     d3.select(that.vizCanvas.nativeElement).html('');
 
-    this.vizCanvas = this.elementRef;
+    //this.vizCanvas = this.elementRef;
 
     this.generateBarChart(data);
 
@@ -255,5 +265,29 @@ export class BoxPlotVisualization extends AfterViewInit {
     }, 5000);
   }
 
+
+}
+
+
+@Component({
+  selector: 'analytics-box-plot-descriptive',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  template: `    <analytics-box-plot style="min-height: 500px;"  [label_y]="Frequency" [label_x]="Dimension" [data]="data.boxplot"></analytics-box-plot>`,
+  styles: [`
+
+
+
+
+  `]
+})
+export class BoxPlotDescriptive  extends AnalysisVisualization {
+  @Input()
+  public data: any;
+
+  constructor(elementRef: ElementRef, ref: ChangeDetectorRef, injector: Injector) {
+    super(elementRef, ref, injector);
+
+  }
 
 }

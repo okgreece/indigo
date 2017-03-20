@@ -142,4 +142,6 @@ function combinations_with_replacement(obj,n){
   return _.map(arrangements,indices=>_.map<any,any>(indices,i=>obj[i]))
 }
 
+/*
 module.exports={combinations_with_replacement,combinations,product,permutations};
+*/

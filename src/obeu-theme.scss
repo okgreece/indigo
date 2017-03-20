@@ -1,0 +1,46 @@
+@import '~@angular/material/core/theming/all-theme';
+@include mat-core();
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue.
+$indigo-app-primary: mat-palette($mat-green);
+$indigo-app-accent:  mat-palette($mat-indigo, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$indigo-app-warn:    mat-palette($mat-red);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$indigo-app-theme: mat-dark-theme($indigo-app-primary, $indigo-app-accent, $indigo-app-warn);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($indigo-app-theme);
+
+
+.mat-card-header-text{
+  display: flex;
+}
+
+.output-card{
+  background: #303030;
+}
+.input-card .mat-input-container{
+
+  width:100%;
+}
+
+
+th {
+  text-align: center;
+  background: gainsboro;
+  color: black;
+}
+
+.indigo-spacer {
+  flex: 1 1 auto;
+}
+
+md-chip {
+  margin: 3px;
+}

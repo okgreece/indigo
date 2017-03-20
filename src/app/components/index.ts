@@ -15,32 +15,47 @@ import { SidenavComponent } from './sidenav';
 import { ToolbarComponent } from './toolbar';
 
 import { PipesModule } from '../pipes';
-import {CubeDetailComponent} from "./cube/cube-detail";
-import {CubePreviewComponent} from "./cube/cube-preview";
-import {CubePreviewListComponent} from "./cube/cube-preview-list";
-import {CubeSearchComponent} from "./cube/cube-search";
-import {TreeBuilder} from "./tree/tree-builder";
-import {BarChartVisualization} from "./tree/visualizations/barchart";
-import {AggregateRequestBuilder} from "./request/aggregate-request-builder";
-import {JsonTreeComponent} from "../lib/json-tree/json-tree";
-import {ModalModule} from "ng2-bootstrap";
-import {JsonNodeComponent} from "../lib/json-tree/json-node";
-import {CubeAnalyticsDetailComponent} from "./cube/analytics/cube-analytics-detail";
-import {LineChartVisualization} from "./analysis/visualizations/lineChart";
-import {TimeSeriesOutputComponent} from "./analysis/timeseries/timeseries";
-import {AcfChartVisualization} from "./analysis/visualizations/acfChart";
-import { CubeAnalyticsIndexComponent} from "../containers/cube/cube-analytics-index-page";
-import {CubeAnalyticsListComponent} from "./cube/analytics/cube-analytics-list";
-import {CubeAnalyticsPreviewComponent} from "./cube/analytics/cube-analytics-preview";
-import {ScatterPlotVisualization} from "./analysis/visualizations/scatterPlot";
-import {DescriptiveStatisticsOutputComponent} from "./analysis/descriptive/descriptive";
-import {FactRequestBuilder} from "./request/fact-request-builder";
-import {FrequencyVisualization} from "./analysis/visualizations/frequencyChart";
-import {BoxPlotVisualization} from "./analysis/visualizations/boxPlot";
-import {HistogramVisualization} from "./analysis/visualizations/histogram";
+import {CubeDetailComponent} from './cube/cube-detail';
+import {CubePreviewComponent} from './cube/cube-preview';
+import {CubePreviewListComponent} from './cube/cube-preview-list';
+import {CubeSearchComponent} from './cube/cube-search';
+import {TreeBuilder} from './tree/tree-builder';
+import {BarChartVisualization} from './tree/visualizations/barchart';
+import {AggregateRequestBuilder} from './request/aggregate-request-builder';
+import {JsonTreeComponent} from '../lib/json-tree/json-tree';
+import {JsonNodeComponent} from '../lib/json-tree/json-node';
+import {CubeAnalyticsDetailComponent} from './cube/analytics/cube-analytics-detail';
+import {
+  LineChartVisualization, LineChartTrends, LineChartRemainders,
+  LineChartFittingResiduals, LineChartFittingTimeFitted, LineChartTimeSeriesForecast
+} from './analysis/visualizations/lineChart';
+import {TimeSeriesOutputComponent} from './analysis/timeseries/timeseries';
+import {
+  AcfChartVisualization, AcfChartVisualizationRegular,
+  AcfChartVisualizationResiduals, PacfChartVisualizationRegular, PacfChartVisualizationResiduals
+} from './analysis/visualizations/acfChart';
+import { CubeAnalyticsIndexComponent} from '../containers/cube/cube-analytics-index-page';
+import {CubeAnalyticsListComponent} from './cube/analytics/cube-analytics-list';
+import {CubeAnalyticsPreviewComponent} from './cube/analytics/cube-analytics-preview';
+import {
+  ScatterPlotVisualization, ScatterPlotTimeseriesDecompositionFittedResiduals,
+  ScatterPlotTimeseriesFittingFittedResiduals
+} from './analysis/visualizations/scatterPlot';
+import {DescriptiveStatisticsOutputComponent} from './analysis/descriptive/descriptive';
+import {FactRequestBuilder} from './request/fact-request-builder';
+import {FrequencyVisualization, FrequencyChartDescriptive} from './analysis/visualizations/frequencyChart';
+import {BoxPlotVisualization, BoxPlotDescriptive} from './analysis/visualizations/boxPlot';
+import {HistogramVisualization, HistogramDescriptive} from './analysis/visualizations/histogram';
+import DynamicComponent from './dynamic-component';
+import {MasonryModule} from 'angular2-masonry';
+import {CubeAnalyticsEmbedComponent} from './cube/analytics/embed/embed';
+import LineString = GeoJSON.LineString;
+import {FlexLayoutModule} from '@angular/flex-layout';
+
 
 
 export const COMPONENTS = [
+  DynamicComponent,
   BookAuthorsComponent,
   BookDetailComponent,
   BookPreviewComponent,
@@ -70,10 +85,25 @@ export const COMPONENTS = [
   TimeSeriesOutputComponent,
   DescriptiveStatisticsOutputComponent,
   AcfChartVisualization,
+  AcfChartVisualizationRegular,
+  AcfChartVisualizationResiduals,
+  LineChartTrends,
+  LineChartRemainders,
+  ScatterPlotTimeseriesDecompositionFittedResiduals,
+  ScatterPlotTimeseriesFittingFittedResiduals,
+  LineChartFittingResiduals,
+  LineChartFittingTimeFitted,
+  PacfChartVisualizationRegular,
+  PacfChartVisualizationResiduals,
+  BoxPlotDescriptive,
   CubePreviewListComponent,
   CubePreviewComponent,
   CubeAnalyticsListComponent,
-  CubeAnalyticsPreviewComponent
+  CubeAnalyticsPreviewComponent,
+  CubeAnalyticsEmbedComponent,
+  LineChartTimeSeriesForecast,
+  FrequencyChartDescriptive,
+  HistogramDescriptive
 ];
 
 
@@ -85,7 +115,8 @@ export const COMPONENTS = [
     RouterModule,
     PipesModule,
     FormsModule,
-    ModalModule
+    MasonryModule,
+    FlexLayoutModule
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,

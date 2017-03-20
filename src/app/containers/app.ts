@@ -1,95 +1,66 @@
 import 'rxjs/add/operator/let';
-import { Observable } from 'rxjs/Observable';
-import {Component, ChangeDetectionStrategy, ViewContainerRef} from '@angular/core';
-import { Store } from '@ngrx/store';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 
-import * as fromRoot from '../reducers';
-import * as layout from '../actions/layout';
+import {
+  Router,
+  Event as RouterEvent,
+  NavigationStart,
+  NavigationEnd,
+  NavigationCancel,
+  NavigationError
+} from '@angular/router';
+import {Http} from '@angular/http';
+import {HttpInterceptorService} from "ng-http-interceptor";
+
 
 
 @Component({
   selector: 'indigo-app',
-  styles:[`    * {
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    .secondary {
-      color: rgba(0, 0, 0, .54);
-    }
-
-    md-sidenav-layout {
-      background: rgba(0, 0, 0, .03);
-      color:white;
-     // right: 30% !important; // Make space for the devtools, demo only
-    }
-
-    md-sidenav {
-      width: 300px;
-      color:white;
-    }
-    
-   .indigo{
-      font-family: 'Leckerli One', cursive;
-      color:white;
-    }`],
+  styles: [`    `],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <bc-layout>
-      <bc-sidenav [open]="showSidenav$ | async">
-<!--        <bc-nav-item (activate)="closeSidenav()" routerLink="/" icon="book" hint="View your book collection">
-          My Collection
-        </bc-nav-item>
-        <bc-nav-item (activate)="closeSidenav()" routerLink="/book/find" icon="search" hint="Find your next book!">
-          Browse Books
-        </bc-nav-item>     -->   
-        
-     <!--   <bc-nav-item (activate)="closeSidenav()" routerLink="/cubes" icon="collections_bookmark" hint="View your bookmarked datasets">
-          My Collection
-        </bc-nav-item>-->
-        <bc-nav-item (activate)="closeSidenav()" routerLink="/cube/find" icon="search" >
-          Browse Cubes
-        </bc-nav-item>
-       <button md-button #mybutton (click)="closeSidenav()">Close</button>
-
-      </bc-sidenav>
-      <bc-toolbar (openMenu)="openSidenav()">
-        <span class="indigo">indigo</span>
-
-      </bc-toolbar>
-
+    <div class="loading-overlay" *ngIf="loading">
+      <!-- show something fancy here, here with Angular 2 Material's loading bar or circle -->
+      <md-progress-bar mode="indeterminate"></md-progress-bar>
+    </div>
       <router-outlet></router-outlet>
-    </bc-layout>
+
+
+
+
+    
   `
 })
 export class AppComponent {
-  showSidenav$: Observable<boolean>;
-  private viewContainerRef: ViewContainerRef;
 
-  constructor(private store: Store<fromRoot.State>, viewContainerRef:ViewContainerRef) {
-    /**
-     * Selectors can be applied with the `let` operator which passes the source
-     * observable to the provided function.
-     *
-     * More on `let`: https://gist.github.com/btroncone/d6cf141d6f2c00dc6b35#let
-     * More on selectors: https://gist.github.com/btroncone/a6e4347326749f938510#extracting-selectors-for-reuse
-     */
-    this.showSidenav$ = this.store.let(fromRoot.getShowSidenav);
-    this.viewContainerRef = viewContainerRef;
+
+
+  loading: boolean = true;
+
+
+  constructor(private router: Router) {
+    router.events.subscribe((event: RouterEvent) => {
+      this.navigationInterceptor(event);
+    });
+
+
+
 
   }
+  navigationInterceptor(event: RouterEvent): void {
+    if (event instanceof NavigationStart) {
+      this.loading = true;
+    }
+    if (event instanceof NavigationEnd) {
+      this.loading = false;
+    }
 
-  closeSidenav() {
-    /**
-     * All state updates are handled through dispatched actions in 'container'
-     * components. This provides a clear, reproducible history of state
-     * updates and user interaction through the life of our
-     * application.
-     */
-    this.store.dispatch(new layout.CloseSidenavAction());
-  }
-
-  openSidenav() {
-    this.store.dispatch(new layout.OpenSidenavAction());
+    // Set loading state to false in both of the below events to hide the spinner in case a request fails
+    if (event instanceof NavigationCancel) {
+      this.loading = false;
+    }
+    if (event instanceof NavigationError) {
+      this.loading = false;
+    }
   }
 }

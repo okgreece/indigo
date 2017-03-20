@@ -1,2 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
-@import "~@angular/material/core/theming/prebuilt/deeppurple-amber.css";
+/*
+@import "~@angular/material/core/theming/prebuilt/purple-green.css";
+*/
+
+@import "~flag-icon-css/css/flag-icon.css";
