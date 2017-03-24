@@ -15,5 +15,5 @@ When you visit Indigo's home page, you are presented with a search box, where yo
 
 <img src="resources/indigo_cube_find.gif" style="max-width: 100%" />
  
-If you type nothing in the search box, you get all the datasets in the configured store. If you are using a Rudolf API store, you also get the Global dataset - you will use it in the following sections to build a time series analysis task.
+If you type nothing in the search box, you get all the datasets in the configured store. If you are using a Rudolf API store, you also get the Global dataset - you will use it in the following sections to build a time series analysis task. If you have spotted the dataset you want to analyze, press the green button "Analytics & Data Mining".
 
