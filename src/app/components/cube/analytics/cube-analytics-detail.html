@@ -3,7 +3,7 @@
     <p>
       <md-toolbar color="primary">
 
-        <span> {{ (cube$|async).pckg.title }}: {{ algorithm.title }}</span>
+        <span> {{ (cube$|async).pckg.title }}: {{ executionConfiguration.title }}</span>
 
         <span class="indigo-spacer"></span>
         <button md-tooltip="Back" md-icon-button [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/']">
@@ -11,7 +11,7 @@
         </button>
 
 
-        <button md-tooltip="Execute" md-icon-button [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/'+ algorithm.name]"
+        <button md-tooltip="Execute" md-icon-button [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/'+ algorithm.name+'/'+ executionConfiguration.name]"
                 [queryParams]="analysisCall.queryParams()">
           <md-icon>play_circle_outline
           </md-icon>
@@ -28,9 +28,9 @@
 
 
           <md-card class="input-card">
-            {{algorithm.prompt}}
+            {{executionConfiguration.prompt}}
           </md-card>
-          <ng-container *ngFor="let input of algorithm.inputs|iterable">
+          <ng-container *ngFor="let input of executionConfiguration.inputs|iterable">
 
             <md-card *ngIf="!input.guess" class="input-card">
               <md-card-header class="">
@@ -208,7 +208,7 @@
         </div>
       </div>
       <div fxFlex="70%">
-        <div>
+        <div >
 
           <md-spinner *ngIf="loading$|async"></md-spinner>
 

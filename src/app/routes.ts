@@ -13,7 +13,7 @@ import {CubeExistsLightGuard} from './guards/cube-exists-light';
 export const routes: Routes = [
 
     {
-      path: 'cube/analytics/:id/:algorithm/embed/:part',
+      path: 'cube/analytics/:id/:algorithm/:configuration/embed/:part',
       canActivate: [CubeExistsLightGuard],
       component: CubeAnalyticsEmbedPage
     },
@@ -36,7 +36,7 @@ export const routes: Routes = [
         },
 
         {
-          path: 'cube/analytics/:id/:algorithm',
+          path: 'cube/analytics/:id/:algorithm/:configuration',
           canActivate: [CubeExistsGuard],
           component: CubeAnalyticsPage
         },

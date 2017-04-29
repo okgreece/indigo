@@ -8,6 +8,7 @@ import 'rxjs/Subscription';
 import {AnalysisCall} from '../models/analysis/analysisCall';
 import {Algorithm} from '../models/analysis/algorithm';
 import {ApiCubesService} from './api-cubes';
+import {ExecutionConfiguration} from '../models/analysis/executionConfiguration';
 
 @Injectable()
 export class AnalysisService {
@@ -15,34 +16,34 @@ export class AnalysisService {
   constructor(private http: Http, public apiService: ApiCubesService) {
   }
 
-  execute(algorithm: Algorithm, inputs): Observable<any> {
+  execute(configuration: ExecutionConfiguration, inputs): Observable<any> {
 
 
-    if (algorithm.name === 'time_series' || algorithm.name === 'TimeSeries') {
-      return this.timeseries(algorithm, inputs);
+    if (configuration.algorithm.name === 'time_series' || configuration.algorithm.name === 'TimeSeries') {
+      return this.timeseries(configuration, inputs);
 
     }
-    else if (algorithm.name === 'descriptive_statistics') {
-      return this.descriptive(algorithm, inputs);
+    else if (configuration.algorithm.name === 'descriptive_statistics') {
+      return this.descriptive(configuration, inputs);
     }
 
 
   }
 
-  timeseries(algorithm, inputs) {
+  timeseries(configuration, inputs) {
     let that = this;
     let body = new URLSearchParams();
-    body.set('amount', "'" + inputs['amount'] + "'");
-    body.set('time', "'" + inputs['time'] + "'");
+    body.set('amount', '\'' + inputs['amount'] + '\'');
+    body.set('time', '\'' + inputs['time'] + '\'');
     body.set('prediction_steps', inputs['prediction_steps']);
-    body.set('json_data', "'" + inputs['json_data'] + "'");
+    body.set('json_data', '\'' + inputs['json_data'] + '\'');
 
-    return that.http.post(algorithm.endpoint.toString() , body).map(res => {
+    return that.http.post(configuration.endpoint.toString() , body).map(res => {
       let response = res.json();
 
       debugger;
 
-      let forecasts = response["forecasts"];
+      let forecasts = response['forecasts'];
       let values: any = [];
       for (let i = 0; i < forecasts.data_year.length; i++) {
         values.push({
@@ -68,57 +69,57 @@ export class AnalysisService {
       let acfRegular = response['acf.param']['acf.parameters'];
       let acfValues = [];
 
-      for (let i = 0; i < acfRegular["acf.lag"].length; i++) {
+      for (let i = 0; i < acfRegular['acf.lag'].length; i++) {
         acfValues.push({
-          lag: parseFloat(acfRegular["acf.lag"][i]),
-          correlation: parseFloat(acfRegular["acf"][i])
+          lag: parseFloat(acfRegular['acf.lag'][i]),
+          correlation: parseFloat(acfRegular['acf'][i])
         });
       }
 
-      let pacfRegular = response["acf.param"]["pacf.parameters"];
+      let pacfRegular = response['acf.param']['pacf.parameters'];
       let pacfValues = [];
 
-      for (let i = 0; i < pacfRegular["pacf.lag"].length; i++) {
+      for (let i = 0; i < pacfRegular['pacf.lag'].length; i++) {
         pacfValues.push({
-          lag: parseFloat(pacfRegular["pacf.lag"][i]),
-          correlation: parseFloat(pacfRegular["pacf"][i])
+          lag: parseFloat(pacfRegular['pacf.lag'][i]),
+          correlation: parseFloat(pacfRegular['pacf'][i])
         });
       }
 
 
-      let acfResiduals = response["acf.param"]["acf.residuals.parameters"];
+      let acfResiduals = response['acf.param']['acf.residuals.parameters'];
       let acfResValues = [];
 
-      for (let i = 0; i < acfResiduals["acf.residuals.lag"].length; i++) {
+      for (let i = 0; i < acfResiduals['acf.residuals.lag'].length; i++) {
         acfResValues.push({
-          lag: parseFloat(acfResiduals["acf.residuals.lag"][i]),
-          correlation: parseFloat(acfResiduals["acf.residuals"][i])
+          lag: parseFloat(acfResiduals['acf.residuals.lag'][i]),
+          correlation: parseFloat(acfResiduals['acf.residuals'][i])
         });
       }
 
-      let pacfResiduals = response["acf.param"]["pacf.residuals.parameters"];
+      let pacfResiduals = response['acf.param']['pacf.residuals.parameters'];
       let pacfResValues = [];
 
-      for (let i = 0; i < pacfResiduals["pacf.residuals.lag"].length; i++) {
+      for (let i = 0; i < pacfResiduals['pacf.residuals.lag'].length; i++) {
         pacfResValues.push({
-          lag: parseFloat(pacfResiduals["pacf.residuals.lag"][i]),
-          correlation: parseFloat(pacfResiduals["pacf.residuals"][i])
+          lag: parseFloat(pacfResiduals['pacf.residuals.lag'][i]),
+          correlation: parseFloat(pacfResiduals['pacf.residuals'][i])
         });
       }
 
 
-      let stl_plot = response.decomposition["stl.plot"];
+      let stl_plot = response.decomposition['stl.plot'];
       let trends: any = [];
       for (let i = 0; i < stl_plot.time.length; i++) {
         let val: any = {
           year: parseInt(stl_plot.time[i]),
           amount: parseFloat(stl_plot.trend[i])
         };
-        if (stl_plot["conf.interval.low"]) {
-          if (!isNaN(stl_plot["conf.interval.low"][i])) val.low80 = parseFloat(stl_plot["conf.interval.low"][i]);
+        if (stl_plot['conf.interval.low']) {
+          if (!isNaN(stl_plot['conf.interval.low'][i])) val.low80 = parseFloat(stl_plot['conf.interval.low'][i]);
         }
-        if (stl_plot["conf.interval.up"]) {
-          if (!isNaN(stl_plot["conf.interval.up"][i])) val.up80 = parseFloat(stl_plot["conf.interval.up"][i]);
+        if (stl_plot['conf.interval.up']) {
+          if (!isNaN(stl_plot['conf.interval.up'][i])) val.up80 = parseFloat(stl_plot['conf.interval.up'][i]);
         }
         trends.push(val);
       }
@@ -142,10 +143,10 @@ export class AnalysisService {
       }
 
 
-      let stl_general = response.decomposition["stl.general"];
-      let compare = response.decomposition["compare"];
+      let stl_general = response.decomposition['stl.general'];
+      let compare = response.decomposition['compare'];
 
-      let residuals = response.decomposition["residuals_fitted"];
+      let residuals = response.decomposition['residuals_fitted'];
 
       let fitted_residuals: any = [];
       for (let i = 0; i < residuals.fitted.length; i++) {
@@ -179,9 +180,9 @@ export class AnalysisService {
       }
 
 
-      let model_fitting = response["model.param"].residuals_fitted;
-      let model_fitting_compare = response["model.param"].compare;
-      let model = response["model.param"].model;
+      let model_fitting = response['model.param'].residuals_fitted;
+      let model_fitting_compare = response['model.param'].compare;
+      let model = response['model.param'].model;
 
       let model_fitted_residuals: any = [];
       for (let i = 0; i < model_fitting.fitted.length; i++) {
@@ -275,7 +276,7 @@ export class AnalysisService {
 
   }
 
-  descriptive(algorithm, inputs) {
+  descriptive(configuration, inputs) {
     let that = this;
     let body = new URLSearchParams();
     body.set('json_data', '\'' + inputs['json_data'] + '\'')
@@ -292,7 +293,7 @@ export class AnalysisService {
     body.set('dimensions', dimensionColumnString);
     // body.set('x', "'" + JSON.stringify(json) + "'");
 
-    return that.http.post(algorithm.endpoint.toString() + '/print', body).map(res => {
+    return that.http.post(configuration.endpoint.toString() + '/print', body).map(res => {
       let response = res.json();
 
       let dimension = inputs['dimensions'];
