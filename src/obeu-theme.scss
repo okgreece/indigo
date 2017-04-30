@@ -23,8 +23,20 @@ $indigo-app-theme: mat-dark-theme($indigo-app-primary, $indigo-app-accent, $indi
 }
 
 .output-card{
-  background: #303030;
+  background: rgba(48, 48, 48, 0.71);
+  margin: 10px 0;
 }
+
+[fxlayout="row"]:first-child .output-card{
+  margin: 0 0 10px 0;
+}
+
+
+
+.output-card md-card-title{
+  font-size: 20px;
+}
+
 .input-card .mat-input-container{
 
   width:100%;
@@ -44,3 +56,5 @@ th {
 md-chip {
   margin: 3px;
 }
+
+

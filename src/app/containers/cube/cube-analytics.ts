@@ -15,7 +15,7 @@ import {ActivatedRoute} from '@angular/router';
 @Component({
   selector: 'cube-analytics-page',
   template: `
-    <cube-analytics-detail [algorithmName]="algorithmName"
+    <cube-analytics-detail [algorithmName]="algorithmName" [configurationName]="configurationName"
       [inCollection]="isCubeInCollection$ | async"
       (add)="addToCollection($event)"
       (remove)="removeFromCollection($event)">
@@ -26,8 +26,10 @@ export class CubeAnalyticsPage {
   isCubeInCollection$: Observable<InCollectionInput>;
   cube: Cube;
   algorithmName: Observable<string> = new Observable<string>();
+  configurationName: Observable<string> = new Observable<string>();
   constructor(private store: Store<fromRoot.State>, route: ActivatedRoute) {
     this.algorithmName = route.params.select<string>('algorithm');
+    this.configurationName = route.params.select<string>('configuration');
     route.params
       .select<string>('id')
       .map(id => new cubeActions.SelectAction(id))

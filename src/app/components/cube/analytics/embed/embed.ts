@@ -11,6 +11,7 @@ import {ActivatedRoute} from '@angular/router';
 import {ApiCubesService} from '../../../../services/api-cubes';
 import {URLSearchParams} from '@angular/http';
 import {DynamicComponents} from '../../../dynamic-component';
+import {ExecutionConfiguration} from '../../../../models/analysis/executionConfiguration';
 export type InCollectionInput = boolean;
 
 @Component({
@@ -42,12 +43,22 @@ export class CubeAnalyticsEmbedComponent {
   cube: Cube;
   @Input() inCollection: InCollectionInput;
   private _algorithmName: Observable<string>;
+  private _configurationName: Observable<string>;
   @Input()
   get algorithmName(): Observable<string> {
     return this._algorithmName;
   }
   set algorithmName(value: Observable<string>) {
     this._algorithmName = value;
+
+  }
+
+  @Input()
+  get configurationName(): Observable<string> {
+    return this._configurationName;
+  }
+  set configurationName(value: Observable<string>) {
+    this._configurationName = value;
 
   }
   constructor(private store: Store<fromRoot.State>, private algorithmsService: AlgorithmsService, @Inject(ElementRef) elementRef: ElementRef, private ref: ChangeDetectorRef, route: ActivatedRoute, apiService: ApiCubesService, analysisService: AnalysisService) {
@@ -58,10 +69,16 @@ export class CubeAnalyticsEmbedComponent {
     this.cube$.subscribe(function (cube) {
       that.cube = cube;
 
-      let observable: Observable<Algorithm> =
+      let observableAlgorithm: Observable<Algorithm> =
         that.algorithmsService.getAlgorithm(route.snapshot.params['algorithm'], cube);
 
-      observable.subscribe(function (algorithm: Algorithm) {
+
+      observableAlgorithm.subscribe(function (algorithm: Algorithm) {
+
+
+        let configuration: ExecutionConfiguration = algorithm.configurations.get(route.snapshot.params['configuration']);
+
+
 
         route.queryParams.subscribe(function (params) {
           let inputs = new URLSearchParams();
@@ -70,7 +87,7 @@ export class CubeAnalyticsEmbedComponent {
           }
 
 
-          analysisService.execute(algorithm, params).subscribe(function (outputs) {
+          analysisService.execute(configuration, params).subscribe(function (outputs) {
             that.componentData = {
               component: DynamicComponents[route.snapshot.params['part']],
               inputs: {

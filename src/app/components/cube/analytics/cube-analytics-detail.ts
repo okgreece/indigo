@@ -21,6 +21,7 @@ import {ApiCubesService} from '../../../services/api-cubes';
 import {IterablePipe} from '../../../pipes/mapToIterable';
 import {IterablePairsPipe} from '../../../pipes/mapToPairsIterable';
 import {PipesModule} from '../../../pipes/index';
+import {ExecutionConfiguration} from '../../../models/analysis/executionConfiguration';
 
 /**
  * Tip: Export type aliases for your component's inputs and outputs. Until we
@@ -49,7 +50,7 @@ export type RemoveOutput = Cube;
     :host {
       display: flex;
       justify-content: center;
-      margin: 30px 0;
+
     }
 
     md-card-title {
@@ -95,8 +96,25 @@ export type RemoveOutput = Cube;
 
     md-card.input-card {
       background: dimgray;
+      margin: 5px 0;
+    }
+
+    md-card.input-card:first-child{
+      margin: 0 0 5px 0;
     }
     
+    .content-card{
+      margin: 0 0 5px 10px;
+      background: url("src/public/sprites/footer_lodyas.png");
+      box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+      transition: box-shadow 280ms cubic-bezier(.4,0,.2,1);
+      will-change: box-shadow;
+      display: block;
+      position: relative;
+      padding: 24px;
+      border-radius: 2px;
+    }
+
 
   `]
 })
@@ -119,6 +137,15 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
     this._algorithmName = value;
 
   }
+  get configurationName(): Observable<string> {
+    return this._configurationName;
+  }
+
+  @Input()
+  set configurationName(value: Observable<string>) {
+    this._configurationName = value;
+
+  }
 
   get analysisCall() {
     return this._analysisCall;
@@ -134,6 +161,13 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
 
   set algorithm(value: Algorithm) {
     this._algorithm = value;
+  }
+  get executionConfiguration(): ExecutionConfiguration {
+    return this._executionConfiguration;
+  }
+
+  set executionConfiguration(value: ExecutionConfiguration) {
+    this._executionConfiguration = value;
   }
 
   /**
@@ -151,6 +185,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
 
   @Input() inCollection: InCollectionInput;
   private _algorithmName: Observable<string>;
+  private _configurationName: Observable<string>;
   @Output() add = new EventEmitter<AddOutput>();
   @Output() remove = new EventEmitter<RemoveOutput>();
   loading$: Observable<boolean>;
@@ -173,17 +208,23 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
         let that = this;
         this.cube$.subscribe(function (cube) {
           that.cube = cube;
-          debugger;
-          let observable: Observable<Algorithm> = that.algorithmName.flatMap(name => that.algorithmsService.getAlgorithm(name, that.cube));
-          observable.subscribe(function (algorithm: Algorithm) {
-            that.algorithm = algorithm;
-            let call = new AnalysisCall(algorithm, that.cube);
-            call.deParametrizeInputs(that.route.snapshot.queryParams);
-            that.analysisCall = call;
+          let observableAlgorithm: Observable<Algorithm> = that.algorithmName.flatMap(name => that.algorithmsService.getAlgorithm(name, that.cube));
+          observableAlgorithm.subscribe(function (algorithm: Algorithm) {
             debugger;
-            if (call.valid) that.execute(that.algorithm);
 
-          });
+            let observableConfiguration: Observable<ExecutionConfiguration> = that.configurationName.map(name => algorithm.configurations.get(name));
+            that.algorithm = algorithm;
+
+            observableConfiguration.subscribe(function (config: ExecutionConfiguration) {
+
+              that.executionConfiguration = config;
+              let call = new AnalysisCall(config, that.cube);
+              call.deParametrizeInputs(that.route.snapshot.queryParams);
+              that.analysisCall = call;
+              debugger;
+              if (call.valid) that.execute(that.executionConfiguration);
+            });
+           });
         });
       }
 
@@ -195,6 +236,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
   private _analysisCall: AnalysisCall;
 
   private _algorithm: Algorithm;
+  private _executionConfiguration: ExecutionConfiguration;
 
   get id() {
 
@@ -293,19 +335,19 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
 
   }
 
-  public execute(algorithm: Algorithm) {
+  public execute(configuration: ExecutionConfiguration) {
 
-    if (algorithm.name === 'time_series')
+    if (configuration.algorithm.name === 'time_series')
       this.prepareTimeSeries();
 
-    if (algorithm.name === 'descriptive_statistics')
+    if (configuration.algorithm.name === 'descriptive_statistics')
       this.prepareDescriptiveStatistics();
 
 
     let that = this;
     this.store.dispatch(new execution.ExecuteAction(null));
 
-    this.analysisService.execute(algorithm, this.analysisCall.queryParams())
+    this.analysisService.execute(configuration, this.analysisCall.queryParams())
       .subscribe(function (values) {
         that.analysisCall.outputs['values'] = values;
         that.ref.detectChanges();

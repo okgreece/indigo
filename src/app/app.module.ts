@@ -42,6 +42,7 @@ import {CubeExistsLightGuard} from './guards/cube-exists-light';
 import {AggregatePreviewDialog, FactsPreviewDialog} from './components/cube/analytics/cube-analytics-detail';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import 'hammerjs';
+import {MarkdownModule} from "angular2-markdown";
 
 
 
@@ -54,6 +55,7 @@ import 'hammerjs';
     FlexLayoutModule,
     ComponentsModule,
     RouterModule.forRoot(routes, { useHash: true }),
+    MarkdownModule.forRoot(),
 
     /**
      * StoreModule.provideStore is imported once in the root module, accepting a reducer

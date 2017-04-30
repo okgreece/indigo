@@ -10,7 +10,9 @@ import {Cube} from '../../../models/cube';
         <md-card-title>{{ algorithm.title }}</md-card-title>
         <span class="indigo-spacer"></span>
 
-        <button md-tooltip="Build execution" md-icon-button [routerLink]="'/cube/analytics/' + cubeId+ '/'+algorithm.name">
+        <button [md-tooltip]="'Perform analysis: '+configuration.title"
+                *ngFor="let configuration of algorithm?.configurations|iterable"
+                md-icon-button [routerLink]="'/cube/analytics/' + cubeId+ '/'+algorithm.name+ '/'+configuration.name">
           <md-icon>play_circle_outline
           </md-icon>
         </button>
@@ -65,7 +67,7 @@ import {Cube} from '../../../models/cube';
     :host {
       display: flex;
       justify-content: center;
-      margin: 30px 0;
+
     }
 
     md-card-title {

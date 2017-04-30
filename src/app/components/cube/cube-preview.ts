@@ -25,7 +25,7 @@ import {Cube} from '../../models/cube';
   `,
   styles: [`
   md-card-title{
-    font-size:20px;
+    font-size:18px;
   }
     a {
       color: inherit;
@@ -49,15 +49,26 @@ import {Cube} from '../../models/cube';
     
     .flag-icon{
         width: 48px;
-    height: 48px;
+    height: 36px;
     min-width: 48px;
-    min-height: 64px;
-    max-width: 64px;
-    max-height: 64px;
+    min-height: 36px;
+    max-width: 48px;
+    max-height: 36px;
     margin-right: -16px;
-    margin-top: -38px;
-    border-top-right-radius: 2px;
+    margin-top: -20px;
+
     opacity: .75;
+      transform: rotate(90deg);
+
+
+
+      box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+      transition: box-shadow 280ms cubic-bezier(.4,0,.2,1);
+      will-change: box-shadow;
+ 
+      border-radius: 2px;
+      
+      
     }
   md-card-title-group{
 overflow-wrap: break-word;

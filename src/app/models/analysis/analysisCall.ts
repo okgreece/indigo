@@ -1,4 +1,3 @@
-import {Algorithm} from './algorithm';
 import {Cube} from '../cube';
 import {Aggregate} from '../aggregate';
 import {Attribute} from '../attribute';
@@ -15,6 +14,7 @@ import {Sort} from '../sort';
 import {Drilldown} from '../drilldown';
 import {FactRequest} from '../fact/factRequest';
 import {SortDirection} from '../sortDirection';
+import {ExecutionConfiguration} from './executionConfiguration';
 /**
  * Created by larjo on 13/10/2016.
  */
@@ -57,7 +57,7 @@ export class AnalysisCall {
     return `${this.API_PATH}/${factRequest.cube.name}/facts?${params.toString()}`;
   }
 
-  public constructor(public algorithm: Algorithm, public cube: Cube) {
+  public constructor(public config: ExecutionConfiguration, public cube: Cube) {
 
     this.init();
 
@@ -67,7 +67,7 @@ export class AnalysisCall {
   public init() {
     let that = this;
 
-    this.algorithm.inputs.forEach((input) => {
+    this.config.inputs.forEach((input) => {
       switch (input.type) {
         case InputTypes.PARAMETER: {
 
@@ -141,7 +141,7 @@ export class AnalysisCall {
     let parts: URLSearchParams = new URLSearchParams();
     let that = this;
 
-    this.algorithm.inputs.forEach((input) => {
+    this.config.inputs.forEach((input) => {
       if (!that.inputs[input.name])return;
       switch (input.type) {
         case InputTypes.PARAMETER: {
@@ -234,7 +234,7 @@ export class AnalysisCall {
   public get valid(): boolean {
     let isValid: boolean = true;
     let that = this;
-    this.algorithm.inputs.forEach((input) => {
+    this.config.inputs.forEach((input) => {
       isValid = isValid && ((input.required && !!that.inputs[input.name]) || (input.required && input.guess) || (!input.required));
       if (input.type === InputTypes.BABBAGE_AGGREGATE_URI) {
         isValid = isValid && ((<AggregateRequest> that.inputs[input.name]).drilldowns.length > 0);
@@ -248,7 +248,7 @@ export class AnalysisCall {
 
     let that = this;
 
-    this.algorithm.inputs.forEach((input) => {
+    this.config.inputs.forEach((input) => {
       if (!parts[input.name])return;
       switch (input.type) {
         case InputTypes.PARAMETER: {
@@ -323,7 +323,7 @@ export class AnalysisCall {
 
 
     if (parts['aggregates']) {
-      let aggregates = this.breakDownQueryParamParts(parts['aggregates']);
+      let aggregates = AnalysisCall.breakDownQueryParamParts(parts['aggregates']);
       request.aggregates = aggregates.map(aggregate => {
         let agg = new AggregateParam();
         agg.column = this.cube.model.aggregates.get(aggregate);
@@ -333,7 +333,7 @@ export class AnalysisCall {
     }
     if (parts['cut']) {
       let that = this;
-      let cuts = this.breakDownQueryParamParts(parts['cut']);
+      let cuts = AnalysisCall.breakDownQueryParamParts(parts['cut']);
       request.cuts = cuts.map(cutSet => {
         let cutParts = cutSet.split(':');
         let cut = new Cut();
@@ -344,7 +344,7 @@ export class AnalysisCall {
 
     }
     if (parts['order']) {
-      let orders = this.breakDownQueryParamParts(parts['order']);
+      let orders = AnalysisCall.breakDownQueryParamParts(parts['order']);
       request.sorts = orders.map(sortSet => {
         let sort = new Sort();
         let sortParts = sortSet.split(':');
@@ -354,7 +354,7 @@ export class AnalysisCall {
       });
     }
     if (parts['drilldown']) {
-      let drilldowns = this.breakDownQueryParamParts(parts['drilldown']);
+      let drilldowns = AnalysisCall.breakDownQueryParamParts(parts['drilldown']);
       request.drilldowns = drilldowns.map(attribute => {
         let drilldown = new Drilldown;
         drilldown.column = this.cube.model.attributes.get(attribute);
@@ -387,7 +387,7 @@ export class AnalysisCall {
 
     if (parts['cut']) {
       let that = this;
-      let cuts = this.breakDownQueryParamParts(parts['cut']);
+      let cuts = AnalysisCall.breakDownQueryParamParts(parts['cut']);
       request.cuts = cuts.map(cutSet => {
         let cutParts = cutSet.split(':');
         let cut = new Cut();
@@ -398,7 +398,7 @@ export class AnalysisCall {
 
     }
     if (parts['order']) {
-      let orders = this.breakDownQueryParamParts(parts['order']);
+      let orders = AnalysisCall.breakDownQueryParamParts(parts['order']);
       request.sorts = orders.map(sortSet => {
         let sort = new Sort();
         let sortParts = sortSet.split(':');
@@ -420,7 +420,7 @@ export class AnalysisCall {
 
   }
 
-  private  breakDownQueryParamParts(queryParam) {
+  private static breakDownQueryParamParts(queryParam) {
     return queryParam.split('|');
   }
 }

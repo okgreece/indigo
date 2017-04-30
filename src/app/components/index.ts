@@ -51,6 +51,8 @@ import {MasonryModule} from 'angular2-masonry';
 import {CubeAnalyticsEmbedComponent} from './cube/analytics/embed/embed';
 import LineString = GeoJSON.LineString;
 import {FlexLayoutModule} from '@angular/flex-layout';
+import {UserGuidePageComponent} from "./user-guide";
+import {MarkdownComponent, MarkdownModule} from "angular2-markdown";
 
 
 
@@ -75,6 +77,7 @@ export const COMPONENTS = [
   AggregateRequestBuilder,
   FactRequestBuilder,
   JsonTreeComponent,
+  UserGuidePageComponent,
   CubeAnalyticsDetailComponent,
   CubeAnalyticsIndexComponent,
   FrequencyVisualization,
@@ -116,7 +119,8 @@ export const COMPONENTS = [
     PipesModule,
     FormsModule,
     MasonryModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MarkdownModule
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,

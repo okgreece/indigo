@@ -62,7 +62,7 @@
 
         <md-card-title>Trends</md-card-title>
         <a target="_blank" md-icon-button
-           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/embed/analytics-line-chart-timeseries-trends']"
+           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/'+analysisCall.config.name+'/embed/analytics-line-chart-timeseries-trends']"
            [queryParams]="analysisCall.queryParams()">
           <md-icon color="primary">share</md-icon>
         </a>
@@ -80,7 +80,7 @@
 
         <md-card-title>Remainders</md-card-title>
         <a target="_blank" md-icon-button
-           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/embed/analytics-line-chart-timeseries-remainders']"
+           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/'+analysisCall.config.name+'/embed/analytics-line-chart-timeseries-remainders']"
            [queryParams]="analysisCall.queryParams()">
           <md-icon color="primary">share</md-icon>
         </a>
@@ -106,7 +106,7 @@
 
         <md-card-title>Fitted - Residuals</md-card-title>
         <a target="_blank" md-icon-button
-           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/embed/analytics-scatter-plot-timeseries-decomposition-fitted-residuals']"
+           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/'+analysisCall.config.name+'/embed/analytics-scatter-plot-timeseries-decomposition-fitted-residuals']"
            [queryParams]="analysisCall.queryParams()">
           <md-icon color="primary">share</md-icon>
         </a>
@@ -285,7 +285,7 @@
 
           <md-card-title>ACF</md-card-title>
           <a target="_blank" md-icon-button
-             [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/embed/analytics-acf-chart-timeseries-regular']"
+             [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/'+analysisCall.config.name+'/embed/analytics-acf-chart-timeseries-regular']"
              [queryParams]="analysisCall.queryParams()">
             <md-icon color="primary">share</md-icon>
           </a>
@@ -306,7 +306,7 @@
 
           <md-card-title>ACF residuals</md-card-title>
           <a target="_blank" md-icon-button
-             [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/embed/analytics-acf-chart-timeseries-residuals']"
+             [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/'+analysisCall.config.name+'/embed/analytics-acf-chart-timeseries-residuals']"
              [queryParams]="analysisCall.queryParams()">
             <md-icon color="primary">share</md-icon>
           </a>
@@ -332,7 +332,7 @@
 
           <md-card-title>PACF</md-card-title>
           <a target="_blank" md-icon-button
-             [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/embed/analytics-pacf-chart-timeseries-regular']"
+             [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/'+analysisCall.config.name+'/embed/analytics-pacf-chart-timeseries-regular']"
              [queryParams]="analysisCall.queryParams()">
             <md-icon color="primary">share</md-icon>
           </a>
@@ -356,7 +356,7 @@
 
           <md-card-title>PACF Residuals</md-card-title>
           <a target="_blank" md-icon-button
-             [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/embed/analytics-pacf-chart-timeseries-residuals']"
+             [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/'+analysisCall.config.name+'/embed/analytics-pacf-chart-timeseries-residuals']"
              [queryParams]="analysisCall.queryParams()">
             <md-icon color="primary">share</md-icon>
           </a>
@@ -382,7 +382,7 @@
 
         <md-card-title>Fitted - Residuals</md-card-title>
         <a target="_blank" md-icon-button
-           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/embed/analytics-scatter-plot-timeseries-fitting-fitted-residuals']"
+           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/'+analysisCall.config.name+'/embed/analytics-scatter-plot-timeseries-fitting-fitted-residuals']"
            [queryParams]="analysisCall.queryParams()">
           <md-icon color="primary">share</md-icon>
         </a>
@@ -403,7 +403,7 @@
 
         <md-card-title>Time - Residuals</md-card-title>
         <a target="_blank" md-icon-button
-           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/embed/analytics-line-chart-timeseries-fitting-residuals']"
+           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/'+analysisCall.config.name+'/embed/analytics-line-chart-timeseries-fitting-residuals']"
            [queryParams]="analysisCall.queryParams()">
           <md-icon color="primary">share</md-icon>
         </a>
@@ -424,7 +424,7 @@
 
         <md-card-title>Time - Fitted</md-card-title>
         <a target="_blank" md-icon-button
-           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/embed/analytics-line-chart-timeseries-fitting-time-fitted']"
+           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/'+analysisCall.config.name+'/embed/analytics-line-chart-timeseries-fitting-time-fitted']"
            [queryParams]="analysisCall.queryParams()">
           <md-icon color="primary">share</md-icon>
         </a>
@@ -452,7 +452,7 @@
 
         <md-card-title>Compare</md-card-title>
         <a target="_blank" md-icon-button
-           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/embed/analytics-scatter-plot-timeseries-fitting-fitted-residuals']"
+           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/'+analysisCall.config.name+'/embed/analytics-scatter-plot-timeseries-fitting-fitted-residuals']"
            [queryParams]="analysisCall.queryParams()">
           <md-icon color="primary">share</md-icon>
         </a>
@@ -520,7 +520,7 @@
 
         <md-card-title>Forecasts from {{data?.forecast.model}}</md-card-title>
         <a target="_blank" md-icon-button
-           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/embed/analytics-line-chart-timeseries-forecast']"
+           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/time_series/'+analysisCall.config.name+'/embed/analytics-line-chart-timeseries-forecast']"
            [queryParams]="analysisCall.queryParams()">
           <md-icon color="primary">share</md-icon>
         </a>
