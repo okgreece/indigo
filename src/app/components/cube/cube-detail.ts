@@ -15,7 +15,7 @@ import {Model} from "../../models/model";
     :host {
       display: flex;
       justify-content: center;
-      margin: 30px 0;
+
     }
     md-card {
       max-width: 90%;

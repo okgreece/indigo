@@ -16,6 +16,7 @@ import { Cube } from '../../models/cube';
 
   masonry{
       margin: 0 auto;
+    text-align: center;
 
   }
   

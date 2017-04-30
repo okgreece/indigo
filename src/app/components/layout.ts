@@ -13,8 +13,15 @@ import {Observable} from "rxjs";
   <bc-sidenav [open]="showSidenav$ | async">
 
     <bc-nav-item (activate)="closeSidenav()" routerLink="/cube/find" icon="search">
-      Browse Datasets
+      Browse datasets
     </bc-nav-item>
+
+
+    <bc-nav-item (activate)="closeSidenav()" routerLink="/userguide" icon="note">
+      Read the manual
+    </bc-nav-item>
+    
+    
     <button md-button #mybutton (click)="closeSidenav()">Close menu</button>
 
   </bc-sidenav>
@@ -22,8 +29,17 @@ import {Observable} from "rxjs";
     <span class="indigo">indigo</span>
 
   </bc-toolbar>
+    <div class="site">
+      <main class="content">
   <router-outlet></router-outlet>
+      </main>
+      <footer class="footer">
+        <p>
+          Indigo was developed with support from the OpenBudgets.eu project, funded by the European Union’s H2020 EU research and innovation programme, under grant agreement No 645833.
 
+        </p>
+      </footer>
+    </div>
 </md-sidenav-container>
   `,
   styles: [`
@@ -43,7 +59,31 @@ import {Observable} from "rxjs";
     .secondary {
       color: rgba(0, 0, 0, .54);
     }
+    
+    
+    .footer{
+      color: gainsboro;
+      text-align: center;
+      font-size: x-small;
+      justify-content: center;
+      display: flex;
+    }
+    
+    .footer p{
+      max-width: calc(90em * 0.5);
+      padding: 10px;
+      border-top: 1px solid #4caf50;
+    }
 
+    .site{
+      display: flex;
+      flex-direction: column;
+      min-height: 93.5vh;
+    }
+    .content{
+      flex: 1;
+    }
+    
     md-sidenav-layout {
       color:white;
      // right: 30% !important; // Make space for the devtools, demo only
@@ -56,7 +96,7 @@ import {Observable} from "rxjs";
     
    .indigo{
       font-family: 'Leckerli One', cursive;
-      color:#29367f;
+      color:white;
     }
     
    .md-button-wrapper{

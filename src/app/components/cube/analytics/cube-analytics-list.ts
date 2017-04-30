@@ -14,7 +14,7 @@ import * as fromRoot from '../../../reducers';
     <md-card>
       <md-toolbar color="primary">
 
-
+        {{cube.pckg.title}}
 
       </md-toolbar>
       <div class="card-container">

@@ -211,13 +211,14 @@ export class AlgorithmsService {
     amount_aggregate_input.required = true;
 
 
+
+
     let factsConfig = new ExecutionConfiguration();
     factsConfig.inputs.set(raw_data_input.name, raw_data_input);
     factsConfig.inputs.set(what_dimension_input.name, what_dimension_input);
 //    descriptiveStatisticsAlgorithm.inputs.set(to_what_dimension_input.name, to_what_dimension_input);
     factsConfig.inputs.set(amount_aggregate_input.name, amount_aggregate_input);
     factsConfig.prompt = 'Build an budget facts subset, by selecting at least the dimension that is to be analyzed.';
-
 
     let json_output = new Output;
     json_output.name = 'output';
@@ -241,8 +242,8 @@ export class AlgorithmsService {
 
   static dummyClustering(): Algorithm {
     let clusteringAlgorithm = new Algorithm();
-    clusteringAlgorithm.title = 'Clustering of aggregates';
-    clusteringAlgorithm.name = 'aggregates_clustering';
+    clusteringAlgorithm.title = 'Clustering';
+    clusteringAlgorithm.name = 'clustering';
     clusteringAlgorithm.description = 'Cluster analysis or clustering is the task of grouping a set of objects in such a way that objects in the same group (called a cluster) are more similar (in some sense or another) to each other than to those in other groups (clusters). It is a main task of exploratory data mining, and a common technique for statistical data analysis, used in many fields, including machine learning, pattern recognition, image analysis, information retrieval, bioinformatics, data compression, and computer graphics.';
 
 
@@ -254,6 +255,14 @@ export class AlgorithmsService {
     raw_data_input.description = 'These are the raw budget facts that will be sent for analysis. By default, all dimensions are included.';
     raw_data_input.guess = false;
 
+    let agg_raw_data_input = new Input();
+    agg_raw_data_input.cardinality = '1';
+    agg_raw_data_input.type = InputTypes.BABBAGE_AGGREGATE_URI;
+    agg_raw_data_input.name = 'json_data';
+    agg_raw_data_input.title = 'Aggregate';
+    agg_raw_data_input.description = 'This is budget aggregate that will be sent for analysis. By default, all dimensions are included.';
+    agg_raw_data_input.guess = false;
+
     let what_dimension_input = new Input();
     what_dimension_input.cardinality = 'n';
     what_dimension_input.type = InputTypes.ATTRIBUTE_REF;
@@ -262,6 +271,16 @@ export class AlgorithmsService {
     what_dimension_input.required = true;
     what_dimension_input.description = 'Select a specific dimension for further frequency analysis. If a dimension contains empty values, it should not be selected for further analysis.';
     what_dimension_input.guess = false;
+
+
+    let measured_dimension_input = new Input();
+    measured_dimension_input.cardinality = 'n';
+    measured_dimension_input.type = InputTypes.ATTRIBUTE_REF;
+    measured_dimension_input.name = 'measured.dim';
+    measured_dimension_input.title = 'Aggregate modifier dimension';
+    measured_dimension_input.required = true;
+    measured_dimension_input.description = 'This dimension is used to create additional, virtual measure aggregates, based on the actual values of the dimension.';
+    measured_dimension_input.guess = false;
 
   /*  let to_what_dimension_input = new Input();
     to_what_dimension_input.cardinality = '1';
@@ -272,27 +291,58 @@ export class AlgorithmsService {
     to_what_dimension_input.guess = false;*/
 
 
+    let amount_measure_input = new Input();
+    amount_measure_input.cardinality = 'n';
+    amount_measure_input.type = InputTypes.MEASURE_REF;
+    amount_measure_input.name = 'amounts';
+    amount_measure_input.description = 'This is the measure that will be used for the descriptive statistics analysis.';
+    amount_measure_input.title = 'Amount measure';
+    amount_measure_input.guess = false;
+    amount_measure_input.required = true;
+
+
     let amount_aggregate_input = new Input();
     amount_aggregate_input.cardinality = 'n';
-    amount_aggregate_input.type = InputTypes.MEASURE_REF;
+    amount_aggregate_input.type = InputTypes.AGGREGATE_REF;
     amount_aggregate_input.name = 'amounts';
-    amount_aggregate_input.description = 'This is the measure that will be used for the descriptive statistics analysis.';
-    amount_aggregate_input.title = 'Amount measure';
+    amount_aggregate_input.description = 'This is the aggregate that will be used for the descriptive statistics analysis.';
+    amount_aggregate_input.title = 'Amount aggregate';
     amount_aggregate_input.guess = false;
     amount_aggregate_input.required = true;
 
+    let clustering_method_input = new Input();
+    clustering_method_input.cardinality = '1';
+    clustering_method_input.type = InputTypes.PARAMETER;
+    clustering_method_input.name = 'cl.method';
+    clustering_method_input.title = 'Clustering Method';
+    clustering_method_input.description = 'The method used to cluster observations.';
+    clustering_method_input.data_type = 'string';
+    clustering_method_input.default_value = 'pam';
+    clustering_method_input.guess = false;
+    clustering_method_input.required = false;
 
 
     let factsConfiguration = new ExecutionConfiguration();
+    let aggregatesConfiguration = new ExecutionConfiguration();
 
 
 
     factsConfiguration.inputs.set(raw_data_input.name, raw_data_input);
     factsConfiguration.inputs.set(what_dimension_input.name, what_dimension_input);
+    factsConfiguration.inputs.set(clustering_method_input.name, clustering_method_input);
 //    descriptiveStatisticsAlgorithm.inputs.set(to_what_dimension_input.name, to_what_dimension_input);
-    factsConfiguration.inputs.set(amount_aggregate_input.name, amount_aggregate_input);
+    factsConfiguration.inputs.set(amount_measure_input.name, amount_measure_input);
     factsConfiguration.prompt = 'Build an budget facts subset, by selecting at least the dimension that is to be analyzed.';
 
+
+    aggregatesConfiguration.inputs.set(agg_raw_data_input.name, agg_raw_data_input);
+    aggregatesConfiguration.inputs.set(what_dimension_input.name, what_dimension_input);
+    aggregatesConfiguration.inputs.set(measured_dimension_input.name, measured_dimension_input);
+    aggregatesConfiguration.inputs.set(clustering_method_input.name, clustering_method_input);
+
+//    descriptiveStatisticsAlgorithm.inputs.set(to_what_dimension_input.name, to_what_dimension_input);
+    aggregatesConfiguration.inputs.set(amount_aggregate_input.name, amount_aggregate_input);
+    aggregatesConfiguration.prompt = 'Build an budget aggregate, by selecting at least the dimension that is to be analyzed.';
 
     let json_output = new Output;
     json_output.name = 'output';
@@ -302,9 +352,26 @@ export class AlgorithmsService {
     factsConfiguration.outputs.set(json_output.name, json_output);
 
     factsConfiguration.method = RequestMethod.Post;
-    factsConfiguration.endpoint = new URL(environment.openCpuEndpoint + '/library/DescriptiveStats.OBeu/R/open_spending.ds');
+    factsConfiguration.endpoint = new URL(environment.openCpuEndpoint + '/library/Cluster.OBeu/R/open_spending.cl');
+    factsConfiguration.algorithm = clusteringAlgorithm;
+    factsConfiguration.name = 'facts';
+    factsConfiguration.title = 'Clustering facts';
+
 
     clusteringAlgorithm.configurations.set('facts', factsConfiguration);
+
+    aggregatesConfiguration.outputs.set(json_output.name, json_output);
+
+    aggregatesConfiguration.method = RequestMethod.Post;
+    aggregatesConfiguration.endpoint = new URL(environment.openCpuEndpoint + '/library/Cluster.OBeu/R/open_spending.cl');
+    aggregatesConfiguration.algorithm = clusteringAlgorithm;
+    aggregatesConfiguration.name = 'aggregates';
+    aggregatesConfiguration.title = 'Clustering aggregates';
+
+
+
+    clusteringAlgorithm.configurations.set('facts', factsConfiguration);
+    clusteringAlgorithm.configurations.set('aggregates', aggregatesConfiguration);
 
     return clusteringAlgorithm;
 

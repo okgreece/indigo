@@ -67,7 +67,7 @@ import {Cube} from '../../../models/cube';
     :host {
       display: flex;
       justify-content: center;
-      margin: 30px 0;
+
     }
 
     md-card-title {

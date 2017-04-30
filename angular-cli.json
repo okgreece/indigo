@@ -16,7 +16,8 @@
       "mobile": false,
       "styles": [
         "styles.css",
-        "obeu-theme.scss"
+        "obeu-theme.scss",
+        "../node_modules/prismjs/themes/prism-okaidia.css"
 
       ],
       "scripts": [],

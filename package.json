@@ -48,6 +48,7 @@
     "@types/urijs": "1.15.31",
     "@types/valid-url": "1.0.2",
     "angular2-fontawesome": "~0.8.0",
+    "angular2-markdown": "^1.6.0",
     "angular2-masonry": "0.4.0",
     "angular2-prettyjson": "2.0.3",
     "angular2-uuid": "1.1.1",

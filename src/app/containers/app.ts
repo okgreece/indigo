@@ -24,11 +24,8 @@ import {HttpInterceptorService} from "ng-http-interceptor";
       <md-progress-bar mode="indeterminate"></md-progress-bar>
     </div>
       <router-outlet></router-outlet>
+  
 
-
-
-
-    
   `
 })
 export class AppComponent {

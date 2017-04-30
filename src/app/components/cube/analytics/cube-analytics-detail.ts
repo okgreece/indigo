@@ -50,7 +50,7 @@ export type RemoveOutput = Cube;
     :host {
       display: flex;
       justify-content: center;
-      margin: 30px 0;
+
     }
 
     md-card-title {
@@ -96,8 +96,25 @@ export type RemoveOutput = Cube;
 
     md-card.input-card {
       background: dimgray;
+      margin: 5px 0;
+    }
+
+    md-card.input-card:first-child{
+      margin: 0 0 5px 0;
     }
     
+    .content-card{
+      margin: 0 0 5px 10px;
+      background: url("src/public/sprites/footer_lodyas.png");
+      box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+      transition: box-shadow 280ms cubic-bezier(.4,0,.2,1);
+      will-change: box-shadow;
+      display: block;
+      position: relative;
+      padding: 24px;
+      border-radius: 2px;
+    }
+
 
   `]
 })

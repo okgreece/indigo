@@ -9,6 +9,7 @@ import {CubeAnalyticsIndexComponent} from './containers/cube/cube-analytics-inde
 import {CubeAnalyticsEmbedPage} from './containers/cube/cube-analytics-embed-page';
 import {LayoutComponent} from './components/layout';
 import {CubeExistsLightGuard} from './guards/cube-exists-light';
+import {UserGuidePageComponent} from './components/user-guide';
 
 export const routes: Routes = [
 
@@ -28,6 +29,10 @@ export const routes: Routes = [
         {
           path: 'cube/find',
           component: FindCubePageComponent
+        },
+        {
+          path: 'userguide',
+          component: UserGuidePageComponent
         },
         {
           path: 'cube/indicators/:id',

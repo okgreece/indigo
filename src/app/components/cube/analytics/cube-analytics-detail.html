@@ -59,9 +59,9 @@
                   <md-icon>directions run</md-icon>
                 </button>
 
-                <a md-icon-button md-tooltip="{{input.description}}">
+                <button md-icon-button md-tooltip="{{input.description}}">
                   <md-icon>info</md-icon>
-                </a>
+                </button>
 
 
                 <button *ngIf="input.type==InputTypes.BABBAGE_FACT_RAW_DATA || input.type==InputTypes.BABBAGE_FACT_URI"
@@ -207,7 +207,7 @@
 
         </div>
       </div>
-      <div fxFlex="70%">
+      <div fxFlex="70%" class="content-card">
         <div >
 
           <md-spinner *ngIf="loading$|async"></md-spinner>
