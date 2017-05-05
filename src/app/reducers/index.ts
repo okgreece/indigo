@@ -6,7 +6,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { ActionReducer } from '@ngrx/store';
 import * as fromRouter from '@ngrx/router-store';
 import { Book } from '../models/book';
-import {ExpressionTree} from '../models/expressionTree'
+import {ExpressionTree} from '../models/expressionTree';
 
 /**
  * The compose function is one of our most handy tools. In basic terms, you give
@@ -51,8 +51,8 @@ import * as fromCubes from './cube/cubes';
 import * as fromCubesCollection from './cube/collection';
 import * as fromTrees from './tree/trees';
 import * as fromExecutions from './execution/execution';
-import {Cube} from "../models/cube";
-import {environment} from "../../environments/environment";
+import {Cube} from '../models/cube';
+import {environment} from '../../environments/environment';
 
 
 /**
@@ -218,7 +218,7 @@ export const isSelectedBookInCollection = function (state$: Observable<State>) {
 
 export function getExecutionState(state$: Observable<State>) {
   return state$.select(s => {
-    return s.executions
+    return s.executions;
   });
 }
 
@@ -308,7 +308,7 @@ export const getCubeSearchResults = function (state$: Observable<State>) {
     state$.let(getCubeEntities),
     state$.let(getSearchCubeIds)
   )
-    .map(([ entities, ids ]) => ids.map(name => { return entities[name];}));
+    .map(([ entities, ids ]) => ids.map(name => { return entities[name]; }));
 };
 
 

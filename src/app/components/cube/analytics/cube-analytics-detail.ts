@@ -188,6 +188,9 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
   private _configurationName: Observable<string>;
   @Output() add = new EventEmitter<AddOutput>();
   @Output() remove = new EventEmitter<RemoveOutput>();
+
+  error: any;
+
   loading$: Observable<boolean>;
   public InputTypes = InputTypes;
 
@@ -337,6 +340,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
 
   public execute(configuration: ExecutionConfiguration) {
 
+    this.error = null;
     if (configuration.algorithm.name === 'time_series')
       this.prepareTimeSeries();
 
@@ -348,11 +352,22 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
     this.store.dispatch(new execution.ExecuteAction(null));
 
     this.analysisService.execute(configuration, this.analysisCall.queryParams())
+      .catch((error: any) => {
+        if (error.status < 400 ||  error.status === 500) {
+          return Observable.throw(new Error(error.status));
+        }
+        else if (error.status === 400) {
+          return Observable.throw(new Error(error._body));
+        }
+      })
+
       .subscribe(function (values) {
         that.analysisCall.outputs['values'] = values;
         that.ref.detectChanges();
         that.store.dispatch(new execution.ExecuteCompleteAction(null));
-      });
+
+      }, err => {   this.error = err;     that.store.dispatch(new execution.ExecuteCompleteAction(null));
+        debugger; console.log(err); }  );
   }
 
   newFactRequest = new FactRequest;
