@@ -157,7 +157,7 @@ export class AlgorithmsService {
     configuration.endpoint = new URL(environment.openCpuEndpoint + '/library/TimeSeries.OBeu/R/open_spending.ts/print');
     configuration.prompt = 'Build an aggregate, with a time-related drilldown and then enter the prediction steps parameter from the left and click on the execute button on top right.';
 
-    timeSeriesAlgorithm.configurations.set('facts', configuration);
+    timeSeriesAlgorithm.configurations.set('aggregate', configuration);
 
 
 
