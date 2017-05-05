@@ -278,6 +278,7 @@ export class AnalysisService {
     });
 
 
+
   }
   clustering(configuration, inputs) {
     let that = this;
@@ -531,7 +532,6 @@ export class AnalysisService {
 
 
   }
-
   descriptive(configuration, inputs) {
     let that = this;
     let body = new URLSearchParams();
