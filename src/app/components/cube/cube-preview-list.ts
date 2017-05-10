@@ -1,27 +1,27 @@
 import {Component, Input, NgModule} from '@angular/core';
-import { Cube } from '../../models/cube';
+import {Cube} from '../../models/cube';
 
 
 @Component({
   selector: 'indigo-cube-preview-list',
   template: `
-     <masonry [options]="{ fitWidth : true }">
-  <masonry-brick class="brick" *ngFor="let cube of cubes" >
-      <indigo-cube-preview [cube]="cube"></indigo-cube-preview>
+    <masonry [options]="{ fitWidth : true }">
+      <masonry-brick class="brick" *ngFor="let cube of cubes">
+        <indigo-cube-preview [cube]="cube"></indigo-cube-preview>
 
-</masonry-brick>
-     </masonry>
+      </masonry-brick>
+    </masonry>
   `,
   styles: [`
 
-  masonry{
+    masonry {
       margin: 0 auto;
-    text-align: center;
+      text-align: center;
 
-  }
-  
-  
-  
+    }
+
+
+
   `]
 })
 export class CubePreviewListComponent {

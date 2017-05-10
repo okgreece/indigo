@@ -9,5 +9,5 @@ export const environment = {
   openCpuEndpoint: 'http://okfnrg.math.auth.gr/ocpu/',
   versionSuffix: '3',
   baseHref: 'indigo/',
-  DAMUrl: 'http://192.168.0.108:5000'
+  DAMUrl: 'http://dam-obeu.iais.fraunhofer.de'
 };

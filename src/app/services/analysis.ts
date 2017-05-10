@@ -9,6 +9,7 @@ import {AnalysisCall} from '../models/analysis/analysisCall';
 import {Algorithm} from '../models/analysis/algorithm';
 import {ApiCubesService} from './api-cubes';
 import {ExecutionConfiguration} from '../models/analysis/executionConfiguration';
+import {environment} from '../../environments/environment';
 
 @Injectable()
 export class AnalysisService {
@@ -29,6 +30,11 @@ export class AnalysisService {
 
     else if (configuration.algorithm.name === 'clustering') {
       return this.clustering(configuration, inputs);
+    }
+
+
+    else if (configuration.algorithm.name === 'outlier_detection') {
+      return this.outlier(configuration, inputs);
     }
 
 
@@ -276,6 +282,37 @@ export class AnalysisService {
       }
         ;
     });
+
+
+
+  }
+  outlier(configuration, inputs) {
+    let that = this;
+    let body = new URLSearchParams();
+
+    body.set('BABBAGE_FACT_URI', '\'' + inputs['BABBAGE_FACT_URI'] + '\'');
+
+    return that.http.get(configuration.endpoint.toString() , body).map(res => {
+      let response = res.json();
+
+      return response;
+    }).mergeMap( resp => {
+
+
+      return that.http.get(environment.DAMUrl + '/results/' + resp.jobid).map(res => {
+        let response = res.json();
+        debugger;
+
+
+        let values: any = response.result;
+
+        return {values: values};
+
+      });
+    });
+
+
+
 
 
 

@@ -21,7 +21,7 @@ export class AlgorithmsService {
   getCompatibleAlgorithms(cube: Cube): Observable<Algorithm[]> {
     let that = this;
     return Observable.create(function (observer: any) {
-      observer.next([AlgorithmsService.dummyTimeSeries(), AlgorithmsService.dummyDescriptiveStatistics(), AlgorithmsService.dummyClustering()]);
+      observer.next([AlgorithmsService.dummyTimeSeries(), AlgorithmsService.dummyDescriptiveStatistics(), AlgorithmsService.dummyClustering(), AlgorithmsService.dummyOutlierDetection()]);
     });
 
 
@@ -71,6 +71,13 @@ export class AlgorithmsService {
     });
   }
 
+  getOutlierDetectionAlgorithm(): Observable<Algorithm> {
+    let that = this;
+    return Observable.create(function (observer: any) {
+      observer.next(AlgorithmsService.dummyOutlierDetection());
+    });
+  }
+
   getAlgorithm(name, cube: Cube): Observable<Algorithm> {
     switch (name) {
       case 'time_series':
@@ -79,6 +86,8 @@ export class AlgorithmsService {
         return this.getDescriptiveStatisticsAlgorithm();
       case 'clustering':
         return this.getClusteringAlgorithm();
+      case 'outlier_detection':
+        return this.getOutlierDetectionAlgorithm();
       default:
         return  this.http.get(`${this.API_DAM_PATH}/algo/${name}`)
         .map(res => {
@@ -163,6 +172,54 @@ export class AlgorithmsService {
 
 
     return timeSeriesAlgorithm;
+
+  }
+
+
+
+
+
+  static dummyOutlierDetection(): Algorithm {
+    let outlierDetectionAlgorithm = new Algorithm();
+    outlierDetectionAlgorithm.title = 'Outlier Detection';
+    outlierDetectionAlgorithm.name = 'outlier_detection';
+    outlierDetectionAlgorithm.description = 'In statistics, an outlier is an observation point that is distant from other observations. An outlier may be due to variability in the measurement or it may indicate experimental error; the latter are sometimes excluded from the data set. Outliers can occur by chance in any distribution, but they often indicate either measurement error or that the population has a heavy-tailed distribution. In the former case one wishes to discard them or use statistics that are robust to outliers, while in the latter case they indicate that the distribution has high skewness and that one should be very cautious in using tools or intuitions that assume a normal distribution. A frequent cause of outliers is a mixture of two distributions, which may be two distinct sub-populations, or may indicate \'correct trial\' versus \'measurement error\'; this is modeled by a mixture model.';
+
+    let raw_data_input = new Input();
+    raw_data_input.cardinality = '1';
+    raw_data_input.type = InputTypes.BABBAGE_FACT_URI;
+    raw_data_input.name = 'BABBAGE_FACT_URI';
+    raw_data_input.title = 'Data coming from an aggregation';
+    raw_data_input.guess = false;
+    raw_data_input.description = 'This is the aggregated data that will be sent to the outlier detection algorithm. You need to select at least a measure.';
+    raw_data_input.required = true;
+
+
+    let configuration = new ExecutionConfiguration;
+
+    configuration.inputs.set(raw_data_input.name, raw_data_input);
+
+    let json_output = new Output;
+    json_output.name = 'output';
+    json_output.cardinality = 1 ;
+    json_output.type = OutputTypes.OBJECT_COLLECTION;
+
+
+    configuration.inputs.set(raw_data_input.name, raw_data_input);
+    configuration.outputs.set(json_output.name, json_output);
+    configuration.name = 'facts';
+    configuration.title = 'Facts outlier detection';
+    configuration.algorithm = outlierDetectionAlgorithm;
+    configuration.method = RequestMethod.Get;
+    configuration.endpoint = new URL(environment.DAMUrl + '/outlier_detection/LOF/sample');
+    configuration.prompt = 'Build an aggregate, with a time-related drilldown and then enter the prediction steps parameter from the left and click on the execute button on top right.';
+
+    outlierDetectionAlgorithm.configurations.set( configuration.name, configuration);
+
+
+
+
+    return outlierDetectionAlgorithm;
 
   }
 
@@ -372,7 +429,7 @@ export class AlgorithmsService {
 
     clusteringAlgorithm.configurations.set('facts', factsConfiguration);
     clusteringAlgorithm.configurations.set('aggregates', aggregatesConfiguration);
-
+;
     return clusteringAlgorithm;
 
 

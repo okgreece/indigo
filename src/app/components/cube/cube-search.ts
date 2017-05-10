@@ -52,7 +52,7 @@ import {Component, Output, Input, EventEmitter, AfterViewInit} from '@angular/co
 })
 export class CubeSearchComponent implements AfterViewInit{
   ngAfterViewInit(): void {
-    this.search.emit("")
+    this.search.emit('');
 
   }
   @Input() query: string = '';

@@ -59,12 +59,12 @@ export class AnalysisCall {
 
   public constructor(public config: ExecutionConfiguration, public cube: Cube) {
 
-    this.init();
+    this.initialize();
 
 
   }
 
-  public init() {
+  public initialize() {
     let that = this;
 
     this.config.inputs.forEach((input) => {

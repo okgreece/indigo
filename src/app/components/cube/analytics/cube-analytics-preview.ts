@@ -89,7 +89,6 @@ export class CubeAnalyticsPreviewComponent {
 
 
   get cubeId() {
-    //debugger;
     return this.cube.name;
   }
 

@@ -43,10 +43,10 @@ export type RemoveOutput = Cube;
       padding: 0 14px;
     }
 
-
     .example-spacer {
       flex: 1 1 auto;
     }
+
     :host {
       display: flex;
       justify-content: center;
@@ -86,28 +86,25 @@ export type RemoveOutput = Cube;
     .well {
       background-color: #615f5f;
     }
-    
-    
-    md-card.input-card md-card-header{
+
+    md-card.input-card md-card-header {
       background: #82BF5E;
     }
-
-
 
     md-card.input-card {
       background: dimgray;
       margin: 5px 0;
     }
 
-    md-card.input-card:first-child{
+    md-card.input-card:first-child {
       margin: 0 0 5px 0;
     }
-    
-    .content-card{
+
+    .content-card {
       margin: 0 0 5px 10px;
       background: url("src/public/sprites/footer_lodyas.png");
-      box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
-      transition: box-shadow 280ms cubic-bezier(.4,0,.2,1);
+      box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
+      transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1);
       will-change: box-shadow;
       display: block;
       position: relative;
@@ -137,6 +134,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
     this._algorithmName = value;
 
   }
+
   get configurationName(): Observable<string> {
     return this._configurationName;
   }
@@ -162,6 +160,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
   set algorithm(value: Algorithm) {
     this._algorithm = value;
   }
+
   get executionConfiguration(): ExecutionConfiguration {
     return this._executionConfiguration;
   }
@@ -227,7 +226,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
               debugger;
               if (call.valid) that.execute(that.executionConfiguration);
             });
-           });
+          });
         });
       }
 
@@ -270,9 +269,9 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
       dialogRef.componentInstance['cube'] = that.cube;
 
 
-/*      dialogRef.afterClosed().subscribe(result => {
-        that.selectedOption = result;
-      });*/
+      /*      dialogRef.afterClosed().subscribe(result => {
+       that.selectedOption = result;
+       });*/
     });
 
 
@@ -288,14 +287,13 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
       dialogRef.componentInstance['cube'] = that.cube;
 
 
-/*      dialogRef.afterClosed().subscribe(result => {
-        that.selectedOption = result;
-      });*/
+      /*      dialogRef.afterClosed().subscribe(result => {
+       that.selectedOption = result;
+       });*/
     });
 
 
   }
-
 
 
   private prepareTimeSeries() {
@@ -353,7 +351,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
 
     this.analysisService.execute(configuration, this.analysisCall.queryParams())
       .catch((error: any) => {
-        if (error.status < 400 ||  error.status === 500) {
+        if (error.status < 400 || error.status === 500) {
           return Observable.throw(new Error(error.status));
         }
         else if (error.status === 400) {
@@ -366,8 +364,12 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
         that.ref.detectChanges();
         that.store.dispatch(new execution.ExecuteCompleteAction(null));
 
-      }, err => {   this.error = err;     that.store.dispatch(new execution.ExecuteCompleteAction(null));
-        debugger; console.log(err); }  );
+      }, err => {
+        this.error = err;
+        that.store.dispatch(new execution.ExecuteCompleteAction(null));
+        debugger;
+        console.log(err);
+      });
   }
 
   newFactRequest = new FactRequest;
@@ -396,10 +398,11 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
         <thead>
         <tr>
           <th *ngFor="let col of json.fields">
-            <span *ngIf="cube.model.attributes.get(col)">{{cube.model.attributes.get(col)?.dimension.label}} - {{cube.model.attributes.get(col)?.label}}</span>
+            <span
+              *ngIf="cube.model.attributes.get(col)">{{cube.model.attributes.get(col)?.dimension.label}} - {{cube.model.attributes.get(col)?.label}}</span>
             <span *ngIf="cube.model.measures.get(col)">{{cube.model.measures.get(col)?.label}}</span>
-            
-          
+
+
           </th>
         </tr>
         </thead>
@@ -443,7 +446,8 @@ export class FactsPreviewDialog {
         <thead>
         <tr>
           <th *ngFor="let col of json.attributes">
-            <span *ngIf="cube.model.attributes.get(col)">{{cube.model.attributes.get(col)?.dimension.label}} - {{cube.model.attributes.get(col)?.label}}</span>
+            <span
+              *ngIf="cube.model.attributes.get(col)">{{cube.model.attributes.get(col)?.dimension.label}} - {{cube.model.attributes.get(col)?.label}}</span>
 
           </th>
           <th *ngFor="let col of json.aggregates">

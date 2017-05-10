@@ -227,6 +227,9 @@
           <analytics-descriptive-output *ngIf="algorithm.name=='descriptive_statistics'"
                                         [data]="analysisCall?.outputs['values']" [cube]="cube"
                                         [analysisCall]="analysisCall"></analytics-descriptive-output>
+          <analytics-outliers-output *ngIf="algorithm.name=='outlier_detection'"
+                                        [data]="analysisCall?.outputs['values']" [cube]="cube"
+                                        [analysisCall]="analysisCall"></analytics-outliers-output>
         </div>
       </div>
 

@@ -53,6 +53,7 @@ import LineString = GeoJSON.LineString;
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {UserGuidePageComponent} from "./user-guide";
 import {MarkdownComponent, MarkdownModule} from "angular2-markdown";
+import {OutliersDetectionOutputComponent} from "./analysis/outlier/outlier_detection";
 
 
 
@@ -95,6 +96,7 @@ export const COMPONENTS = [
   ScatterPlotTimeseriesDecompositionFittedResiduals,
   ScatterPlotTimeseriesFittingFittedResiduals,
   LineChartFittingResiduals,
+  OutliersDetectionOutputComponent,
   LineChartFittingTimeFitted,
   PacfChartVisualizationRegular,
   PacfChartVisualizationResiduals,

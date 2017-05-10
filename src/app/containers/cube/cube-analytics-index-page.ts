@@ -10,8 +10,8 @@ import {
   AddOutput,
   RemoveOutput
 } from '../../components/cube/analytics/cube-analytics-detail';
-import {Cube} from "../../models/cube";
-import {ActivatedRoute} from "@angular/router";
+import {Cube} from '../../models/cube';
+import {ActivatedRoute} from '@angular/router';
 
 
 @Component({
