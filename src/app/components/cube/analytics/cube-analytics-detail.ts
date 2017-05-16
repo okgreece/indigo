@@ -22,6 +22,7 @@ import {IterablePipe} from '../../../pipes/mapToIterable';
 import {IterablePairsPipe} from '../../../pipes/mapToPairsIterable';
 import {PipesModule} from '../../../pipes/index';
 import {ExecutionConfiguration} from '../../../models/analysis/executionConfiguration';
+import {JobTimeoutException} from "../../../models/analysis/jobTimeoutException";
 
 /**
  * Tip: Export type aliases for your component's inputs and outputs. Until we
@@ -357,6 +358,10 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
         else if (error.status === 400) {
           return Observable.throw(new Error(error._body));
         }
+        else if(error instanceof JobTimeoutException) {
+          return Observable.throw(new Error('We are sorry, the analysis process did not finish in timely manner'));
+        }
+        debugger;
       })
 
       .subscribe(function (values) {
@@ -369,7 +374,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
         that.store.dispatch(new execution.ExecuteCompleteAction(null));
         debugger;
         console.log(err);
-      });
+      }, () => {console.log('Completed'); });
   }
 
   newFactRequest = new FactRequest;

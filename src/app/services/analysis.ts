@@ -10,6 +10,8 @@ import {Algorithm} from '../models/analysis/algorithm';
 import {ApiCubesService} from './api-cubes';
 import {ExecutionConfiguration} from '../models/analysis/executionConfiguration';
 import {environment} from '../../environments/environment';
+import {OperationCanceledException} from 'typescript';
+import {JobTimeoutException} from '../models/analysis/jobTimeoutException';
 
 @Injectable()
 export class AnalysisService {
@@ -48,7 +50,7 @@ export class AnalysisService {
     body.set('prediction_steps', inputs['prediction_steps']);
     body.set('json_data', '\'' + inputs['json_data'] + '\'');
 
-    return that.http.post(configuration.endpoint.toString() , body).map(res => {
+    return that.http.post(configuration.endpoint.toString(), body).map(res => {
       let response = res.json();
 
       debugger;
@@ -284,39 +286,45 @@ export class AnalysisService {
     });
 
 
-
   }
+
   outlier(configuration, inputs) {
     let that = this;
     let body = new URLSearchParams();
 
     body.set('BABBAGE_FACT_URI', '\'' + inputs['BABBAGE_FACT_URI'] + '\'');
 
-    return that.http.get(configuration.endpoint.toString() , body).map(res => {
-      let response = res.json();
-
-      return response;
-    }).mergeMap( resp => {
+    return that.http.get(configuration.endpoint.toString(), body).map(res => {
+      return res.json();
+    }).mergeMap(resp => {
 
 
-      return that.http.get(environment.DAMUrl + '/results/' + resp.jobid).map(res => {
-        let response = res.json();
-        debugger;
+      return this.http.get(environment.DAMUrl + '/results/' + resp.jobid)
+        .map(res => {
+          let response = res.json();
+          debugger;
 
+          if (!response.hasOwnProperty('result')) {
+            throw 'ex';
 
-        let values: any = response.result;
+          }
+          let values: any = response.result;
 
-        return {values: values};
+          return {values: values};
 
-      });
+        }).retryWhen(function (attempts) {
+          debugger;
+          return Observable.range(1, environment.DAMretries).zip(attempts, function (i) { return i; }).flatMap(function (i) {
+            console.log('delay retry by ' + i + ' second(s)');
+            if (i === 3) return Observable.throw(new JobTimeoutException);
+            return Observable.timer(i * 1000);
+          });
+        });
     });
 
 
-
-
-
-
   }
+
   clustering(configuration, inputs) {
     let that = this;
     let body = new URLSearchParams();
@@ -325,14 +333,13 @@ export class AnalysisService {
     let measuredDimString = '\'' + inputs['measured.dim'] + '\'';
 
 
-
     body.set('amounts', '\'' + inputs['amounts'] + '\'');
     body.set('dimensions', dimensionColumnString);
     body.set('measured.dim', measuredDimString);
     body.set('cl.method', '\'' + inputs['cl.method'] + '\'');
     body.set('json_data', '\'' + inputs['json_data'] + '\'');
 
-    return that.http.post(configuration.endpoint.toString() , body).map(res => {
+    return that.http.post(configuration.endpoint.toString(), body).map(res => {
       let response = res.json();
 
       debugger;
@@ -569,6 +576,7 @@ export class AnalysisService {
 
 
   }
+
   descriptive(configuration, inputs) {
     let that = this;
     let body = new URLSearchParams();
@@ -605,8 +613,6 @@ export class AnalysisService {
           frequencies[frequencyKeys[i]].push(val);
         }
       }
-
-
 
 
       let boxplotResponse = response.boxplot;
