@@ -29,9 +29,30 @@ export class Algorithm {
     this.configurations = configurations;
 
     this.name = data.name;
+    this.description = data.algorithm.description;
     this.title = data.algorithm.title;
 
     return this;
+  }
+  serialize(): any {
+
+    let output = {};
+
+    output['configurations'] = {};
+
+    this.configurations.forEach(function(value, key){
+      output['configurations'][key] = value.serialize();
+    });
+
+
+
+    output['name'] = this.name;
+    output['title'] = this.title;
+    output['description'] = this.description;
+
+
+
+    return output;
   }
 
 }

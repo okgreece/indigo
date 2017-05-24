@@ -20,8 +20,12 @@ export class AlgorithmsService {
 
   getCompatibleAlgorithms(cube: Cube): Observable<Algorithm[]> {
     let that = this;
-    return Observable.create(function (observer: any) {
-      observer.next([AlgorithmsService.dummyTimeSeries(), AlgorithmsService.dummyDescriptiveStatistics(), AlgorithmsService.dummyClustering(), AlgorithmsService.dummyOutlierDetection()]);
+    debugger;
+AlgorithmsService.dummyClustering().serialize();
+console.log(JSON.stringify({outlier_detection: AlgorithmsService.dummyOutlierDetection().serialize(), rule_mining:  AlgorithmsService.dummyRuleMining().serialize()}));
+
+return Observable.create(function (observer: any) {
+      observer.next([AlgorithmsService.dummyTimeSeries(), AlgorithmsService.dummyDescriptiveStatistics(), AlgorithmsService.dummyClustering(), AlgorithmsService.dummyOutlierDetection(), AlgorithmsService.dummyRuleMining()]);
     });
 
 
@@ -211,7 +215,7 @@ export class AlgorithmsService {
     configuration.title = 'Facts outlier detection';
     configuration.algorithm = outlierDetectionAlgorithm;
     configuration.method = RequestMethod.Get;
-    configuration.endpoint = new URL(environment.DAMUrl + '/outlier_detection/LOF/sample');
+    configuration.endpoint = new URL(environment.DAMUrl + '/outlier_detection/LOF');
     configuration.prompt = 'Build an aggregate, with a time-related drilldown and then enter the prediction steps parameter from the left and click on the execute button on top right.';
 
     outlierDetectionAlgorithm.configurations.set( configuration.name, configuration);
@@ -222,6 +226,53 @@ export class AlgorithmsService {
     return outlierDetectionAlgorithm;
 
   }
+
+
+  static dummyRuleMining(): Algorithm {
+    let ruleMiningAlgorithm = new Algorithm();
+    ruleMiningAlgorithm.title = 'Rule Mining';
+    ruleMiningAlgorithm.name = 'rule_mining';
+    ruleMiningAlgorithm.description = 'Association rule learning is a rule-based machine learning method for discovering interesting relations between variables in large databases. It is intended to identify strong rules discovered in databases using some measures of interestingness.[1] Based on the concept of strong rules, Rakesh Agrawal, Tomasz Imieliński and Arun Swami [2] introduced association rules for discovering regularities between products in large-scale transaction data recorded by point-of-sale (POS) systems in supermarkets. For example, the rule {\\displaystyle \\{\\mathrm {onions,potatoes} \\}\\Rightarrow \\{\\mathrm {burger} \\}} \\{{\\mathrm  {onions,potatoes}}\\}\\Rightarrow \\{{\\mathrm  {burger}}\\} found in the sales data of a supermarket would indicate that if a customer buys onions and potatoes together, they are likely to also buy hamburger meat. Such information can be used as the basis for decisions about marketing activities such as, e.g., promotional pricing or product placements. In addition to the above example from market basket analysis association rules are employed today in many application areas including Web usage mining, intrusion detection, continuous production, and bioinformatics. In contrast with sequence mining, association rule learning typically does not consider the order of items either within a transaction or across transactions.\n' +
+      '\n';
+
+    let raw_data_input = new Input();
+    raw_data_input.cardinality = '1';
+    raw_data_input.type = InputTypes.BABBAGE_FACT_URI;
+    raw_data_input.name = 'BABBAGE_FACT_URI';
+    raw_data_input.title = 'Data coming from an aggregation';
+    raw_data_input.guess = false;
+    raw_data_input.description = 'This is the aggregated data that will be sent to the rule mining algorithm. You need to select at least a measure.';
+    raw_data_input.required = true;
+
+
+    let configuration = new ExecutionConfiguration;
+
+    configuration.inputs.set(raw_data_input.name, raw_data_input);
+
+    let json_output = new Output;
+    json_output.name = 'output';
+    json_output.cardinality = 1 ;
+    json_output.type = OutputTypes.OBJECT_COLLECTION;
+
+
+    configuration.inputs.set(raw_data_input.name, raw_data_input);
+    configuration.outputs.set(json_output.name, json_output);
+    configuration.name = 'facts';
+    configuration.title = 'Facts rule mining';
+    configuration.algorithm = ruleMiningAlgorithm;
+    configuration.method = RequestMethod.Get;
+    configuration.endpoint = new URL(environment.DAMUrl + '/rule_mining');
+    configuration.prompt = 'Build an aggregate, with a time-related drilldown and then enter the prediction steps parameter from the left and click on the execute button on top right.';
+
+    ruleMiningAlgorithm.configurations.set( configuration.name, configuration);
+
+
+
+
+    return ruleMiningAlgorithm;
+
+  }
+
 
 
 

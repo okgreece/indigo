@@ -2,7 +2,7 @@ import {RequestMethod} from '@angular/http';
 import {Output} from './output';
 import {Input} from './input';
 import {environment} from '../../../environments/environment';
-import {Algorithm} from "./algorithm";
+import {Algorithm} from './algorithm';
 /**
  * Created by larjo on 28/4/2017.
  */
@@ -51,4 +51,31 @@ export class ExecutionConfiguration {
     return this;
   }
 
+  serialize() {
+
+    let output = {};
+
+    output['inputs'] = {};
+
+    this.inputs.forEach(function (value, key, map) {
+      output['inputs'][key] = value.serialize();
+    });
+
+    output['outputs'] = {};
+
+    this.outputs.forEach(function (value, key, map) {
+      output['outputs'][key] = value.serialize();
+    });
+
+    output['prompt'] = this.prompt;
+    output['method'] = this.method;
+    output['endpoint'] = this.endpoint.toString();
+    output['name'] = this.name;
+    output['title'] = this.title;
+
+
+
+
+    return output;
+  }
 }

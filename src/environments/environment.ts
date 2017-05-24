@@ -10,5 +10,6 @@ export const environment = {
   versionSuffix: '3',
   baseHref: 'indigo/',
   DAMUrl: 'http://dam-obeu.iais.fraunhofer.de',
-  DAMretries: 10
+  DAMretries: 10,
+  DAMpollingInitialStep: 1000,
 };

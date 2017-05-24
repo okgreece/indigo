@@ -289,6 +289,7 @@ export class AnalysisCall {
           break;
         }
         case  InputTypes.BABBAGE_FACT_URI: {
+          debugger;
           let uri = parts[input.name];
           if (validURL.isUri(uri)) {
             that.inputs[input.name] = this.factsFromURI(uri);

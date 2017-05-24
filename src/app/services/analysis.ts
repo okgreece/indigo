@@ -38,6 +38,9 @@ export class AnalysisService {
     else if (configuration.algorithm.name === 'outlier_detection') {
       return this.outlier(configuration, inputs);
     }
+   else if (configuration.algorithm.name === 'rule_mining') {
+      return this.outlier(configuration, inputs);
+    }
 
 
   }
@@ -292,9 +295,9 @@ export class AnalysisService {
     let that = this;
     let body = new URLSearchParams();
 
-    body.set('BABBAGE_FACT_URI', '\'' + inputs['BABBAGE_FACT_URI'] + '\'');
+    body.set('BABBAGE_FACT_URI',  inputs['BABBAGE_FACT_URI']);
 
-    return that.http.get(configuration.endpoint.toString(), body).map(res => {
+    return that.http.get(configuration.endpoint.toString(), {search: body}).map(res => {
       return res.json();
     }).mergeMap(resp => {
 
@@ -316,8 +319,45 @@ export class AnalysisService {
           debugger;
           return Observable.range(1, environment.DAMretries).zip(attempts, function (i) { return i; }).flatMap(function (i) {
             console.log('delay retry by ' + i + ' second(s)');
-            if (i === 3) return Observable.throw(new JobTimeoutException);
-            return Observable.timer(i * 1000);
+            if (i === environment.DAMretries) return Observable.throw(new JobTimeoutException);
+            return Observable.timer(i * environment.DAMpollingInitialStep);
+          });
+        });
+    });
+
+
+  }
+
+  rulemining(configuration, inputs) {
+    let that = this;
+    let body = new URLSearchParams();
+
+    body.set('BABBAGE_FACT_URI',  inputs['BABBAGE_FACT_URI']);
+
+    return that.http.get(configuration.endpoint.toString(), {search: body}).map(res => {
+      return res.json();
+    }).mergeMap(resp => {
+
+
+      return this.http.get(environment.DAMUrl + '/results/' + resp.jobid)
+        .map(res => {
+          let response = res.json();
+          debugger;
+
+          if (!response.hasOwnProperty('result')) {
+            throw 'ex';
+
+          }
+          let values: any = response.result;
+
+          return {values: values};
+
+        }).retryWhen(function (attempts) {
+          debugger;
+          return Observable.range(1, environment.DAMretries).zip(attempts, function (i) { return i; }).flatMap(function (i) {
+            console.log('delay retry by ' + i + ' second(s)');
+            if (i === environment.DAMretries) return Observable.throw(new JobTimeoutException);
+            return Observable.timer(i * environment.DAMpollingInitialStep);
           });
         });
     });
