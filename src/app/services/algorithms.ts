@@ -53,6 +53,21 @@ return Observable.create(function (observer: any) {
   }
 
 
+  getActualCompatibleAlgorithm( algorithmName): Observable<Algorithm> {
+
+    return this.http.get(`${environment.DAMUrl}/services/meta/${algorithmName}`)
+      .map(res => {
+
+        let response = res.json();
+
+        debugger;
+        return new Algorithm().deserialize(response);
+      });
+
+
+  }
+
+
   getTimeSeriesAlgorithm(): Observable<Algorithm> {
     let that = this;
     debugger;
@@ -77,9 +92,10 @@ return Observable.create(function (observer: any) {
 
   getOutlierDetectionAlgorithm(): Observable<Algorithm> {
     let that = this;
-    return Observable.create(function (observer: any) {
+    return this.getActualCompatibleAlgorithm('outlier_detection');
+    /*return Observable.create(function (observer: any) {
       observer.next(AlgorithmsService.dummyOutlierDetection());
-    });
+    });*/
   }
 
   getAlgorithm(name, cube: Cube): Observable<Algorithm> {

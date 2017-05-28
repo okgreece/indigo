@@ -16,7 +16,7 @@ export enum InputTypes  {
   BABBAGE_FACT_URI= <any>'URI pointing to a Babbage compliant facts API request',
   BABBAGE_FACT_RAW_DATA= <any>'Raw data coming from a Babbage compliant facts API request',
   BABBAGE_MEMBER= <any>'Member values from a dimension'
-};
+}
 
 
 

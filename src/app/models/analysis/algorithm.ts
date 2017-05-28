@@ -21,7 +21,7 @@ export class Algorithm {
 
 
     for (let key of Object.keys(data.configurations)){
-      let config =  new ExecutionConfiguration().deserialize(data.input[key]);
+      let config =  new ExecutionConfiguration().deserialize(data.configurations[key]);
       config.algorithm = this;
       configurations.set(key, config);
     }
@@ -29,8 +29,8 @@ export class Algorithm {
     this.configurations = configurations;
 
     this.name = data.name;
-    this.description = data.algorithm.description;
-    this.title = data.algorithm.title;
+    this.description = data.description;
+    this.title = data.title;
 
     return this;
   }
