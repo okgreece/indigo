@@ -17,80 +17,80 @@ import {Cube} from '../../../models/cube';
   encapsulation: ViewEncapsulation.None,
   templateUrl: './timeseries.html',
   styles: [`
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
 
-.x.axis path {
-  display: none;
-}
+    .x.axis path {
+      display: none;
+    }
 
-.line {
-  fill: none;
-  stroke: #82bf5e;
-  stroke-width: 2px;
-}
+    .line {
+      fill: none;
+      stroke: #82bf5e;
+      stroke-width: 2px;
+    }
 
-.lineUp80 {
-  fill: none;
-  stroke: orange;
-  stroke-width: 2px;
-  stroke-dasharray: 5, 5;
+    .lineUp80 {
+      fill: none;
+      stroke: orange;
+      stroke-width: 2px;
+      stroke-dasharray: 5, 5;
 
-}
+    }
 
-.lineUp95 {
-  fill: none;
-  stroke: red;
-  stroke-width: 2px;
-  stroke-dasharray: 5, 5;
+    .lineUp95 {
+      fill: none;
+      stroke: red;
+      stroke-width: 2px;
+      stroke-dasharray: 5, 5;
 
-}
+    }
 
-.lineLow95 {
-  fill: none;
-  stroke: green;
-  stroke-width: 2px;
-  stroke-dasharray: 5, 5;
+    .lineLow95 {
+      fill: none;
+      stroke: green;
+      stroke-width: 2px;
+      stroke-dasharray: 5, 5;
 
-}
+    }
 
-.lineLow80 {
-  fill: none;
-  stroke: gold;
-  stroke-width: 1.5px;
-  stroke-dasharray: 5, 5;
+    .lineLow80 {
+      fill: none;
+      stroke: gold;
+      stroke-width: 1.5px;
+      stroke-dasharray: 5, 5;
 
-}
+    }
 
-svg {
-  background: url("src/public/sprites/grid_paper.png");
-  font-family: monospace;
-}
+    svg {
+      background: url('assets/sprites/grid_paper.png');
+      font-family: monospace;
+    }
 
-svg text {
-  font-family: monospace;
-}
+    svg text {
+      font-family: monospace;
+    }
 
-analytics-timeseries-output md-card {
-  background: #303030;
-}
+    analytics-timeseries-output md-card {
+      background: #303030;
+    }
 
-md-spinner svg{
-background: none;
-}
+    md-progress-spinner svg {
+      background: none;
+    }
 
-md-card{
-margin:5px;
-}
+    md-card {
+      margin: 5px;
+    }
 
 
   `]
 })
-export class TimeSeriesOutputComponent extends AfterViewInit {
+export class TimeSeriesOutputComponent implements AfterViewInit {
 
   @Input()
   get analysisCall(): AnalysisCall {
@@ -142,7 +142,6 @@ export class TimeSeriesOutputComponent extends AfterViewInit {
 
 
   constructor( private elementRef: ElementRef,       private ref: ChangeDetectorRef) {
-    super();
     setInterval(() => {
       // the following is required, otherwise the view will not be updated
       this.ref.markForCheck();

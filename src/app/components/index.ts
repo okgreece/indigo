@@ -1,5 +1,4 @@
 import { CommonModule } from '@angular/common';
-import { MaterialModule } from '@angular/material';
 import { NgModule } from '@angular/core';
 import {ReactiveFormsModule, FormsModule} from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -54,6 +53,12 @@ import {FlexLayoutModule} from '@angular/flex-layout';
 import {UserGuidePageComponent} from "./user-guide";
 import {MarkdownComponent, MarkdownModule} from "angular2-markdown";
 import {OutliersDetectionOutputComponent} from "./analysis/outlier/outlier_detection";
+import {
+  MdButtonModule, MdCheckboxModule, MdInputModule, MdSidenavModule, MdChipsModule, MdButtonToggleModule,
+  MdTooltipModule, MdProgressBarModule, MdCardModule, MaterialModule, MdIconModule, MdDialogModule, MdProgressSpinnerModule
+} from '@angular/material';
+import {NguiInfiniteListModule} from "@ngui/infinite-list";
+import {InfiniteScrollerDirective} from "../infinite-scroller.directive";
 
 
 
@@ -108,7 +113,8 @@ export const COMPONENTS = [
   CubeAnalyticsEmbedComponent,
   LineChartTimeSeriesForecast,
   FrequencyChartDescriptive,
-  HistogramDescriptive
+  HistogramDescriptive,
+  InfiniteScrollerDirective
 ];
 
 
@@ -116,13 +122,24 @@ export const COMPONENTS = [
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MaterialModule,
     RouterModule,
     PipesModule,
     FormsModule,
     MasonryModule,
     FlexLayoutModule,
-    MarkdownModule
+    MarkdownModule,
+    MdProgressBarModule,
+    MdInputModule,
+    MdSidenavModule,
+    MdButtonModule,
+    MdChipsModule,
+    MdButtonToggleModule,
+    MdTooltipModule,
+    MdCardModule,
+    MdIconModule,
+    MdDialogModule,
+    NguiInfiniteListModule,
+    MdProgressSpinnerModule
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,

@@ -4,8 +4,8 @@
   <div class="col-sm-4">
     <md-tab-group class="demo-tab-group">
       <md-tab>
-        <template md-tab-label>Aggregate Request</template>
-        <template md-tab-content>
+        <ng-template md-tab-label>Aggregate Request</ng-template>
+        <ng-template md-tab-content>
           <aggregate-request-builder [cube]="cube" [(request)]="newAggregateRequest"></aggregate-request-builder>
           <div class="row-fluid col-sm-12 text-center well">
 
@@ -16,13 +16,13 @@
 
           </div>
 
-        </template>
+        </ng-template>
       </md-tab>
 
 
       <md-tab>
-        <template md-tab-label>Functions</template>
-        <template md-tab-content>
+        <ng-template md-tab-label>Functions</ng-template>
+        <ng-template md-tab-content>
           <div class="row-fluid well col-sm-12 text-center">
             <div class="col-sm-4">
               <button (click)="addFuncChild(funcType.Addition)" md-raised-button>Addition</button>
@@ -59,13 +59,13 @@
             </div>
 
           </div>
-        </template>
+        </ng-template>
       </md-tab>
 
 
       <md-tab>
-        <template md-tab-label>Custom data</template>
-        <template md-tab-content>
+        <ng-template md-tab-label>Custom data</ng-template>
+        <ng-template md-tab-content>
 
 
           <div class="row-fluid col-sm-12 well">
@@ -93,7 +93,7 @@
 
 
 
-        </template>
+        </ng-template>
       </md-tab>
 
 

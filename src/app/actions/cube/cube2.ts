@@ -28,14 +28,13 @@ export const ActionTypes = {
 export class SearchAction implements Action {
   type = ActionTypes.SEARCH;
 
-  constructor(public payload: string) { }
+  constructor(public payload: any) { }
 }
 
 export class SearchCompleteAction implements Action {
   type = ActionTypes.SEARCH_COMPLETE;
 
   constructor(public payload: any[]|any) {
-
   }
 
 }

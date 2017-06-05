@@ -12,11 +12,10 @@ import * as fromRoot from '../../../reducers';
   template: `
 
     <md-card>
-      <md-toolbar color="primary">
+      <md-card-title>
+          {{cube.pckg.title}}
 
-        {{cube.pckg.title}}
-
-      </md-toolbar>
+      </md-card-title>
 
       <masonry [options]="{ fitWidth : true }">
         <masonry-brick class="brick" *ngFor="let algorithm of algorithms">
@@ -47,7 +46,7 @@ import * as fromRoot from '../../../reducers';
     }
 
     md-card {
-      margin: 0 16px 16px 0;
+      margin: 0 0 16px 0;
       width: 100%;
     }
 
@@ -56,10 +55,18 @@ import * as fromRoot from '../../../reducers';
       text-align: center;
 
     }
+    
+    md-sidenav a{
+      color:white;
+    }
 
     .card-container {
       display: flex;
       flex-direction: row;
+    }
+    
+    .mat-card md-card-title{
+      text-align: center;
     }
   `]
 })
@@ -80,7 +87,7 @@ export class CubeAnalyticsListComponent {
       that.cube = cube;
 
       let observable: Observable<Algorithm[]> =
-        that.algorithmsService.getCompatibleAlgorithms(cube);
+        that.algorithmsService.getActualCompatibleAlgorithms();
 
       observable.subscribe(function (algorithms: Algorithm[]) {
         that.algorithms = algorithms;

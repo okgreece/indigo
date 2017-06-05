@@ -6,10 +6,11 @@
 export const environment = {
   production: false,
   apiUrl: 'http://ws307.math.auth.gr/rudolf/public',
+  searchSize: 50,
   openCpuEndpoint: 'http://okfnrg.math.auth.gr/ocpu/',
   versionSuffix: '3',
   baseHref: 'indigo/',
-  DAMUrl: 'http://192.168.222.128:5000',
+  DAMUrl: 'http://dam-obeu.iais.fraunhofer.de',
   DAMretries: 10,
   DAMpollingInitialStep: 1000,
 };

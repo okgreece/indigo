@@ -1,11 +1,11 @@
 import '@ngrx/core/add/operator/select';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/let';
-import { Observable } from 'rxjs/Observable';
-import { combineLatest } from 'rxjs/observable/combineLatest';
-import { ActionReducer } from '@ngrx/store';
+import {Observable} from 'rxjs/Observable';
+import {combineLatest} from 'rxjs/observable/combineLatest';
+import {ActionReducer} from '@ngrx/store';
 import * as fromRouter from '@ngrx/router-store';
-import { Book } from '../models/book';
+import {Book} from '../models/book';
 import {ExpressionTree} from '../models/expressionTree';
 
 /**
@@ -16,14 +16,14 @@ import {ExpressionTree} from '../models/expressionTree';
  *
  * More: https://drboolean.gitbooks.io/mostly-adequate-guide/content/ch5.html
  */
-import { compose } from '@ngrx/core/compose';
+import {compose} from '@ngrx/core/compose';
 
 /**
  * storeFreeze prevents state from being mutated. When mutation occurs, an
  * exception will be thrown. This is useful during development mode to
  * ensure that none of the reducers accidentally mutates the state.
  */
-import { storeFreeze } from 'ngrx-store-freeze';
+import {storeFreeze} from 'ngrx-store-freeze';
 
 /**
  * combineReducers is another useful metareducer that takes a map of reducer
@@ -33,7 +33,7 @@ import { storeFreeze } from 'ngrx-store-freeze';
  *
  * More: https://egghead.io/lessons/javascript-redux-implementing-combinereducers-from-scratch
  */
-import { combineReducers } from '@ngrx/store';
+import {combineReducers} from '@ngrx/store';
 
 
 /**
@@ -132,7 +132,7 @@ export function reducer(state: any, action: any) {
  * ```
  *
  */
- export function getBooksState(state$: Observable<State>) {
+export function getBooksState(state$: Observable<State>) {
   return state$.select(state => state.books);
 }
 
@@ -151,9 +151,9 @@ export function reducer(state: any, action: any) {
  * observable. Each subscription to the resultant observable
  * is shared across all subscribers.
  */
- export const getBookEntities = compose(fromBooks.getBookEntities, getBooksState);
- export const getBookIds = compose(fromBooks.getBookIds, getBooksState);
- export const getSelectedBook = compose(fromBooks.getSelectedBook, getBooksState);
+export const getBookEntities = compose(fromBooks.getBookEntities, getBooksState);
+export const getBookIds = compose(fromBooks.getBookIds, getBooksState);
+export const getSelectedBook = compose(fromBooks.getSelectedBook, getBooksState);
 
 
 /**
@@ -161,7 +161,7 @@ export function reducer(state: any, action: any) {
  * reducer's and collection reducer's selectors.
  */
 export function getSearchState(state$: Observable<State>) {
- return state$.select(s => s.search);
+  return state$.select(s => s.search);
 }
 
 export const getSearchBookIds = compose(fromSearch.getBookIds, getSearchState);
@@ -179,9 +179,8 @@ export const getSearchResults = function (state$: Observable<State>) {
     state$.let(getBookEntities),
     state$.let(getSearchBookIds)
   )
-  .map(([ entities, ids ]) => ids.map(id => entities[id]));
+    .map(([entities, ids]) => ids.map(id => entities[id]));
 };
-
 
 
 export function getCollectionState(state$: Observable<State>) {
@@ -197,7 +196,7 @@ export const getBookCollection = function (state$: Observable<State>) {
     state$.let(getBookEntities),
     state$.let(getCollectionBookIds)
   )
-  .map(([ entities, ids ]) => ids.map(id => entities[id]));
+    .map(([entities, ids]) => ids.map(id => entities[id]));
 };
 
 export const isSelectedBookInCollection = function (state$: Observable<State>) {
@@ -205,15 +204,8 @@ export const isSelectedBookInCollection = function (state$: Observable<State>) {
     state$.let(getCollectionBookIds),
     state$.let(getSelectedBook)
   )
-  .map(([ ids, selectedBook ]) => ids.indexOf(selectedBook.id) > -1);
+    .map(([ids, selectedBook]) => ids.indexOf(selectedBook.id) > -1);
 };
-
-
-
-
-
-
-
 
 
 export function getExecutionState(state$: Observable<State>) {
@@ -224,14 +216,6 @@ export function getExecutionState(state$: Observable<State>) {
 
 
 export const getExecutionLoading = compose(fromExecutions.getLoading, getExecutionState);
-
-
-
-
-
-
-
-
 
 
 /**
@@ -295,6 +279,8 @@ export function getCubeSearchState(state$: Observable<State>) {
 export const getSearchCubeIds = compose(fromCubeSearch.getCubeIds, getCubeSearchState);
 export const getCubeSearchStatus = compose(fromCubeSearch.getStatus, getCubeSearchState);
 export const getCubeSearchQuery = compose(fromCubeSearch.getQuery, getCubeSearchState);
+export const getCubeSearchSize = compose(fromCubeSearch.getSize, getCubeSearchState);
+export const getCubeSearchFrom = compose(fromCubeSearch.getFrom, getCubeSearchState);
 export const getCubeSearchLoading = compose(fromCubeSearch.getLoading, getCubeSearchState);
 
 
@@ -306,11 +292,12 @@ export const getCubeSearchResults = function (state$: Observable<State>) {
 
   return combineLatest<{ [name: string]: Cube }, string[]>(
     state$.let(getCubeEntities),
-    state$.let(getSearchCubeIds)
+    state$.let(getCubeIds)
   )
-    .map(([ entities, ids ]) => ids.map(name => { return entities[name]; }));
+    .map(([entities, ids]) => ids.map(name => {
+      return entities[name];
+    }));
 };
-
 
 
 export function getCubeCollectionState(state$: Observable<State>) {
@@ -326,7 +313,7 @@ export const getCubeCollection = function (state$: Observable<State>) {
     state$.let(getCubeEntities),
     state$.let(getCollectionCubeIds)
   )
-    .map(([ entities, ids ]) => ids.map(name => entities[name]));
+    .map(([entities, ids]) => ids.map(name => entities[name]));
 };
 
 export const isSelectedCubeInCollection = function (state$: Observable<State>) {
@@ -334,7 +321,7 @@ export const isSelectedCubeInCollection = function (state$: Observable<State>) {
     state$.let(getCollectionCubeIds),
     state$.let(getSelectedCube)
   )
-    .map(([ ids, selectedCube ]) => ids.indexOf(selectedCube.name) > -1);
+    .map(([ids, selectedCube]) => ids.indexOf(selectedCube.name) > -1);
 };
 
 
@@ -349,8 +336,6 @@ export function getTreesState(state$: Observable<State>) {
   return state$.select(state => state.trees);
 
 }
-
-
 
 
 /**

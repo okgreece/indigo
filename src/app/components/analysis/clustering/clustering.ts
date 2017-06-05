@@ -75,7 +75,6 @@ import {IterablePipe} from "../../../pipes/mapToIterable";
 }
 
 svg {
-  background: url("src/public/sprites/grid_paper.png");
   font-family: monospace;
 }
 
@@ -86,7 +85,7 @@ svg text {
 analytics-clustering-output md-card {
   background: #303030;
 }
-md-spinner svg{
+md-progress-spinner svg{
 background: none;
 }
 md-card{
@@ -95,7 +94,7 @@ margin:5px;
 
   `]
 })
-export class ClusteringOutputComponent extends AfterViewInit {
+export class ClusteringOutputComponent implements AfterViewInit {
   get data(): any {
     return this._data;
   }
@@ -133,7 +132,6 @@ export class ClusteringOutputComponent extends AfterViewInit {
 
 
   constructor( private elementRef: ElementRef,       private ref: ChangeDetectorRef) {
-    super();
     setInterval(() => {
       // the following is required, otherwise the view will not be updated
       this.ref.markForCheck();

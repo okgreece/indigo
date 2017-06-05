@@ -1,4 +1,4 @@
-@import '~@angular/material/core/theming/all-theme';
+@import "~@angular/material/_theming.scss";
 @include mat-core();
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
@@ -31,7 +31,10 @@ $indigo-app-theme: mat-dark-theme($indigo-app-primary, $indigo-app-accent, $indi
   margin: 0 0 10px 0;
 }
 
-
+bc-toolbar.indigo {
+  display: flex;
+  background: #4caf50;
+}
 
 .output-card md-card-title{
   font-size: 20px;

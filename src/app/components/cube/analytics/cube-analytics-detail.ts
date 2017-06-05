@@ -53,7 +53,9 @@ export type RemoveOutput = Cube;
       justify-content: center;
 
     }
-
+    md-progress-spinner svg{
+      background: none;
+    }
     md-card-title {
       justify-content: center;
       align-items: center;
@@ -83,6 +85,13 @@ export type RemoveOutput = Cube;
       margin: 2px;
 
     }
+    
+    md-toolbar{
+      display: flex;
+      align-items: center;
+      background: #82BF5E;
+      padding: 0 15px;
+    }
 
     .well {
       background-color: #615f5f;
@@ -103,7 +112,7 @@ export type RemoveOutput = Cube;
 
     .content-card {
       margin: 0 0 5px 10px;
-      background: url("src/public/sprites/footer_lodyas.png");
+      background: url("assets/sprites/footer_lodyas.png");
       box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
       transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1);
       will-change: box-shadow;
@@ -111,6 +120,10 @@ export type RemoveOutput = Cube;
       position: relative;
       padding: 24px;
       border-radius: 2px;
+    }
+
+    .content-card .error-card{
+      text-align: center;
     }
 
 

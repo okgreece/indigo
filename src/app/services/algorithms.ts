@@ -31,23 +31,24 @@ return Observable.create(function (observer: any) {
 
   }
 
-  getActualCompatibleAlgorithms(cube: Cube): Observable<Algorithm[]> {
+  getActualCompatibleAlgorithms(): Observable<Algorithm[]> {
 
-    return this.http.get(`${this.API_DAM_PATH}/${cube.name}/algo`)
+    return this.http.get(`${environment.DAMUrl}/services/meta/all`)
       .map(res => {
-
-        let response = res.json();
-
-
         let algorithms = [];
-        for (let algorithmName of response.algos) {
-           let algorithm = new Algorithm();
-           algorithm.name = algorithmName;
-           algorithm.title = algorithmName;
-           algorithms.push(algorithm);
+        let response = res.json();
+        for (let key of Object.keys(response)){
+          let algorithm =  new Algorithm().deserialize(response[key]);
+
+          algorithms.push(algorithm);
+
         }
+        debugger;
+
         return algorithms;
+
       });
+
 
 
   }

@@ -7,7 +7,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { DBModule } from '@ngrx/db';
 import { RouterStoreModule } from '@ngrx/router-store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import {MaterialModule, MaterialRootModule} from '@angular/material';
+import {MaterialModule, MdCardModule} from '@angular/material';
 
 import { ComponentsModule } from './components';
 import { BookEffects } from './effects/book';
@@ -42,8 +42,10 @@ import {CubeExistsLightGuard} from './guards/cube-exists-light';
 import {AggregatePreviewDialog, FactsPreviewDialog} from './components/cube/analytics/cube-analytics-detail';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import 'hammerjs';
-import {MarkdownModule} from "angular2-markdown";
+import {MarkdownModule} from 'angular2-markdown';
 
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { InfiniteScrollerDirective } from './infinite-scroller.directive';
 
 
 @NgModule({
@@ -51,12 +53,15 @@ import {MarkdownModule} from "angular2-markdown";
 
     CommonModule,
     BrowserModule,
-    MaterialRootModule,
+/*
+    MaterialModule,
+*/
+    BrowserAnimationsModule,
     FlexLayoutModule,
     ComponentsModule,
     RouterModule.forRoot(routes, { useHash: true }),
     MarkdownModule.forRoot(),
-
+MdCardModule,
     /**
      * StoreModule.provideStore is imported once in the root module, accepting a reducer
      * function or object map of reducer functions. If passed an object of

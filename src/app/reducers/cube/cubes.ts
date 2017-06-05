@@ -24,17 +24,19 @@ export function reducer(state = initialState, action: cube.Actions | collection.
   switch (action.type) {
     case cube.ActionTypes.SEARCH_COMPLETE:
     case collection.ActionTypes.LOAD_SUCCESS: {
-      const packages:any = action.payload;
-      const newPackages = packages.filter(pckg => !state.entities[pckg.id]);
+      const packages: any = action.payload.cubes;
+      const newPackages =  action.payload.params.from < 2 ? [ ...packages ] : packages.filter(pckg => !state.entities[pckg.id]);
       const newPackageIds = newPackages.map(pckg => pckg.id);
       const newCubeEntities = newPackages.reduce((entities: { [id: string]: any }, pckg: any) => {
         return Object.assign(entities, {
-          [pckg.id]: {pckg:pckg.package, id:pckg.id}
+          [pckg.id]: {pckg: pckg.package, id: pckg.id}
         });
       }, {});
+      let entities  = Object.assign({}, state.entities, newCubeEntities);
+      let ids = action.payload.params.from < 2 ? [ ...newPackageIds ] : [ ...state.ids, ...newPackageIds ];
       return {
-        ids: [ ...state.ids, ...newPackageIds ],
-        entities: Object.assign({}, state.entities, newCubeEntities),
+        ids: ids,
+        entities: entities,
         selectedCubeId: state.selectedCubeId
       };
     }
@@ -44,7 +46,7 @@ export function reducer(state = initialState, action: cube.Actions | collection.
 /*      if (state.ids.indexOf(cube.name) > -1) {
         return state;
       }*/
-      let mergedCube = Object.assign({}, state.entities[cube.name],cube);
+      let mergedCube = Object.assign({}, state.entities[cube.name], cube);
       return {
         ids: [ ...state.ids, cube.name ],
         entities: Object.assign({}, state.entities, {

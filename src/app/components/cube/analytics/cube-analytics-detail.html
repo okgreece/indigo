@@ -1,7 +1,7 @@
 <md-card style="width:100%">
   <md-card-content *ngIf="algorithm">
     <p>
-      <md-toolbar color="primary">
+      <md-toolbar>
 
         <span> {{ (cube$|async).pckg.title }}: {{ executionConfiguration.title }}</span>
 
@@ -210,14 +210,14 @@
       <div fxFlex="70%" class="content-card">
         <div >
 
-          <md-card class="input-card" *ngIf="error">
+          <md-card class="error-card" *ngIf="error">
             <md-card-content>
               <md-icon>error</md-icon> <div>{{error}}</div>
             </md-card-content>
 
           </md-card>
 
-          <md-spinner *ngIf="loading$|async"></md-spinner>
+          <md-progress-spinner mode="indeterminate" *ngIf="loading$|async"></md-progress-spinner>
 
           <analytics-timeseries-output *ngIf="algorithm.name=='time_series'"
                                        style="min-height: 500px;" [cube]="cube"

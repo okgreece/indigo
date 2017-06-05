@@ -61,6 +61,16 @@ import {Observable} from "rxjs";
     }
     
     
+    bc-nav-item{
+      display: flex;
+      padding: 10px;
+      
+    }
+    
+    bc-nav-item:focus{
+    outline:none;
+    }
+    
     .footer{
       color: gainsboro;
       text-align: center;

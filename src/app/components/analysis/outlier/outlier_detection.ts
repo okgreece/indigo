@@ -8,14 +8,14 @@ import {
 } from '@angular/core';
 import {Inject, NgZone, ChangeDetectorRef} from '@angular/core';
 import * as d3 from 'd3';
-import {Observable} from "rxjs";
-import * as $ from 'jquery'
+import {Observable} from 'rxjs';
+import * as $ from 'jquery';
 import * as _ from 'lodash';
 
-import {Store} from "@ngrx/store";
-import {Cube} from "../../../models/cube";
-import {AnalysisCall} from "../../../models/analysis/analysisCall";
-import {IterablePipe} from "../../../pipes/mapToIterable";
+import {Store} from '@ngrx/store';
+import {Cube} from '../../../models/cube';
+import {AnalysisCall} from '../../../models/analysis/analysisCall';
+import {IterablePipe} from '../../../pipes/mapToIterable';
 
 
 @Component({
@@ -75,7 +75,7 @@ import {IterablePipe} from "../../../pipes/mapToIterable";
 }
 
 svg {
-  background: url("src/public/sprites/grid_paper.png");
+  background: url("assets/sprites/grid_paper.png");
   font-family: monospace;
 }
 
@@ -86,7 +86,7 @@ svg text {
 analytics-descriptive-output md-card {
   background: #303030;
 }
-md-spinner svg{
+md-progress-spinner svg{
 background: none;
 }
 md-card{
@@ -95,7 +95,7 @@ margin:5px;
 
   `]
 })
-export class OutliersDetectionOutputComponent extends AfterViewInit {
+export class OutliersDetectionOutputComponent implements AfterViewInit {
   get data(): any {
     return this._data;
   }
@@ -132,7 +132,6 @@ export class OutliersDetectionOutputComponent extends AfterViewInit {
 
 
   constructor( private elementRef: ElementRef,       private ref: ChangeDetectorRef) {
-    super();
     setInterval(() => {
       // the following is required, otherwise the view will not be updated
       this.ref.markForCheck();

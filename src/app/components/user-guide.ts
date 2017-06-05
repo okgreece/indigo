@@ -15,7 +15,7 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
       <md-card>
 
         <md-card-content>
-          <div Markdown path="USERGUIDE.md"></div>
+          <div Markdown path="assets/USERGUIDE.md"></div>
 
         </md-card-content>
       </md-card>

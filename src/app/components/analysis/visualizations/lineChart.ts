@@ -36,7 +36,7 @@ import {AnalysisVisualization} from "../visualization";
 
   `]
 })
-export class LineChartVisualization extends AfterViewInit {
+export class LineChartVisualization implements AfterViewInit {
   get values(): any {
     return this._values;
   }
@@ -289,7 +289,6 @@ export class LineChartVisualization extends AfterViewInit {
 
 
   constructor(private elementRef: ElementRef, private ref: ChangeDetectorRef) {
-    super();
     setInterval(() => {
       // the following is required, otherwise the view will not be updated
       this.ref.markForCheck();

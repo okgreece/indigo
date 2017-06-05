@@ -36,7 +36,7 @@ import {AnalysisVisualization} from "../visualization";
 
   `]
 })
-export class HistogramVisualization extends AfterViewInit {
+export class HistogramVisualization implements AfterViewInit {
   get values(): any {
     return this._values;
   }
@@ -217,7 +217,7 @@ export class HistogramVisualization extends AfterViewInit {
 
   }
   @Input()
-  legend:boolean = false;
+  legend: boolean = false;
 
 
   init(values: any) {
@@ -225,7 +225,7 @@ export class HistogramVisualization extends AfterViewInit {
 
     let that = this;
 
-    d3.select(that.vizCanvas.nativeElement).html("");
+    d3.select(that.vizCanvas.nativeElement).html('');
 
   //  this.vizCanvas = this.elementRef;
 
@@ -242,7 +242,6 @@ export class HistogramVisualization extends AfterViewInit {
 
 
   constructor(private elementRef: ElementRef, private ref: ChangeDetectorRef) {
-    super();
     setInterval(() => {
       // the following is required, otherwise the view will not be updated
       this.ref.markForCheck();
