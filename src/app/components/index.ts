@@ -57,7 +57,6 @@ import {
   MdButtonModule, MdCheckboxModule, MdInputModule, MdSidenavModule, MdChipsModule, MdButtonToggleModule,
   MdTooltipModule, MdProgressBarModule, MdCardModule, MaterialModule, MdIconModule, MdDialogModule, MdProgressSpinnerModule
 } from '@angular/material';
-import {NguiInfiniteListModule} from "@ngui/infinite-list";
 import {InfiniteScrollerDirective} from "../infinite-scroller.directive";
 
 
@@ -138,7 +137,6 @@ export const COMPONENTS = [
     MdCardModule,
     MdIconModule,
     MdDialogModule,
-    NguiInfiniteListModule,
     MdProgressSpinnerModule
   ],
   declarations: COMPONENTS,
