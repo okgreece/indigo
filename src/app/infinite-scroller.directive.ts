@@ -52,9 +52,7 @@ export class InfiniteScrollerDirective implements AfterViewInit {
     this.streamScrollEvents();
 
     this.requestCallbackOnScroll();
-    Observable.fromEvent($('[cdk-scrollable]'), 'scroll').subscribe(function (eve) {
-      console.log(eve.toString());
-    });
+
   }
 
   private registerScrollEvent() {

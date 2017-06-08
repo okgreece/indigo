@@ -220,13 +220,11 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
         this.cube$ = this.store.let(fromRoot.getSelectedCube);
         this.loading$ = this.store.let(fromRoot.getExecutionLoading);
 
-        debugger;
         let that = this;
         this.cube$.subscribe(function (cube) {
           that.cube = cube;
           let observableAlgorithm: Observable<Algorithm> = that.algorithmName.flatMap(name => that.algorithmsService.getAlgorithm(name, that.cube));
           observableAlgorithm.subscribe(function (algorithm: Algorithm) {
-            debugger;
 
             let observableConfiguration: Observable<ExecutionConfiguration> = that.configurationName.map(name => algorithm.configurations.get(name));
             that.algorithm = algorithm;
@@ -237,7 +235,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
               let call = new AnalysisCall(config, that.cube);
               call.deParametrizeInputs(that.route.snapshot.queryParams);
               that.analysisCall = call;
-              debugger;
+
               if (call.valid) that.execute(that.executionConfiguration);
             });
           });
@@ -371,10 +369,9 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
         else if (error.status === 400) {
           return Observable.throw(new Error(error._body));
         }
-        else if(error instanceof JobTimeoutException) {
+        else if (error instanceof JobTimeoutException) {
           return Observable.throw(new Error('We are sorry, the analysis process did not finish in timely manner'));
         }
-        debugger;
       })
 
       .subscribe(function (values) {
@@ -385,7 +382,6 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
       }, err => {
         this.error = err;
         that.store.dispatch(new execution.ExecuteCompleteAction(null));
-        debugger;
         console.log(err);
       }, () => {console.log('Completed'); });
   }

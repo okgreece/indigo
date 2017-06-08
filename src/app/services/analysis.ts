@@ -56,7 +56,6 @@ export class AnalysisService {
     return that.http.post(configuration.endpoint.toString(), body).map(res => {
       let response = res.json();
 
-      debugger;
 
       let forecasts = response['forecasts'];
       let values: any = [];
@@ -305,7 +304,6 @@ export class AnalysisService {
       return this.http.get(environment.DAMUrl + '/results/' + resp.jobid)
         .map(res => {
           let response = res.json();
-          debugger;
 
           if (!response.hasOwnProperty('result')) {
             throw 'ex';
@@ -316,7 +314,6 @@ export class AnalysisService {
           return {values: values};
 
         }).retryWhen(function (attempts) {
-          debugger;
           return Observable.range(1, environment.DAMretries).zip(attempts, function (i) { return i; }).flatMap(function (i) {
             console.log('delay retry by ' + i + ' second(s)');
             if (i === environment.DAMretries) return Observable.throw(new JobTimeoutException);
@@ -342,7 +339,6 @@ export class AnalysisService {
       return this.http.get(environment.DAMUrl + '/results/' + resp.jobid)
         .map(res => {
           let response = res.json();
-          debugger;
 
           if (!response.hasOwnProperty('result')) {
             throw 'ex';
@@ -353,7 +349,6 @@ export class AnalysisService {
           return {values: values};
 
         }).retryWhen(function (attempts) {
-          debugger;
           return Observable.range(1, environment.DAMretries).zip(attempts, function (i) { return i; }).flatMap(function (i) {
             console.log('delay retry by ' + i + ' second(s)');
             if (i === environment.DAMretries) return Observable.throw(new JobTimeoutException);
@@ -382,7 +377,6 @@ export class AnalysisService {
     return that.http.post(configuration.endpoint.toString(), body).map(res => {
       let response = res.json();
 
-      debugger;
 
       let forecasts = response['forecasts'];
       let values: any = [];

@@ -20,9 +20,8 @@ export class AlgorithmsService {
 
   getCompatibleAlgorithms(cube: Cube): Observable<Algorithm[]> {
     let that = this;
-    debugger;
 AlgorithmsService.dummyClustering().serialize();
-console.log(JSON.stringify({outlier_detection: AlgorithmsService.dummyOutlierDetection().serialize(), rule_mining:  AlgorithmsService.dummyRuleMining().serialize()}));
+//console.log(JSON.stringify({outlier_detection: AlgorithmsService.dummyOutlierDetection().serialize(), rule_mining:  AlgorithmsService.dummyRuleMining().serialize()}));
 
 return Observable.create(function (observer: any) {
       observer.next([AlgorithmsService.dummyTimeSeries(), AlgorithmsService.dummyDescriptiveStatistics(), AlgorithmsService.dummyClustering(), AlgorithmsService.dummyOutlierDetection(), AlgorithmsService.dummyRuleMining()]);
@@ -32,6 +31,7 @@ return Observable.create(function (observer: any) {
   }
 
   getActualCompatibleAlgorithms(): Observable<Algorithm[]> {
+   // console.log(JSON.stringify({time_series: AlgorithmsService.dummyTimeSeries().serialize(), descriptive_statistics: AlgorithmsService.dummyDescriptiveStatistics().serialize(), clustering:  AlgorithmsService.dummyClustering().serialize()}));
 
     return this.http.get(`${environment.DAMUrl}/services/meta/all`)
       .map(res => {
@@ -43,7 +43,6 @@ return Observable.create(function (observer: any) {
           algorithms.push(algorithm);
 
         }
-        debugger;
 
         return algorithms;
 
@@ -61,7 +60,6 @@ return Observable.create(function (observer: any) {
 
         let response = res.json();
 
-        debugger;
         return new Algorithm().deserialize(response);
       });
 
@@ -71,7 +69,6 @@ return Observable.create(function (observer: any) {
 
   getTimeSeriesAlgorithm(): Observable<Algorithm> {
     let that = this;
-    debugger;
     return Observable.create(function (observer: any) {
       observer.next(AlgorithmsService.dummyTimeSeries());
     });
