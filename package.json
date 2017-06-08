@@ -42,7 +42,7 @@
     "@ngrx/router-store": "1.2.6",
     "@ngrx/store": "2.2.2",
     "@ngrx/store-devtools": "3.2.4",
-    "@ngtools/webpack": "^.4.1",
+    "@ngtools/webpack": "1.4.1",
     "@types/d3": "4.7.0",
     "@types/hammerjs": "2.0.34",
     "@types/jquery": "2.0.41",
