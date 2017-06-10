@@ -106,8 +106,10 @@ export class DescriptiveStatisticsOutputComponent implements AfterViewInit {
     this._data = value;
 
 
-    if (value)
-    this.init(value);
+    if (value) {
+      this.init(value);
+    }
+
 
 
     this.ref.detectChanges();

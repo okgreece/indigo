@@ -1,24 +1,27 @@
 {
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "project": {
-    "version": "1.0.0-beta.17",
     "name": "indigo"
   },
   "apps": [
     {
       "root": "src",
       "outDir": "dist",
-      "assets": ["assets", "USERGUIDE.md"],
+      "assets": [
+        "assets",
+        "favicon.ico",
+        "USERGUIDE.md"
+      ],
       "index": "index.html",
       "main": "main.ts",
+      "polyfills": "polyfills.ts",
       "test": "test.ts",
-      "tsconfig": "tsconfig.json",
+      "tsconfig": "tsconfig.app.json",
+      "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
-      "mobile": false,
       "styles": [
         "styles.css",
-        "obeu-theme.scss",
-        "../node_modules/prismjs/themes/prism-okaidia.css"
-
+        "obeu-theme.scss"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",
@@ -28,13 +31,22 @@
       }
     }
   ],
-  "addons": [],
-  "packages": [],
   "e2e": {
     "protractor": {
       "config": "./protractor.conf.js"
     }
   },
+  "lint": [
+    {
+      "project": "src/tsconfig.app.json"
+    },
+    {
+      "project": "src/tsconfig.spec.json"
+    },
+    {
+      "project": "e2e/tsconfig.e2e.json"
+    }
+  ],
   "test": {
     "karma": {
       "config": "./karma.conf.js"
@@ -42,6 +54,6 @@
   },
   "defaults": {
     "styleExt": "css",
-    "prefixInterfaces": false
+    "component": {}
   }
 }
