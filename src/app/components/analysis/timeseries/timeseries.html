@@ -69,7 +69,7 @@
 
       </md-card-title-group>
       <div class="text-center">
-        <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'"
+        <analytics-line-chart  style="min-height: 500px;" [label_x]="'Time (years)'"
                               [label_y]="'Trend component'"
                               [values]="data?.decomposition.trends"></analytics-line-chart>
       </div>
@@ -88,7 +88,7 @@
       </md-card-title-group>
       <div class="text-center">
 
-        <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'"
+        <analytics-line-chart style="min-height: 500px;" [label_x]="'Time (years)'"
                               [label_y]="'Remainder Component'"
                               [values]="data?.decomposition.remainders"></analytics-line-chart>
       </div>
@@ -114,7 +114,7 @@
       </md-card-title-group>
       <div class="text-center">
 
-        <analytics-scatter-plot [x_accessor]="'year'" [y_accessor]="'amount'" class="col-sm-12"
+        <analytics-scatter-plot [x_accessor]="'year'" [y_accessor]="'amount'"
                                 style="min-height: 500px;" [label_x]="'Fitted Values'" [label_y]="'Residual Values'"
                                 [values]="data?.decomposition.fitted_residuals"></analytics-scatter-plot>
 
@@ -292,7 +292,7 @@
 
         </md-card-title-group>
         <div class="row text-center">
-          <analytics-acf-chart class="col-sm-12" style="min-height: 250px;" [label_x]="'Lags'"
+          <analytics-acf-chart style="min-height: 250px;" [label_x]="'Lags'"
                                [label_y]="'Autocorrelation'"
                                [data]="data?.autocorrelation.acf.regular"></analytics-acf-chart>
         </div>
@@ -313,7 +313,7 @@
 
         </md-card-title-group>
         <div class="row text-center">
-          <analytics-acf-chart class="col-sm-12" style="min-height: 250px;" [label_x]="'Lags'"
+          <analytics-acf-chart style="min-height: 250px;" [label_x]="'Lags'"
                                [label_y]="'Autocorrelation of residuals'"
                                [data]="data?.autocorrelation.acf.residuals"></analytics-acf-chart>
         </div>
@@ -341,7 +341,7 @@
         <div class="row text-center">
 
 
-          <analytics-acf-chart class="col-sm-12" style="min-height: 250px;" [label_y]="'Partial autocorrelation'"
+          <analytics-acf-chart style="min-height: 250px;" [label_y]="'Partial autocorrelation'"
                                [label_x]="'Lags'"
                                [data]="data?.autocorrelation.pacf.regular"></analytics-acf-chart>
 
@@ -364,7 +364,7 @@
         </md-card-title-group>
         <div class="row text-center">
 
-          <analytics-acf-chart class="col-sm-12" style="min-height: 250px;"
+          <analytics-acf-chart style="min-height: 250px;"
                                [label_y]="'Partial autocorrelation of residuals'" [label_x]="'Lags'"
                                [data]="data?.autocorrelation.pacf.residuals"></analytics-acf-chart>
 
@@ -391,7 +391,7 @@
       <div class="text-center">
 
 
-        <analytics-scatter-plot class="col-sm-12" style="min-height: 500px;" [values]="data?.fitting.fitted_residuals"
+        <analytics-scatter-plot style="min-height: 500px;" [values]="data?.fitting.fitted_residuals"
                                 [label_x]="'Fitted Values'" [label_y]="'Residual Values'"
                                 [x_accessor]="'year'" [y_accessor]="'amount'"></analytics-scatter-plot>
       </div>
@@ -412,7 +412,7 @@
       <div class="row text-center">
 
 
-        <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'"
+        <analytics-line-chart style="min-height: 500px;" [label_x]="'Time (years)'"
                               [label_y]="'Residual Values'"
                               [values]="data?.fitting.time_residuals"></analytics-line-chart>
       </div>
@@ -433,7 +433,7 @@
       <div class="row text-center">
 
 
-        <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'"
+        <analytics-line-chart  style="min-height: 500px;" [label_x]="'Time (years)'"
                               [label_y]="'Fitted Values'"
                               [values]="data?.fitting.time_fitted"></analytics-line-chart>
       </div>
@@ -529,7 +529,7 @@
       <div class=" text-center">
 
 
-        <analytics-line-chart class="col-sm-12" style="min-height: 500px;" [label_x]="'Time (years)'"
+        <analytics-line-chart  style="min-height: 500px;" [label_x]="'Time (years)'"
                               [label_y]="analysisCall.cube.model.aggregates.get(analysisCall.inputs['amount'].ref).label"
                               [values]="data?.forecast.values"></analytics-line-chart>
       </div>

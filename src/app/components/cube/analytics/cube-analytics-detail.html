@@ -6,7 +6,7 @@
         <span> {{ (cube$|async).pckg.title }}: {{ executionConfiguration.title }}</span>
 
         <span class="indigo-spacer"></span>
-        <button md-tooltip="Back" md-icon-button [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/']">
+        <button md-tooltip="Select another algorithm" md-icon-button [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/']">
           <md-icon >arrow_back</md-icon>
         </button>
 
@@ -122,17 +122,18 @@
 
                 <div *ngIf="input.type==InputTypes.MEASURE_REF">
                   <div>
-                    <div class="form-group">
-                      <select
-                        (change)="setSelected($event.target, input.name, cube.model.measures)"
-                        multiple class="form-control"
-                        [(ngModel)]="analysisCall?.inputs[input.name]">
-                        <option [ngValue]="item" [attr.data-key]="item |nestedProperty:'ref'"
-                                *ngFor="let item of cube?.model?.measures|iterable">{{item |
-                          nestedProperty:'label'}}
-                        </option>
-                      </select>
-                    </div>
+
+                    <md-select
+
+                      multiple
+                      [(ngModel)]="analysisCall?.inputs[input.name]">
+                      <md-option [value]="item" [attr.data-key]="item |nestedProperty:'ref'"
+                              *ngFor="let item of cube?.model?.measures|iterable">{{item |
+                        nestedProperty:'label'}}
+                      </md-option>
+                    </md-select>
+
+
 
                   </div>
 
@@ -141,60 +142,62 @@
 
                 <div *ngIf="input.type==InputTypes.AGGREGATE_REF">
                   <div>
-                    <div class="form-group">
 
-                      <select *ngIf="input.cardinality=='1'" class="form-control "
+
+
+                      <md-select *ngIf="input.cardinality=='1'"
                               [(ngModel)]="analysisCall?.inputs[input.name]">
-
-                        <option *ngFor="let item of cube?.model?.aggregates|iterable" [ngValue]="item">{{item |
+                        <md-option *ngFor="let item of cube?.model?.aggregates|iterable" [value]="item">{{item |
                           nestedProperty:'label'}}
-                        </option>
+                        </md-option>
 
-                      </select>
+                      </md-select>
 
-                      <select *ngIf="input.cardinality=='n'"
-                              (change)="setSelected($event.target, input.name, cube.model.aggregates)"
-                              multiple class="form-control"
+                      <md-select *ngIf="input.cardinality=='n'"
+                              multiple
                               [(ngModel)]="analysisCall?.inputs[input.name]">
-                        <option [ngValue]="item" [attr.data-key]="item |nestedProperty:'ref'"
+                        <md-option [value]="item" [attr.data-key]="item |nestedProperty:'ref'"
                                 *ngFor="let item of cube?.model?.aggregates|iterable">{{item |
                           nestedProperty:'label'}}
-                        </option>
-                      </select>
+                        </md-option>
+                      </md-select>
+
                     </div>
 
-                  </div>
 
                 </div>
 
 
                 <div *ngIf="input.type==InputTypes.ATTRIBUTE_REF">
                   <div>
-                    <div>
-                      <select *ngIf="input.cardinality=='1'" class="form-control"
+
+
+
+                      <md-select *ngIf="input.cardinality=='1'"
                               [(ngModel)]="analysisCall?.inputs[input.name]">
-                        <optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" label="{{dim.label}}">
-                          <option [ngValue]="item" *ngFor="let item of dim?.attributes|iterable">{{item |
+                        <md-optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" label="{{dim.label}}">
+                          <md-option [value]="item" *ngFor="let item of dim?.attributes|iterable">{{item |
                             nestedProperty:'label'}}
-                          </option>
-                        </optgroup>
-                      </select>
+                          </md-option>
+                        </md-optgroup>
+                      </md-select>
 
-                      <select *ngIf="input.cardinality=='n'"
-                              (change)="setSelected($event.target, input.name, cube.model.attributes)"
-                              multiple class="form-control "
+
+
+                      <md-select *ngIf="input.cardinality=='n'"
+
+                              multiple
                               [(ngModel)]="analysisCall?.inputs[input.name]">
 
-                        <optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" label="{{dim.label}}">
-                          <option [ngValue]="item" [attr.data-key]="item |nestedProperty:'ref'"
-                                  *ngFor="let item of dim?.attributes|iterable">{{item |
+                        <md-optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" label="{{dim.label}}">
+                          <md-option [value]="item" [attr.data-key]="item |nestedProperty:'ref'"
+                                  *ngFor="let item of dim?.significants|iterable">{{item |
                             nestedProperty:'label'}}
-                          </option>
-                        </optgroup>
+                          </md-option>
+                        </md-optgroup>
 
 
-                      </select>
-                    </div>
+                      </md-select>
 
                   </div>
 

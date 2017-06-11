@@ -75,7 +75,6 @@ import {IterablePipe} from "../../../pipes/mapToIterable";
 }
 
 svg {
-  background: url("assets/sprites/grid_paper.png");
   font-family: monospace;
 }
 
@@ -83,9 +82,7 @@ svg text {
   font-family: monospace;
 }
 
-analytics-descriptive-output md-card {
-  background: #303030;
-}
+
 md-progress-spinner svg{
 background: none;
 }

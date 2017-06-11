@@ -32,7 +32,7 @@ import {Cube} from '../../../models/cube';
     md-card {
       width: 400px;
       margin: 15px;
-      background: #667767;
+      background: #f7f7f7;
     }
 
     md-card-title {

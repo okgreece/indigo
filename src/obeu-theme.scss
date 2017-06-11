@@ -1,4 +1,4 @@
-@import "~@angular/material/_theming.scss";
+@import '~@angular/material/theming';
 @include mat-core();
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
@@ -6,11 +6,15 @@
 $indigo-app-primary: mat-palette($mat-green);
 $indigo-app-accent:  mat-palette($mat-indigo, A200, A100, A400);
 
+
 // The warn palette is optional (defaults to red).
 $indigo-app-warn:    mat-palette($mat-red);
 
 // Create the theme object (a Sass map containing all of the palettes).
-$indigo-app-theme: mat-dark-theme($indigo-app-primary, $indigo-app-accent, $indigo-app-warn);
+$indigo-app-theme: mat-light-theme($indigo-app-primary, $indigo-app-accent, $indigo-app-warn);
+
+
+$mat-font-family: 'Cabin', sans-serif;
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
@@ -23,7 +27,7 @@ $indigo-app-theme: mat-dark-theme($indigo-app-primary, $indigo-app-accent, $indi
 }
 
 .output-card{
-  background: rgba(48, 48, 48, 0.71);
+  background: rgba(255, 255, 255, 0.58);
   margin: 10px 0;
 }
 
@@ -46,6 +50,11 @@ bc-toolbar.indigo {
 }
 
 
+footer{
+  background: #4E6864;
+}
+
+
 th {
   text-align: center;
   background: gainsboro;
@@ -61,3 +70,80 @@ md-chip {
 }
 
 
+*{
+  font-family: 'Cabin', sans-serif;
+}
+
+
+.mat-select-placeholder{
+  font-size: 14px;
+}
+
+.font-override { // body or wrapper class
+  .mat-button-toggle,
+  %mat-button-base,
+  .mat-button,
+  .mat-raised-button,
+  .mat-fab,
+  .mat-icon-button,
+  .mat-mini-fab,
+  .mat-card,
+  .mat-checkbox,
+  .mat-input-container,
+  .mat-list,
+  .mat-menu-item,
+  .mat-radio-button,
+  .mat-select,
+  .mat-list .mat-list-item .mat-list-item-content,
+  .mat-nav-list .mat-list-item .mat-list-item-content,
+  .mat-simple-snackbar,
+  .mat-tab-label,
+  .mat-slide-toggle-content,
+  .mat-option,
+  .mat-toolbar,
+
+  .mat-tooltip  {
+    font-family: $mat-font-family!important;
+  }
+}
+
+
+md-chip-list{
+  overflow: auto;
+  padding: 0 20px 0 0;
+}
+
+md-chip{
+  cursor: pointer;
+}
+
+
+.row-item{
+  margin: 10px 0;
+}
+
+
+md-card-header  md-card-title, md-toolbar{
+
+  color:white;
+}
+
+md-card-header .mat-button, md-card-header .mat-icon-button, md-card-header .mat-raised-button {
+  color: white;
+}
+
+md-select{
+  width:100%;
+}
+
+md-chip-list .mat-chip:not(.mat-basic-chip)+.mat-chip:not(.mat-basic-chip) {
+  margin: 3px;
+}
+
+md-card.input-card{
+  margin: 5px 0;
+}
+
+fact-request-builder>md-card, aggregate-request-builder>md-card{
+  margin: 5px 0;
+}

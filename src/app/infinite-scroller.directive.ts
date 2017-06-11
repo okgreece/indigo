@@ -84,7 +84,7 @@ export class InfiniteScrollerDirective implements AfterViewInit {
     }
 
     this.requestOnScroll$
-      .exhaustMap(() => { return this.scrollCallback(); })
+      .exhaustMap(() => {debugger; return this.scrollCallback(); })
       .subscribe(() => { });
 
   }

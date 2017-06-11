@@ -367,7 +367,7 @@ export class AnalysisCall {
       request.pageSize = parseInt(parts['pagesize']);
     }
     if (parts['page']) {
-      request.pageSize = parseInt(parts['page']);
+      request.page = parseInt(parts['page']);
     }
 
     return request;

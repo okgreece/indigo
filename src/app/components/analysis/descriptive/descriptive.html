@@ -95,7 +95,7 @@
         <div *ngFor="let item of data?.frequencies|iterablepairs" class="text-center">
 
 
-          <analytics-frequency-chart class="col-sm-12" style="min-height: 500px;" [label_y]="'Relative Frequency (%)'"
+          <analytics-frequency-chart  style="min-height: 500px;" [label_y]="'Relative Frequency (%)'"
                                      [label_x]="analysisCall.cube.model.attributes.get(item.key).fullLabel" [data]="item.value"  ></analytics-frequency-chart>
 
         </div>
@@ -121,7 +121,7 @@
       <div class="text-center">
 
 
-        <analytics-box-plot class="col-sm-12" style="min-height: 500px;" [label_y]="Frequency" [label_x]="Dimension"
+        <analytics-box-plot  style="min-height: 500px;" [label_y]="Frequency" [label_x]="Dimension"
                             [data]="data.boxplot"></analytics-box-plot>
 
 
@@ -147,7 +147,7 @@
       <div class="text-center">
 
 
-        <analytics-histogram *ngFor="let item of data?.histogram|iterable" class="col-sm-12" style="min-height: 500px;"
+        <analytics-histogram *ngFor="let item of data?.histogram|iterable" style="min-height: 500px;"
                              [label_y]="Frequency" [label_x]="Dimension" [values]="item"></analytics-histogram>
       </div>
 

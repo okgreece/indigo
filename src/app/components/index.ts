@@ -18,11 +18,8 @@ import {CubeDetailComponent} from './cube/cube-detail';
 import {CubePreviewComponent} from './cube/cube-preview';
 import {CubePreviewListComponent} from './cube/cube-preview-list';
 import {CubeSearchComponent} from './cube/cube-search';
-import {TreeBuilder} from './tree/tree-builder';
-import {BarChartVisualization} from './tree/visualizations/barchart';
 import {AggregateRequestBuilder} from './request/aggregate-request-builder';
-import {JsonTreeComponent} from '../lib/json-tree/json-tree';
-import {JsonNodeComponent} from '../lib/json-tree/json-node';
+
 import {CubeAnalyticsDetailComponent} from './cube/analytics/cube-analytics-detail';
 import {
   LineChartVisualization, LineChartTrends, LineChartRemainders,
@@ -55,7 +52,7 @@ import {MarkdownComponent, MarkdownModule} from "angular2-markdown";
 import {OutliersDetectionOutputComponent} from "./analysis/outlier/outlier_detection";
 import {
   MdButtonModule, MdCheckboxModule, MdInputModule, MdSidenavModule, MdChipsModule, MdButtonToggleModule,
-  MdTooltipModule, MdProgressBarModule, MdCardModule, MaterialModule, MdIconModule, MdDialogModule, MdProgressSpinnerModule
+  MdTooltipModule, MdProgressBarModule, MdCardModule, MaterialModule, MdIconModule, MdDialogModule, MdProgressSpinnerModule, MdSelectModule, MdOptionModule,
 } from '@angular/material';
 import {InfiniteScrollerDirective} from "../infinite-scroller.directive";
 
@@ -76,12 +73,9 @@ export const COMPONENTS = [
   NavItemComponent,
   SidenavComponent,
   ToolbarComponent,
-  TreeBuilder,
   HistogramVisualization,
-  BarChartVisualization,
   AggregateRequestBuilder,
   FactRequestBuilder,
-  JsonTreeComponent,
   UserGuidePageComponent,
   CubeAnalyticsDetailComponent,
   CubeAnalyticsIndexComponent,
@@ -89,7 +83,6 @@ export const COMPONENTS = [
   BoxPlotVisualization,
   LineChartVisualization,
   ScatterPlotVisualization,
-  JsonNodeComponent,
   TimeSeriesOutputComponent,
   DescriptiveStatisticsOutputComponent,
   AcfChartVisualization,
@@ -137,7 +130,9 @@ export const COMPONENTS = [
     MdCardModule,
     MdIconModule,
     MdDialogModule,
-    MdProgressSpinnerModule
+    MdProgressSpinnerModule,
+    MdOptionModule,
+    MdSelectModule
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,

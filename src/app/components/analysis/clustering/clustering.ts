@@ -82,15 +82,11 @@ svg text {
   font-family: monospace;
 }
 
-analytics-clustering-output md-card {
-  background: #303030;
-}
+
 md-progress-spinner svg{
 background: none;
 }
-md-card{
-margin:5px;
-}
+
 
   `]
 })

@@ -49,7 +49,20 @@ export class Dimension implements Serializable<Dimension> {
 
   hierarchy: string;
 
-  attributes: Map<string, Attribute> = new Map<string,Attribute>();
+  attributes: Map<string, Attribute> = new Map<string, Attribute>();
+
+
+  get significants(): Map<string, Attribute>{
+
+    const significants = new Map<string, Attribute>();
+
+    significants.set(this.key_attribute, this.attributes.get(this.key_attribute));
+    significants.set(this.label_attribute, this.attributes.get(this.label_attribute));
+
+
+    return significants;
+
+  }
 
 
 }

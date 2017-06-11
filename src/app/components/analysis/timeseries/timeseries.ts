@@ -83,7 +83,7 @@ import {Cube} from '../../../models/cube';
       background: none;
     }
 
-    md-card {
+    .content-card md-card {
       margin: 5px;
     }
 

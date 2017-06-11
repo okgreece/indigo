@@ -309,7 +309,7 @@ export class AnalysisService {
             throw 'ex';
 
           }
-          let values: any = response.result;
+          let values: any = response.result.result;
 
           return {values: values};
 

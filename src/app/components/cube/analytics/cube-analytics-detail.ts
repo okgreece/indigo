@@ -22,7 +22,7 @@ import {IterablePipe} from '../../../pipes/mapToIterable';
 import {IterablePairsPipe} from '../../../pipes/mapToPairsIterable';
 import {PipesModule} from '../../../pipes/index';
 import {ExecutionConfiguration} from '../../../models/analysis/executionConfiguration';
-import {JobTimeoutException} from "../../../models/analysis/jobTimeoutException";
+import {JobTimeoutException} from '../../../models/analysis/jobTimeoutException';
 
 /**
  * Tip: Export type aliases for your component's inputs and outputs. Until we
@@ -53,9 +53,11 @@ export type RemoveOutput = Cube;
       justify-content: center;
 
     }
-    md-progress-spinner svg{
+
+    md-progress-spinner svg {
       background: none;
     }
+
     md-card-title {
       justify-content: center;
       align-items: center;
@@ -65,6 +67,7 @@ export type RemoveOutput = Cube;
 
     .mat-button-toggle-checked {
       background-color: transparent;
+      color:white;
     }
 
     img {
@@ -85,8 +88,8 @@ export type RemoveOutput = Cube;
       margin: 2px;
 
     }
-    
-    md-toolbar{
+
+    md-toolbar {
       display: flex;
       align-items: center;
       background: #82BF5E;
@@ -102,7 +105,7 @@ export type RemoveOutput = Cube;
     }
 
     md-card.input-card {
-      background: dimgray;
+      background: #f3f3f3;
       margin: 5px 0;
     }
 
@@ -112,7 +115,7 @@ export type RemoveOutput = Cube;
 
     .content-card {
       margin: 0 0 5px 10px;
-      background: url("assets/sprites/footer_lodyas.png");
+      background: url("assets/sprites/brushed_alu.png");
       box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
       transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1);
       will-change: box-shadow;
@@ -122,7 +125,7 @@ export type RemoveOutput = Cube;
       border-radius: 2px;
     }
 
-    .content-card .error-card{
+    .content-card .error-card {
       text-align: center;
     }
 
@@ -220,22 +223,21 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
         this.cube$ = this.store.let(fromRoot.getSelectedCube);
         this.loading$ = this.store.let(fromRoot.getExecutionLoading);
 
-        let that = this;
+        const that = this;
         this.cube$.subscribe(function (cube) {
           that.cube = cube;
-          let observableAlgorithm: Observable<Algorithm> = that.algorithmName.flatMap(name => that.algorithmsService.getAlgorithm(name, that.cube));
+          const observableAlgorithm: Observable<Algorithm> = that.algorithmName.flatMap(name => that.algorithmsService.getAlgorithm(name, that.cube));
           observableAlgorithm.subscribe(function (algorithm: Algorithm) {
 
-            let observableConfiguration: Observable<ExecutionConfiguration> = that.configurationName.map(name => algorithm.configurations.get(name));
+            const observableConfiguration: Observable<ExecutionConfiguration> = that.configurationName.map(name => algorithm.configurations.get(name));
             that.algorithm = algorithm;
 
             observableConfiguration.subscribe(function (config: ExecutionConfiguration) {
 
               that.executionConfiguration = config;
-              let call = new AnalysisCall(config, that.cube);
+              const call = new AnalysisCall(config, that.cube);
               call.deParametrizeInputs(that.route.snapshot.queryParams);
               that.analysisCall = call;
-
               if (call.valid) that.execute(that.executionConfiguration);
             });
           });
@@ -273,9 +275,9 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
 
   openFactsDialog(input) {
 
-    let that = this;
+    const that = this;
     this.apiCubesService.fact(this.analysisCall.inputs[input.name]).subscribe(function (json) {
-      let dialogRef = that.dialog.open(FactsPreviewDialog);
+      const dialogRef = that.dialog.open(FactsPreviewDialog);
       dialogRef.componentInstance['json'] = json;
       dialogRef.componentInstance['request'] = that.analysisCall.inputs[input.name];
       dialogRef.componentInstance['cube'] = that.cube;
@@ -291,9 +293,9 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
 
   openAggregateDialog(input) {
 
-    let that = this;
+    const that = this;
     this.apiCubesService.aggregate(this.analysisCall.inputs[input.name]).subscribe(function (json) {
-      let dialogRef = that.dialog.open(AggregatePreviewDialog);
+      const dialogRef = that.dialog.open(AggregatePreviewDialog);
       dialogRef.componentInstance['json'] = json;
       dialogRef.componentInstance['request'] = that.analysisCall.inputs[input.name];
       dialogRef.componentInstance['cube'] = that.cube;
@@ -309,7 +311,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
 
 
   private prepareTimeSeries() {
-    let dateTimeDimension = this.analysisCall.inputs['json_data'].drilldowns.find(drilldown => this.isDateTime(drilldown.column));
+    const dateTimeDimension = this.analysisCall.inputs['json_data'].drilldowns.find(drilldown => this.isDateTime(drilldown.column));
 
     this.analysisCall.inputs['json_data'].cube = this.cube;
 
@@ -329,10 +331,10 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
     this.analysisCall.inputs[input_name] = [];
     for (let i = 0; i < eventTarget.options.length; i++) {
 
-      let optionElement = eventTarget.options[i];
+      const optionElement = eventTarget.options[i];
 
       if (optionElement.selected === true) {
-        let key = eventTarget.options[i].attributes['data-key'].value;
+        const key = eventTarget.options[i].attributes['data-key'].value;
         this.analysisCall.inputs[input_name].push(collection.get(key));
 
       }
@@ -358,7 +360,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
       this.prepareDescriptiveStatistics();
 
 
-    let that = this;
+    const that = this;
     this.store.dispatch(new execution.ExecuteAction(null));
 
     this.analysisService.execute(configuration, this.analysisCall.queryParams())
@@ -388,8 +390,8 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
 
   newFactRequest = new FactRequest;
 
-  aggregateShown: boolean = false;
-  factsShown: boolean = false;
+  aggregateShown = false;
+  factsShown = false;
 
 
   toggleAggregate() {
@@ -406,8 +408,8 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
 @Component({
   selector: 'facts-preview-dialog',
   template: `
-    <div style="color: white"><h1>Facts preview ({{json.data.length}} records)</h1></div>
-    <div style="max-height: 400px; overflow: scroll; background: white">
+    <div ><h1>Facts preview ({{json.data.length}} records)</h1></div>
+    <div style="max-height: 400px; overflow: scroll;">
       <table class="table table-bordered">
         <thead>
         <tr>
@@ -454,8 +456,8 @@ export class FactsPreviewDialog {
 @Component({
   selector: 'aggregate-preview-dialog',
   template: `
-    <div style="color: white"><h1>Aggregate preview ({{json.cells.length}} results)</h1></div>
-    <div style="max-height: 400px; overflow: scroll; background: white">
+    <div ><h1>Aggregate preview ({{json.cells.length}} results)</h1></div>
+    <div style="max-height: 400px; overflow: scroll;">
       <table class="table table-bordered">
         <thead>
         <tr>

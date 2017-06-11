@@ -8,49 +8,66 @@ import {Observable} from "rxjs";
 
 @Component({
   selector: 'bc-layout',
-  template: `<md-sidenav-container fullscreen>
-   
-  <bc-sidenav [open]="showSidenav$ | async">
+  template: `
+    <md-sidenav-container fullscreen>
 
-    <bc-nav-item (activate)="closeSidenav()" routerLink="/cube/find" icon="search">
-      Browse datasets
-    </bc-nav-item>
+      <bc-sidenav [open]="showSidenav$ | async">
+
+        <bc-nav-item (activate)="closeSidenav()" routerLink="/cube/find" icon="search">
+          Browse datasets
+        </bc-nav-item>
 
 
-    <bc-nav-item (activate)="closeSidenav()" routerLink="/userguide" icon="note">
-      Read the manual
-    </bc-nav-item>
-    
-    
-    <button md-button #mybutton (click)="closeSidenav()">Close menu</button>
+        <bc-nav-item (activate)="closeSidenav()" routerLink="/userguide" icon="note">
+          Read the manual
+        </bc-nav-item>
 
-  </bc-sidenav>
-  <bc-toolbar class="indigo" (openMenu)="openSidenav()">
-    <span class="indigo">indigo</span>
 
-  </bc-toolbar>
-    <div class="site">
-      <main class="content">
-  <router-outlet></router-outlet>
-      </main>
-      <footer class="footer">
-        <p>
-          Indigo was developed with support from the OpenBudgets.eu project, funded by the European Union’s H2020 EU research and innovation programme, under grant agreement No 645833.
+        <button md-button #mybutton (click)="closeSidenav()">Close menu</button>
 
-        </p>
-      </footer>
-    </div>
-</md-sidenav-container>
+      </bc-sidenav>
+      <div fxLayout="row">
+        <div fxLayout="row" style="margin: 4px;border: solid #cacaca; border-width: 0 1px 0 0; padding: 0 18px;"> 
+          
+          <img src="assets/sprites/icon.png" height="64px" alt=""/>
+
+          <div fxLayout="column" fxLayoutAlign="center center">Open<br>
+            Budgets</div>
+        </div>
+       
+      </div>
+     <!-- <bc-toolbar class="indigo" (openMenu)="openSidenav()">
+        <span class="indigo">indigo</span>
+
+      </bc-toolbar>-->
+      <div class="site">
+        <main class="content" fxLayout="column">
+          <div style="    background: #82bf5e;
+    padding: 30px;
+    color: white;">
+            <h1>Explore uploaded data sets!</h1>
+            <h3>How do you wish to proceed?</h3>
+          </div>
+          <router-outlet></router-outlet>
+        </main>
+        <footer class="footer">
+          <p>
+            Indigo is developed with support from the OpenBudgets.eu project, funded by the European Union’s H2020 EU
+            research and innovation programme, under grant agreement No 645833.
+
+          </p>
+        </footer>
+      </div>
+    </md-sidenav-container>
   `,
   styles: [`
 
-    
+
     *, /deep/ * {
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
-    
-    
+
     * {
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
@@ -59,57 +76,57 @@ import {Observable} from "rxjs";
     .secondary {
       color: rgba(0, 0, 0, .54);
     }
-    
-    
-    bc-nav-item{
+
+    bc-nav-item {
       display: flex;
       padding: 10px;
-      
+
     }
-    
-    bc-nav-item:focus{
-    outline:none;
+
+    bc-nav-item:focus {
+      outline: none;
     }
-    
-    .footer{
+
+    .footer {
       color: gainsboro;
       text-align: center;
       font-size: x-small;
       justify-content: center;
       display: flex;
     }
-    
-    .footer p{
+
+    .footer p {
       max-width: calc(90em * 0.5);
       padding: 10px;
-      border-top: 1px solid #4caf50;
     }
 
-    .site{
+    .site {
       display: flex;
       flex-direction: column;
       min-height: 93.5vh;
     }
-    .content{
+
+    .content {
       flex: 1;
     }
-    
+
     md-sidenav-layout {
-      color:white;
-     // right: 30% !important; // Make space for the devtools, demo only
+      color: white;
+    / / right: 30 % !important;
+    / / Make space for the devtools, demo only
     }
 
     md-sidenav {
       width: 300px;
-      color:white;
+      color: white;
     }
-    
-   .indigo{
+
+    .indigo {
       font-family: 'Leckerli One', cursive;
-      color:white;
+      color: white;
     }
-    
-   .md-button-wrapper{
+
+    .md-button-wrapper {
       color: #29367f;
     }
   `]

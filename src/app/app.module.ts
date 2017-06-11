@@ -31,7 +31,6 @@ import {FindCubePageComponent} from './containers/cube/find-cube-page';
 import {SelectedCubePageComponent} from './containers/cube/selected-cube-page';
 import {CubeExistsGuard} from './guards/cube-exists';
 import {CubeEffects} from './effects/cube';
-import {TreeExecution} from './services/tree-execution';
 import {AlgorithmsService} from './services/algorithms';
 import {CubeAnalyticsPage} from './containers/cube/cube-analytics';
 import {AnalysisService} from './services/analysis';
@@ -127,7 +126,6 @@ MdCardModule,
     CubeExistsLightGuard,
     GoogleBooksService,
     ApiCubesService,
-    TreeExecution,
     AlgorithmsService,
     AnalysisService,
     {provide: APP_BASE_HREF, useValue: environment.baseHref},
