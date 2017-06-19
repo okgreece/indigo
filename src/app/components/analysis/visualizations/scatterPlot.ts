@@ -146,12 +146,12 @@ export class ScatterPlotVisualization implements AfterViewInit {
 
 
     let xis: number[] = data.map(function (d: any) {
-      return d[that._x_accessor];
+      return Number(d[that._x_accessor]);
     });
 
 
     let yis: number[] = data.map(function (d: any) {
-      return d[that._y_accessor];
+      return Number(d[that._y_accessor]);
     });
 
 

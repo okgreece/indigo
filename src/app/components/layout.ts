@@ -9,9 +9,12 @@ import {Observable} from "rxjs";
 @Component({
   selector: 'bc-layout',
   template: `
+
+
+
     <md-sidenav-container fullscreen>
 
-      <bc-sidenav [open]="showSidenav$ | async">
+      <!--<bc-sidenav [open]="showSidenav$ | async">
 
         <bc-nav-item (activate)="closeSidenav()" routerLink="/cube/find" icon="search">
           Browse datasets
@@ -35,29 +38,88 @@ import {Observable} from "rxjs";
             Budgets</div>
         </div>
        
-      </div>
-     <!-- <bc-toolbar class="indigo" (openMenu)="openSidenav()">
-        <span class="indigo">indigo</span>
+      </div>-->
+      <!-- <bc-toolbar class="indigo" (openMenu)="openSidenav()">
+         <span class="indigo">indigo</span>
+ 
+       </bc-toolbar>-->
 
-      </bc-toolbar>-->
-      <div class="site">
-        <main class="content" fxLayout="column">
-          <div style="    background: #82bf5e;
-    padding: 30px;
-    color: white;">
-            <h1>Explore uploaded data sets!</h1>
-            <h3>How do you wish to proceed?</h3>
+      <header class="site-header">
+        <div class="wrapper">
+          <a href="/openbudgets.github.io/" class="logo">
+            <img src="assets/sprites/openbudgets-logo.svg" alt="OpenBudgets">
+          </a>
+
+          <nav>
+            <ul>
+
+
+              <li>
+                <a href="/openbudgets.github.io/#">Explore Data</a>
+
+              </li>
+
+
+              <li class="active">
+                <a href="/">Data Toolbox</a>
+
+              </li>
+
+
+              <li>
+                <a href="/openbudgets.github.io/documentation">Documentation</a>
+
+              </li>
+
+
+              <li>
+                <a href="/openbudgets.github.io/blog">Blog</a>
+
+              </li>
+
+            </ul>
+          </nav>
+        </div>
+        <a id="cd-menu-trigger" href="#0"><span class="cd-menu-text">Menu</span><span class="cd-menu-icon"></span></a>
+      </header>
+      <main class="site" class="cd-main-content">
+        <div class="content home" fxLayout="column">
+          <div class="banner">
+            <div class="wrapper">
+      <span>
+        <h1>Upload, Visualize, Analyse public budget and spending data. Start exploring and learn stories behind budgets.
+</h1>
+      </span>
+            </div>
           </div>
-          <router-outlet></router-outlet>
-        </main>
-        <footer class="footer">
-          <p>
-            Indigo is developed with support from the OpenBudgets.eu project, funded by the European Union’s H2020 EU
-            research and innovation programme, under grant agreement No 645833.
+               <router-outlet></router-outlet>
+        </div>
+        <nav class="footer-nav">
+          <ul>
 
-          </p>
-        </footer>
-      </div>
+            <li>
+              <a href="/openbudgets.github.io/about">About</a>
+            </li>
+
+            <li>
+              <a href="/openbudgets.github.io/about/work-packages">Work Packages</a>
+            </li>
+
+            <li>
+              <a href="/openbudgets.github.io/about/deliverables">Deliverables</a>
+            </li>
+
+            <li>
+              <a href="/openbudgets.github.io/about/technical-structure">Technical Structure</a>
+            </li>
+
+            <li>
+              <a href="/openbudgets.github.io/resources">Resources</a>
+            </li>
+
+          </ul>
+        </nav>
+      </main>
     </md-sidenav-container>
   `,
   styles: [`

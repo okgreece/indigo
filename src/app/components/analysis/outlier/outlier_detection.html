@@ -8,7 +8,13 @@
 
       </md-card-title-group>
       <div class="text-center">
+        <div class="text-center">
 
+          <analytics-scatter-plot [x_accessor]="'Item'" [y_accessor]="'Score'"
+                                  style="min-height: 500px;" [label_x]="'Item'" [label_y]="'Score'"
+                                  [values]="data?.values"></analytics-scatter-plot>
+
+        </div>
 
         <table class="table table-bordered">
 

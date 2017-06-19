@@ -67,7 +67,7 @@ export type RemoveOutput = Cube;
 
     .mat-button-toggle-checked {
       background-color: transparent;
-      color:white;
+      color: white;
     }
 
     img {
@@ -92,7 +92,6 @@ export type RemoveOutput = Cube;
     md-toolbar {
       display: flex;
       align-items: center;
-      background: #82BF5E;
       padding: 0 15px;
     }
 
@@ -101,7 +100,6 @@ export type RemoveOutput = Cube;
     }
 
     md-card.input-card md-card-header {
-      background: #82BF5E;
     }
 
     md-card.input-card {
@@ -385,7 +383,9 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
         this.error = err;
         that.store.dispatch(new execution.ExecuteCompleteAction(null));
         console.log(err);
-      }, () => {console.log('Completed'); });
+      }, () => {
+        console.log('Completed');
+      });
   }
 
   newFactRequest = new FactRequest;
@@ -408,7 +408,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
 @Component({
   selector: 'facts-preview-dialog',
   template: `
-    <div ><h1>Facts preview ({{json.data.length}} records)</h1></div>
+    <div><h1>Facts preview ({{json.data.length}} records)</h1></div>
     <div style="max-height: 400px; overflow: scroll;">
       <table class="table table-bordered">
         <thead>
@@ -456,7 +456,7 @@ export class FactsPreviewDialog {
 @Component({
   selector: 'aggregate-preview-dialog',
   template: `
-    <div ><h1>Aggregate preview ({{json.cells.length}} results)</h1></div>
+    <div><h1>Aggregate preview ({{json.cells.length}} results)</h1></div>
     <div style="max-height: 400px; overflow: scroll;">
       <table class="table table-bordered">
         <thead>

@@ -1,4 +1,4 @@
-import { Directive, AfterViewInit, ElementRef, Input } from '@angular/core';
+import {Directive, AfterViewInit, ElementRef, Input, OnDestroy} from '@angular/core';
 
 import { Observable, Subscription } from 'rxjs/Rx';
 import 'rxjs/add/observable/fromEvent';
@@ -24,7 +24,7 @@ const DEFAULT_SCROLL_POSITION: ScrollPosition = {
 @Directive({
   selector: '[appInfiniteScroller]'
 })
-export class InfiniteScrollerDirective implements AfterViewInit {
+export class InfiniteScrollerDirective implements AfterViewInit, OnDestroy {
 
   private scrollEvent$;
 
@@ -58,7 +58,6 @@ export class InfiniteScrollerDirective implements AfterViewInit {
   private registerScrollEvent() {
 
     this.scrollEvent$ = Observable.fromEvent($('[cdk-scrollable]'), 'scroll');
-
   }
 
   private streamScrollEvents() {
@@ -72,6 +71,8 @@ export class InfiniteScrollerDirective implements AfterViewInit {
       .filter(positions => this.isUserScrollingDown(positions) && this.isScrollExpectedPercent(positions[1]));
   }
 
+  private subscription: Subscription ;
+
   private requestCallbackOnScroll() {
 
     this.requestOnScroll$ = this.userScrolledDown$;
@@ -83,15 +84,20 @@ export class InfiniteScrollerDirective implements AfterViewInit {
         .startWith([DEFAULT_SCROLL_POSITION, DEFAULT_SCROLL_POSITION]);
     }
 
-    this.requestOnScroll$
+    this.subscription = this.requestOnScroll$
       .exhaustMap(() => {debugger; return this.scrollCallback(); })
       .subscribe(() => { });
 
   }
 
+  public ngOnDestroy(): void {
+    debugger;
+   this.subscription.unsubscribe();
+  }
+
   private isUserScrollingDown = (positions) => {
     return positions[0].sT < positions[1].sT;
-  }
+  };
 
   private isScrollExpectedPercent = (position) => {
     return ((position.sT + position.cH) / position.sH) > (this.scrollPercent / 100);

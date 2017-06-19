@@ -10,14 +10,16 @@ import {Cube} from '../../models/cube';
       <indigo-cube-preview [cube]="cube"></indigo-cube-preview>
 
     </div>-->
+<div class="wrapper-flex">
 
-  
-    <masonry [options]="{ fitWidth : true }">
+<masonry [options]="{ fitWidth : true }">
       <masonry-brick class="brick" *ngFor="let cube of cubes">
         <indigo-cube-preview [cube]="cube"></indigo-cube-preview>
 
       </masonry-brick>
     </masonry>
+  
+</div>
 
   `,
   styles: [`
