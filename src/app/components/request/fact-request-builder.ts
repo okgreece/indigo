@@ -32,6 +32,11 @@ import {FactRequest} from '../../models/fact/factRequest';
   encapsulation: ViewEncapsulation.None,
   templateUrl: './fact-request-builder.html',
   styles: [`
+    
+    form{
+      margin: 30px 0 0;
+    }
+    
   ul.alt-list{padding:0; margin:10px 0}
     ul.alt-list li {
       list-style-type: none;

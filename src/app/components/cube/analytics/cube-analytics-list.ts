@@ -12,20 +12,28 @@ import * as fromRoot from '../../../reducers';
   template: `
 
     <md-card>
-      <md-toolbar color="primary">
+      <md-card-title>
+          {{cube.pckg.title}}
 
-        {{cube.pckg.title}}
+      </md-card-title>
 
-      </md-toolbar>
-      <div class="card-container">
+      <masonry [options]="{ fitWidth : true }">
+        <masonry-brick class="brick" *ngFor="let algorithm of algorithms">
+          <indigo-cube-analytics-preview [cube]="cube"
+                                         [algorithm]="algorithm"></indigo-cube-analytics-preview>
 
-        <indigo-cube-analytics-preview *ngFor="let algorithm of algorithms" [cube]="cube"
-                                       [algorithm]="algorithm"></indigo-cube-analytics-preview>
-        <hr/>
-        <indigo-cube-analytics-preview *ngFor="let algorithm of actualAlgorithms" [cube]="cube"
-                                       [algorithm]="algorithm"></indigo-cube-analytics-preview>
-
-      </div>
+        </masonry-brick>
+      </masonry>
+      <!--
+            <div class="card-container">
+      
+              <indigo-cube-analytics-preview *ngFor="let algorithm of algorithms" [cube]="cube"
+                                             [algorithm]="algorithm"></indigo-cube-analytics-preview>
+              <hr/>
+              <indigo-cube-analytics-preview *ngFor="let algorithm of actualAlgorithms" [cube]="cube"
+                                             [algorithm]="algorithm"></indigo-cube-analytics-preview>
+      
+            </div>-->
     </md-card>
 
 
@@ -38,12 +46,27 @@ import * as fromRoot from '../../../reducers';
     }
 
     md-card {
-      margin: 0 16px 16px 0;
+      margin: 0 0 16px 0;
+      width: 100%;
+    }
+
+    masonry {
+      margin: 0 auto;
+      text-align: center;
+
+    }
+    
+    md-sidenav a{
+      color:white;
     }
 
     .card-container {
       display: flex;
       flex-direction: row;
+    }
+    
+    .mat-card md-card-title{
+      text-align: center;
     }
   `]
 })
@@ -64,20 +87,20 @@ export class CubeAnalyticsListComponent {
       that.cube = cube;
 
       let observable: Observable<Algorithm[]> =
-        that.algorithmsService.getCompatibleAlgorithms(cube);
+        that.algorithmsService.getActualCompatibleAlgorithms();
 
       observable.subscribe(function (algorithms: Algorithm[]) {
         that.algorithms = algorithms;
       });
 
 
-      let observable2: Observable<Algorithm[]> =
-        that.algorithmsService.getActualCompatibleAlgorithms(cube);
+      /* let observable2: Observable<Algorithm[]> =
+       that.algorithmsService.getActualCompatibleAlgorithms(cube);
 
-      observable2.subscribe(function (algorithms: Algorithm[]) {
-        that.actualAlgorithms = algorithms;
-      });
-
+       observable2.subscribe(function (algorithms: Algorithm[]) {
+       that.actualAlgorithms = algorithms;
+       });
+       */
     });
 
     setInterval(() => {

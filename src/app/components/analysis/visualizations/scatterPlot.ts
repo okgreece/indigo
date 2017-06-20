@@ -40,7 +40,7 @@ fill: blue;
 
   `]
 })
-export class ScatterPlotVisualization extends AfterViewInit {
+export class ScatterPlotVisualization implements AfterViewInit {
   get y_accessor(): string {
     return this._y_accessor;
   }
@@ -146,12 +146,12 @@ export class ScatterPlotVisualization extends AfterViewInit {
 
 
     let xis: number[] = data.map(function (d: any) {
-      return d[that._x_accessor];
+      return Number(d[that._x_accessor]);
     });
 
 
     let yis: number[] = data.map(function (d: any) {
-      return d[that._y_accessor];
+      return Number(d[that._y_accessor]);
     });
 
 
@@ -248,7 +248,6 @@ export class ScatterPlotVisualization extends AfterViewInit {
 
 
   constructor(private elementRef: ElementRef, private ref: ChangeDetectorRef) {
-    super();
     setInterval(() => {
       // the following is required, otherwise the view will not be updated
       this.ref.markForCheck();

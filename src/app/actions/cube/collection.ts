@@ -90,4 +90,4 @@ export type Actions
   | RemoveCubeFailAction
   | LoadAction
   | LoadSuccessAction
-  | LoadFailAction
+  | LoadFailAction;

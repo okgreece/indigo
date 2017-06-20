@@ -2,7 +2,7 @@ import {RequestMethod} from '@angular/http';
 import {Output} from './output';
 import {Input} from './input';
 import {environment} from '../../../environments/environment';
-import {Algorithm} from "./algorithm";
+import {Algorithm} from './algorithm';
 /**
  * Created by larjo on 28/4/2017.
  */
@@ -23,8 +23,8 @@ export class ExecutionConfiguration {
     let inputs = new Map<string, Input>();
 
 
-    for (let key of Object.keys(data.input)){
-      inputs.set(key, new Input().deserialize(data.input[key]));
+    for (let key of Object.keys(data.inputs)){
+      inputs.set(key, new Input().deserialize(data.inputs[key]));
     }
 
     this.inputs = inputs;
@@ -34,21 +34,48 @@ export class ExecutionConfiguration {
     let outputs = new Map<string, Output>();
 
 
-    for (let key of Object.keys(data.output)){
-      outputs.set(key, new Output().deserialize(data.output[key]));
+    for (let key of Object.keys(data.outputs)){
+      outputs.set(key, new Output().deserialize(data.outputs[key]));
     }
 
     this.outputs = outputs;
 
 
 
-    this.prompt = data.algorithm.prompt;
-    this.method = data.algorithm.method;
-    this.endpoint = new URL(environment[data.algorithm.endpoint[0]] + '/' + data.algorithm.name);
+    this.prompt = data.prompt;
+    this.method = data.method;
+    this.endpoint = new URL(data.endpoint );
     this.name = data.name;
     this.title = data.title;
 
     return this;
   }
 
+  serialize() {
+
+    let output = {};
+
+    output['inputs'] = {};
+
+    this.inputs.forEach(function (value, key, map) {
+      output['inputs'][key] = value.serialize();
+    });
+
+    output['outputs'] = {};
+
+    this.outputs.forEach(function (value, key, map) {
+      output['outputs'][key] = value.serialize();
+    });
+
+    output['prompt'] = this.prompt;
+    output['method'] = this.method;
+    output['endpoint'] = this.endpoint.toString();
+    output['name'] = this.name;
+    output['title'] = this.title;
+
+
+
+
+    return output;
+  }
 }

@@ -25,10 +25,10 @@ import {NestedPropertyPipe} from "../pipes/nestedProperty";
 })
 export class NgChosenComponent implements AfterViewInit {
 
-  @ViewChild('selectElem') el:ElementRef;
+  @ViewChild('selectElem') el: ElementRef;
   @Input() public items = [];
-  @Input() public valueAccessor:string;
-  @Input() public labelAccessor:string;
+  @Input() public valueAccessor: string;
+  @Input() public labelAccessor: string;
 
 
   onChangeObj(newObj) {
@@ -47,12 +47,12 @@ export class NgChosenComponent implements AfterViewInit {
 
   }
 
-  get selectedItem():any {
+  get selectedItem(): any {
 
     return this._selectedItem;
   }
 
-  set selectedItem(value:any) {
+  set selectedItem(value: any) {
     /*if(value)
       this.selectedItemChange.emit({value:value});*/
     this._selectedItem = value;
@@ -63,10 +63,10 @@ export class NgChosenComponent implements AfterViewInit {
   selectedItemChange = new EventEmitter();
 
   ngAfterViewInit() {
-    if (this.items.length>0) {
+    if (this.items.length > 0) {
 
 
-      this.selectedItem =this.items[0];
+      this.selectedItem = this.items[0];
 
     }
 

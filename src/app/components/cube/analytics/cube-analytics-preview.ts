@@ -32,7 +32,7 @@ import {Cube} from '../../../models/cube';
     md-card {
       width: 400px;
       margin: 15px;
-      background: dimgray;
+      background: #f7f7f7;
     }
 
     md-card-title {
@@ -77,9 +77,7 @@ import {Cube} from '../../../models/cube';
       margin-bottom: 0;
     }
 
-    md-card.algo-card md-card-header {
-      background: #82BF5E;
-    }
+
 
   `]
 })
@@ -89,7 +87,6 @@ export class CubeAnalyticsPreviewComponent {
 
 
   get cubeId() {
-    //debugger;
     return this.cube.name;
   }
 

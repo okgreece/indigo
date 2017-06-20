@@ -9,6 +9,9 @@ import {AnalysisCall} from '../models/analysis/analysisCall';
 import {Algorithm} from '../models/analysis/algorithm';
 import {ApiCubesService} from './api-cubes';
 import {ExecutionConfiguration} from '../models/analysis/executionConfiguration';
+import {environment} from '../../environments/environment';
+import {OperationCanceledException} from 'typescript';
+import {JobTimeoutException} from '../models/analysis/jobTimeoutException';
 
 @Injectable()
 export class AnalysisService {
@@ -32,6 +35,14 @@ export class AnalysisService {
     }
 
 
+    else if (configuration.algorithm.name === 'outlier_detection') {
+      return this.outlier(configuration, inputs);
+    }
+   else if (configuration.algorithm.name === 'rule_mining') {
+      return this.outlier(configuration, inputs);
+    }
+
+
   }
 
   timeseries(configuration, inputs) {
@@ -42,10 +53,9 @@ export class AnalysisService {
     body.set('prediction_steps', inputs['prediction_steps']);
     body.set('json_data', '\'' + inputs['json_data'] + '\'');
 
-    return that.http.post(configuration.endpoint.toString() , body).map(res => {
+    return that.http.post(configuration.endpoint.toString(), body).map(res => {
       let response = res.json();
 
-      debugger;
 
       let forecasts = response['forecasts'];
       let values: any = [];
@@ -278,8 +288,85 @@ export class AnalysisService {
     });
 
 
+  }
+
+  outlier(configuration, inputs) {
+    let that = this;
+    let body = new URLSearchParams();
+
+    body.set('BABBAGE_FACT_URI',  inputs['BABBAGE_FACT_URI']);
+    return that.http.get(configuration.endpoint.toString(), {search: body}).map(res => {
+      return res.json();
+    }).mergeMap(resp => {
+
+
+      return this.http.get(environment.DAMUrl + '/results/' + resp.jobid)
+        .map(res => {
+          let response = res.json();
+
+          if (!response.hasOwnProperty('result')) {
+            throw 'ex';
+
+          }
+          if(configuration.name === 'LOF') {
+            let values: any = response.result.result;
+            return {values: values};
+
+          }else {
+            let values: any = response.result;
+
+            return {values: values};
+
+          }
+
+
+        }).retryWhen(function (attempts) {
+          return Observable.range(1, environment.DAMretries).zip(attempts, function (i) { return i; }).flatMap(function (i) {
+            console.log('delay retry by ' + i + ' second(s)');
+            if (i === environment.DAMretries) return Observable.throw(new JobTimeoutException);
+            return Observable.timer(i * environment.DAMpollingInitialStep);
+          });
+        });
+    });
+
 
   }
+
+  rulemining(configuration, inputs) {
+    let that = this;
+    let body = new URLSearchParams();
+
+    body.set('BABBAGE_FACT_URI',  inputs['BABBAGE_FACT_URI']);
+debugger;
+    return that.http.get(configuration.endpoint.toString(), {search: body}).map(res => {
+      return res.json();
+    }).mergeMap(resp => {
+
+
+      return this.http.get(environment.DAMUrl + '/results/' + resp.jobid)
+        .map(res => {
+          let response = res.json();
+
+          if (!response.hasOwnProperty('result')) {
+            throw 'ex';
+
+          }
+          let values: any = response.result;
+
+          return {values: values};
+
+        }).retryWhen(function (attempts) {
+          return Observable.range(1, environment.DAMretries).zip(attempts, function (i) { return i; }).flatMap(function (i) {
+            console.log('delay retry by ' + i + ' second(s)');
+            if (i === environment.DAMretries) return Observable.throw(new JobTimeoutException);
+            return Observable.timer(i * environment.DAMpollingInitialStep);
+          });
+        });
+    });
+
+
+  }
+
   clustering(configuration, inputs) {
     let that = this;
     let body = new URLSearchParams();
@@ -288,17 +375,15 @@ export class AnalysisService {
     let measuredDimString = '\'' + inputs['measured.dim'] + '\'';
 
 
-
     body.set('amounts', '\'' + inputs['amounts'] + '\'');
     body.set('dimensions', dimensionColumnString);
     body.set('measured.dim', measuredDimString);
     body.set('cl.method', '\'' + inputs['cl.method'] + '\'');
     body.set('json_data', '\'' + inputs['json_data'] + '\'');
 
-    return that.http.post(configuration.endpoint.toString() , body).map(res => {
+    return that.http.post(configuration.endpoint.toString(), body).map(res => {
       let response = res.json();
 
-      debugger;
 
       let forecasts = response['forecasts'];
       let values: any = [];
@@ -532,6 +617,7 @@ export class AnalysisService {
 
 
   }
+
   descriptive(configuration, inputs) {
     let that = this;
     let body = new URLSearchParams();
@@ -568,8 +654,6 @@ export class AnalysisService {
           frequencies[frequencyKeys[i]].push(val);
         }
       }
-
-
 
 
       let boxplotResponse = response.boxplot;

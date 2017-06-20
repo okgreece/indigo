@@ -7,18 +7,24 @@ export interface State {
   ids: string[];
   loading: boolean;
   query: string;
+  size: number;
+  from: number;
 }
 
 const initialState: State = {
   ids: [],
   loading: false,
-  query: ''
+  query: '',
+  size: 50,
+  from: 0
 };
 
 export function reducer(state = initialState, action: cube.Actions): State {
   switch (action.type) {
     case cube.ActionTypes.SEARCH: {
-      const query = action.payload;
+      const query = action.payload.query;
+      const size = action.payload.size;
+      const from = action.payload.from;
 
      /* if (query === '') {
         return {
@@ -29,17 +35,19 @@ export function reducer(state = initialState, action: cube.Actions): State {
       }*/
 
       return Object.assign({}, state, {
-        query,
+        query, size, from,
         loading: true
       });
     }
 
     case cube.ActionTypes.SEARCH_COMPLETE: {
-      const cubes = action.payload;
+      const cubes = action.payload.cubes;
       return {
         ids: cubes.map(cube => cube.id),
         loading: false,
-        query: state.query
+        query: state.query,
+        size: state.size,
+        from: state.from
       };
     }
 
@@ -59,6 +67,12 @@ export function getCubeIds(state$: Observable<State>) {
 
 export function getQuery(state$: Observable<State>) {
   return state$.select(state => state.query);
+}
+export function getSize(state$: Observable<State>) {
+  return state$.select(state => state.size);
+}
+export function getFrom(state$: Observable<State>) {
+  return state$.select(state => state.from);
 }
 
 export function getLoading(state$: Observable<State>) {

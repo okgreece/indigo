@@ -75,7 +75,6 @@ import {IterablePipe} from "../../../pipes/mapToIterable";
 }
 
 svg {
-  background: url("src/public/sprites/grid_paper.png");
   font-family: monospace;
 }
 
@@ -83,10 +82,8 @@ svg text {
   font-family: monospace;
 }
 
-analytics-descriptive-output md-card {
-  background: #303030;
-}
-md-spinner svg{
+
+md-progress-spinner svg{
 background: none;
 }
 md-card{
@@ -95,7 +92,7 @@ margin:5px;
 
   `]
 })
-export class DescriptiveStatisticsOutputComponent extends AfterViewInit {
+export class DescriptiveStatisticsOutputComponent implements AfterViewInit {
   get data(): any {
     return this._data;
   }
@@ -106,8 +103,10 @@ export class DescriptiveStatisticsOutputComponent extends AfterViewInit {
     this._data = value;
 
 
-    if (value)
-    this.init(value);
+    if (value) {
+      this.init(value);
+    }
+
 
 
     this.ref.detectChanges();
@@ -133,7 +132,6 @@ export class DescriptiveStatisticsOutputComponent extends AfterViewInit {
 
 
   constructor( private elementRef: ElementRef,       private ref: ChangeDetectorRef) {
-    super();
     setInterval(() => {
       // the following is required, otherwise the view will not be updated
       this.ref.markForCheck();

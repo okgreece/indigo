@@ -73,9 +73,6 @@ span.node-key {
   cursor: pointer;
 }
 
-.well {
-  background-color: #615f5f;
-}
   `]
 })
 export class AggregateRequestBuilder {
@@ -270,6 +267,14 @@ export class AggregateRequestBuilder {
     });
     /* .catch(() => Observable.of(this.cubeActions.searchComplete([]));*/
 
+  }
+
+  aggregatePageNumberChanged(value) {
+    this.newAggregateRequest.page = value;
+  }
+
+  aggregatePageSizeChanged(value) {
+    this.newAggregateRequest.pageSize = value;
   }
 
 }

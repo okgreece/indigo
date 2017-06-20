@@ -1,41 +1,20 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": ".",
-    "declaration": true,
-    "stripInternal": true,
+    "outDir": "./dist/out-tsc",
+    "baseUrl": "src",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "module": "es2015",
-    "moduleResolution": "node",
-    "noEmitOnError": false,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "outDir": "./dist",
-    "rootDir": ".",
-    "sourceMap": true,
-    "inlineSources": true,
-    "lib": ["es2015", "dom"],
     "target": "es5",
-    "skipLibCheck": true,
-    "types": [
-      "node",
-      "hammerjs",
-      "jquery",
-      "d3",
-      "lodash",
-      "URI"
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2016",
+      "dom"
     ]
-  },
-  "awesomeTypescriptLoaderOptions": {
-  "useWebpackText": true // Allows other loaders to be chained to awesome-typescript-loader.
-  },
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "typings/**/*"
-  ],
-  "compileOnSave": false,
-  "buildOnSave": false,
-  "atom": { "rewriteTsconfig": false }
+  }
 }

@@ -18,11 +18,12 @@ export class ApiCubesService {
   constructor(private http: Http) {
   }
 
-  searchCubes(queryTitle: string): Observable<any[]> {
+  searchCubes(queryTitle: string, size: number, from: number): Observable<any[]> {
 
     let params = new URLSearchParams();
     params.set('q', `"${queryTitle}"`);
-    params.set('size', '10000');
+    params.set('size', size.toString());
+    params.set('from', from.toString());
     return this.http.get(`${this.API_PACKAGES_PATH}`, {search: params})
       .map(res => res.json())
       ;
@@ -77,7 +78,6 @@ export class ApiCubesService {
     let orderString = element.sorts.map(s => s.column.ref + ':' + s.direction.key).join('|');
     let cutString = element.cuts.map(c => c.column.ref + c.transitivity.key + ':' + c.value).join('|');
 
-    debugger;
     let params = new URLSearchParams();
     if (element.cuts.length > 0) params.set('cut', cutString);
     if (element.sorts.length > 0) params.set('order', orderString);

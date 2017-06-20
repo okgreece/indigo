@@ -4,14 +4,14 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/skip';
 import 'rxjs/add/operator/takeUntil';
-import { Injectable } from '@angular/core';
-import { Effect, Actions } from '@ngrx/effects';
-import { Action } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
-import { empty } from 'rxjs/observable/empty';
-import { of } from 'rxjs/observable/of';
+import {Injectable} from '@angular/core';
+import {Effect, Actions} from '@ngrx/effects';
+import {Action} from '@ngrx/store';
+import {Observable} from 'rxjs/Observable';
+import {empty} from 'rxjs/observable/empty';
+import {of} from 'rxjs/observable/of';
 
-import { ApiCubesService } from '../services/api-cubes';
+import {ApiCubesService} from '../services/api-cubes';
 import * as cube from '../actions/cube/cube2';
 
 
@@ -31,7 +31,8 @@ import * as cube from '../actions/cube/cube2';
 
 @Injectable()
 export class CubeEffects {
-  constructor(private actions$: Actions, private rudolfCubes: ApiCubesService) { }
+  constructor(private actions$: Actions, private rudolfCubes: ApiCubesService) {
+  }
 
 
   @Effect()
@@ -39,21 +40,23 @@ export class CubeEffects {
     .ofType(cube.ActionTypes.SEARCH)
     .debounceTime(300)
     .map(action => action.payload)
-    .switchMap(query => {
-     /* if (query === '') {
-        return empty();
-      }*/
+    .switchMap(params => {
+      /* if (query === '') {
+         return empty();
+       }*/
       const nextSearch$ = this.actions$.ofType(cube.ActionTypes.SEARCH).skip(1);
-
-      return this.rudolfCubes.searchCubes(query)
+      return this.rudolfCubes.searchCubes(params.query, params.size, params.from)
         .takeUntil(nextSearch$)
-        .map(cubes => {return new cube.SearchCompleteAction(cubes.filter(function (cube) {
-          if(query=="")return true;
-          return  (cube.package.title.toLocaleLowerCase().indexOf(query.toLocaleLowerCase())>-1);
-        }));})
+        .map(cubes => {
+
+          return new cube.SearchCompleteAction({cubes: cubes.filter(function (cube) {
+
+            if (params.query === '') return true;
+            return (cube.package.title.toLocaleLowerCase().indexOf(params.query.toLocaleLowerCase()) > -1);
+          }), params: params});
+        })
         .catch(() => of(new cube.SearchCompleteAction([])));
     });
-
 
 
 }

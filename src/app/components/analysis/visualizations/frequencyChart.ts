@@ -54,7 +54,7 @@ import {AnalysisVisualization} from "../visualization";
 
   `]
 })
-export class FrequencyVisualization extends AfterViewInit {
+export class FrequencyVisualization implements AfterViewInit {
   get data(): any {
     return this._data;
   }
@@ -232,7 +232,6 @@ export class FrequencyVisualization extends AfterViewInit {
 
 
   constructor( private elementRef: ElementRef,       private ref: ChangeDetectorRef) {
-    super();
     setInterval(() => {
       // the following is required, otherwise the view will not be updated
       this.ref.markForCheck();

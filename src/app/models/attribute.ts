@@ -1,14 +1,14 @@
-import {Dimension} from "./dimension";
-import {Serializable} from "./iserializeable";
+import {Dimension} from './dimension';
+import {Serializable} from './iserializeable';
 /**
  * Created by larjo on 16/7/2016.
  */
 
-export class Attribute implements Serializable<Attribute>{
+export class Attribute implements Serializable<Attribute> {
   serialize(input: Attribute): Object {
     return this;
   }
-  deserialize(input:any):Attribute {
+  deserialize(input: any): Attribute {
 
     this.ref = input.ref;
     this.datatype = input.datatype;
@@ -18,17 +18,19 @@ export class Attribute implements Serializable<Attribute>{
 
     return this;
   }
-  constructor(){}
+  constructor() {
 
-  ref:string;
-  datatype:string;
-  label:string;
-  orig_attribute:string;
-  dimension:Dimension;
+  }
+
+  ref: string;
+  datatype: string;
+  label: string;
+  orig_attribute: string;
+  dimension: Dimension;
 
 
-  public get fullLabel():string{
-    return (this.dimension?this.dimension.label:"")+"→"+this.label;
+  public get fullLabel(): string{
+    return (this.dimension ? this.dimension.label : '') + '→' + this.label;
   }
 
 

@@ -22,6 +22,7 @@ import {IterablePipe} from '../../../pipes/mapToIterable';
 import {IterablePairsPipe} from '../../../pipes/mapToPairsIterable';
 import {PipesModule} from '../../../pipes/index';
 import {ExecutionConfiguration} from '../../../models/analysis/executionConfiguration';
+import {JobTimeoutException} from '../../../models/analysis/jobTimeoutException';
 
 /**
  * Tip: Export type aliases for your component's inputs and outputs. Until we
@@ -43,14 +44,18 @@ export type RemoveOutput = Cube;
       padding: 0 14px;
     }
 
-
     .example-spacer {
       flex: 1 1 auto;
     }
+
     :host {
       display: flex;
       justify-content: center;
 
+    }
+
+    md-progress-spinner svg {
+      background: none;
     }
 
     md-card-title {
@@ -62,6 +67,7 @@ export type RemoveOutput = Cube;
 
     .mat-button-toggle-checked {
       background-color: transparent;
+      color: white;
     }
 
     img {
@@ -83,36 +89,42 @@ export type RemoveOutput = Cube;
 
     }
 
+    md-toolbar {
+      display: flex;
+      align-items: center;
+      padding: 0 15px;
+    }
+
     .well {
       background-color: #615f5f;
     }
-    
-    
-    md-card.input-card md-card-header{
-      background: #82BF5E;
+
+    md-card.input-card md-card-header {
     }
 
-
-
     md-card.input-card {
-      background: dimgray;
+      background: #f3f3f3;
       margin: 5px 0;
     }
 
-    md-card.input-card:first-child{
+    md-card.input-card:first-child {
       margin: 0 0 5px 0;
     }
-    
-    .content-card{
+
+    .content-card {
       margin: 0 0 5px 10px;
-      background: url("src/public/sprites/footer_lodyas.png");
-      box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
-      transition: box-shadow 280ms cubic-bezier(.4,0,.2,1);
+      background: url("assets/sprites/brushed_alu.png");
+      box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
+      transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1);
       will-change: box-shadow;
       display: block;
       position: relative;
       padding: 24px;
       border-radius: 2px;
+    }
+
+    .content-card .error-card {
+      text-align: center;
     }
 
 
@@ -137,6 +149,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
     this._algorithmName = value;
 
   }
+
   get configurationName(): Observable<string> {
     return this._configurationName;
   }
@@ -162,6 +175,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
   set algorithm(value: Algorithm) {
     this._algorithm = value;
   }
+
   get executionConfiguration(): ExecutionConfiguration {
     return this._executionConfiguration;
   }
@@ -207,27 +221,24 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
         this.cube$ = this.store.let(fromRoot.getSelectedCube);
         this.loading$ = this.store.let(fromRoot.getExecutionLoading);
 
-        debugger;
-        let that = this;
+        const that = this;
         this.cube$.subscribe(function (cube) {
           that.cube = cube;
-          let observableAlgorithm: Observable<Algorithm> = that.algorithmName.flatMap(name => that.algorithmsService.getAlgorithm(name, that.cube));
+          const observableAlgorithm: Observable<Algorithm> = that.algorithmName.flatMap(name => that.algorithmsService.getAlgorithm(name, that.cube));
           observableAlgorithm.subscribe(function (algorithm: Algorithm) {
-            debugger;
 
-            let observableConfiguration: Observable<ExecutionConfiguration> = that.configurationName.map(name => algorithm.configurations.get(name));
+            const observableConfiguration: Observable<ExecutionConfiguration> = that.configurationName.map(name => algorithm.configurations.get(name));
             that.algorithm = algorithm;
 
             observableConfiguration.subscribe(function (config: ExecutionConfiguration) {
 
               that.executionConfiguration = config;
-              let call = new AnalysisCall(config, that.cube);
+              const call = new AnalysisCall(config, that.cube);
               call.deParametrizeInputs(that.route.snapshot.queryParams);
               that.analysisCall = call;
-              debugger;
               if (call.valid) that.execute(that.executionConfiguration);
             });
-           });
+          });
         });
       }
 
@@ -262,17 +273,17 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
 
   openFactsDialog(input) {
 
-    let that = this;
+    const that = this;
     this.apiCubesService.fact(this.analysisCall.inputs[input.name]).subscribe(function (json) {
-      let dialogRef = that.dialog.open(FactsPreviewDialog);
+      const dialogRef = that.dialog.open(FactsPreviewDialog);
       dialogRef.componentInstance['json'] = json;
       dialogRef.componentInstance['request'] = that.analysisCall.inputs[input.name];
       dialogRef.componentInstance['cube'] = that.cube;
 
 
-/*      dialogRef.afterClosed().subscribe(result => {
-        that.selectedOption = result;
-      });*/
+      /*      dialogRef.afterClosed().subscribe(result => {
+       that.selectedOption = result;
+       });*/
     });
 
 
@@ -280,26 +291,25 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
 
   openAggregateDialog(input) {
 
-    let that = this;
+    const that = this;
     this.apiCubesService.aggregate(this.analysisCall.inputs[input.name]).subscribe(function (json) {
-      let dialogRef = that.dialog.open(AggregatePreviewDialog);
+      const dialogRef = that.dialog.open(AggregatePreviewDialog);
       dialogRef.componentInstance['json'] = json;
       dialogRef.componentInstance['request'] = that.analysisCall.inputs[input.name];
       dialogRef.componentInstance['cube'] = that.cube;
 
 
-/*      dialogRef.afterClosed().subscribe(result => {
-        that.selectedOption = result;
-      });*/
+      /*      dialogRef.afterClosed().subscribe(result => {
+       that.selectedOption = result;
+       });*/
     });
 
 
   }
 
 
-
   private prepareTimeSeries() {
-    let dateTimeDimension = this.analysisCall.inputs['json_data'].drilldowns.find(drilldown => this.isDateTime(drilldown.column));
+    const dateTimeDimension = this.analysisCall.inputs['json_data'].drilldowns.find(drilldown => this.isDateTime(drilldown.column));
 
     this.analysisCall.inputs['json_data'].cube = this.cube;
 
@@ -319,10 +329,10 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
     this.analysisCall.inputs[input_name] = [];
     for (let i = 0; i < eventTarget.options.length; i++) {
 
-      let optionElement = eventTarget.options[i];
+      const optionElement = eventTarget.options[i];
 
       if (optionElement.selected === true) {
-        let key = eventTarget.options[i].attributes['data-key'].value;
+        const key = eventTarget.options[i].attributes['data-key'].value;
         this.analysisCall.inputs[input_name].push(collection.get(key));
 
       }
@@ -348,16 +358,19 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
       this.prepareDescriptiveStatistics();
 
 
-    let that = this;
+    const that = this;
     this.store.dispatch(new execution.ExecuteAction(null));
 
     this.analysisService.execute(configuration, this.analysisCall.queryParams())
       .catch((error: any) => {
-        if (error.status < 400 ||  error.status === 500) {
+        if (error.status < 400 || error.status === 500) {
           return Observable.throw(new Error(error.status));
         }
         else if (error.status === 400) {
           return Observable.throw(new Error(error._body));
+        }
+        else if (error instanceof JobTimeoutException) {
+          return Observable.throw(new Error('We are sorry, the analysis process did not finish in timely manner'));
         }
       })
 
@@ -366,14 +379,19 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
         that.ref.detectChanges();
         that.store.dispatch(new execution.ExecuteCompleteAction(null));
 
-      }, err => {   this.error = err;     that.store.dispatch(new execution.ExecuteCompleteAction(null));
-        debugger; console.log(err); }  );
+      }, err => {
+        this.error = err;
+        that.store.dispatch(new execution.ExecuteCompleteAction(null));
+        console.log(err);
+      }, () => {
+        console.log('Completed');
+      });
   }
 
   newFactRequest = new FactRequest;
 
-  aggregateShown: boolean = false;
-  factsShown: boolean = false;
+  aggregateShown = false;
+  factsShown = false;
 
 
   toggleAggregate() {
@@ -390,16 +408,17 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
 @Component({
   selector: 'facts-preview-dialog',
   template: `
-    <div style="color: white"><h1>Facts preview ({{json.data.length}} records)</h1></div>
-    <div style="max-height: 400px; overflow: scroll; background: white">
+    <div><h1>Facts preview ({{json.data.length}} records)</h1></div>
+    <div style="max-height: 400px; overflow: scroll;">
       <table class="table table-bordered">
         <thead>
         <tr>
           <th *ngFor="let col of json.fields">
-            <span *ngIf="cube.model.attributes.get(col)">{{cube.model.attributes.get(col)?.dimension.label}} - {{cube.model.attributes.get(col)?.label}}</span>
+            <span
+              *ngIf="cube.model.attributes.get(col)">{{cube.model.attributes.get(col)?.dimension.label}} - {{cube.model.attributes.get(col)?.label}}</span>
             <span *ngIf="cube.model.measures.get(col)">{{cube.model.measures.get(col)?.label}}</span>
-            
-          
+
+
           </th>
         </tr>
         </thead>
@@ -437,13 +456,14 @@ export class FactsPreviewDialog {
 @Component({
   selector: 'aggregate-preview-dialog',
   template: `
-    <div style="color: white"><h1>Aggregate preview ({{json.cells.length}} results)</h1></div>
-    <div style="max-height: 400px; overflow: scroll; background: white">
+    <div><h1>Aggregate preview ({{json.cells.length}} results)</h1></div>
+    <div style="max-height: 400px; overflow: scroll;">
       <table class="table table-bordered">
         <thead>
         <tr>
           <th *ngFor="let col of json.attributes">
-            <span *ngIf="cube.model.attributes.get(col)">{{cube.model.attributes.get(col)?.dimension.label}} - {{cube.model.attributes.get(col)?.label}}</span>
+            <span
+              *ngIf="cube.model.attributes.get(col)">{{cube.model.attributes.get(col)?.dimension.label}} - {{cube.model.attributes.get(col)?.label}}</span>
 
           </th>
           <th *ngFor="let col of json.aggregates">

@@ -8,12 +8,12 @@ import {
 } from '@angular/core';
 import {Inject, NgZone, ChangeDetectorRef} from '@angular/core';
 import * as d3 from 'd3';
-import {Observable} from "rxjs";
-import * as $ from 'jquery'
+import {Observable} from 'rxjs';
+import * as $ from 'jquery';
 import * as _ from 'lodash';
 
-import {Store} from "@ngrx/store";
-import {AnalysisVisualization} from "../visualization";
+import {Store} from '@ngrx/store';
+import {AnalysisVisualization} from '../visualization';
 
 @Component({
   selector: 'analytics-box-plot',
@@ -66,7 +66,7 @@ stroke: green;
 
   `]
 })
-export class BoxPlotVisualization extends AfterViewInit {
+export class BoxPlotVisualization implements AfterViewInit {
   get data(): any {
     return this._data;
   }
@@ -258,7 +258,6 @@ export class BoxPlotVisualization extends AfterViewInit {
 
 
   constructor( private elementRef: ElementRef,       private ref: ChangeDetectorRef) {
-    super();
     setInterval(() => {
       // the following is required, otherwise the view will not be updated
       this.ref.markForCheck();

@@ -1,0 +1,48 @@
+<div *ngIf="data&&analysisCall" #container>
+  <div fxLayout="row">
+    <md-card fxFlex="100%" class="output-card">
+      <md-card-title-group align="center center">
+
+        <md-card-title>Outliers</md-card-title>
+
+
+      </md-card-title-group>
+      <div class="text-center">
+        <div class="text-center">
+
+          <analytics-scatter-plot [x_accessor]="'Item'" [y_accessor]="'Score'"
+                                  style="min-height: 500px;" [label_x]="'Item'" [label_y]="'Score'"
+                                  [values]="data?.values"></analytics-scatter-plot>
+
+        </div>
+
+        <table class="table table-bordered">
+
+          <thead>
+          <tr>
+            <th>Item</th>
+            <th>Score</th>
+            <th>Target</th>
+          </tr>
+          </thead>
+          <tbody>
+
+          <tr *ngFor="let item of data.values">
+            <td>{{item.Item}}</td>
+            <td>{{item.Sco}}</td>
+            <td>{{item.Targ}}</td>
+          </tr>
+
+
+          </tbody>
+        </table>
+
+
+      </div>
+
+    </md-card>
+
+  </div>
+
+
+</div>

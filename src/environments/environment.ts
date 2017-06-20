@@ -5,9 +5,12 @@
 
 export const environment = {
   production: false,
+  searchSize: 50,
   apiUrl: 'http://localhost/rudolf/public',
   openCpuEndpoint: 'http://okfnrg.math.auth.gr/ocpu/',
   versionSuffix: '3',
   baseHref: 'indigo/',
-  DAMUrl: 'http://192.168.0.108:5000'
+  DAMUrl: 'http://dam-obeu.iais.fraunhofer.de',
+  DAMretries: 12,
+  DAMpollingInitialStep: 1000,
 };

@@ -15,7 +15,7 @@ import { Cube } from '../../models/cube';
       <md-card-title>My Collection</md-card-title>
     </md-card>
 
-    <indigo-cube-preview-list [cubes]="cubes$ | async"></indigo-cube-preview-list>
+    <indigo-cube-preview-list  (scrolled)="scrolled($event)" [cubes]="cubes$ | async"></indigo-cube-preview-list>
   `,
   /**
    * Container components are permitted to have just enough styles
@@ -32,8 +32,16 @@ import { Cube } from '../../models/cube';
 })
 export class CollectionCubePageComponent {
   cubes$: Observable<Cube[]>;
+  currentPage: number = 1;
+
 
   constructor(store: Store<fromRoot.State>) {
     this.cubes$ = store.let(fromRoot.getCubeCollection);
   }
+
+  scrolled(event) {
+
+
+  }
+
 }

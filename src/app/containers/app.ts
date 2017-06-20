@@ -1,5 +1,5 @@
 import 'rxjs/add/operator/let';
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ChangeDetectionStrategy, NgModule} from '@angular/core';
 
 import {
   Router,
@@ -10,7 +10,6 @@ import {
   NavigationError
 } from '@angular/router';
 import {Http} from '@angular/http';
-import {HttpInterceptorService} from "ng-http-interceptor";
 
 
 
@@ -28,6 +27,7 @@ import {HttpInterceptorService} from "ng-http-interceptor";
 
   `
 })
+
 export class AppComponent {
 
 

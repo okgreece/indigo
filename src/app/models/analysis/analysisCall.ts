@@ -59,12 +59,12 @@ export class AnalysisCall {
 
   public constructor(public config: ExecutionConfiguration, public cube: Cube) {
 
-    this.init();
+    this.initialize();
 
 
   }
 
-  public init() {
+  public initialize() {
     let that = this;
 
     this.config.inputs.forEach((input) => {
@@ -367,7 +367,7 @@ export class AnalysisCall {
       request.pageSize = parseInt(parts['pagesize']);
     }
     if (parts['page']) {
-      request.pageSize = parseInt(parts['page']);
+      request.page = parseInt(parts['page']);
     }
 
     return request;
