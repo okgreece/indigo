@@ -14,7 +14,9 @@ import {Cube} from '../../models/cube';
 
       </md-card-title-group>
       <div class="row text-center">
-        <a [routerLink]="'/cube/analytics/' + cube.id"  color="primary"  md-raised-button>Analytics & Data Mining
+        <a [routerLink]="'/cube/analytics/' + cube.id"  color="primary"  md-raised-button>Navigation
+        </a>
+        <a [routerLink]="'/cube/analytics/' + cube.id"  color="primary"  md-raised-button>Analysis
         </a>
         <!--
             <button [routerLink]="'/cube/indicators/' + cube.id" md-raised-button>Indicators Builder</button>

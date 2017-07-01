@@ -19,7 +19,6 @@ import {Drilldown} from '../../models/drilldown';
 import {Cut} from '../../models/cut';
 import {AggregateParam} from '../../models/aggregateParam';
 import {AggregateRequest} from '../../models/aggregate/aggregateRequest';
-import {AggregateNode} from '../../models/aggregate/aggregateNode';
 import {Cube} from '../../models/cube';
 
 
@@ -129,8 +128,7 @@ export class AggregateRequestBuilder {
   addAggregateChild() {
 
 
-    let aggregateNode = new AggregateNode();
-    aggregateNode.element = this.newAggregateRequest;
+
     this.newAggregateRequest.cube = this.cube;
     this.newAggregateRequest.page = this.newAggregatePageNumber;
     this.newAggregateRequest.pageSize = this.newAggregatePageSize;

@@ -21,7 +21,7 @@ const initialState: State = {
 
 export function reducer(state = initialState, action: cube.Actions): State {
   switch (action.type) {
-    case cube.ActionTypes.SEARCH: {
+    case cube.ActionTypes.SEARCH_CUBE: {
       const query = action.payload.query;
       const size = action.payload.size;
       const from = action.payload.from;
@@ -40,7 +40,7 @@ export function reducer(state = initialState, action: cube.Actions): State {
       });
     }
 
-    case cube.ActionTypes.SEARCH_COMPLETE: {
+    case cube.ActionTypes.SEARCH_CUBE_COMPLETE: {
       const cubes = action.payload.cubes;
       return {
         ids: cubes.map(cube => cube.id),

@@ -5,7 +5,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://ws307.math.auth.gr/rudolf/public',
+  apiUrl: 'http://apps.openbudgets.eu',
   searchSize: 50,
   openCpuEndpoint: 'http://okfnrg.math.auth.gr/ocpu/',
   versionSuffix: '3',

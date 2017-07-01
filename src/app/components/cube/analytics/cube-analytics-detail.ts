@@ -35,7 +35,7 @@ export type RemoveOutput = Cube;
 
 
 @Component({
-  selector: 'cube-analytics-detail',
+  selector: 'app-cube-analytics-detail',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './cube-analytics-detail.html',
   styles: [`
@@ -93,6 +93,7 @@ export type RemoveOutput = Cube;
       display: flex;
       align-items: center;
       padding: 0 15px;
+      margin-bottom: 8px;
     }
 
     .well {
@@ -133,12 +134,10 @@ export type RemoveOutput = Cube;
 
 
 export class CubeAnalyticsDetailComponent implements AfterViewInit {
-  ngAfterViewInit(): void {
-    this.cube$ = this.store.let(fromRoot.getSelectedCube);
-    this.loading$ = this.store.let(fromRoot.getExecutionLoading);
+  private _analysisCall: AnalysisCall;
 
-
-  }
+  private _algorithm: Algorithm;
+  private _executionConfiguration: ExecutionConfiguration;
 
   get algorithmName(): Observable<string> {
     return this._algorithmName;
@@ -202,14 +201,20 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
   private _configurationName: Observable<string>;
   @Output() add = new EventEmitter<AddOutput>();
   @Output() remove = new EventEmitter<RemoveOutput>();
+  newFactRequest = new FactRequest;
 
+  aggregateShown = false;
+  factsShown = false;
   error: any;
 
   loading$: Observable<boolean>;
   public InputTypes = InputTypes;
 
 
-  public constructor(private store: Store<fromRoot.State>, private algorithmsService: AlgorithmsService, private ref: ChangeDetectorRef, private analysisService: AnalysisService, private route: ActivatedRoute, private router: Router, public dialog: MdDialog, public apiCubesService: ApiCubesService) {
+  public constructor(private store: Store<fromRoot.State>, private algorithmsService: AlgorithmsService,
+                     private ref: ChangeDetectorRef, private analysisService: AnalysisService,
+                     private route: ActivatedRoute, private router: Router, public dialog: MdDialog,
+                     public apiCubesService: ApiCubesService) {
 
     setInterval(() => {
       // the following is required, otherwise the view will not be updated
@@ -220,37 +225,63 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
       if (event instanceof NavigationEnd) {
         this.cube$ = this.store.let(fromRoot.getSelectedCube);
         this.loading$ = this.store.let(fromRoot.getExecutionLoading);
-
         const that = this;
         this.cube$.subscribe(function (cube) {
           that.cube = cube;
-          const observableAlgorithm: Observable<Algorithm> = that.algorithmName.flatMap(name => that.algorithmsService.getAlgorithm(name, that.cube));
-          observableAlgorithm.subscribe(function (algorithm: Algorithm) {
+          if (that.algorithmName) {
+            const observableAlgorithm: Observable<Algorithm> =
+              that.algorithmName.flatMap(name => that.algorithmsService.getAlgorithm(name, that.cube));
+            observableAlgorithm.subscribe(function (algorithm: Algorithm) {
+              const observableConfiguration: Observable<ExecutionConfiguration> =
+                that.configurationName.map(name => algorithm.configurations.get(name));
+              that.algorithm = algorithm;
 
-            const observableConfiguration: Observable<ExecutionConfiguration> = that.configurationName.map(name => algorithm.configurations.get(name));
-            that.algorithm = algorithm;
+              observableConfiguration.subscribe(function (config: ExecutionConfiguration) {
 
-            observableConfiguration.subscribe(function (config: ExecutionConfiguration) {
-
-              that.executionConfiguration = config;
-              const call = new AnalysisCall(config, that.cube);
-              call.deParametrizeInputs(that.route.snapshot.queryParams);
-              that.analysisCall = call;
-              if (call.valid) that.execute(that.executionConfiguration);
+                that.executionConfiguration = config;
+                const call = new AnalysisCall(config, that.cube);
+                call.deParametrizeInputs(that.route.snapshot.queryParams);
+                that.analysisCall = call;
+                if (call.valid) {
+                  that.execute(that.executionConfiguration);
+                }
+              });
             });
-          });
+          }
         });
       }
-
-
     });
   }
 
+  ngAfterViewInit(): void {
+    this.cube$ = this.store.let(fromRoot.getSelectedCube);
+    this.loading$ = this.store.let(fromRoot.getExecutionLoading);
 
-  private _analysisCall: AnalysisCall;
+    const that = this;
+    this.cube$.subscribe(function (cube) {
+      that.cube = cube;
+      const observableAlgorithm: Observable<Algorithm> =
+        that.algorithmName.flatMap(name => that.algorithmsService.getAlgorithm(name, that.cube));
+      observableAlgorithm.subscribe(function (algorithm: Algorithm) {
 
-  private _algorithm: Algorithm;
-  private _executionConfiguration: ExecutionConfiguration;
+        const observableConfiguration: Observable<ExecutionConfiguration> =
+          that.configurationName.map(name => algorithm.configurations.get(name));
+        that.algorithm = algorithm;
+
+        observableConfiguration.subscribe(function (config: ExecutionConfiguration) {
+
+          that.executionConfiguration = config;
+          const call = new AnalysisCall(config, that.cube);
+          call.deParametrizeInputs(that.route.snapshot.queryParams);
+          that.analysisCall = call;
+          if (call.valid) {
+            that.execute(that.executionConfiguration);
+          }
+        });
+      });
+    });
+  }
+
 
   get id() {
 
@@ -275,7 +306,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
 
     const that = this;
     this.apiCubesService.fact(this.analysisCall.inputs[input.name]).subscribe(function (json) {
-      const dialogRef = that.dialog.open(FactsPreviewDialog);
+      const dialogRef = that.dialog.open(FactsPreviewDialogComponent);
       dialogRef.componentInstance['json'] = json;
       dialogRef.componentInstance['request'] = that.analysisCall.inputs[input.name];
       dialogRef.componentInstance['cube'] = that.cube;
@@ -293,7 +324,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
 
     const that = this;
     this.apiCubesService.aggregate(this.analysisCall.inputs[input.name]).subscribe(function (json) {
-      const dialogRef = that.dialog.open(AggregatePreviewDialog);
+      const dialogRef = that.dialog.open(AggregatePreviewDialogComponent);
       dialogRef.componentInstance['json'] = json;
       dialogRef.componentInstance['request'] = that.analysisCall.inputs[input.name];
       dialogRef.componentInstance['cube'] = that.cube;
@@ -344,7 +375,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
     this.newFactRequest.cube = this.cube;
 
 
-    this.analysisCall.inputs['json_data'] = this.newFactRequest;
+  //  this.analysisCall.inputs['json_data'] = this.newFactRequest;
 
   }
 
@@ -365,11 +396,9 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
       .catch((error: any) => {
         if (error.status < 400 || error.status === 500) {
           return Observable.throw(new Error(error.status));
-        }
-        else if (error.status === 400) {
+        } else if (error.status === 400) {
           return Observable.throw(new Error(error._body));
-        }
-        else if (error instanceof JobTimeoutException) {
+        } else if (error instanceof JobTimeoutException) {
           return Observable.throw(new Error('We are sorry, the analysis process did not finish in timely manner'));
         }
       })
@@ -388,10 +417,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
       });
   }
 
-  newFactRequest = new FactRequest;
 
-  aggregateShown = false;
-  factsShown = false;
 
 
   toggleAggregate() {
@@ -415,10 +441,9 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
         <tr>
           <th *ngFor="let col of json.fields">
             <span
-              *ngIf="cube.model.attributes.get(col)">{{cube.model.attributes.get(col)?.dimension.label}} - {{cube.model.attributes.get(col)?.label}}</span>
+              *ngIf="cube.model.attributes.get(col)">
+              {{cube.model.attributes.get(col)?.dimension.label}} - {{cube.model.attributes.get(col)?.label}}</span>
             <span *ngIf="cube.model.measures.get(col)">{{cube.model.measures.get(col)?.label}}</span>
-
-
           </th>
         </tr>
         </thead>
@@ -447,8 +472,8 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
   ],
 
 })
-export class FactsPreviewDialog {
-  constructor(public dialogRef: MdDialogRef<FactsPreviewDialog>) {
+export class FactsPreviewDialogComponent {
+  constructor(public dialogRef: MdDialogRef<FactsPreviewDialogComponent>) {
   }
 }
 
@@ -489,13 +514,11 @@ export class FactsPreviewDialog {
 
 @NgModule({
   imports: [
-
     PipesModule,
-
   ],
 
 })
-export class AggregatePreviewDialog {
-  constructor(public dialogRef: MdDialogRef<AggregatePreviewDialog>) {
+export class AggregatePreviewDialogComponent {
+  constructor(public dialogRef: MdDialogRef<AggregatePreviewDialogComponent>) {
   }
 }

@@ -10,9 +10,9 @@ export const ActionTypes = {
   REMOVE_CUBE:          type('[Collection] Remove Cube'),
   REMOVE_CUBE_SUCCESS:  type('[Collection] Remove Cube Success'),
   REMOVE_CUBE_FAIL:     type('[Collection] Remove Cube Fail'),
-  LOAD:                 type('[Collection] Load Cube'),
-  LOAD_SUCCESS:         type('[Collection] Load Cube Success'),
-  LOAD_FAIL:            type('[Collection] Load Cube Fail'),
+  LOAD_CUBE:                 type('[Collection] Load Cube'),
+  LOAD_CUBE_SUCCESS:         type('[Collection] Load Cube Success'),
+  LOAD_CUBE_FAIL:            type('[Collection] Load Cube Fail'),
 };
 
 
@@ -62,20 +62,22 @@ export class RemoveCubeFailAction implements Action {
 /**
  * Load Collection Actions
  */
-export class LoadAction implements Action {
-  type = ActionTypes.LOAD;
+export class LoadCubeAction implements Action {
+  type = ActionTypes.LOAD_CUBE;
 
   constructor() { }
 }
 
-export class LoadSuccessAction implements Action {
-  type = ActionTypes.LOAD_SUCCESS;
-
-  constructor(public payload: Cube[]) { }
+export class LoadCubeSuccessAction implements Action {
+  type = ActionTypes.LOAD_CUBE_SUCCESS;
+  payload = {'cubes': []};
+  constructor(payload: any) {
+    this.payload = payload;
+  }
 }
 
-export class LoadFailAction implements Action {
-  type = ActionTypes.LOAD_FAIL;
+export class LoadCubeFailAction implements Action {
+  type = ActionTypes.LOAD_CUBE_FAIL;
 
   constructor(public payload: any) { }
 }
@@ -88,6 +90,6 @@ export type Actions
   | RemoveCubeAction
   | RemoveCubeSuccessAction
   | RemoveCubeFailAction
-  | LoadAction
-  | LoadSuccessAction
-  | LoadFailAction;
+  | LoadCubeAction
+  | LoadCubeSuccessAction
+  | LoadCubeFailAction;

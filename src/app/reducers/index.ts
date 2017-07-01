@@ -5,8 +5,6 @@ import {Observable} from 'rxjs/Observable';
 import {combineLatest} from 'rxjs/observable/combineLatest';
 import {ActionReducer} from '@ngrx/store';
 import * as fromRouter from '@ngrx/router-store';
-import {Book} from '../models/book';
-import {ExpressionTree} from '../models/expressionTree';
 
 /**
  * The compose function is one of our most handy tools. In basic terms, you give
@@ -42,14 +40,11 @@ import {combineReducers} from '@ngrx/store';
  * the state of the reducer plus any selector functions. The `* as`
  * notation packages up all of the exports into a single object.
  */
-import * as fromSearch from './search';
-import * as fromBooks from './books';
-import * as fromCollection from './collection';
+
 import * as fromLayout from './layout';
 import * as fromCubeSearch from './cube/search';
 import * as fromCubes from './cube/cubes';
 import * as fromCubesCollection from './cube/collection';
-import * as fromTrees from './tree/trees';
 import * as fromExecutions from './execution/execution';
 import {Cube} from '../models/cube';
 import {environment} from '../../environments/environment';
@@ -60,15 +55,12 @@ import {environment} from '../../environments/environment';
  * our top level state interface is just a map of keys to inner state types.
  */
 export interface State {
-  search: fromSearch.State;
-  books: fromBooks.State;
-  collection: fromCollection.State;
+
   layout: fromLayout.State;
   router: fromRouter.RouterState;
   cubeSearch: fromCubeSearch.State;
   cubes: fromCubes.State;
   cubeCollection: fromCubesCollection.State;
-  trees: fromTrees.TreesState;
   executions: fromExecutions.State;
 }
 
@@ -81,15 +73,11 @@ export interface State {
  * the result from right to left.
  */
 const reducers = {
-  search: fromSearch.reducer,
-  books: fromBooks.reducer,
-  collection: fromCollection.reducer,
   layout: fromLayout.reducer,
   router: fromRouter.routerReducer,
   cubeSearch: fromCubeSearch.reducer,
   cubes: fromCubes.reducer,
   cubeCollection: fromCubesCollection.reducer,
-  trees: fromTrees.reducer,
   executions: fromExecutions.reducer
 };
 
@@ -99,8 +87,7 @@ const productionReducer = combineReducers(reducers);
 export function reducer(state: any, action: any) {
   if (environment.production) {
     return productionReducer(state, action);
-  }
-  else {
+  }else {
     return developmentReducer(state, action);
   }
 }
@@ -132,9 +119,7 @@ export function reducer(state: any, action: any) {
  * ```
  *
  */
-export function getBooksState(state$: Observable<State>) {
-  return state$.select(state => state.books);
-}
+
 
 /**
  * Every reducer module exports selector functions, however child reducers
@@ -151,61 +136,22 @@ export function getBooksState(state$: Observable<State>) {
  * observable. Each subscription to the resultant observable
  * is shared across all subscribers.
  */
-export const getBookEntities = compose(fromBooks.getBookEntities, getBooksState);
-export const getBookIds = compose(fromBooks.getBookIds, getBooksState);
-export const getSelectedBook = compose(fromBooks.getSelectedBook, getBooksState);
+
 
 
 /**
  * Just like with the books selectors, we also have to compose the search
  * reducer's and collection reducer's selectors.
  */
-export function getSearchState(state$: Observable<State>) {
-  return state$.select(s => s.search);
-}
 
-export const getSearchBookIds = compose(fromSearch.getBookIds, getSearchState);
-export const getSearchStatus = compose(fromSearch.getStatus, getSearchState);
-export const getSearchQuery = compose(fromSearch.getQuery, getSearchState);
-export const getSearchLoading = compose(fromSearch.getLoading, getSearchState);
 
 
 /**
  * Some selector functions create joins across parts of state. This selector
  * composes the search result IDs to return an array of books in the store.
  */
-export const getSearchResults = function (state$: Observable<State>) {
-  return combineLatest<{ [id: string]: Book }, string[]>(
-    state$.let(getBookEntities),
-    state$.let(getSearchBookIds)
-  )
-    .map(([entities, ids]) => ids.map(id => entities[id]));
-};
 
 
-export function getCollectionState(state$: Observable<State>) {
-  return state$.select(s => s.collection);
-}
-
-export const getCollectionLoaded = compose(fromCollection.getLoaded, getCollectionState);
-export const getCollectionLoading = compose(fromCollection.getLoading, getCollectionState);
-export const getCollectionBookIds = compose(fromCollection.getBookIds, getCollectionState);
-
-export const getBookCollection = function (state$: Observable<State>) {
-  return combineLatest<{ [id: string]: Book }, string[]>(
-    state$.let(getBookEntities),
-    state$.let(getCollectionBookIds)
-  )
-    .map(([entities, ids]) => ids.map(id => entities[id]));
-};
-
-export const isSelectedBookInCollection = function (state$: Observable<State>) {
-  return combineLatest<string[], Book>(
-    state$.let(getCollectionBookIds),
-    state$.let(getSelectedBook)
-  )
-    .map(([ids, selectedBook]) => ids.indexOf(selectedBook.id) > -1);
-};
 
 
 export function getExecutionState(state$: Observable<State>) {
@@ -301,7 +247,7 @@ export const getCubeSearchResults = function (state$: Observable<State>) {
 
 
 export function getCubeCollectionState(state$: Observable<State>) {
-  return state$.select(s => s.collection);
+  return state$.select(s => s.cubeCollection);
 }
 
 export const getCubeCollectionLoaded = compose(fromCubesCollection.getLoaded, getCubeCollectionState);
@@ -325,17 +271,6 @@ export const isSelectedCubeInCollection = function (state$: Observable<State>) {
 };
 
 
-/**
- * Tree Reducers
- *
- */
-
-export const getTree = compose(fromTrees.getTree, getTreesState);
-
-export function getTreesState(state$: Observable<State>) {
-  return state$.select(state => state.trees);
-
-}
 
 
 /**

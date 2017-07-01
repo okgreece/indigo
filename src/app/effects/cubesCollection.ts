@@ -17,9 +17,7 @@ import { Cube } from '../models/cube';
 
 
 @Injectable()
-export class CollectionEffects {
-  constructor(private actions$: Actions, private db: Database) { }
-
+export class CubeCollectionEffects {
   /**
    * This effect does not yield any actions back to the store. Set
    * `dispatch` to false to hint to @ngrx/effects that it should
@@ -32,7 +30,7 @@ export class CollectionEffects {
    */
   @Effect({ dispatch: false })
   openDB$: Observable<any> = defer(() => {
-    return this.db.open('cubes_app');
+    return this.db.open('indigo');
   });
 
   /**
@@ -41,13 +39,16 @@ export class CollectionEffects {
    */
   @Effect()
   loadCollection$: Observable<Action> = this.actions$
-    .ofType(collection.ActionTypes.LOAD)
-    .startWith(new collection.LoadAction())
+    .ofType(collection.ActionTypes.LOAD_CUBE)
+    .startWith(new collection.LoadCubeAction())
     .switchMap(() =>
       this.db.query('cubes')
         .toArray()
-        .map((cubes: Cube[]) => new collection.LoadSuccessAction(cubes))
-        .catch(error => of(new collection.LoadFailAction(error)))
+        .map((cubes: Cube[]) =>
+        {
+                return new collection.LoadCubeSuccessAction({cubes:cubes});
+        })
+        .catch(error => { return of(new collection.LoadCubeFailAction(error))})
     );
 
   @Effect()
@@ -66,8 +67,11 @@ export class CollectionEffects {
     .ofType(collection.ActionTypes.REMOVE_CUBE)
     .map((action: collection.RemoveCubeAction) => action.payload)
     .mergeMap(cube =>
-      this.db.executeWrite('cubes', 'delete', [ cube.id ])
+      this.db.executeWrite('cubes', 'delete', [ cube.name ])
         .map(() => new collection.RemoveCubeSuccessAction(cube))
         .catch(() => of(new collection.RemoveCubeFailAction(cube)))
     );
+
+  constructor(private actions$: Actions, private db: Database) { }
+
 }

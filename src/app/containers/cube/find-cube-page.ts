@@ -53,11 +53,11 @@ export class FindCubePageComponent {
     if (!from) from = 0;
     if (!size) size = environment.searchSize;
     this.store.dispatch(new cube.SearchAction({query: query, from: from, size: size}));
+    this.query = query;
   }
 
   scrolled() {
     this.currentPage++;
-
     this.store.dispatch(new cube.SearchAction({
       query: this.query,
       from: this.currentPage * environment.searchSize,

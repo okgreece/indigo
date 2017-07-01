@@ -10,17 +10,9 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import {MaterialModule, MdCardModule} from '@angular/material';
 
 import { ComponentsModule } from './components';
-import { BookEffects } from './effects/book';
-import { CollectionEffects } from './effects/collection';
-import { BookExistsGuard } from './guards/book-exists';
 
 import { AppComponent } from './containers/app';
-import { FindBookPageComponent } from './containers/find-book-page';
-import { ViewBookPageComponent } from './containers/view-book-page';
-import { SelectedBookPageComponent } from './containers/selected-book-page';
-import { CollectionPageComponent } from './containers/collection-page';
 import { NotFoundPageComponent } from './containers/not-found-page';
-import { GoogleBooksService } from './services/google-books';
 import { routes } from './routes';
 import { reducer } from './reducers';
 import { schema } from './db';
@@ -38,13 +30,15 @@ import {environment} from '../environments/environment';
 import {APP_BASE_HREF} from '@angular/common';
 import {CubeAnalyticsEmbedPage} from './containers/cube/cube-analytics-embed-page';
 import {CubeExistsLightGuard} from './guards/cube-exists-light';
-import {AggregatePreviewDialog, FactsPreviewDialog} from './components/cube/analytics/cube-analytics-detail';
+import {AggregatePreviewDialogComponent, FactsPreviewDialogComponent} from './components/cube/analytics/cube-analytics-detail';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import 'hammerjs';
 import {MarkdownModule} from 'angular2-markdown';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { InfiniteScrollerDirective } from './infinite-scroller.directive';
+import {CubeCollectionEffects} from "./effects/cubesCollection";
+import DynamicComponent from "./components/dynamic-component";
 
 
 @NgModule({
@@ -95,8 +89,7 @@ MdCardModule,
      * See: https://github.com/ngrx/effects/blob/master/docs/api.md#run
      */
     EffectsModule.run(CubeEffects),
-    EffectsModule.run(BookEffects),
-    EffectsModule.run(CollectionEffects),
+    EffectsModule.run(CubeCollectionEffects),
 
     /**
      * `provideDB` sets up @ngrx/db with the provided schema and makes the Database
@@ -106,10 +99,6 @@ MdCardModule,
   ],
   declarations: [
     AppComponent,
-    FindBookPageComponent,
-    SelectedBookPageComponent,
-    ViewBookPageComponent,
-    CollectionPageComponent,
     FindCubePageComponent,
     SelectedCubePageComponent,
     ViewCubePageComponent,
@@ -117,14 +106,12 @@ MdCardModule,
     CollectionCubePageComponent,
     NotFoundPageComponent,
     CubeAnalyticsEmbedPage,
-    FactsPreviewDialog,
-    AggregatePreviewDialog,
+    FactsPreviewDialogComponent,
+    AggregatePreviewDialogComponent,
   ],
   providers: [
-    BookExistsGuard,
     CubeExistsGuard,
     CubeExistsLightGuard,
-    GoogleBooksService,
     ApiCubesService,
     AlgorithmsService,
     AnalysisService,
@@ -133,7 +120,7 @@ MdCardModule,
   bootstrap: [
     AppComponent
   ],
-  entryComponents: [FactsPreviewDialog, AggregatePreviewDialog],
+  entryComponents: [FactsPreviewDialogComponent, AggregatePreviewDialogComponent],
 
 })
 export class AppModule {

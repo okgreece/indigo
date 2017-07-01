@@ -23,14 +23,36 @@
             <th>Item</th>
             <th>Score</th>
             <th>Target</th>
+            <th>Values</th>
           </tr>
           </thead>
           <tbody>
 
           <tr *ngFor="let item of data.values">
             <td>{{item.Item}}</td>
-            <td>{{item.Sco}}</td>
-            <td>{{item.Targ}}</td>
+            <td>{{item.Score}}</td>
+            <td>{{item.Target}}</td>
+            <td>
+              <md-chip-list style="max-height: 200px" >
+                <ng-container *ngFor="let dimension of cube.model.dimensions|iterable" >
+                  <ng-container *ngFor="let attribute of dimension.significants|iterable" >
+                    <md-chip [mdTooltip]="dimension.label + ' → ' +  attribute.label"   *ngIf="item[(dimension.ref+'_' + attribute.shortRef).toLowerCase()]!=undefined"  >
+
+                      <a class="action-anchor">{{item[(dimension.ref+'_' + attribute.shortRef).toLowerCase()]}}</a>
+                    </md-chip>
+                  </ng-container>
+
+                </ng-container>
+                <ng-container *ngFor="let measure of cube.model.measures|iterable" >
+                    <md-chip [mdTooltip]="measure.label"    *ngIf="item[(measure.ref).toLowerCase()]!=undefined"  >
+
+                      <a class="action-anchor">{{measure.currency}} {{item[(measure.ref).toLowerCase()]}}</a>
+                    </md-chip>
+                </ng-container>
+
+              </md-chip-list>
+
+             </td>
           </tr>
 
 

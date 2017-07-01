@@ -23,7 +23,7 @@ export enum InputTypes  {
 export class Input {
 
   name: string;
-  cardinality: string = '1';
+  cardinality = '1';
   description: string;
   type: InputTypes;
   title: string;
@@ -50,7 +50,7 @@ export class Input {
   }
 
   serialize() {
-    let output = {};
+    const output = {};
 
     output['name'] = this.name;
     output['title'] = this.title;

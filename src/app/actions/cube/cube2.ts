@@ -11,10 +11,10 @@ import { type } from '../../util';
  * action types in the application are unique.
  */
 export const ActionTypes = {
-  SEARCH:           type('[Cube] Search'),
-  SEARCH_COMPLETE:  type('[Cube] Search Complete'),
-  LOAD:             type('[Cube] Load'),
-  SELECT:           type('[Cube] Select'),
+  SEARCH_CUBE:           type('[Cube] Search'),
+  SEARCH_CUBE_COMPLETE:  type('[Cube] Search Complete'),
+  LOAD_CUBE:             type('[Cube] Load'),
+  SELECT_CUBE:           type('[Cube] Select'),
 };
 
 
@@ -26,13 +26,13 @@ export const ActionTypes = {
  * See Discriminated Unions: https://www.typescriptlang.org/docs/handcube/advanced-types.html#discriminated-unions
  */
 export class SearchAction implements Action {
-  type = ActionTypes.SEARCH;
+  type = ActionTypes.SEARCH_CUBE;
 
   constructor(public payload: any) { }
 }
 
 export class SearchCompleteAction implements Action {
-  type = ActionTypes.SEARCH_COMPLETE;
+  type = ActionTypes.SEARCH_CUBE_COMPLETE;
 
   constructor(public payload: any[]|any) {
   }
@@ -40,13 +40,13 @@ export class SearchCompleteAction implements Action {
 }
 
 export class LoadAction implements Action {
-  type = ActionTypes.LOAD;
+  type = ActionTypes.LOAD_CUBE;
 
   constructor(public payload: Cube) { }
 }
 
 export class SelectAction implements Action {
-  type = ActionTypes.SELECT;
+  type = ActionTypes.SELECT_CUBE;
 
   constructor(public payload: string) { }
 }

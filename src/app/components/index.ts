@@ -3,11 +3,7 @@ import { NgModule } from '@angular/core';
 import {ReactiveFormsModule, FormsModule} from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import { BookAuthorsComponent } from './book-authors';
-import { BookDetailComponent } from './book-detail';
-import { BookPreviewComponent } from './book-preview';
-import { BookPreviewListComponent } from './book-preview-list';
-import { BookSearchComponent } from './book-search';
+
 import { LayoutComponent } from './layout';
 import { NavItemComponent } from './nav-item';
 import { SidenavComponent } from './sidenav';
@@ -55,21 +51,19 @@ import {
   MdTooltipModule, MdProgressBarModule, MdCardModule, MaterialModule, MdIconModule, MdDialogModule, MdProgressSpinnerModule, MdSelectModule, MdOptionModule,
 } from '@angular/material';
 import {InfiniteScrollerDirective} from "../infinite-scroller.directive";
+import {RuleMiningOutputComponent} from "./analysis/rulemining/rulemining";
+import {ClusteringOutputComponent} from "./analysis/clustering/clustering";
 
 
 
 export const COMPONENTS = [
   DynamicComponent,
-  BookAuthorsComponent,
-  BookDetailComponent,
-  BookPreviewComponent,
-  BookPreviewListComponent,
-  BookSearchComponent,
   CubeDetailComponent,
   CubePreviewComponent,
   CubePreviewListComponent,
   CubeSearchComponent,
-  LayoutComponent,
+  DynamicComponent,
+ LayoutComponent,
   NavItemComponent,
   SidenavComponent,
   ToolbarComponent,
@@ -84,6 +78,8 @@ export const COMPONENTS = [
   LineChartVisualization,
   ScatterPlotVisualization,
   TimeSeriesOutputComponent,
+  RuleMiningOutputComponent,
+  ClusteringOutputComponent,
   DescriptiveStatisticsOutputComponent,
   AcfChartVisualization,
   AcfChartVisualizationRegular,

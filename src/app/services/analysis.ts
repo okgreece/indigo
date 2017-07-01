@@ -39,7 +39,7 @@ export class AnalysisService {
       return this.outlier(configuration, inputs);
     }
    else if (configuration.algorithm.name === 'rule_mining') {
-      return this.outlier(configuration, inputs);
+      return this.rulemining(configuration, inputs);
     }
 
 
@@ -295,6 +295,7 @@ export class AnalysisService {
     let body = new URLSearchParams();
 
     body.set('BABBAGE_FACT_URI',  inputs['BABBAGE_FACT_URI']);
+
     return that.http.get(configuration.endpoint.toString(), {search: body}).map(res => {
       return res.json();
     }).mergeMap(resp => {
@@ -308,7 +309,7 @@ export class AnalysisService {
             throw 'ex';
 
           }
-          if(configuration.name === 'LOF') {
+          if (configuration.name === 'LOF') {
             let values: any = response.result.result;
             return {values: values};
 
@@ -337,7 +338,11 @@ export class AnalysisService {
     let body = new URLSearchParams();
 
     body.set('BABBAGE_FACT_URI',  inputs['BABBAGE_FACT_URI']);
-debugger;
+    body.set('consequentColumns[]',  inputs['consequentColumns']);
+    body.set('antecedentColumns[]',  inputs['antecedentColumns']);
+    if(inputs["minConfidence"])body.set('minConfidence',  inputs['minConfidence']);
+    if(inputs["minSupport"])body.set('minSupport',  inputs['minSupport']);
+
     return that.http.get(configuration.endpoint.toString(), {search: body}).map(res => {
       return res.json();
     }).mergeMap(resp => {
@@ -351,9 +356,9 @@ debugger;
             throw 'ex';
 
           }
-          let values: any = response.result;
+          let data: any = response.result;
 
-          return {values: values};
+          return data;
 
         }).retryWhen(function (attempts) {
           return Observable.range(1, environment.DAMretries).zip(attempts, function (i) { return i; }).flatMap(function (i) {

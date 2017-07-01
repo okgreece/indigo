@@ -7,7 +7,7 @@ import {Observable} from "rxjs";
 
 
 @Component({
-  selector: 'bc-layout',
+  selector: 'app-indigo-layout',
   template: `
 
 
@@ -82,7 +82,7 @@ import {Observable} from "rxjs";
         </div>
         <a id="cd-menu-trigger" href="#0"><span class="cd-menu-text">Menu</span><span class="cd-menu-icon"></span></a>
       </header>
-      <main class="site" class="cd-main-content">
+      <main class="site" class="cd-main-content" fxLayout="column" fxLayoutAlign="center stretch">
         <div class="content home" fxLayout="column">
           <div class="banner">
             <div class="wrapper">

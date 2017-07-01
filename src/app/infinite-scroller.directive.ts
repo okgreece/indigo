@@ -57,11 +57,11 @@ export class InfiniteScrollerDirective implements AfterViewInit, OnDestroy {
 
   private registerScrollEvent() {
 
-    this.scrollEvent$ = Observable.fromEvent($('[cdk-scrollable]'), 'scroll');
+    this.scrollEvent$ = Observable.fromEvent($('[cdk-scrollable]')[0], 'scroll');
   }
 
   private streamScrollEvents() {
-    this.userScrolledDown$ = Observable.fromEvent($('[cdk-scrollable]'), 'scroll')
+    this.userScrolledDown$ = Observable.fromEvent($('[cdk-scrollable]')[0], 'scroll')
       .map((e: any): ScrollPosition => { return ({
         sH: e.target.scrollHeight,
         sT: e.target.scrollTop,
@@ -85,13 +85,12 @@ export class InfiniteScrollerDirective implements AfterViewInit, OnDestroy {
     }
 
     this.subscription = this.requestOnScroll$
-      .exhaustMap(() => {debugger; return this.scrollCallback(); })
+      .exhaustMap(() => { return this.scrollCallback(); })
       .subscribe(() => { });
 
   }
 
   public ngOnDestroy(): void {
-    debugger;
    this.subscription.unsubscribe();
   }
 

@@ -35,7 +35,7 @@ export class CubeExistsLightGuard implements CanActivate {
    * has finished.
    */
   waitForCollectionToLoad(): Observable<boolean> {
-    return this.store.let(fromRoot.getCollectionLoaded)
+    return this.store.let(fromRoot.getCubeCollectionLoaded)
       .filter(loaded => loaded)
       .take(1);
   }

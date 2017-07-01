@@ -5,6 +5,14 @@ import {Serializable} from './iserializeable';
  */
 
 export class Attribute implements Serializable<Attribute> {
+
+
+  ref: string;
+  datatype: string;
+  label: string;
+  orig_attribute: string;
+  dimension: Dimension;
+
   serialize(input: Attribute): Object {
     return this;
   }
@@ -22,15 +30,15 @@ export class Attribute implements Serializable<Attribute> {
 
   }
 
-  ref: string;
-  datatype: string;
-  label: string;
-  orig_attribute: string;
-  dimension: Dimension;
-
 
   public get fullLabel(): string{
     return (this.dimension ? this.dimension.label : '') + '→' + this.label;
+  }
+
+  public get shortRef(): string{
+    const replace = '^(' + this.dimension.ref + '\.)';
+    const re = new RegExp(replace, 'g');
+    return (this.dimension ? this.ref.replace(re, '') : '') ;
   }
 
 

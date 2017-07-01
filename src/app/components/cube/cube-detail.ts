@@ -1,9 +1,6 @@
 import {Component, Input, Output, EventEmitter, NgModule} from '@angular/core';
 import {Cube} from '../../models/cube';
 import {Observable} from "rxjs";
-import {ExpressionTree} from "../../models/expressionTree";
-import {FuncType, FuncNode} from "../../models/func/funcNode";
-import * as treeActions from "../../actions/tree";
 import {Store} from "@ngrx/store";
 import {State} from "../../reducers";
 import {Model} from "../../models/model";
@@ -54,17 +51,8 @@ export class CubeDetailComponent {
   @Input() inCollection: boolean;
   @Output() add = new EventEmitter<Cube>();
   @Output() remove = new EventEmitter<Cube>();
-  tree$: Observable<ExpressionTree>;
 
   public constructor( private store: Store<State>) {
-    let root = new FuncNode(FuncType.Addition);
-    let expressionTree = new ExpressionTree();
-    expressionTree.root = root;
-    this.tree$ = Observable.create(function (observer:any) {
-      observer.next(expressionTree);
-    });
-    expressionTree =  expressionTree =  Object.assign({}, expressionTree);
-    this.store.dispatch(new treeActions.ReplaceAction(expressionTree));
 
 
   }

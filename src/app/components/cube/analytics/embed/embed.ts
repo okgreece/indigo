@@ -17,7 +17,8 @@ export type InCollectionInput = boolean;
 @Component({
   selector: 'indigo-cube-analytics-embed',
   template: `
-      <dynamic-component style="min-height: 250px; min-width: 250px;" [componentData]="componentData"></dynamic-component>
+    <app-indigo-dynamic-component style="min-height: 250px; min-width: 250px;"
+                                  [componentData]="componentData"></app-indigo-dynamic-component>
 
   `,
   styles: [`

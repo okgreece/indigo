@@ -37,14 +37,14 @@ export class CubeEffects {
 
   @Effect()
   search$: Observable<Action> = this.actions$
-    .ofType(cube.ActionTypes.SEARCH)
+    .ofType(cube.ActionTypes.SEARCH_CUBE)
     .debounceTime(300)
     .map(action => action.payload)
     .switchMap(params => {
       /* if (query === '') {
          return empty();
        }*/
-      const nextSearch$ = this.actions$.ofType(cube.ActionTypes.SEARCH).skip(1);
+      const nextSearch$ = this.actions$.ofType(cube.ActionTypes.SEARCH_CUBE).skip(1);
       return this.rudolfCubes.searchCubes(params.query, params.size, params.from)
         .takeUntil(nextSearch$)
         .map(cubes => {
