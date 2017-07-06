@@ -126,12 +126,12 @@
 
   <md-input-container>
     <input type="number" name="newCutValueVal" title="Page number" mdInput (ngModelChange)="factPageNumberChanged($event)"
-           [(ngModel)]="newFactPageNumber" placeholder="Page number"  align="end"/>
+           [(ngModel)]="newFactRequest.page" placeholder="Page number"  align="end"/>
   </md-input-container>
 
     <md-input-container>
     <input type="number" name="newCutValueVal" title="Page size" mdInput (ngModelChange)="factPageSizeChanged($event)"
-           [(ngModel)]="newFactPageSize" placeholder="Page size"  align="end"/>
+           [(ngModel)]="newFactRequest.pageSize" placeholder="Page size"  align="end"/>
   </md-input-container>
 
 

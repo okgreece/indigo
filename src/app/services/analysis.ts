@@ -47,11 +47,11 @@ export class AnalysisService {
 
   timeseries(configuration, inputs) {
     let that = this;
-    let body = new URLSearchParams();
+    let body = new URLSearchParams("", new PureURIEncoder());
     body.set('amount', '\'' + inputs['amount'] + '\'');
     body.set('time', '\'' + inputs['time'] + '\'');
     body.set('prediction_steps', inputs['prediction_steps']);
-    body.set('json_data', '\'' + inputs['json_data'] + '\'');
+    body.set('json_data', '\'' + (inputs['json_data']) + '\'');
 
     return that.http.post(configuration.endpoint.toString(), body).map(res => {
       let response = res.json();
@@ -374,7 +374,7 @@ export class AnalysisService {
 
   clustering(configuration, inputs) {
     let that = this;
-    let body = new URLSearchParams();
+    let body = new URLSearchParams("", new PureURIEncoder());
 
     let dimensionColumnString = '\'' + inputs['dimensions'] + '\'';
     let measuredDimString = '\'' + inputs['measured.dim'] + '\'';
@@ -384,7 +384,7 @@ export class AnalysisService {
     body.set('dimensions', dimensionColumnString);
     body.set('measured.dim', measuredDimString);
     body.set('cl.method', '\'' + inputs['cl.method'] + '\'');
-    body.set('json_data', '\'' + inputs['json_data'] + '\'');
+    body.set('json_data', '\'' +  inputs['json_data'] + '\'');
 
     return that.http.post(configuration.endpoint.toString(), body).map(res => {
       let response = res.json();
@@ -625,11 +625,8 @@ export class AnalysisService {
 
   descriptive(configuration, inputs) {
     let that = this;
-    let body = new URLSearchParams();
-    body.set('json_data', '\'' + inputs['json_data'] + '\'')
-
-
-    ;
+    let body = new URLSearchParams("", new PureURIEncoder());
+    body.set('json_data', '\'' + (inputs['json_data']) + '\'');
 
 
     let amountColumnString = '\'' + inputs['amounts'] + '\'';
@@ -693,3 +690,16 @@ export class AnalysisService {
 
 
 }
+
+
+import { QueryEncoder} from '@angular/http';
+class PureURIEncoder extends QueryEncoder {
+  encodeKey(k: string): string {
+    return encodeURIComponent(k);
+  }
+
+  encodeValue(v: string): string {
+    return encodeURIComponent(v);
+  }
+}
+
