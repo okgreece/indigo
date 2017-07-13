@@ -26,6 +26,11 @@ import {Observable} from "rxjs";
             <ul>
 
 
+              <li >
+                <a href="/">Upload</a>
+
+              </li>
+
               <li class="active">
                 <a  href="/">Explore Data</a>
 
