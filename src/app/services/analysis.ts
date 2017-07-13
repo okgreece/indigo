@@ -301,7 +301,7 @@ export class AnalysisService {
     }).mergeMap(resp => {
 
 
-      return this.http.get(environment.DAMUrl + '/results/' + resp.jobid)
+      return this.http.get(environment.DAMUrl + '/results/' + resp.jobid + '?t=' + new Date())
         .map(res => {
           let response = res.json();
 
@@ -348,7 +348,7 @@ export class AnalysisService {
     }).mergeMap(resp => {
 
 
-      return this.http.get(environment.DAMUrl + '/results/' + resp.jobid)
+      return this.http.get(environment.DAMUrl + '/results/' + resp.jobid + '?t=' + new Date())
         .map(res => {
           let response = res.json();
 
