@@ -11,7 +11,7 @@
 
 
         <button md-tooltip="Execute" md-icon-button [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/'+ algorithm.name+'/'+ executionConfiguration.name]"
-                [queryParams]="analysisCall.queryParams()">
+                [queryParams]="analysisCall.queryParams()" >
           <md-icon>play_circle_outline
           </md-icon>
         </button>
@@ -231,6 +231,12 @@
           <analytics-outliers-output *ngIf="algorithm.name=='outlier_detection'"
                                         [data]="analysisCall?.outputs['values']" [cube]="cube"
                                         [analysisCall]="analysisCall"></analytics-outliers-output>
+          <analytics-clustering-output *ngIf="algorithm.name=='clustering'"
+                                     [data]="analysisCall?.outputs['values']" [cube]="cube"
+                                     [analysisCall]="analysisCall"></analytics-clustering-output>
+          <app-analytics-rulemining-output *ngIf="algorithm.name=='rule_mining'"
+                                     [data]="analysisCall?.outputs['values']" [cube]="cube"
+                                     [analysisCall]="analysisCall"></app-analytics-rulemining-output>
         </div>
       </div>
 

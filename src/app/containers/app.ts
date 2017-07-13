@@ -20,8 +20,9 @@ import {Http} from '@angular/http';
   template: `
     <div class="loading-overlay" *ngIf="loading">
       <!-- show something fancy here, here with Angular 2 Material's loading bar or circle -->
-      <md-progress-bar mode="indeterminate"></md-progress-bar>
+       <md-progress-bar mode="indeterminate"></md-progress-bar>
     </div>
+    
       <router-outlet></router-outlet>
   
 

@@ -246,21 +246,19 @@ export class AnalysisCall {
 
   public deParametrizeInputs(parts: any) {
 
-    let that = this;
-
+    const that = this;
     this.config.inputs.forEach((input) => {
-      if (!parts[input.name])return;
+      if (!parts[input.name]){
+        return;
+      }
       switch (input.type) {
         case InputTypes.PARAMETER: {
 
           if (input.data_type === 'integer' || input.data_type === 'int') {
             that.inputs[input.name] = parseInt(parts[input.name]);
-
-          }
-          else if (input.data_type === 'float' || input.data_type === 'double') {
+          } else if (input.data_type === 'float' || input.data_type === 'double') {
             that.inputs[input.name] = parseFloat(parts[input.name]);
-          }
-          else {
+          } else {
             that.inputs[input.name] = parts[input.name];
           }
           break;
@@ -303,21 +301,15 @@ export class AnalysisCall {
           that.inputs[input.name] = parts[input.name];
           break;
         }
-
-
       }
-
     });
     return parts;
-
   }
 
 
   private aggregateFromURI(uri: string) {
-
-    let parts = new URI(uri).search(true);
-
-    let request = new AggregateRequest();
+    const parts = new URI(uri).search(true);
+    const request = new AggregateRequest();
 
     request.cube = this.cube;
 
@@ -378,12 +370,9 @@ export class AnalysisCall {
   private factsFromURI(uri: string) {
 
     let parts = new URI(uri).search(true);
-
     let request = new FactRequest();
 
-
     request.cube = this.cube;
-
 
     if (parts['cut']) {
       let that = this;
@@ -407,13 +396,11 @@ export class AnalysisCall {
         return sort;
       });
     }
-
-
     if (parts['pagesize']) {
       request.pageSize = parseInt(parts['pagesize']);
     }
     if (parts['page']) {
-      request.pageSize = parseInt(parts['page']);
+      request.page = parseInt(parts['page']);
     }
     return request;
 

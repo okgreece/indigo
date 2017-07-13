@@ -18,15 +18,14 @@ const initialState: State = {
 
 export function reducer(state = initialState, action: collection.Actions | any): State {
   switch (action.type) {
-    case collection.ActionTypes.LOAD: {
+    case collection.ActionTypes.LOAD_CUBE: {
       return Object.assign({}, state, {
         loading: true
       });
     }
 
-    case collection.ActionTypes.LOAD_SUCCESS: {
-      const cubes = action.payload;
-
+    case collection.ActionTypes.LOAD_CUBE_SUCCESS: {
+      const cubes = action.payload.cubes;
       return {
         loaded: true,
         loading: false,

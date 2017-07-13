@@ -3,7 +3,7 @@
     <md-card fxFlex="100%" class="output-card">
       <md-card-title-group align="center center">
 
-        <md-card-title>Statistical measures</md-card-title>
+        <md-card-title>Rule mining</md-card-title>
 
 
       </md-card-title-group>
@@ -14,141 +14,21 @@
 
           <thead>
           <tr>
-            <th>Statistical Measure</th>
-            <th *ngFor="let item of analysisCall.inputs['amounts']">{{item.label}} ({{item.currency}})</th>
+            <th>Rule</th>
           </tr>
           </thead>
-          <tbody *ngIf="data?.descriptives">
+          <tbody *ngIf="data?.rules">
 
-          <tr>
-            <td>Minimum observed value</td>
-            <td *ngFor="let item of analysisCall.inputs['amounts']">{{data?.descriptives.Min[item.ref][0]}}</td>
-          </tr>
-
-          <tr>
-            <td>Maximum observed value</td>
-            <td *ngFor="let item of analysisCall.inputs['amounts']">{{data?.descriptives.Max[item.ref][0]}}</td>
+          <tr *ngFor="let rule of data.rules">
+            <td>{{rule.text}}</td>
           </tr>
 
-          <tr>
-            <td>Range of values</td>
-            <td *ngFor="let item of analysisCall.inputs['amounts']">{{data?.descriptives.Range[item.ref][0]}}</td>
-          </tr>
-          <tr>
-            <td>Mean</td>
-            <td *ngFor="let item of analysisCall.inputs['amounts']">{{data?.descriptives.Mean[item.ref][0]}}</td>
-          </tr>
-          <tr>
-            <td>Quantiles</td>
-            <td *ngFor="let item of analysisCall.inputs['amounts']">
-              <ul>
-                <li style="display: inline-block">25%: {{data?.descriptives.Quantiles[item.ref][0]}}</li>
-                <li style="display: inline-block">75%: {{data?.descriptives.Quantiles[item.ref][1]}}</li>
-              </ul>
-            </td>
-          </tr>
 
-          <tr>
-            <td>Variance</td>
-            <td *ngFor="let item of analysisCall.inputs['amounts']">{{data?.descriptives.Variance[item.ref][0]}}</td>
-          </tr>
-
-          <tr>
-            <td>Standard Deviation</td>
-            <td *ngFor="let item of analysisCall.inputs['amounts']">
-              {{data?.descriptives.StandardDeviation[item.ref][0]}}
-            </td>
-          </tr>
-          <tr>
-            <td>Skewness</td>
-            <td>{{data?.descriptives.Skewness[0]}}</td>
-          </tr>
-          <tr>
-            <td>Kurtosis</td>
-            <td>{{data?.descriptives.Kurtosis[0]}}</td>
-          </tr>
 
           </tbody>
         </table>
 
 
-      </div>
-
-    </md-card>
-
-  </div>
-
-  <div fxLayout="row">
-    <md-card fxFlex="100%" class="output-card">
-      <md-card-title-group align="center center">
-
-        <md-card-title>Frequency chart</md-card-title>
-        <a target="_blank" md-icon-button
-           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/descriptive_statistics/'+analysisCall.config.name+'/embed/analytics-frequency-chart-descriptive']"
-           [queryParams]="analysisCall.queryParams()">
-          <md-icon color="primary">share</md-icon>
-        </a>
-
-      </md-card-title-group>
-      <div class="text-center">
-
-        <div *ngFor="let item of data?.frequencies|iterablepairs" class="text-center">
-
-
-          <analytics-frequency-chart  style="min-height: 500px;" [label_y]="'Relative Frequency (%)'"
-                                     [label_x]="analysisCall.cube.model.attributes.get(item.key).fullLabel" [data]="item.value"  ></analytics-frequency-chart>
-
-        </div>
-
-
-      </div>
-
-    </md-card>
-
-  </div>
-  <div fxLayout="row">
-    <md-card fxFlex="100%" class="output-card">
-      <md-card-title-group align="center center">
-
-        <md-card-title>Box plot</md-card-title>
-        <a target="_blank" md-icon-button
-           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/descriptive_statistics/'+analysisCall.config.name+'/embed/analytics-box-plot-descriptive']"
-           [queryParams]="analysisCall.queryParams()">
-          <md-icon color="primary">share</md-icon>
-        </a>
-
-      </md-card-title-group>
-      <div class="text-center">
-
-
-        <analytics-box-plot style="min-height: 500px;" [label_y]="Frequency" [label_x]="Dimension"
-                            [data]="data.boxplot"></analytics-box-plot>
-
-
-      </div>
-
-    </md-card>
-
-  </div>
-
-
-  <div fxLayout="row">
-    <md-card fxFlex="100%" class="output-card">
-      <md-card-title-group align="center center">
-
-        <md-card-title>Histogram</md-card-title>
-        <a target="_blank" md-icon-button
-           [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/descriptive_statistics/'+analysisCall.config.name+'/embed/analytics-histogram-chart-descriptive']"
-           [queryParams]="analysisCall.queryParams()">
-          <md-icon color="primary">share</md-icon>
-        </a>
-
-      </md-card-title-group>
-      <div class="text-center">
-
-
-        <analytics-histogram *ngFor="let item of data?.histogram|iterable"  style="min-height: 500px;"
-                             [label_y]="Frequency" [label_x]="Dimension" [values]="item"></analytics-histogram>
       </div>
 
     </md-card>

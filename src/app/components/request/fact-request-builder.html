@@ -31,17 +31,20 @@
       </md-select>
 
 
-      <md-input-container>
-              <textarea name="newCutValueVal" mdInput (ngModelChange)="selectedCutValChanged($event)"
-                        [(ngModel)]="newCutValueVal" placeholder="Filter value"></textarea></md-input-container>
 
-      <md-chip-list style="max-height: 200px" *ngIf="newCutAttribute!=undefined">
-        <md-chip (click)="setCutValue(member)" *ngFor="let member of cutMembers"
-                 selected="true"
-        >
-          <a class="action-anchor" >{{member}}</a>
-        </md-chip>
-      </md-chip-list>
+      <md-input-container>
+              <textarea [mdAutocomplete]="auto" name="newCutValueVal" mdInput (ngModelChange)="selectedCutValChanged($event)"
+                        [(ngModel)]="newCutValueVal" placeholder="Filter value"></textarea>
+      </md-input-container>
+
+
+      <md-autocomplete placeholder="Filter attribute" #auto="mdAutocomplete" class="form-control">
+
+        <md-option [value]="member" *ngFor="let member of cutMembers">{{member}}
+        </md-option>
+      </md-autocomplete>
+
+
 
     </div>
 
@@ -126,12 +129,12 @@
 
   <md-input-container>
     <input type="number" name="newCutValueVal" title="Page number" mdInput (ngModelChange)="factPageNumberChanged($event)"
-           [(ngModel)]="newFactPageNumber" placeholder="Page number"  align="end"/>
+           [(ngModel)]="newFactRequest.page" placeholder="Page number"  align="end"/>
   </md-input-container>
 
     <md-input-container>
     <input type="number" name="newCutValueVal" title="Page size" mdInput (ngModelChange)="factPageSizeChanged($event)"
-           [(ngModel)]="newFactPageSize" placeholder="Page size"  align="end"/>
+           [(ngModel)]="newFactRequest.pageSize" placeholder="Page size"  align="end"/>
   </md-input-container>
 
 

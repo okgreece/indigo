@@ -19,7 +19,7 @@
 
   <div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="25px">
 
-    <div  fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="25px">
+    <div fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="25px">
 
       <md-select [(ngModel)]="newAggregateAggregate" placeholder="Aggregate">
         <md-option [value]="item" *ngFor="let item of cube?.model?.aggregates|iterable">{{item |
@@ -60,12 +60,12 @@
   </md-list>
   <div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="25px">
 
-    <div  fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="25px">
+    <div fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="25px">
       <md-select placeholder="Filter attribute" class="form-control" [(ngModel)]="newCutAttribute"
                  (ngModelChange)="selectedCutChanged($event)">
 
         <md-optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" label="{{dim.label}}">
-          <md-option [value]="item" *ngFor="let item of dim?.attributes|iterable">{{item |
+          <md-option [value]="item" *ngFor="let item of dim?.significants|iterable">{{item |
             nestedProperty:'label'}}
           </md-option>
         </md-optgroup>
@@ -74,15 +74,18 @@
       </md-select>
 
 
-      <md-input-container>
-              <textarea name="newCutValueVal" mdInput (ngModelChange)="selectedCutValChanged($event)"
-                        [(ngModel)]="newCutValueVal" placeholder="Filter value"></textarea></md-input-container>
 
-      <md-chip-list style="max-height: 200px" *ngIf="newCutAttribute!=undefined" >
-        <md-chip (click)="setCutValue(member)" *ngFor="let member of cutMembers"  selected="true">
-          <a class="action-anchor" >{{member}}</a>
-        </md-chip>
-      </md-chip-list>
+      <md-input-container>
+              <textarea [mdAutocomplete]="auto" name="newCutValueVal" mdInput (ngModelChange)="selectedCutValChanged($event)"
+                        [(ngModel)]="newCutValueVal" placeholder="Filter value"></textarea>
+      </md-input-container>
+
+
+      <md-autocomplete placeholder="Filter attribute" #auto="mdAutocomplete" class="form-control">
+
+        <md-option [value]="member" *ngFor="let member of cutMembers">{{member}}
+        </md-option>
+      </md-autocomplete>
 
     </div>
     <div fxFlexAlign="center">
@@ -114,22 +117,22 @@
   </md-list>
   <div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="25px">
 
-    <div  fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="25px">
+    <div fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="25px">
       <md-select placeholder="Drill-down attribute" [(ngModel)]="newDrilldownAttribute">
         <md-optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" label="{{dim.label}}">
-          <md-option [value]="item" *ngFor="let item of dim?.attributes|iterable">{{item |
+          <md-option [value]="item" *ngFor="let item of dim?.significants|iterable">{{item |
             nestedProperty:'label'}}
           </md-option>
         </md-optgroup>
       </md-select>
     </div>
 
-  <div fxFlexAlign="center">
-    <button md-icon-button (click)="addDrilldown()" [disabled]="newDrilldownAttribute==undefined">
-      <md-icon class="md-24">playlist_add</md-icon>
-    </button>
+    <div fxFlexAlign="center">
+      <button md-icon-button (click)="addDrilldown()" [disabled]="newDrilldownAttribute==undefined">
+        <md-icon class="md-24">playlist_add</md-icon>
+      </button>
 
-  </div>
+    </div>
 
 
   </div>
@@ -156,9 +159,9 @@
   <div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="25px">
 
     <div fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="25px">
-      <md-select  placeholder="Sorting attribute" [(ngModel)]="newSortAttribute">
+      <md-select placeholder="Sorting attribute" [(ngModel)]="newSortAttribute">
         <md-optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" label="{{dim.label}}">
-          <md-option [value]="item" *ngFor="let item of dim?.attributes|iterable">{{item |
+          <md-option [value]="item" *ngFor="let item of dim?.significants|iterable">{{item |
             nestedProperty:'label'}}
           </md-option>
         </md-optgroup>
@@ -173,7 +176,7 @@
     </div>
 
 
-    <div  fxFlexAlign="center">
+    <div fxFlexAlign="center">
       <button md-icon-button (click)="addSort()"
               [disabled]="newSortAttribute==undefined||newSortDirection==undefined">
         <md-icon class="md-24">playlist_add</md-icon>
@@ -181,9 +184,6 @@
     </div>
 
   </div>
-
-
-
 
 
 </md-card>
@@ -194,16 +194,16 @@
   <h3 md-subheader>Pagination</h3>
 
   <md-input-container>
-    <input type="number" name="newCutValueVal" title="Page number" mdInput (ngModelChange)="aggregatePageNumberChanged($event)"
-           [(ngModel)]="newAggregateRequest.page" placeholder="Page number"  align="end"/>
+    <input type="number" name="newCutValueVal" title="Page number" mdInput
+           (ngModelChange)="aggregatePageNumberChanged($event)"
+           [(ngModel)]="newAggregateRequest.page" placeholder="Page number" align="end"/>
   </md-input-container>
 
   <md-input-container>
-    <input type="number" name="newCutValueVal" title="Page size" mdInput  (ngModelChange)="aggregatePageSizeChanged($event)"
-           [(ngModel)]="newAggregateRequest.pageSize" placeholder="Page size"  align="end"/>
+    <input type="number" name="newCutValueVal" title="Page size" mdInput
+           (ngModelChange)="aggregatePageSizeChanged($event)"
+           [(ngModel)]="newAggregateRequest.pageSize" placeholder="Page size" align="end"/>
   </md-input-container>
-
-
 
 
 </md-card>

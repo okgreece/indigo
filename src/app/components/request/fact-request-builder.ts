@@ -19,7 +19,6 @@ import {Drilldown} from '../../models/drilldown';
 import {Cut} from '../../models/cut';
 import {AggregateParam} from '../../models/aggregateParam';
 import {AggregateRequest} from '../../models/aggregate/aggregateRequest';
-import {AggregateNode} from '../../models/aggregate/aggregateNode';
 import {Cube} from '../../models/cube';
 import {Dimension} from '../../models/dimension';
 import {FactRequest} from '../../models/fact/factRequest';
@@ -146,7 +145,6 @@ export class FactRequestBuilder {
 
 
   addSort() {
-
     let newSort = new Sort();
     newSort.column = this.newSortAttribute;
     newSort.direction = this.newSortDirection;
