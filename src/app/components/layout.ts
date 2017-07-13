@@ -14,35 +14,7 @@ import {Observable} from "rxjs";
 
     <md-sidenav-container fullscreen>
 
-      <!--<bc-sidenav [open]="showSidenav$ | async">
 
-        <bc-nav-item (activate)="closeSidenav()" routerLink="/cube/find" icon="search">
-          Browse datasets
-        </bc-nav-item>
-
-
-        <bc-nav-item (activate)="closeSidenav()" routerLink="/userguide" icon="note">
-          Read the manual
-        </bc-nav-item>
-
-
-        <button md-button #mybutton (click)="closeSidenav()">Close menu</button>
-
-      </bc-sidenav>
-      <div fxLayout="row">
-        <div fxLayout="row" style="margin: 4px;border: solid #cacaca; border-width: 0 1px 0 0; padding: 0 18px;"> 
-          
-          <img src="assets/sprites/icon.png" height="64px" alt=""/>
-
-          <div fxLayout="column" fxLayoutAlign="center center">Open<br>
-            Budgets</div>
-        </div>
-       
-      </div>-->
-      <!-- <bc-toolbar class="indigo" (openMenu)="openSidenav()">
-         <span class="indigo">indigo</span>
- 
-       </bc-toolbar>-->
 
       <header class="site-header">
         <div class="wrapper">
@@ -54,13 +26,13 @@ import {Observable} from "rxjs";
             <ul>
 
 
-              <li>
-                <a href="/openbudgets.github.io/#">Explore Data</a>
+              <li class="active">
+                <a  href="/">Explore Data</a>
 
               </li>
 
 
-              <li class="active">
+              <li >
                 <a href="/">Data Toolbox</a>
 
               </li>
@@ -120,7 +92,6 @@ import {Observable} from "rxjs";
           </ul>
         </nav>
       </main>
-    </md-sidenav-container>
   `,
   styles: [`
 

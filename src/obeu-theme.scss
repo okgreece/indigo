@@ -133,7 +133,10 @@ bc-toolbar.indigo {
 
   width:100%;
 }
-
+.mat-chip.mat-chip-selected:not(.mat-basic-chip).mat-primary {
+  background-color: #50b958;
+  color: white;
+}
 
 footer{
   background: #4E6864;

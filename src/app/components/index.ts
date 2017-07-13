@@ -48,11 +48,14 @@ import {MarkdownComponent, MarkdownModule} from "angular2-markdown";
 import {OutliersDetectionOutputComponent} from "./analysis/outlier/outlier_detection";
 import {
   MdButtonModule, MdCheckboxModule, MdInputModule, MdSidenavModule, MdChipsModule, MdButtonToggleModule,
-  MdTooltipModule, MdProgressBarModule, MdCardModule, MaterialModule, MdIconModule, MdDialogModule, MdProgressSpinnerModule, MdSelectModule, MdOptionModule,
+  MdTooltipModule, MdProgressBarModule, MdCardModule, MaterialModule, MdIconModule, MdDialogModule,
+  MdProgressSpinnerModule, MdSelectModule, MdOptionModule, MdAutocompleteModule,
 } from '@angular/material';
 import {InfiniteScrollerDirective} from "../infinite-scroller.directive";
 import {RuleMiningOutputComponent} from "./analysis/rulemining/rulemining";
 import {ClusteringOutputComponent} from "./analysis/clustering/clustering";
+import {TreeDiagramVisualization} from "./analysis/visualizations/treeDiagram";
+import {OutlierPlotVisualization} from "./analysis/visualizations/outlierPlot";
 
 
 
@@ -63,7 +66,8 @@ export const COMPONENTS = [
   CubePreviewListComponent,
   CubeSearchComponent,
   DynamicComponent,
- LayoutComponent,
+  LayoutComponent,
+  OutlierPlotVisualization,
   NavItemComponent,
   SidenavComponent,
   ToolbarComponent,
@@ -77,6 +81,7 @@ export const COMPONENTS = [
   BoxPlotVisualization,
   LineChartVisualization,
   ScatterPlotVisualization,
+  TreeDiagramVisualization,
   TimeSeriesOutputComponent,
   RuleMiningOutputComponent,
   ClusteringOutputComponent,
@@ -128,7 +133,8 @@ export const COMPONENTS = [
     MdDialogModule,
     MdProgressSpinnerModule,
     MdOptionModule,
-    MdSelectModule
+    MdSelectModule,
+    MdAutocompleteModule
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,

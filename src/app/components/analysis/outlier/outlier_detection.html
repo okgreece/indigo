@@ -4,8 +4,7 @@
       <md-card-title-group align="center center">
 
         <md-card-title>Outliers</md-card-title>
-
-
+{{analysisCall.inputs["coloringAttribute"][0].ref}}
       </md-card-title-group>
       <div class="text-center">
         <div class="text-center">
@@ -15,6 +14,7 @@
                                   [values]="data?.values"></analytics-scatter-plot>
 
         </div>
+        <analytics-outlier-plot [values]="data?.values" [color]="analysisCall.inputs['coloringAttribute'][0]" [group]="analysisCall.inputs['groupingAttribute'][0]"></analytics-outlier-plot>
 
         <table class="table table-bordered">
 
