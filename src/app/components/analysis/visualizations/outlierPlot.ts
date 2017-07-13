@@ -111,7 +111,7 @@ export class OutlierPlotVisualization implements AfterViewInit {
     const svg = d3.select(this.vizCanvas.nativeElement).append('svg')
       .attr('width', viewerWidth + margin.left + margin.right)
       .attr('height', viewerHeight + margin.top + margin.bottom) .append("g")
-      .attr("transform","translate(" + margin.left + "," + margin.top + ")");
+      .attr('transform','translate(' + margin.left + "," + margin.top + ")");
 
 
     const that = this;

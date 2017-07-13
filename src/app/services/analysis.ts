@@ -1,6 +1,6 @@
 import 'rxjs/add/operator/map';
 import {Injectable} from '@angular/core';
-import {Http, URLSearchParams} from '@angular/http';
+import {Http, URLSearchParams, Headers} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 
 import 'rxjs/add/operator/mergeMap';
@@ -301,7 +301,13 @@ export class AnalysisService {
     }).mergeMap(resp => {
 
 
-      return this.http.get(environment.DAMUrl + '/results/' + resp.jobid + '?t=' + new Date())
+      const headersAdditional = new Headers;
+      headersAdditional.append('Cache-control', 'no-cache');
+      headersAdditional.append('Cache-control', 'no-store');
+      headersAdditional.append('Expires', '0');
+      headersAdditional.append('Pragma', 'no-cache');
+
+      return this.http.get(environment.DAMUrl + '/results/' + resp.jobid, {'headers': headersAdditional})
         .map(res => {
           let response = res.json();
 
@@ -343,12 +349,20 @@ export class AnalysisService {
     if(inputs["minConfidence"])body.set('minConfidence',  inputs['minConfidence']);
     if(inputs["minSupport"])body.set('minSupport',  inputs['minSupport']);
 
+
+
+
     return that.http.get(configuration.endpoint.toString(), {search: body}).map(res => {
       return res.json();
     }).mergeMap(resp => {
 
+      const headersAdditional = new Headers;
+      headersAdditional.append('Cache-control', 'no-cache');
+      headersAdditional.append('Cache-control', 'no-store');
+      headersAdditional.append('Expires', '0');
+      headersAdditional.append('Pragma', 'no-cache');
 
-      return this.http.get(environment.DAMUrl + '/results/' + resp.jobid + '?t=' + new Date())
+      return this.http.get(environment.DAMUrl + '/results/' + resp.jobid, {headers: headersAdditional})
         .map(res => {
           let response = res.json();
 
