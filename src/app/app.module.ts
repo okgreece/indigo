@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
-import { RouterModule } from '@angular/router';
+import {RouterModule, ROUTES} from '@angular/router';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { DBModule } from '@ngrx/db';
@@ -44,6 +44,7 @@ import DynamicComponent from "./components/dynamic-component";
 @NgModule({
   imports: [
 
+
     CommonModule,
     BrowserModule,
 /*
@@ -52,7 +53,7 @@ import DynamicComponent from "./components/dynamic-component";
     BrowserAnimationsModule,
     FlexLayoutModule,
     ComponentsModule,
-    RouterModule.forRoot(routes, { useHash: true }),
+    RouterModule.forRoot(routes, { useHash: false }),
     MarkdownModule.forRoot(),
 MdCardModule,
     /**

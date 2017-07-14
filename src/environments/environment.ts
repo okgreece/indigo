@@ -9,7 +9,7 @@ export const environment = {
   searchSize: 50,
   openCpuEndpoint: 'http://okfnrg.math.auth.gr/ocpu/',
   versionSuffix: '3',
-  baseHref: 'indigo/',
+  baseHref: '/',
   DAMUrl: 'http://dam-obeu.iais.fraunhofer.de',
   DAMretries: 12,
   DAMpollingInitialStep: 1000,

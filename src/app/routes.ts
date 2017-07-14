@@ -34,11 +34,6 @@ export const routes: Routes = [
           path: 'userguide',
           component: UserGuidePageComponent
         },
-        {
-          path: 'cube/indicators/:id',
-          canActivate: [CubeExistsGuard],
-          component: ViewCubePageComponent
-        },
 
         {
           path: 'cube/analytics/:id/:algorithm/:configuration',
