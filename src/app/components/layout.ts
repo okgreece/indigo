@@ -18,7 +18,7 @@ import {Observable} from "rxjs";
 
       <header class="site-header">
         <div class="wrapper">
-          <a href="/openbudgets.github.io/" class="logo">
+          <a href="/" class="logo">
             <img src="assets/sprites/openbudgets-logo.svg" alt="OpenBudgets">
           </a>
 
@@ -26,31 +26,33 @@ import {Observable} from "rxjs";
             <ul>
 
 
-              <li >
-                <a href="/">Upload</a>
+              <li [routerLink]="['/upload']" routerLinkActive="active" >
+                <a [routerLink]="['/upload']" routerLinkActive="active">Upload</a>
 
               </li>
 
-              <li class="active">
-                <a  href="/">Explore Data</a>
+              <li [routerLink]="['/']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:
+true}">
+                <a  [routerLink]="['/']"  routerLinkActive="active" [routerLinkActiveOptions]="{exact:
+true}" >Explore Data</a>
 
               </li>
 
 
               <li >
-                <a href="/">Data Toolbox</a>
+                <a href="http://openbudgets.eu/tools/">Data Toolbox</a>
 
               </li>
 
 
               <li>
-                <a href="/openbudgets.github.io/documentation">Documentation</a>
+                <a href="http:///openbudgets.github.io/documentation">Documentation</a>
 
               </li>
 
 
               <li>
-                <a href="/openbudgets.github.io/blog">Blog</a>
+                <a href="http:///openbudgets.github.io/blog">Blog</a>
 
               </li>
 
@@ -75,23 +77,23 @@ import {Observable} from "rxjs";
           <ul>
 
             <li>
-              <a href="/openbudgets.github.io/about">About</a>
+              <a href="http://openbudgets.github.io/about">About</a>
             </li>
 
             <li>
-              <a href="/openbudgets.github.io/about/work-packages">Work Packages</a>
+              <a href="http://openbudgets.github.io/about/work-packages">Work Packages</a>
             </li>
 
             <li>
-              <a href="/openbudgets.github.io/about/deliverables">Deliverables</a>
+              <a href="http://openbudgets.github.io/about/deliverables">Deliverables</a>
             </li>
 
             <li>
-              <a href="/openbudgets.github.io/about/technical-structure">Technical Structure</a>
+              <a href="http://openbudgets.github.io/about/technical-structure">Technical Structure</a>
             </li>
 
             <li>
-              <a href="/openbudgets.github.io/resources">Resources</a>
+              <a href="http://openbudgets.github.io/resources">Resources</a>
             </li>
 
           </ul>

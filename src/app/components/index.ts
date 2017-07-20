@@ -56,6 +56,8 @@ import {RuleMiningOutputComponent} from "./analysis/rulemining/rulemining";
 import {ClusteringOutputComponent} from "./analysis/clustering/clustering";
 import {TreeDiagramVisualization} from "./analysis/visualizations/treeDiagram";
 import {OutlierPlotVisualization} from "./analysis/visualizations/outlierPlot";
+import {UploadPageComponent} from "../containers/cube/upload";
+import {LinkedPipesPageComponent} from "../containers/cube/linkedpipes";
 
 
 
@@ -75,6 +77,8 @@ export const COMPONENTS = [
   AggregateRequestBuilder,
   FactRequestBuilder,
   UserGuidePageComponent,
+  UploadPageComponent,
+  LinkedPipesPageComponent,
   CubeAnalyticsDetailComponent,
   CubeAnalyticsIndexComponent,
   FrequencyVisualization,

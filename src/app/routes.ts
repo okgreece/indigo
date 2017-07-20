@@ -10,6 +10,8 @@ import {CubeAnalyticsEmbedPage} from './containers/cube/cube-analytics-embed-pag
 import {LayoutComponent} from './components/layout';
 import {CubeExistsLightGuard} from './guards/cube-exists-light';
 import {UserGuidePageComponent} from './components/user-guide';
+import {UploadPageComponent} from "./containers/cube/upload";
+import {LinkedPipesPageComponent} from "./containers/cube/linkedpipes";
 
 export const routes: Routes = [
 
@@ -55,6 +57,15 @@ export const routes: Routes = [
           component: ViewCubePageComponent
         },
 
+        {
+          path: 'upload',
+          component: UploadPageComponent
+        },
+
+        {
+          path: 'upload/linkedpipes',
+          component: LinkedPipesPageComponent
+        }
       ]
     },
 
