@@ -99,7 +99,7 @@ export class OutlierPlotVisualization implements AfterViewInit {
   public group;
 
   private generateOutlierPlot(data: any) {
-    const margin = {top: 20, right: 40, bottom: 50, left: 75};
+    const margin = {top: 20, right: 40, bottom: 80, left: 75};
 
 
     const viewerWidth = $(this.vizCanvas.nativeElement).width() - margin.left - margin.right;
@@ -168,18 +168,19 @@ export class OutlierPlotVisualization implements AfterViewInit {
       .style('font-weight', 'bold')
       .text('Amount');
 
-    // x axis and label
+
     svg.append('g')
-      .attr('class', 'x axis')
-      .attr('transform', 'translate(0,' + viewerHeight + ')')
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + viewerHeight + ")")
       .call(xAxis)
-      .append('text')
-      .attr('x', viewerWidth + 100)
-      .attr('y', margin.bottom - 130)
-      .attr('dy', '.71em')
-      .style('text-anchor', 'end')
-      .style('font-weight', 'bold')
-      .text(this.group.label);
+      .selectAll("text")
+      .attr("y", 0)
+      .attr("x", 9)
+      .attr("dy", ".35em")
+      .attr("transform", "rotate(45)")
+      .style("text-anchor", "start");
+
+    ;
 
     const color = d3.scaleOrdinal(d3.schemeCategory10);
     const colors = {};

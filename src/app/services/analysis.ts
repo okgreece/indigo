@@ -294,7 +294,12 @@ export class AnalysisService {
     let that = this;
     let body = new URLSearchParams();
 
-    body.set('BABBAGE_FACT_URI',  inputs['BABBAGE_FACT_URI']);
+    if (configuration.name === 'LOF_AGGREGATE') {
+      body.set('BABBAGE_AGGREGATE_URI',  inputs['BABBAGE_AGGREGATE_URI']);
+    } else {
+      body.set('BABBAGE_FACT_URI',  inputs['BABBAGE_FACT_URI']);
+    }
+
 
     return that.http.get(configuration.endpoint.toString(), {search: body}).map(res => {
       return res.json();
@@ -315,7 +320,7 @@ export class AnalysisService {
             throw 'ex';
 
           }
-          if (configuration.name === 'LOF_FACTS' || configuration.name === 'AGGREGATE') {
+          if (configuration.name === 'LOF_FACTS' || configuration.name === 'LOF_AGGREGATE') {
             let values: any = response.result.result;
             return {values: values};
 
