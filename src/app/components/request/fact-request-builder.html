@@ -21,18 +21,21 @@
 
     <div  fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="25px">
 
-      <md-select name="newCutAttribute" placeholder="Filter attribute" [(ngModel)]="newCutAttribute"
+      <md-select name="newCutAttribute" placeholder="Filter attribute" [(ngModel)]="newCutAttribute" #select="mdSelect"
                  (ngModelChange)="selectedCutChanged($event)">
         <md-optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" [label]="dim.label">
           <md-option *ngFor="let item of dim?.significants|iterable" [value]="item">
-            {{item | nestedProperty:'label'}}
+            <ng-container  *ngIf="select.panelOpen">{{item |
+              nestedProperty:'label'}}</ng-container>
+            <ng-container  *ngIf="!select.panelOpen">{{item.dimension.label}} &rarr; {{item |
+              nestedProperty:'label'}}</ng-container>
           </md-option>
         </md-optgroup>
       </md-select>
 
 
 
-      <md-input-container>
+      <md-input-container *ngIf="newCutAttribute">
               <textarea [mdAutocomplete]="auto" name="newCutValueVal" mdInput (ngModelChange)="selectedCutValChanged($event)"
                         [(ngModel)]="newCutValueVal" placeholder="Filter value"></textarea>
       </md-input-container>
@@ -85,16 +88,19 @@
 
     <div fxFlexFill fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="25px">
 
-      <md-select name="newSortAttribute" placeholder="Sorting attribute" [(ngModel)]="newSortAttribute">
+      <md-select name="newSortAttribute" placeholder="Sorting attribute" [(ngModel)]="newSortAttribute" #select="mdSelect">
         <md-optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" [label]="dim.label">
           <md-option *ngFor="let item of dim?.significants|iterable" [value]="item">
-            {{item | nestedProperty:'label'}}
+            <ng-container  *ngIf="select.panelOpen">{{item |
+              nestedProperty:'label'}}</ng-container>
+            <ng-container  *ngIf="!select.panelOpen">{{item.dimension.label}} &rarr; {{item |
+              nestedProperty:'label'}}</ng-container>
           </md-option>
         </md-optgroup>
       </md-select>
 
 
-      <md-select name="newSortDirection" placeholder="Sorting direction" [(ngModel)]="newSortDirection"
+      <md-select *ngIf="newSortAttribute" name="newSortDirection" placeholder="Sorting direction" [(ngModel)]="newSortDirection"
                  (ngModelChange)="selectedCutChanged($event)">
           <md-option *ngFor="let item of sortDirections|iterable" [value]="item">
             {{item | nestedProperty:'label'}}

@@ -392,7 +392,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
     const that = this;
     this.store.dispatch(new execution.ExecuteAction(null));
 
-    this.analysisService.execute(configuration, this.analysisCall.queryParams())
+    this.analysisService.execute(configuration, this.analysisCall.queryParams(), this.cube)
       .catch((error: any) => {
         if (error.status < 400 || error.status === 500) {
           return Observable.throw(new Error(error.status));

@@ -3,7 +3,7 @@
     <md-card fxFlex="100%" class="output-card">
       <md-card-title-group align="center center">
 
-        <md-card-title>Rule mining</md-card-title>
+        <md-card-title>Rules</md-card-title>
 
 
       </md-card-title-group>
@@ -14,13 +14,40 @@
 
           <thead>
           <tr>
-            <th>Rule</th>
+            <th>Antecedent</th>
+            <th></th>
+            <th>Consequent</th>
           </tr>
           </thead>
           <tbody *ngIf="data?.rules">
 
           <tr *ngFor="let rule of data.rules">
-            <td>{{rule.text}}</td>
+            <td>
+              <ng-container *ngFor="let dimension of cube.model.dimensions|iterable" >
+                <ng-container *ngFor="let attribute of dimension.significants|iterable" >
+
+                  <md-chip [mdTooltip]="dimension.label + ' → ' +  attribute.label"   *ngIf="rule['antCol']===attribute.ref"  >
+
+                    <a class="action-anchor">{{rule["antVal"]}}</a>
+                  </md-chip>
+                </ng-container>
+
+              </ng-container>
+
+            </td>
+            <td style="text-align: center">→</td>
+            <td>
+              <ng-container *ngFor="let dimension of cube.model.dimensions|iterable" >
+                <ng-container *ngFor="let attribute of dimension.significants|iterable" >
+
+                  <md-chip [mdTooltip]="dimension.label + ' → ' +  attribute.label"   *ngIf="rule['consCol']===attribute.ref"  >
+
+                    <a class="action-anchor">{{rule["consVal"]}}</a>
+                  </md-chip>
+                </ng-container>
+
+              </ng-container>
+            </td>
           </tr>
 
 

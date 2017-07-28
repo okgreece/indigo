@@ -28,7 +28,7 @@
           <md-card class="input-card">
             {{executionConfiguration.prompt}}
           </md-card>
-          <ng-container *ngFor="let input of executionConfiguration.inputs|iterable">
+          <ng-container *ngFor="let input of executionConfiguration.inputs|inputIterable">
 
             <md-card *ngIf="!input.guess" class="input-card">
               <md-card-header class="">
@@ -111,17 +111,26 @@
                                         [(request)]="analysisCall?.inputs[input.name]"></fact-request-builder>
                 </div>
 
+                <ng-container *ngIf="input.type==InputTypes.PARAMETER">
+                  <md-input-container *ngIf="!input.options" class="example-full-width">
 
-                <md-input-container *ngIf="input.type==InputTypes.PARAMETER" class="example-full-width">
-                  <input mdInput placeholder="{{input.title}}" type="{{input.data_type}}"
-                         value="{{input.default_value}}" [(ngModel)]="analysisCall?.inputs[input.name]">
-                </md-input-container>
+                    <input  mdInput placeholder="Parameter" type="{{input.data_type}}"
+                           value="{{input.default_value}}" [(ngModel)]="analysisCall?.inputs[input.name]">
+
+
+                  </md-input-container>
+
+                  <md-select *ngIf="input.options"  placeholder="Parameter from list" [(ngModel)]="analysisCall?.inputs[input.name]">
+                    <md-option *ngFor="let option of input.options|iterablepairs" [value]="option.key">{{option.value}}</md-option>
+                  </md-select>
+                </ng-container>
+
 
 
                 <div *ngIf="input.type==InputTypes.MEASURE_REF">
                   <div>
 
-                    <md-select
+                    <md-select placeholder="Measure"
 
                       multiple
                       [(ngModel)]="analysisCall?.inputs[input.name]">
@@ -143,7 +152,7 @@
 
 
 
-                      <md-select *ngIf="input.cardinality=='1'"
+                      <md-select *ngIf="input.cardinality=='1'" placeholder="Aggregated measure"
                               [(ngModel)]="analysisCall?.inputs[input.name]">
                         <md-option *ngFor="let item of cube?.model?.aggregates|iterable" [value]="item">{{item |
                           nestedProperty:'label'}}
@@ -151,7 +160,7 @@
 
                       </md-select>
 
-                      <md-select *ngIf="input.cardinality=='n'"
+                      <md-select *ngIf="input.cardinality=='n'" placeholder="Aggregated measures"
                               multiple
                               [(ngModel)]="analysisCall?.inputs[input.name]">
                         <md-option [value]="item" [attr.data-key]="item |nestedProperty:'ref'"
@@ -171,26 +180,35 @@
 
 
 
-                      <md-select *ngIf="input.cardinality=='1'"
+                      <md-select *ngIf="input.cardinality=='1'" placeholder="Attribute" #select="mdSelect"
                               [(ngModel)]="analysisCall?.inputs[input.name]">
-                        <md-optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" label="{{dim.label}}">
-                          <md-option [value]="item" *ngFor="let item of dim?.attributes|iterable">{{item |
-                            nestedProperty:'label'}}
+
+                        <md-optgroup  *ngFor="let dim of cube?.model?.dimensions|iterable" label="{{dim.label}}">
+                          <md-option [value]="item" *ngFor="let item of dim?.significants|iterable">
+
+                            <ng-container  *ngIf="select.panelOpen">{{item |
+                              nestedProperty:'label'}}</ng-container>
+                            <ng-container  *ngIf="!select.panelOpen">{{item.dimension.label}} &rarr; {{item |
+                              nestedProperty:'label'}}</ng-container>
+
                           </md-option>
                         </md-optgroup>
                       </md-select>
 
 
 
-                      <md-select *ngIf="input.cardinality=='n'"
+                      <md-select placeholder="Attributes" *ngIf="input.cardinality=='n'" #select="mdSelect"
 
                               multiple
                               [(ngModel)]="analysisCall?.inputs[input.name]">
 
                         <md-optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" label="{{dim.label}}">
                           <md-option [value]="item" [attr.data-key]="item |nestedProperty:'ref'"
-                                  *ngFor="let item of dim?.significants|iterable">{{item |
-                            nestedProperty:'label'}}
+                                  *ngFor="let item of dim?.significants|iterable">
+                            <ng-container  *ngIf="select.panelOpen">{{item |
+                              nestedProperty:'label'}}</ng-container>
+                            <ng-container  *ngIf="!select.panelOpen">{{item.dimension.label}} &rarr; {{item |
+                                nestedProperty:'label'}}</ng-container>
                           </md-option>
                         </md-optgroup>
 

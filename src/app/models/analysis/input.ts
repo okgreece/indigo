@@ -32,6 +32,7 @@ export class Input {
   guess: boolean;
   required: boolean;
   data: any;
+  options: any;
 
   deserialize(data: any): Input {
 
@@ -44,6 +45,7 @@ export class Input {
     this.required = data.required;
     this.data_type = data.data_type;
     this.type = data.type;
+    this.options = data.options;
 
 
     return this;

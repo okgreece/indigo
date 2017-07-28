@@ -39,6 +39,10 @@
 
                       <a class="action-anchor">{{item[(dimension.ref+'_' + attribute.shortRef).toLowerCase()]}}</a>
                     </md-chip>
+                    <md-chip [mdTooltip]="dimension.label + ' → ' +  attribute.label"   *ngIf="item[attribute.ref]!=undefined"  >
+
+                      <a class="action-anchor">{{item[attribute.ref]}}</a>
+                    </md-chip>
                   </ng-container>
 
                 </ng-container>

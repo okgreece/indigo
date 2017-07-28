@@ -1,7 +1,6 @@
 import {RequestMethod} from '@angular/http';
 import {Output} from './output';
 import {Input} from './input';
-import {environment} from '../../../environments/environment';
 import {Algorithm} from './algorithm';
 /**
  * Created by larjo on 28/4/2017.
@@ -20,10 +19,10 @@ export class ExecutionConfiguration {
 
   deserialize(data: any): ExecutionConfiguration {
 
-    let inputs = new Map<string, Input>();
+    const inputs = new Map<string, Input>();
 
 
-    for (let key of Object.keys(data.inputs)){
+    for (const key of Object.keys(data.inputs)){
       inputs.set(key, new Input().deserialize(data.inputs[key]));
     }
 
@@ -31,10 +30,10 @@ export class ExecutionConfiguration {
 
 
 
-    let outputs = new Map<string, Output>();
+    const outputs = new Map<string, Output>();
 
 
-    for (let key of Object.keys(data.outputs)){
+    for (const key of Object.keys(data.outputs)){
       outputs.set(key, new Output().deserialize(data.outputs[key]));
     }
 
@@ -53,17 +52,17 @@ export class ExecutionConfiguration {
 
   serialize() {
 
-    let output = {};
+    const output = {};
 
     output['inputs'] = {};
 
-    this.inputs.forEach(function (value, key, map) {
+    this.inputs.forEach(function (value, key) {
       output['inputs'][key] = value.serialize();
     });
 
     output['outputs'] = {};
 
-    this.outputs.forEach(function (value, key, map) {
+    this.outputs.forEach(function (value, key) {
       output['outputs'][key] = value.serialize();
     });
 

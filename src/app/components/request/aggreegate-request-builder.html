@@ -61,12 +61,15 @@
   <div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="25px">
 
     <div fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="25px">
-      <md-select placeholder="Filter attribute" class="form-control" [(ngModel)]="newCutAttribute"
+      <md-select placeholder="Filter attribute" class="form-control" [(ngModel)]="newCutAttribute" #selectCut="mdSelect"
                  (ngModelChange)="selectedCutChanged($event)">
 
-        <md-optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" label="{{dim.label}}">
-          <md-option [value]="item" *ngFor="let item of dim?.significants|iterable">{{item |
-            nestedProperty:'label'}}
+        <md-optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" label="{{dim.label}}" >
+          <md-option [value]="item" *ngFor="let item of dim?.significants|iterable">
+            <ng-container  *ngIf="selectCut.panelOpen">{{item |
+            nestedProperty:'label'}}</ng-container>
+            <ng-container  *ngIf="!selectCut.panelOpen">{{item.dimension.label}} &rarr; {{item |
+              nestedProperty:'label'}}</ng-container>
           </md-option>
         </md-optgroup>
 
@@ -75,7 +78,7 @@
 
 
 
-      <md-input-container>
+      <md-input-container *ngIf="newCutAttribute">
               <textarea [mdAutocomplete]="auto" name="newCutValueVal" mdInput (ngModelChange)="selectedCutValChanged($event)"
                         [(ngModel)]="newCutValueVal" placeholder="Filter value"></textarea>
       </md-input-container>
@@ -118,10 +121,13 @@
   <div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="25px">
 
     <div fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="25px">
-      <md-select placeholder="Drill-down attribute" [(ngModel)]="newDrilldownAttribute">
+      <md-select placeholder="Drill-down attribute" [(ngModel)]="newDrilldownAttribute" #selectDrilldown="mdSelect">
         <md-optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" label="{{dim.label}}">
-          <md-option [value]="item" *ngFor="let item of dim?.significants|iterable">{{item |
-            nestedProperty:'label'}}
+          <md-option [value]="item" *ngFor="let item of dim?.significants|iterable">
+            <ng-container  *ngIf="selectDrilldown.panelOpen">{{item |
+              nestedProperty:'label'}}</ng-container>
+            <ng-container  *ngIf="!selectDrilldown.panelOpen">{{item.dimension.label}} &rarr; {{item |
+              nestedProperty:'label'}}</ng-container>
           </md-option>
         </md-optgroup>
       </md-select>
@@ -159,16 +165,19 @@
   <div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="25px">
 
     <div fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="25px">
-      <md-select placeholder="Sorting attribute" [(ngModel)]="newSortAttribute">
+      <md-select placeholder="Sorting attribute" [(ngModel)]="newSortAttribute" #selectSort="mdSelect">
         <md-optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" label="{{dim.label}}">
-          <md-option [value]="item" *ngFor="let item of dim?.significants|iterable">{{item |
-            nestedProperty:'label'}}
+          <md-option [value]="item" *ngFor="let item of dim?.significants|iterable">
+            <ng-container  *ngIf="selectSort.panelOpen">{{item |
+              nestedProperty:'label'}}</ng-container>
+            <ng-container  *ngIf="!selectSort.panelOpen">{{item.dimension.label}} &rarr; {{item |
+              nestedProperty:'label'}}</ng-container>
           </md-option>
         </md-optgroup>
       </md-select>
 
 
-      <md-select placeholder="Sorting direction" [(ngModel)]="newSortDirection">
+      <md-select *ngIf="newSortAttribute" placeholder="Sorting direction" [(ngModel)]="newSortDirection">
         <md-option [value]="item" *ngFor="let item of sortDirections|iterable">{{item |
           nestedProperty:'label'}}
         </md-option>
