@@ -4,11 +4,11 @@ import {ExecutionConfiguration} from './executionConfiguration';
  */
 export class Algorithm {
 
-  name: string;
-  title: string;
+  public name: string;
+  public title: string;
   description: string;
 
-  configurations: Map<string, ExecutionConfiguration> = new Map<string, ExecutionConfiguration>();
+  public configurations: Map<string, ExecutionConfiguration> = new Map<string, ExecutionConfiguration>();
 
 
   deserialize(data: any): Algorithm {

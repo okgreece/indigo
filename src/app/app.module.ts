@@ -36,9 +36,7 @@ import 'hammerjs';
 import {MarkdownModule} from 'angular2-markdown';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import { InfiniteScrollerDirective } from './infinite-scroller.directive';
 import {CubeCollectionEffects} from "./effects/cubesCollection";
-import DynamicComponent from "./components/dynamic-component";
 
 
 @NgModule({
@@ -107,8 +105,7 @@ MdCardModule,
     CollectionCubePageComponent,
     NotFoundPageComponent,
     CubeAnalyticsEmbedPage,
-    FactsPreviewDialogComponent,
-    AggregatePreviewDialogComponent,
+
   ],
   providers: [
     CubeExistsGuard,
@@ -121,7 +118,9 @@ MdCardModule,
   bootstrap: [
     AppComponent
   ],
+/*
   entryComponents: [FactsPreviewDialogComponent, AggregatePreviewDialogComponent],
+*/
 
 })
 export class AppModule {

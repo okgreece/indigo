@@ -49,7 +49,7 @@ export const DynamicComponents = {
     <div #dynamicComponentContainer></div>
   `,
 })
-export default class DynamicComponent {
+export class DynamicComponent {
   currentComponent = null;
 
   @ViewChild('dynamicComponentContainer', { read: ViewContainerRef }) dynamicComponentContainer: ViewContainerRef;

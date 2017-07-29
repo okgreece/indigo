@@ -272,7 +272,7 @@ export class BoxPlotVisualization implements AfterViewInit {
   selector: 'analytics-box-plot-descriptive',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  template: `    <analytics-box-plot style="min-height: 500px;"  [label_y]="Frequency" [label_x]="Dimension" [data]="data.boxplot"></analytics-box-plot>`,
+  template: `    <analytics-box-plot style="min-height: 500px;"  [label_y]="'Frequency'" [label_x]="'Dimension'" [data]="data.boxplot"></analytics-box-plot>`,
   styles: [`
 
 

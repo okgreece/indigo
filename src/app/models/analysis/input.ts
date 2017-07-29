@@ -46,6 +46,7 @@ export class Input {
     this.data_type = data.data_type;
     this.type = data.type;
     this.options = data.options;
+    this.description = data.description;
 
 
     return this;
@@ -62,6 +63,8 @@ export class Input {
     output['required'] = this.required;
     output['data_type'] = this.data_type;
     output['type'] =   this.type;
+    output['options'] =   this.options;
+    output['description'] =   this.description;
 
     return output;
   }

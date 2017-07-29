@@ -105,7 +105,8 @@ $mat-font-family: 'Cabin', sans-serif;
 
 md-card-header, #giant, md-toolbar{
   background-color: map_get($md-obeupalette0, 500);
-  color: map_get( map_get($md-obeupalette0, 'contrast'), 700)
+  color: map_get( map_get($md-obeupalette0, 'contrast'), 700);
+  border-radius: 2px;
 }
 .mat-card-header-text{
   display: flex;
@@ -240,6 +241,16 @@ fact-request-builder>md-card, aggregate-request-builder>md-card{
   margin: 5px 0;
 }
 
+
+.required-asterisk{
+  margin-left: 5px;
+  font-size: 1.5em;
+  color: #273d3a;
+}
+
+.input-card md-card-header.mat-card-header {
+  height: 3em;
+}
 
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 /** 1. Set default font family to sans-serif. 2. Prevent iOS and IE text size adjust after device orientation change, without disabling user zoom. */

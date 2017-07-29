@@ -26,14 +26,14 @@ export class AnalysisCall {
   private API_PATH: string = environment.apiUrl + '/api/' + environment.versionSuffix + '/cubes';
 
   aggregateToURI(aggregateRequest: AggregateRequest) {
-    let drilldownString = aggregateRequest.drilldowns.map(d => d.column.ref).join('|');
-    let orderString = aggregateRequest.sorts.map(s => s.column.ref + ':' + s.direction.key).join('|');
-    let cutString = aggregateRequest.cuts.map(c => {
+    const drilldownString = aggregateRequest.drilldowns.map(d => d.column.ref).join('|');
+    const orderString = aggregateRequest.sorts.map(s => s.column.ref + ':' + s.direction.key).join('|');
+    const cutString = aggregateRequest.cuts.map(c => {
       return c.column.ref + c.transitivity.key + ':' + c.value;
     }).join('|');
-    let aggregatesString = aggregateRequest.aggregates.map(a => a.column.ref).join('|');
+    const aggregatesString = aggregateRequest.aggregates.map(a => a.column.ref).join('|');
 
-    let params = new URLSearchParams();
+    const params = new URLSearchParams();
     if (aggregateRequest.drilldowns.length > 0) params.set('drilldown', drilldownString);
     if (aggregateRequest.cuts.length > 0) params.set('cut', cutString);
     if (aggregateRequest.sorts.length > 0) params.set('order', orderString);
@@ -44,12 +44,12 @@ export class AnalysisCall {
   }
 
   factsToURI(factRequest: FactRequest) {
-    let orderString = factRequest.sorts.map(s => s.column.ref + ':' + s.direction.key).join('|');
-    let cutString = factRequest.cuts.map(c => {
+    const orderString = factRequest.sorts.map(s => s.column.ref + ':' + s.direction.key).join('|');
+    const cutString = factRequest.cuts.map(c => {
       return c.column.ref + c.transitivity.key + ':' + c.value;
     }).join('|');
 
-    let params = new URLSearchParams();
+    const params = new URLSearchParams();
     if (factRequest.cuts.length > 0) params.set('cut', cutString);
     if (factRequest.sorts.length > 0) params.set('order', orderString);
     if (factRequest.pageSize > 0) params.set('pagesize', factRequest.pageSize.toString());
@@ -65,7 +65,7 @@ export class AnalysisCall {
   }
 
   public initialize() {
-    let that = this;
+    const that = this;
 
     this.config.inputs.forEach((input) => {
       switch (input.type) {
@@ -128,7 +128,7 @@ export class AnalysisCall {
   }
 
   queryParams() {
-    let map = {};
+    const map = {};
     this.parametrizeInputs().paramsMap.forEach((value: string[], key: string) => {
       map[key] = value[0];
     });
@@ -138,8 +138,8 @@ export class AnalysisCall {
 
 
   public parametrizeInputs() {
-    let parts: URLSearchParams = new URLSearchParams();
-    let that = this;
+    const parts: URLSearchParams = new URLSearchParams();
+    const that = this;
 
     this.config.inputs.forEach((input) => {
       if (!that.inputs[input.name])return;
@@ -185,14 +185,14 @@ export class AnalysisCall {
 
         }
         case InputTypes.BABBAGE_AGGREGATE_URI: {
-          let uri = this.aggregateToURI(that.inputs[input.name]);
+          const uri = this.aggregateToURI(that.inputs[input.name]);
           if (validURL.isUri(uri)) {
             parts.append(input.name, uri);
           }
           break;
         }
         case  InputTypes.BABBAGE_FACT_URI: {
-          let uri = this.factsToURI(that.inputs[input.name]);
+          const uri = this.factsToURI(that.inputs[input.name]);
           if (validURL.isUri(uri)) {
             parts.append(input.name, uri);
           }
@@ -232,8 +232,8 @@ export class AnalysisCall {
   }
 
   public get valid(): boolean {
-    let isValid: boolean = true;
-    let that = this;
+    let isValid = true;
+    const that = this;
     this.config.inputs.forEach((input) => {
       isValid = isValid && ((input.required && !!that.inputs[input.name]) || (input.required && input.guess) || (!input.required));
       if (input.type === InputTypes.BABBAGE_AGGREGATE_URI) {
@@ -264,30 +264,30 @@ export class AnalysisCall {
           break;
         }
         case InputTypes.AGGREGATE_REF: {
-          let inps = parts[input.name].split('|');
+          const inps = parts[input.name].split('|');
           that.inputs[input.name] =  Array.from(that.cube.model.aggregates.values()).filter(a => inps.includes(a.ref));
           break;
 
         }
         case InputTypes.ATTRIBUTE_REF: {
-          let inps = parts[input.name].split('|');
+          const inps = parts[input.name].split('|');
           that.inputs[input.name] = Array.from(that.cube.model.attributes.values()).filter(a =>  inps.includes(a.ref));
           break;
         }
         case InputTypes.MEASURE_REF: {
-          let inps = parts[input.name].split('|');
+          const inps = parts[input.name].split('|');
           that.inputs[input.name] = Array.from(that.cube.model.measures.values()).filter(a => inps.includes(a.ref));
           break;
         }
         case InputTypes.BABBAGE_AGGREGATE_URI: {
-          let uri = parts[input.name];
+          const uri = parts[input.name];
           if (validURL.isUri(uri)) {
             that.inputs[input.name] = this.aggregateFromURI(uri);
           }
           break;
         }
         case  InputTypes.BABBAGE_FACT_URI: {
-          let uri = parts[input.name];
+          const uri = parts[input.name];
           if (validURL.isUri(uri)) {
             that.inputs[input.name] = this.factsFromURI(uri);
           }
@@ -315,20 +315,20 @@ export class AnalysisCall {
 
 
     if (parts['aggregates']) {
-      let aggregates = AnalysisCall.breakDownQueryParamParts(parts['aggregates']);
+      const aggregates = AnalysisCall.breakDownQueryParamParts(parts['aggregates']);
       request.aggregates = aggregates.map(aggregate => {
-        let agg = new AggregateParam();
+        const agg = new AggregateParam();
         agg.column = this.cube.model.aggregates.get(aggregate);
         return agg;
       });
 
     }
     if (parts['cut']) {
-      let that = this;
-      let cuts = AnalysisCall.breakDownQueryParamParts(parts['cut']);
+      const that = this;
+      const cuts = AnalysisCall.breakDownQueryParamParts(parts['cut']);
       request.cuts = cuts.map(cutSet => {
-        let cutParts = cutSet.split(':');
-        let cut = new Cut();
+        const cutParts = cutSet.split(':');
+        const cut = new Cut();
         cut.column = that.cube.model.attributes.get(cutParts[0]);
         cut.value = cutParts[1];
         return cut;
@@ -336,19 +336,19 @@ export class AnalysisCall {
 
     }
     if (parts['order']) {
-      let orders = AnalysisCall.breakDownQueryParamParts(parts['order']);
+      const orders = AnalysisCall.breakDownQueryParamParts(parts['order']);
       request.sorts = orders.map(sortSet => {
-        let sort = new Sort();
-        let sortParts = sortSet.split(':');
+        const sort = new Sort();
+        const sortParts = sortSet.split(':');
         sort.column = this.cube.model.attributes.get(sortParts[0]);
         sort.direction = SortDirection.parse(sortParts[1]);
         return sort;
       });
     }
     if (parts['drilldown']) {
-      let drilldowns = AnalysisCall.breakDownQueryParamParts(parts['drilldown']);
+      const drilldowns = AnalysisCall.breakDownQueryParamParts(parts['drilldown']);
       request.drilldowns = drilldowns.map(attribute => {
-        let drilldown = new Drilldown;
+        const drilldown = new Drilldown;
         drilldown.column = this.cube.model.attributes.get(attribute);
         return drilldown;
       });
@@ -369,17 +369,17 @@ export class AnalysisCall {
 
   private factsFromURI(uri: string) {
 
-    let parts = new URI(uri).search(true);
-    let request = new FactRequest();
+    const parts = new URI(uri).search(true);
+    const request = new FactRequest();
 
     request.cube = this.cube;
 
     if (parts['cut']) {
-      let that = this;
-      let cuts = AnalysisCall.breakDownQueryParamParts(parts['cut']);
+      const that = this;
+      const cuts = AnalysisCall.breakDownQueryParamParts(parts['cut']);
       request.cuts = cuts.map(cutSet => {
-        let cutParts = cutSet.split(':');
-        let cut = new Cut();
+        const cutParts = cutSet.split(':');
+        const cut = new Cut();
         cut.column = that.cube.model.attributes.get(cutParts[0]);
         cut.value = cutParts[1];
         return cut;
@@ -387,10 +387,10 @@ export class AnalysisCall {
 
     }
     if (parts['order']) {
-      let orders = AnalysisCall.breakDownQueryParamParts(parts['order']);
+      const orders = AnalysisCall.breakDownQueryParamParts(parts['order']);
       request.sorts = orders.map(sortSet => {
-        let sort = new Sort();
-        let sortParts = sortSet.split(':');
+        const sort = new Sort();
+        const sortParts = sortSet.split(':');
         sort.column = this.cube.model.attributes.get(sortParts[0]);
         sort.direction = SortDirection.parse(sortParts[1]);
         return sort;

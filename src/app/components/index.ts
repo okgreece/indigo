@@ -16,7 +16,10 @@ import {CubePreviewListComponent} from './cube/cube-preview-list';
 import {CubeSearchComponent} from './cube/cube-search';
 import {AggregateRequestBuilder} from './request/aggregate-request-builder';
 
-import {CubeAnalyticsDetailComponent} from './cube/analytics/cube-analytics-detail';
+import {
+  AggregatePreviewDialogComponent, CubeAnalyticsDetailComponent,
+  FactsPreviewDialogComponent
+} from './cube/analytics/cube-analytics-detail';
 import {
   LineChartVisualization, LineChartTrends, LineChartRemainders,
   LineChartFittingResiduals, LineChartFittingTimeFitted, LineChartTimeSeriesForecast
@@ -38,10 +41,9 @@ import {FactRequestBuilder} from './request/fact-request-builder';
 import {FrequencyVisualization, FrequencyChartDescriptive} from './analysis/visualizations/frequencyChart';
 import {BoxPlotVisualization, BoxPlotDescriptive} from './analysis/visualizations/boxPlot';
 import {HistogramVisualization, HistogramDescriptive} from './analysis/visualizations/histogram';
-import DynamicComponent from './dynamic-component';
+import {DynamicComponent} from './dynamic-component';
 import {MasonryModule} from 'angular2-masonry';
 import {CubeAnalyticsEmbedComponent} from './cube/analytics/embed/embed';
-import LineString = GeoJSON.LineString;
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {UserGuidePageComponent} from "./user-guide";
 import {MarkdownComponent, MarkdownModule} from "angular2-markdown";
@@ -54,64 +56,68 @@ import {
 import {InfiniteScrollerDirective} from "../infinite-scroller.directive";
 import {RuleMiningOutputComponent} from "./analysis/rulemining/rulemining";
 import {ClusteringOutputComponent} from "./analysis/clustering/clustering";
-import {TreeDiagramVisualization} from "./analysis/visualizations/treeDiagram";
-import {OutlierPlotVisualization} from "./analysis/visualizations/outlierPlot";
+import {ClusteringTreeDiagram, TreeDiagramVisualization} from "./analysis/visualizations/treeDiagram";
+import {OutlierPlotVisualization, OutliersHeatmapDiagram} from "./analysis/visualizations/outlierPlot";
 import {UploadPageComponent} from "../containers/cube/upload";
 import {LinkedPipesPageComponent} from "../containers/cube/linkedpipes";
+import {AnalysisVisualization} from "./analysis/visualization";
 
 
 
 export const COMPONENTS = [
-  DynamicComponent,
   CubeDetailComponent,
   CubePreviewComponent,
   CubePreviewListComponent,
-  CubeSearchComponent,
-  DynamicComponent,
-  LayoutComponent,
-  OutlierPlotVisualization,
-  NavItemComponent,
-  SidenavComponent,
-  ToolbarComponent,
-  HistogramVisualization,
-  AggregateRequestBuilder,
-  FactRequestBuilder,
-  UserGuidePageComponent,
-  UploadPageComponent,
-  LinkedPipesPageComponent,
-  CubeAnalyticsDetailComponent,
-  CubeAnalyticsIndexComponent,
-  FrequencyVisualization,
-  BoxPlotVisualization,
-  LineChartVisualization,
-  ScatterPlotVisualization,
-  TreeDiagramVisualization,
-  TimeSeriesOutputComponent,
-  RuleMiningOutputComponent,
-  ClusteringOutputComponent,
-  DescriptiveStatisticsOutputComponent,
-  AcfChartVisualization,
-  AcfChartVisualizationRegular,
-  AcfChartVisualizationResiduals,
-  LineChartTrends,
-  LineChartRemainders,
-  ScatterPlotTimeseriesDecompositionFittedResiduals,
-  ScatterPlotTimeseriesFittingFittedResiduals,
-  LineChartFittingResiduals,
-  OutliersDetectionOutputComponent,
-  LineChartFittingTimeFitted,
-  PacfChartVisualizationRegular,
-  PacfChartVisualizationResiduals,
-  BoxPlotDescriptive,
-  CubePreviewListComponent,
-  CubePreviewComponent,
-  CubeAnalyticsListComponent,
-  CubeAnalyticsPreviewComponent,
-  CubeAnalyticsEmbedComponent,
-  LineChartTimeSeriesForecast,
-  FrequencyChartDescriptive,
-  HistogramDescriptive,
-  InfiniteScrollerDirective
+    CubeSearchComponent,
+    DynamicComponent,
+    LayoutComponent,
+    OutlierPlotVisualization,
+    NavItemComponent,
+    SidenavComponent,
+    ToolbarComponent,
+    HistogramVisualization,
+    AggregateRequestBuilder,
+    FactRequestBuilder,
+    UserGuidePageComponent,
+    UploadPageComponent,
+    LinkedPipesPageComponent,
+    CubeAnalyticsDetailComponent,
+    CubeAnalyticsIndexComponent,
+    FrequencyVisualization,
+    BoxPlotVisualization,
+    LineChartVisualization,
+    ScatterPlotVisualization,
+    TreeDiagramVisualization,
+    TimeSeriesOutputComponent,
+    RuleMiningOutputComponent,
+    ClusteringOutputComponent,
+    DescriptiveStatisticsOutputComponent,
+    AcfChartVisualization,
+    AcfChartVisualizationRegular,
+    AcfChartVisualizationResiduals,
+    LineChartTrends,
+    LineChartRemainders,
+    ScatterPlotTimeseriesDecompositionFittedResiduals,
+    ScatterPlotTimeseriesFittingFittedResiduals,
+    LineChartFittingResiduals,
+    OutliersDetectionOutputComponent,
+    LineChartFittingTimeFitted,
+    PacfChartVisualizationRegular,
+    PacfChartVisualizationResiduals,
+    BoxPlotDescriptive,
+    CubePreviewListComponent,
+    CubePreviewComponent,
+    CubeAnalyticsListComponent,
+    CubeAnalyticsPreviewComponent,
+    CubeAnalyticsEmbedComponent,
+    LineChartTimeSeriesForecast,
+    FrequencyChartDescriptive,
+    HistogramDescriptive,
+    InfiniteScrollerDirective,
+  AnalysisVisualization,
+  ClusteringTreeDiagram,
+  OutliersHeatmapDiagram,
+
 ];
 
 
@@ -143,4 +149,6 @@ export const COMPONENTS = [
   declarations: COMPONENTS,
   exports: COMPONENTS,
 })
-export class ComponentsModule { }
+export  class ComponentsModule {
+
+}

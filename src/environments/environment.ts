@@ -4,7 +4,7 @@
 // The list of which env maps to which file can be found in `angular-cli.json`.
 
 export const environment = {
-  production: false,
+  production: true,
   apiUrl: 'http://ws307.math.auth.gr/rudolf/public',
   searchSize: 50,
   openCpuEndpoint: 'http://okfnrg.math.auth.gr/ocpu/',

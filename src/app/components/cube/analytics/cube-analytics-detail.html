@@ -1,4 +1,4 @@
-<md-card style="width:100%">
+<md-card style="width:100%; box-shadow: none">
   <md-card-content *ngIf="algorithm">
       <md-toolbar>
 
@@ -10,7 +10,7 @@
         </button>
 
 
-        <button md-tooltip="Execute" md-icon-button [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/'+ algorithm.name+'/'+ executionConfiguration.name]"
+        <button md-tooltip="Execute" [disabled]="analysisCall&&!analysisCall.valid" md-icon-button [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/'+ algorithm.name+'/'+ executionConfiguration.name]"
                 [queryParams]="analysisCall.queryParams()" >
           <md-icon>play_circle_outline
           </md-icon>
@@ -31,7 +31,7 @@
           <ng-container *ngFor="let input of executionConfiguration.inputs|inputIterable">
 
             <md-card *ngIf="!input.guess" class="input-card">
-              <md-card-header class="">
+              <md-card-header >
 
                 <md-card-title>
                   <md-button-toggle md-icon-button
@@ -46,7 +46,7 @@
 
                     <md-icon>visibility</md-icon>
                   </md-button-toggle>
-                  {{input.title}}
+                  {{input.title}} <span *ngIf="input.required" class="required-asterisk">∗</span>
                 </md-card-title>
                 <span class="example-spacer"></span>
 
@@ -57,7 +57,7 @@
                   <md-icon>directions run</md-icon>
                 </button>
 
-                <button md-icon-button md-tooltip="{{input.description}}">
+                <button *ngIf="input.description" md-icon-button md-tooltip="{{input.description}}">
                   <md-icon>info</md-icon>
                 </button>
 

@@ -11,7 +11,7 @@ import * as fromRoot from '../../../reducers';
   selector: 'indigo-cube-analytics-preview-list',
   template: `
 
-    <md-card>
+    <md-card style="box-shadow:none">
       <md-card-title>
         {{cube.pckg.title}}
 
