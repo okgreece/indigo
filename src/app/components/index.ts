@@ -17,9 +17,7 @@ import {CubeSearchComponent} from './cube/cube-search';
 import {AggregateRequestBuilder} from './request/aggregate-request-builder';
 
 import {
-  AggregatePreviewDialogComponent, CubeAnalyticsDetailComponent,
-  FactsPreviewDialogComponent
-} from './cube/analytics/cube-analytics-detail';
+  CubeAnalyticsDetailComponent} from './cube/analytics/cube-analytics-detail';
 import {
   LineChartVisualization, LineChartTrends, LineChartRemainders,
   LineChartFittingResiduals, LineChartFittingTimeFitted, LineChartTimeSeriesForecast

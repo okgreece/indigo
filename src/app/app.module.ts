@@ -30,13 +30,14 @@ import {environment} from '../environments/environment';
 import {APP_BASE_HREF} from '@angular/common';
 import {CubeAnalyticsEmbedPage} from './containers/cube/cube-analytics-embed-page';
 import {CubeExistsLightGuard} from './guards/cube-exists-light';
-import {AggregatePreviewDialogComponent, FactsPreviewDialogComponent} from './components/cube/analytics/cube-analytics-detail';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import 'hammerjs';
 import {MarkdownModule} from 'angular2-markdown';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CubeCollectionEffects} from "./effects/cubesCollection";
+import {FactsPreviewDialogComponent} from "./components/cube/analytics/dialog/facts-preview-dialog";
+import {AggregatePreviewDialogComponent} from "./components/cube/analytics/dialog/aggregate-preview-dialog";
 
 
 @NgModule({
@@ -105,6 +106,8 @@ MdCardModule,
     CollectionCubePageComponent,
     NotFoundPageComponent,
     CubeAnalyticsEmbedPage,
+    FactsPreviewDialogComponent,
+    AggregatePreviewDialogComponent
 
   ],
   providers: [
@@ -112,15 +115,12 @@ MdCardModule,
     CubeExistsLightGuard,
     ApiCubesService,
     AlgorithmsService,
-    AnalysisService,
-    {provide: APP_BASE_HREF, useValue: environment.baseHref},
+    AnalysisService
   ],
   bootstrap: [
     AppComponent
   ],
-/*
   entryComponents: [FactsPreviewDialogComponent, AggregatePreviewDialogComponent],
-*/
 
 })
 export class AppModule {

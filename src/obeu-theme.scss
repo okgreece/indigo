@@ -103,6 +103,10 @@ $mat-font-family: 'Cabin', sans-serif;
 // that you are using.
 @include angular-material-theme($indigo-app-theme);
 
+$flag-icon-css-path: '~flag-icon-css/flags' !default;
+@import "~flag-icon-css/sass/flag-icon";
+
+
 md-card-header, #giant, md-toolbar{
   background-color: map_get($md-obeupalette0, 500);
   color: map_get( map_get($md-obeupalette0, 'contrast'), 700);
