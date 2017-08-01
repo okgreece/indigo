@@ -1,4 +1,58 @@
 <md-card fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="35px">
+  <md-list>
+    <h3 md-subheader>Fields</h3>
+    <md-list-item *ngFor="let field of newFactRequest.fields">
+      <div class="row-item"  fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="25px">
+        <button  md-mini-fab (click)="removeField(field)">
+          <md-icon >remove_circle</md-icon>
+        </button>
+        <span>{{field.fullLabel}} </span>
+
+      </div>
+
+
+    </md-list-item>
+    <md-divider></md-divider>
+
+  </md-list>
+
+
+  <div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="25px">
+
+    <div fxFlexFill fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="25px">
+
+      <md-select name="newField" placeholder="Field" [(ngModel)]="newField" #select="mdSelect">
+        <md-optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" [label]="dim.label">
+          <md-option *ngFor="let item of dim?.significants|iterable" [value]="item">
+            <ng-container  *ngIf="select.panelOpen">{{item |
+              nestedProperty:'label'}}</ng-container>
+            <ng-container  *ngIf="!select.panelOpen">{{item.dimension.label}} &rarr; {{item |
+              nestedProperty:'label'}}</ng-container>
+          </md-option>
+        </md-optgroup>
+      </md-select>
+
+
+    </div>
+
+    <div fxFlexAlign="center">
+      <button md-icon-button (click)="addField()">
+        <md-icon >playlist_add</md-icon>
+      </button>
+
+    </div>
+
+  </div>
+
+
+
+
+</md-card>
+
+
+
+<md-card fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="35px">
+
 
 
   <md-list>

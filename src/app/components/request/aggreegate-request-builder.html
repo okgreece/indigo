@@ -9,7 +9,6 @@
           <md-icon class="md-24">remove_circle</md-icon>
         </button>
         <span>{{aggregate.column.label}}</span>
-
       </div>
     </md-list-item>
     <md-divider></md-divider>
@@ -38,6 +37,46 @@
 
   </div>
 
+
+</md-card>
+<md-card fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="35px">
+  <md-list>
+    <h3 md-subheader>Drill-down</h3>
+    <md-list-item *ngFor="let drilldown of newAggregateRequest.drilldowns">
+      <div class="row-item" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="25px">
+        <button md-mini-fab (click)="removeDrilldown(drilldown)">
+          <md-icon class="md-24">remove_circle</md-icon>
+        </button>
+        <span>{{drilldown.column.fullLabel}}</span>
+      </div>
+    </md-list-item>
+    <md-divider></md-divider>
+
+  </md-list>
+  <div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="25px">
+
+    <div fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="25px">
+      <md-select placeholder="Drill-down attribute" [(ngModel)]="newDrilldownAttribute" #selectDrilldown="mdSelect">
+        <md-optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" label="{{dim.label}}">
+          <md-option [value]="item" *ngFor="let item of dim?.significants|iterable">
+            <ng-container  *ngIf="selectDrilldown.panelOpen">{{item |
+              nestedProperty:'label'}}</ng-container>
+            <ng-container  *ngIf="!selectDrilldown.panelOpen">{{item.dimension.label}} &rarr; {{item |
+              nestedProperty:'label'}}</ng-container>
+          </md-option>
+        </md-optgroup>
+      </md-select>
+    </div>
+
+    <div fxFlexAlign="center">
+      <button md-icon-button (click)="addDrilldown()" [disabled]="newDrilldownAttribute==undefined">
+        <md-icon class="md-24">playlist_add</md-icon>
+      </button>
+
+    </div>
+
+
+  </div>
 
 </md-card>
 
@@ -103,47 +142,6 @@
 
 </md-card>
 
-<md-card fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="35px">
-  <md-list>
-    <h3 md-subheader>Drill-down</h3>
-    <md-list-item *ngFor="let drilldown of newAggregateRequest.drilldowns">
-      <div class="row-item" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="25px">
-        <button md-mini-fab (click)="removeDrilldown(drilldown)">
-          <md-icon class="md-24">remove_circle</md-icon>
-        </button>
-        <span>{{drilldown.column.fullLabel}}</span>
-
-      </div>
-    </md-list-item>
-    <md-divider></md-divider>
-
-  </md-list>
-  <div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="25px">
-
-    <div fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="25px">
-      <md-select placeholder="Drill-down attribute" [(ngModel)]="newDrilldownAttribute" #selectDrilldown="mdSelect">
-        <md-optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" label="{{dim.label}}">
-          <md-option [value]="item" *ngFor="let item of dim?.significants|iterable">
-            <ng-container  *ngIf="selectDrilldown.panelOpen">{{item |
-              nestedProperty:'label'}}</ng-container>
-            <ng-container  *ngIf="!selectDrilldown.panelOpen">{{item.dimension.label}} &rarr; {{item |
-              nestedProperty:'label'}}</ng-container>
-          </md-option>
-        </md-optgroup>
-      </md-select>
-    </div>
-
-    <div fxFlexAlign="center">
-      <button md-icon-button (click)="addDrilldown()" [disabled]="newDrilldownAttribute==undefined">
-        <md-icon class="md-24">playlist_add</md-icon>
-      </button>
-
-    </div>
-
-
-  </div>
-
-</md-card>
 
 <md-card fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="35px">
 

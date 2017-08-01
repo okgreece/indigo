@@ -26,6 +26,7 @@ export class ExecutionConfiguration {
       inputs.set(key, new Input().deserialize(data.inputs[key]));
     }
 
+
     this.inputs = inputs;
 
 

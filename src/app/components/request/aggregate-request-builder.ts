@@ -75,44 +75,25 @@ span.node-key {
   `]
 })
 export class AggregateRequestBuilder {
-  get newAggregateAggregate(): Aggregate {
-    return this._newAggregateAggregate;
-  }
-
-  set newAggregateAggregate(value: Aggregate) {
-    this._newAggregateAggregate = value;
-  }
-
-
   @Output()
   public onRequestBuilt: EventEmitter<AggregateRequest> = new EventEmitter<AggregateRequest>();
-
-  public get cube() {
-    return this._cube;
-  }
-
-  @Input()
-  public set cube(value: Cube) {
-    let that = this;
-    that._cube = value;
-  }
-
-  _cube: Cube;
-
-
   @Output() requestChange = new EventEmitter();
-
-
-  public get request(): AggregateRequest {
-    return this.newAggregateRequest;
-  }
-
-  @Input()
-  public set request(value: AggregateRequest) {
-    let that = this;
-    that.newAggregateRequest = value;
-  }
-
+  newAggregateRequest: AggregateRequest;
+  newSortAttribute: Attribute;
+  newDrilldownAttribute: Attribute;
+  newCutAttribute: Attribute;
+  newCutValueVal: string;
+  newSortDirection: SortDirection;
+  newCustomValue: any;
+  sortDirections: Map<string, SortDirection> = SortDirection.directions;
+  public newAggregatePageNumber = 0;
+  public newAggregatePageSize = 30;
+  members: Map<string, Map<string, Object>> = new Map<string, Map<string, Object>>();
+  cutMembers: string[] = [];
+  transitivities: Transitivity[] = Transitivity.staticFactory();
+  newCutTransitivity: Transitivity = this.transitivities[0];
+  _cube: Cube;
+  private _newAggregateAggregate: Aggregate;
 
   constructor(private ref: ChangeDetectorRef, private rudolfCubesService: ApiCubesService) {
     setInterval(() => {
@@ -122,8 +103,34 @@ export class AggregateRequestBuilder {
 
   }
 
+  public get cube() {
+    return this._cube;
+  }
 
-  newAggregateRequest: AggregateRequest;
+  @Input()
+  public set cube(value: Cube) {
+    const that = this;
+    that._cube = value;
+  }
+
+  public get request(): AggregateRequest {
+    return this.newAggregateRequest;
+  }
+
+  @Input()
+  public set request(value: AggregateRequest) {
+    const that = this;
+    that.newAggregateRequest = value;
+  }
+
+
+  get newAggregateAggregate(): Aggregate {
+    return this._newAggregateAggregate;
+  }
+
+  set newAggregateAggregate(value: Aggregate) {
+    this._newAggregateAggregate = value;
+  }
 
   addAggregateChild() {
 
@@ -139,9 +146,8 @@ export class AggregateRequestBuilder {
     this.newAggregateRequest.cube = this.cube;
   }
 
-
   addAggregate() {
-    let newAggregate = new AggregateParam();
+    const newAggregate = new AggregateParam();
     newAggregate.column = this._newAggregateAggregate;
     this.newAggregateRequest.aggregates.push(newAggregate);
 
@@ -150,30 +156,27 @@ export class AggregateRequestBuilder {
 
   }
 
-
   removeAggregate(aggregate: AggregateParam) {
     _.remove(this.newAggregateRequest.aggregates, aggregate);
   }
 
   addCut() {
-    let newCut = new Cut();
+    const newCut = new Cut();
     newCut.column = this.newCutAttribute;
     newCut.transitivity = this.newCutTransitivity;
     newCut.value = this.newCutValueVal;
     this.newAggregateRequest.cuts.push(newCut);
   }
 
-
   removeCut(cut: Cut) {
     _.remove(this.newAggregateRequest.cuts, cut);
   }
 
   addDrilldown() {
-    let newDrilldown = new Drilldown();
+    const newDrilldown = new Drilldown();
     newDrilldown.column = this.newDrilldownAttribute;
     this.newAggregateRequest.drilldowns.push(newDrilldown);
   }
-
 
   removeDrilldown(drilldown: Drilldown) {
     _.remove(this.newAggregateRequest.drilldowns, drilldown);
@@ -181,7 +184,7 @@ export class AggregateRequestBuilder {
 
   addSort() {
 
-    let newSort = new Sort();
+    const newSort = new Sort();
     newSort.column = this.newSortAttribute;
     newSort.direction = this.newSortDirection;
     this.newAggregateRequest.sorts.push(newSort);
@@ -201,41 +204,15 @@ export class AggregateRequestBuilder {
     this.searchMembers(this.newCutAttribute, search);
   }
 
-
-  private _newAggregateAggregate: Aggregate;
-
-  newSortAttribute: Attribute;
-
-  newDrilldownAttribute: Attribute;
-
-  newCutAttribute: Attribute;
-
-  newCutValueVal: string;
-
-  newSortDirection: SortDirection;
-
-  newCustomValue: any;
-
-  sortDirections: Map<string, SortDirection> = SortDirection.directions;
-  public newAggregatePageNumber: number = 0;
-  public newAggregatePageSize: number = 30;
-
   setCutValue(member: string) {
     this.newCutValueVal = member;
   }
 
-  members: Map<string, Map<string, Object>> = new Map<string, Map<string, Object>>();
-
-  cutMembers: string[] = [];
-
-  transitivities: Transitivity[] = Transitivity.staticFactory();
-
-  newCutTransitivity: Transitivity = this.transitivities[0];
-
-
   searchMembers(attribute: Attribute, search: string) {
-    if (!attribute) return;
-    let that = this;
+    if (!attribute) {
+      return;
+    }
+    const that = this;
     this.rudolfCubesService.members(this.cube, attribute.dimension).subscribe(response => {
       that.members.set(attribute.ref, response);
 
@@ -250,10 +227,10 @@ export class AggregateRequestBuilder {
 
   getMembers(attributeName: string) {
 
-    let newCutDimension = _.filter(Array.from(this.cube.model.attributes.values()), function (attribute) {
+    const newCutDimension = _.filter(Array.from(this.cube.model.attributes.values()), function (attribute) {
       return attribute.ref === attributeName;
     })[0].dimension;
-    let that = this;
+    const that = this;
     this.rudolfCubesService.members(this.cube, newCutDimension).subscribe(response => {
       that.members.set(newCutDimension.ref, response);
 

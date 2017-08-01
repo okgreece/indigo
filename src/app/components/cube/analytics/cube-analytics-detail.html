@@ -1,23 +1,25 @@
 <md-card style="width:100%; box-shadow: none">
   <md-card-content *ngIf="algorithm">
-      <md-toolbar>
+    <md-toolbar>
 
-        <span> {{ (cube$|async).pckg.title }}: {{ executionConfiguration.title }}</span>
+      <span> {{ (cube$|async).pckg.title }}: {{ executionConfiguration.title }}</span>
 
-        <span class="indigo-spacer"></span>
-        <button md-tooltip="Select another algorithm" md-icon-button [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/']">
-          <md-icon >arrow_back</md-icon>
-        </button>
-
-
-        <button md-tooltip="Execute" [disabled]="analysisCall&&!analysisCall.valid" md-icon-button [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/'+ algorithm.name+'/'+ executionConfiguration.name]"
-                [queryParams]="analysisCall.queryParams()" >
-          <md-icon>play_circle_outline
-          </md-icon>
-        </button>
+      <span class="indigo-spacer"></span>
+      <button md-tooltip="Select another algorithm" md-icon-button
+              [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/']">
+        <md-icon>arrow_back</md-icon>
+      </button>
 
 
-      </md-toolbar>
+      <button md-tooltip="Execute" [disabled]="analysisCall&&!analysisCall.valid" md-icon-button
+              [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/'+ algorithm.name+'/'+ executionConfiguration.name]"
+              [queryParams]="analysisCall.queryParams()">
+        <md-icon>play_circle_outline
+        </md-icon>
+      </button>
+
+
+    </md-toolbar>
 
 
     <div fxLayout="row">
@@ -31,7 +33,7 @@
           <ng-container *ngFor="let input of executionConfiguration.inputs|inputIterable">
 
             <md-card *ngIf="!input.guess" class="input-card">
-              <md-card-header >
+              <md-card-header>
 
                 <md-card-title>
                   <md-button-toggle md-icon-button
@@ -73,38 +75,44 @@
               <md-card-content>
                 <div
                   *ngIf="input.type==InputTypes.BABBAGE_AGGREGATE_RAW_DATA || input.type==InputTypes.BABBAGE_AGGREGATE_URI">
-
                   <md-chip-list *ngIf="analysisCall?.inputs[input.name]&&!aggregateShown">
-                    <md-chip md-tooltip="Aggregate"  *ngFor="let aggregate of analysisCall?.inputs[input.name].aggregates|iterable">{{aggregate.column.label}}</md-chip>
-                    <md-chip md-tooltip="Drilldown"  color="accent" selected="true" *ngFor="let drilldown of analysisCall?.inputs[input.name].drilldowns|iterable">
-                      {{drilldown.column.dimension.label}}.{{drilldown.column.label}}</md-chip>
-                    <md-chip md-tooltip="Filter"  color="primary" selected="true" *ngFor="let cut of analysisCall?.inputs[input.name].cuts|iterable">{{cut.column.dimension.label}}.{{cut.column.label}}: {{cut.value}}</md-chip>
-                    <md-chip md-tooltip="Page number"  color="primary" selected="true">Page number: {{analysisCall?.inputs[input.name].page}}</md-chip>
-                    <md-chip md-tooltip="Page size"  color="primary" selected="true">Page size: {{analysisCall?.inputs[input.name].pageSize}}</md-chip>
-
-
-
+                    <md-chip md-tooltip="Aggregate"
+                             *ngFor="let aggregate of analysisCall?.inputs[input.name].aggregates|iterable">
+                      {{aggregate.column.label}}
+                    </md-chip>
+                    <md-chip md-tooltip="Drilldown" color="accent" selected="true"
+                             *ngFor="let drilldown of analysisCall?.inputs[input.name].drilldowns|iterable">
+                      {{drilldown.column.dimension.label}}.{{drilldown.column.label}}
+                    </md-chip>
+                    <md-chip md-tooltip="Filter" color="primary" selected="true"
+                             *ngFor="let cut of analysisCall?.inputs[input.name].cuts|iterable">
+                      {{cut.column.dimension.label}}.{{cut.column.label}}: {{cut.value}}
+                    </md-chip>
+                    <md-chip md-tooltip="Page number" color="primary" selected="true">Page number:
+                      {{analysisCall?.inputs[input.name].page}}
+                    </md-chip>
+                    <md-chip md-tooltip="Page size" color="primary" selected="true">Page size:
+                      {{analysisCall?.inputs[input.name].pageSize}}
+                    </md-chip>
                   </md-chip-list>
-
 
                   <aggregate-request-builder *ngIf="analysisCall?.inputs[input.name]&&aggregateShown"
                                              [cube]="cube$|async"
                                              [(request)]="analysisCall?.inputs[input.name]"></aggregate-request-builder>
                 </div>
                 <div *ngIf="input.type==InputTypes.BABBAGE_FACT_RAW_DATA || input.type==InputTypes.BABBAGE_FACT_URI">
-
-
-
                   <md-chip-list *ngIf="analysisCall?.inputs[input.name]&&!factsShown">
-
-                    <md-chip md-tooltip="Filter"  color="primary" selected="true" *ngFor="let cut of analysisCall?.inputs[input.name].cuts|iterable">{{cut.column.dimension.label}}.{{cut.column.label}}: {{cut.value}}</md-chip>
-                    <md-chip md-tooltip="Page number"  color="primary" selected="true">Page number: {{analysisCall?.inputs[input.name].page}}</md-chip>
-                    <md-chip md-tooltip="Page size"  color="primary" selected="true">Page size: {{analysisCall?.inputs[input.name].pageSize}}</md-chip>
-
-
-
+                    <md-chip md-tooltip="Filter" color="primary" selected="true"
+                             *ngFor="let cut of analysisCall?.inputs[input.name].cuts|iterable">
+                      {{cut.column.dimension.label}}.{{cut.column.label}}: {{cut.value}}
+                    </md-chip>
+                    <md-chip md-tooltip="Page number" color="primary" selected="true">Page number:
+                      {{analysisCall?.inputs[input.name].page}}
+                    </md-chip>
+                    <md-chip md-tooltip="Page size" color="primary" selected="true">Page size:
+                      {{analysisCall?.inputs[input.name].pageSize}}
+                    </md-chip>
                   </md-chip-list>
-
 
 
                   <fact-request-builder *ngIf="analysisCall?.inputs[input.name]&&factsShown" [cube]="cube$|async"
@@ -114,32 +122,52 @@
                 <ng-container *ngIf="input.type==InputTypes.PARAMETER">
                   <md-input-container *ngIf="!input.options" class="example-full-width">
 
-                    <input  mdInput placeholder="Parameter" type="{{input.data_type}}"
+                    <input mdInput placeholder="Parameter" type="{{input.data_type}}"
                            value="{{input.default_value}}" [(ngModel)]="analysisCall?.inputs[input.name]">
 
 
                   </md-input-container>
 
-                  <md-select *ngIf="input.options"  placeholder="Parameter from list" [(ngModel)]="analysisCall?.inputs[input.name]">
-                    <md-option *ngFor="let option of input.options|iterablepairs" [value]="option.key">{{option.value}}</md-option>
+                  <md-select *ngIf="input.options" placeholder="Parameter from list"
+                             [(ngModel)]="analysisCall?.inputs[input.name]">
+                    <md-option *ngFor="let option of input.options|iterablepairs" [value]="option.key">
+                      {{option.value}}
+                    </md-option>
                   </md-select>
                 </ng-container>
-
 
 
                 <div *ngIf="input.type==InputTypes.MEASURE_REF">
                   <div>
 
-                    <md-select placeholder="Measure"
+                    <div class="mat-caption" *ngIf="input.bound">
+                      This analysis input is bound to the <i>{{executionConfiguration.inputs.get(input.bound).title}}</i> input.
+                      <ng-container *ngIf="executionConfiguration.inputs.get(input.bound).type === InputTypes.BABBAGE_AGGREGATE_URI && analysisCall?.inputs[input.bound].actual_measures.length <1">
+                        You have to configure this input with one or more drill-down attributes, that will appear here afterwards.
+                      </ng-container>
+                      <ng-container *ngIf="executionConfiguration.inputs.get(input.bound).type === InputTypes.BABBAGE_FACT_URI && analysisCall?.inputs[input.bound].actual_measures.length <1">
+                        You have to configure this input with one or more fields, that will appear here afterwards.
+                      </ng-container>
+                    </div>
 
-                      multiple
-                      [(ngModel)]="analysisCall?.inputs[input.name]">
-                      <md-option [value]="item" [attr.data-key]="item |nestedProperty:'ref'"
-                              *ngFor="let item of cube?.model?.measures|iterable">{{item |
-                        nestedProperty:'label'}}
-                      </md-option>
+
+                    <md-select placeholder="Measure" [multiple]="input.cardinality=='n'"
+                               [(ngModel)]="analysisCall?.inputs[input.name]">
+
+                      <ng-container *ngIf="!input.bound">
+                        <md-option [value]="item" [attr.data-key]="item |nestedProperty:'ref'"
+                                   *ngFor="let item of cube?.model?.measures|iterable">{{item |
+                          nestedProperty:'label'}}
+                        </md-option>
+                      </ng-container>
+                      <ng-container *ngIf="input.bound">
+
+                        <md-option [value]="item" [attr.data-key]="item |nestedProperty:'ref'"
+                                   *ngFor="let item of analysisCall?.inputs[input.bound].actual_measures">{{item |
+                          nestedProperty:'label'}}
+                        </md-option>
+                      </ng-container>
                     </md-select>
-
 
 
                   </div>
@@ -150,26 +178,38 @@
                 <div *ngIf="input.type==InputTypes.AGGREGATE_REF">
                   <div>
 
-
-
-                      <md-select *ngIf="input.cardinality=='1'" placeholder="Aggregated measure"
-                              [(ngModel)]="analysisCall?.inputs[input.name]">
-                        <md-option *ngFor="let item of cube?.model?.aggregates|iterable" [value]="item">{{item |
-                          nestedProperty:'label'}}
-                        </md-option>
-
-                      </md-select>
-
-                      <md-select *ngIf="input.cardinality=='n'" placeholder="Aggregated measures"
-                              multiple
-                              [(ngModel)]="analysisCall?.inputs[input.name]">
-                        <md-option [value]="item" [attr.data-key]="item |nestedProperty:'ref'"
-                                *ngFor="let item of cube?.model?.aggregates|iterable">{{item |
-                          nestedProperty:'label'}}
-                        </md-option>
-                      </md-select>
-
+                    <div class="mat-caption" *ngIf="input.bound">
+                      This analysis input is bound to the <i>{{executionConfiguration.inputs.get(input.bound).title}}</i> input.
+                      <ng-container *ngIf="executionConfiguration.inputs.get(input.bound).type === InputTypes.BABBAGE_AGGREGATE_URI && analysisCall?.inputs[input.bound].actual_aggregates.length <1">
+                        You have to configure this input with one or more drill-down attributes, that will appear here afterwards.
+                      </ng-container>
+                      <ng-container *ngIf="executionConfiguration.inputs.get(input.bound).type === InputTypes.BABBAGE_FACT_URI && analysisCall?.inputs[input.bound].actual_aggregates.length <1">
+                        You have to configure this input with one or more fields, that will appear here afterwards.
+                      </ng-container>
                     </div>
+
+                    <md-select placeholder="Aggregated measures" [multiple]="input.cardinality=='n'"
+                               [(ngModel)]="analysisCall?.inputs[input.name]">
+
+
+                      <ng-container *ngIf="!input.bound">
+                        <md-option [value]="item" [attr.data-key]="item |nestedProperty:'ref'"
+                                   *ngFor="let item of cube?.model?.aggregates|iterable">{{item |
+                          nestedProperty:'label'}}
+                        </md-option>
+                      </ng-container>
+
+                      <ng-container *ngIf="input.bound">
+                        <md-option [value]="item" [attr.data-key]="item |nestedProperty:'ref'"
+                                   *ngFor="let item of analysisCall?.inputs[input.bound].actual_aggregates">{{item |
+                          nestedProperty:'label'}}
+                        </md-option>
+                      </ng-container>
+
+
+                    </md-select>
+
+                  </div>
 
 
                 </div>
@@ -177,43 +217,47 @@
 
                 <div *ngIf="input.type==InputTypes.ATTRIBUTE_REF">
                   <div>
+                    <div class="mat-caption" *ngIf="input.bound">
+                      This analysis input is bound to the <i>{{executionConfiguration.inputs.get(input.bound).title}}</i> input.
+                      <ng-container *ngIf="executionConfiguration.inputs.get(input.bound).type === InputTypes.BABBAGE_AGGREGATE_URI && analysisCall?.inputs[input.bound].actual_attributes.length <1">
+                        You have to configure this input with one or more drill-down attributes, that will appear here afterwards.
+                      </ng-container>
+                      <ng-container *ngIf="executionConfiguration.inputs.get(input.bound).type === InputTypes.BABBAGE_FACT_URI && analysisCall?.inputs[input.bound].actual_attributes.length <1">
+                        You have to configure this input with one or more fields, that will appear here afterwards.
+                      </ng-container>
+                    </div>
 
-
-
-                      <md-select *ngIf="input.cardinality=='1'" placeholder="Attribute" #select="mdSelect"
-                              [(ngModel)]="analysisCall?.inputs[input.name]">
-
-                        <md-optgroup  *ngFor="let dim of cube?.model?.dimensions|iterable" label="{{dim.label}}">
-                          <md-option [value]="item" *ngFor="let item of dim?.significants|iterable">
-
-                            <ng-container  *ngIf="select.panelOpen">{{item |
-                              nestedProperty:'label'}}</ng-container>
-                            <ng-container  *ngIf="!select.panelOpen">{{item.dimension.label}} &rarr; {{item |
-                              nestedProperty:'label'}}</ng-container>
-
-                          </md-option>
-                        </md-optgroup>
-                      </md-select>
-
-
-
-                      <md-select placeholder="Attributes" *ngIf="input.cardinality=='n'" #select="mdSelect"
-
-                              multiple
-                              [(ngModel)]="analysisCall?.inputs[input.name]">
-
-                        <md-optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" label="{{dim.label}}">
+                    <ng-container *ngIf="!input.bound || (input.bound && analysisCall?.inputs[input.bound].actual_attributes.length > 0)">
+                      <md-select placeholder="Attributes" [multiple]="input.cardinality=='n'" #select="mdSelect"
+                                 [(ngModel)]="analysisCall?.inputs[input.name]">
+                        <ng-container *ngIf="input.bound">
                           <md-option [value]="item" [attr.data-key]="item |nestedProperty:'ref'"
-                                  *ngFor="let item of dim?.significants|iterable">
-                            <ng-container  *ngIf="select.panelOpen">{{item |
-                              nestedProperty:'label'}}</ng-container>
-                            <ng-container  *ngIf="!select.panelOpen">{{item.dimension.label}} &rarr; {{item |
-                                nestedProperty:'label'}}</ng-container>
+                                     *ngFor="let item of analysisCall?.inputs[input.bound].actual_attributes">
+                            <ng-container>{{item.dimension.label}} &rarr; {{item |
+                              nestedProperty:'label'}}
+                            </ng-container>
                           </md-option>
-                        </md-optgroup>
+                        </ng-container>
+
+                        <ng-container *ngIf="!input.bound">
+                          <md-optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" label="{{dim.label}}">
+                            <md-option [value]="item" [attr.data-key]="item |nestedProperty:'ref'"
+                                       *ngFor="let item of dim?.significants|iterable">
+                              <ng-container *ngIf="select.panelOpen">{{item |
+                                nestedProperty:'label'}}
+                              </ng-container>
+                              <ng-container *ngIf="!select.panelOpen">{{item.dimension.label}} &rarr; {{item |
+                                nestedProperty:'label'}}
+                              </ng-container>
+                            </md-option>
+                          </md-optgroup>
+                        </ng-container>
 
 
                       </md-select>
+
+                    </ng-container>
+
 
                   </div>
 
@@ -227,11 +271,12 @@
         </div>
       </div>
       <div fxFlex="70%" class="content-card">
-        <div >
+        <div>
 
           <md-card class="error-card" *ngIf="error">
             <md-card-content>
-              <md-icon>error</md-icon> <div>{{error}}</div>
+              <md-icon>error</md-icon>
+              <div>{{error}}</div>
             </md-card-content>
 
           </md-card>
@@ -247,14 +292,14 @@
                                         [data]="analysisCall?.outputs['values']" [cube]="cube"
                                         [analysisCall]="analysisCall"></analytics-descriptive-output>
           <analytics-outliers-output *ngIf="algorithm.name=='outlier_detection'"
-                                        [data]="analysisCall?.outputs['values']" [cube]="cube"
-                                        [analysisCall]="analysisCall"></analytics-outliers-output>
+                                     [data]="analysisCall?.outputs['values']" [cube]="cube"
+                                     [analysisCall]="analysisCall"></analytics-outliers-output>
           <analytics-clustering-output *ngIf="algorithm.name=='clustering'"
-                                     [data]="analysisCall?.outputs['values']" [cube]="cube"
-                                     [analysisCall]="analysisCall"></analytics-clustering-output>
+                                       [data]="analysisCall?.outputs['values']" [cube]="cube"
+                                       [analysisCall]="analysisCall"></analytics-clustering-output>
           <app-analytics-rulemining-output *ngIf="algorithm.name=='rule_mining'"
-                                     [data]="analysisCall?.outputs['values']" [cube]="cube"
-                                     [analysisCall]="analysisCall"></app-analytics-rulemining-output>
+                                           [data]="analysisCall?.outputs['values']" [cube]="cube"
+                                           [analysisCall]="analysisCall"></app-analytics-rulemining-output>
         </div>
       </div>
 

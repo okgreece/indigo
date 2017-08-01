@@ -17,17 +17,16 @@ import { routes } from './routes';
 import { reducer } from './reducers';
 import { schema } from './db';
 import {ApiCubesService} from './services/api-cubes';
-import {CollectionCubePageComponent} from './containers/cube/collection-page';
-import {ViewCubePageComponent} from './containers/cube/view-cube-page';
 import {FindCubePageComponent} from './containers/cube/find-cube-page';
-import {SelectedCubePageComponent} from './containers/cube/selected-cube-page';
 import {CubeExistsGuard} from './guards/cube-exists';
 import {CubeEffects} from './effects/cube';
 import {AlgorithmsService} from './services/algorithms';
 import {CubeAnalyticsPage} from './containers/cube/cube-analytics';
 import {AnalysisService} from './services/analysis';
 import {environment} from '../environments/environment';
+/*
 import {APP_BASE_HREF} from '@angular/common';
+*/
 import {CubeAnalyticsEmbedPage} from './containers/cube/cube-analytics-embed-page';
 import {CubeExistsLightGuard} from './guards/cube-exists-light';
 import {FlexLayoutModule} from '@angular/flex-layout';
@@ -35,9 +34,9 @@ import 'hammerjs';
 import {MarkdownModule} from 'angular2-markdown';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {CubeCollectionEffects} from "./effects/cubesCollection";
-import {FactsPreviewDialogComponent} from "./components/cube/analytics/dialog/facts-preview-dialog";
-import {AggregatePreviewDialogComponent} from "./components/cube/analytics/dialog/aggregate-preview-dialog";
+import {CubeCollectionEffects} from './effects/cubesCollection';
+import {FactsPreviewDialogComponent} from './components/cube/analytics/dialog/facts-preview-dialog';
+import {AggregatePreviewDialogComponent} from './components/cube/analytics/dialog/aggregate-preview-dialog';
 
 
 @NgModule({
@@ -100,10 +99,7 @@ MdCardModule,
   declarations: [
     AppComponent,
     FindCubePageComponent,
-    SelectedCubePageComponent,
-    ViewCubePageComponent,
     CubeAnalyticsPage,
-    CollectionCubePageComponent,
     NotFoundPageComponent,
     CubeAnalyticsEmbedPage,
     FactsPreviewDialogComponent,

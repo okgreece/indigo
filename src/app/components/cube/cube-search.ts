@@ -13,11 +13,9 @@ import {Component, Output, Input, EventEmitter, AfterViewInit} from '@angular/co
         <md-input-container>
           <input mdInput placeholder="Search for a dataset" [value]="query" (keyup)="search.emit($event.target.value)"/>
         </md-input-container>
-       
         <md-spinner *ngIf="searching" [class.show]="searching"></md-spinner>
       </md-card-content>
-    </md-card>
-  `,
+    </md-card>`,
   styles: [`
     md-card-title,
     md-card-content {
@@ -46,17 +44,16 @@ import {Component, Output, Input, EventEmitter, AfterViewInit} from '@angular/co
     md-spinner.show {
       opacity: 1.0;
     }
-    
-  
   `]
 })
-export class CubeSearchComponent implements AfterViewInit{
+export class CubeSearchComponent implements AfterViewInit {
+  @Input() query = '';
+  @Input() searching = false;
+  @Output() search = new EventEmitter<string>();
   ngAfterViewInit(): void {
     this.search.emit('');
 
   }
-  @Input() query: string = '';
-  @Input() searching = false;
-  @Output() search = new EventEmitter<string>();
+
 
 }

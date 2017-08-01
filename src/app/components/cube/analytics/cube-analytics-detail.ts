@@ -23,8 +23,8 @@ import {IterablePairsPipe} from '../../../pipes/mapToPairsIterable';
 import {PipesModule} from '../../../pipes/index';
 import {ExecutionConfiguration} from '../../../models/analysis/executionConfiguration';
 import {JobTimeoutException} from '../../../models/analysis/jobTimeoutException';
-import {AggregatePreviewDialogComponent} from "./dialog/aggregate-preview-dialog";
-import {FactsPreviewDialogComponent} from "./dialog/facts-preview-dialog";
+import {AggregatePreviewDialogComponent} from './dialog/aggregate-preview-dialog';
+import {FactsPreviewDialogComponent} from './dialog/facts-preview-dialog';
 
 /**
  * Tip: Export type aliases for your component's inputs and outputs. Until we

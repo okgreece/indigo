@@ -10,7 +10,6 @@ import { SidenavComponent } from './sidenav';
 import { ToolbarComponent } from './toolbar';
 
 import { PipesModule } from '../pipes';
-import {CubeDetailComponent} from './cube/cube-detail';
 import {CubePreviewComponent} from './cube/cube-preview';
 import {CubePreviewListComponent} from './cube/cube-preview-list';
 import {CubeSearchComponent} from './cube/cube-search';
@@ -43,27 +42,26 @@ import {DynamicComponent} from './dynamic-component';
 import {MasonryModule} from 'angular2-masonry';
 import {CubeAnalyticsEmbedComponent} from './cube/analytics/embed/embed';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import {UserGuidePageComponent} from "./user-guide";
-import {MarkdownComponent, MarkdownModule} from "angular2-markdown";
-import {OutliersDetectionOutputComponent} from "./analysis/outlier/outlier_detection";
+import {UserGuidePageComponent} from './user-guide';
+import {MarkdownComponent, MarkdownModule} from 'angular2-markdown';
+import {OutliersDetectionOutputComponent} from './analysis/outlier/outlier_detection';
 import {
   MdButtonModule, MdCheckboxModule, MdInputModule, MdSidenavModule, MdChipsModule, MdButtonToggleModule,
   MdTooltipModule, MdProgressBarModule, MdCardModule, MaterialModule, MdIconModule, MdDialogModule,
   MdProgressSpinnerModule, MdSelectModule, MdOptionModule, MdAutocompleteModule,
 } from '@angular/material';
-import {InfiniteScrollerDirective} from "../infinite-scroller.directive";
-import {RuleMiningOutputComponent} from "./analysis/rulemining/rulemining";
-import {ClusteringOutputComponent} from "./analysis/clustering/clustering";
-import {ClusteringTreeDiagram, TreeDiagramVisualization} from "./analysis/visualizations/treeDiagram";
-import {OutlierPlotVisualization, OutliersHeatmapDiagram} from "./analysis/visualizations/outlierPlot";
-import {UploadPageComponent} from "../containers/cube/upload";
-import {LinkedPipesPageComponent} from "../containers/cube/linkedpipes";
-import {AnalysisVisualization} from "./analysis/visualization";
+import {InfiniteScrollerDirective} from '../infinite-scroller.directive';
+import {RuleMiningOutputComponent} from './analysis/rulemining/rulemining';
+import {ClusteringOutputComponent} from './analysis/clustering/clustering';
+import {ClusteringTreeDiagram, TreeDiagramVisualization} from './analysis/visualizations/treeDiagram';
+import {OutlierPlotVisualization, OutliersHeatmapDiagram} from './analysis/visualizations/outlierPlot';
+import {UploadPageComponent} from '../containers/cube/upload';
+import {LinkedPipesPageComponent} from '../containers/cube/linkedpipes';
+import {AnalysisVisualization} from './analysis/visualization';
 
 
 
 export const COMPONENTS = [
-  CubeDetailComponent,
   CubePreviewComponent,
   CubePreviewListComponent,
     CubeSearchComponent,

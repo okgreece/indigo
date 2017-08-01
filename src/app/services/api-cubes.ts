@@ -78,6 +78,7 @@ export class ApiCubesService {
   factToUri(element: FactRequest) {
     const orderString = element.sorts.map(s => s.column.ref + ':' + s.direction.key).join('|');
     const cutString = element.cuts.map(c => c.column.ref + c.transitivity.key + ':' + c.value).join('|');
+    const fieldsString = element.fields.map(c => c.ref ).join('|');
 
     const params = new URLSearchParams();
     if (element.cuts.length > 0) {
@@ -86,6 +87,11 @@ export class ApiCubesService {
     if (element.sorts.length > 0) {
       params.set('order', orderString);
     }
+
+    if (element.fields.length > 0) {
+      params.set('fields', fieldsString);
+    }
+
     if (element.page) {
       params.set('page', element.page.toString());
     }

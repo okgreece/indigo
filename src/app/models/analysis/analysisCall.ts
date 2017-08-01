@@ -24,6 +24,34 @@ export class AnalysisCall {
   public outputs: any = {};
 
   private API_PATH: string = environment.apiUrl + '/api/' + environment.versionSuffix + '/cubes';
+  private static breakDownQueryParamParts(queryParam) {
+    return queryParam.split('|');
+  }
+
+  public constructor(public config: ExecutionConfiguration, public cube: Cube) {
+
+    this.initialize();
+
+
+  }
+
+  public get query() {
+    return this.parametrizeInputs().toString();
+  }
+
+  public get valid(): boolean {
+    let isValid = true;
+    const that = this;
+    this.config.inputs.forEach((input) => {
+      isValid = isValid && ((input.required && !!that.inputs[input.name]) || (input.required && input.guess) || (!input.required));
+      if (input.type === InputTypes.BABBAGE_AGGREGATE_URI) {
+        isValid = isValid && ((<AggregateRequest> that.inputs[input.name]).drilldowns.length > 0);
+      }
+
+    });
+    return isValid;
+  }
+
 
   aggregateToURI(aggregateRequest: AggregateRequest) {
     const drilldownString = aggregateRequest.drilldowns.map(d => d.column.ref).join('|');
@@ -34,12 +62,24 @@ export class AnalysisCall {
     const aggregatesString = aggregateRequest.aggregates.map(a => a.column.ref).join('|');
 
     const params = new URLSearchParams();
-    if (aggregateRequest.drilldowns.length > 0) params.set('drilldown', drilldownString);
-    if (aggregateRequest.cuts.length > 0) params.set('cut', cutString);
-    if (aggregateRequest.sorts.length > 0) params.set('order', orderString);
-    if (aggregateRequest.aggregates.length > 0) params.set('aggregates', aggregatesString);
-    if (aggregateRequest.pageSize > 0) params.set('pagesize', aggregateRequest.pageSize.toString());
-    if (aggregateRequest.page > 0) params.set('page', aggregateRequest.page.toString());
+    if (aggregateRequest.drilldowns.length > 0) {
+      params.set('drilldown', drilldownString);
+    }
+    if (aggregateRequest.cuts.length > 0) {
+      params.set('cut', cutString);
+    }
+    if (aggregateRequest.sorts.length > 0) {
+      params.set('order', orderString);
+    }
+    if (aggregateRequest.aggregates.length > 0) {
+      params.set('aggregates', aggregatesString);
+    }
+    if (aggregateRequest.pageSize > 0) {
+      params.set('pagesize', aggregateRequest.pageSize.toString());
+    }
+    if (aggregateRequest.page > 0) {
+      params.set('page', aggregateRequest.page.toString());
+    }
     return `${this.API_PATH}/${aggregateRequest.cube.name}/aggregate?${params.toString()}`;
   }
 
@@ -48,20 +88,26 @@ export class AnalysisCall {
     const cutString = factRequest.cuts.map(c => {
       return c.column.ref + c.transitivity.key + ':' + c.value;
     }).join('|');
+    const fieldsString = factRequest.fields.map(c => c.ref ).join('|');
 
     const params = new URLSearchParams();
-    if (factRequest.cuts.length > 0) params.set('cut', cutString);
-    if (factRequest.sorts.length > 0) params.set('order', orderString);
-    if (factRequest.pageSize > 0) params.set('pagesize', factRequest.pageSize.toString());
-    if (factRequest.page > 0) params.set('page', factRequest.page.toString());
+    if (factRequest.cuts.length > 0) {
+      params.set('cut', cutString);
+    }
+    if (factRequest.sorts.length > 0) {
+      params.set('order', orderString);
+    }
+
+    if (factRequest.fields.length > 0) {
+      params.set('fields', fieldsString);
+    }
+    if (factRequest.pageSize > 0) {
+      params.set('pagesize', factRequest.pageSize.toString());
+    }
+    if (factRequest.page > 0) {
+      params.set('page', factRequest.page.toString());
+    }
     return `${this.API_PATH}/${factRequest.cube.name}/facts?${params.toString()}`;
-  }
-
-  public constructor(public config: ExecutionConfiguration, public cube: Cube) {
-
-    this.initialize();
-
-
   }
 
   public initialize() {
@@ -74,11 +120,9 @@ export class AnalysisCall {
           if (input.data_type === 'integer' || input.data_type === 'int') {
             that.inputs[input.name] = input.default_value ? input.default_value : 0;
 
-          }
-          else if (input.data_type === 'float' || input.data_type === 'double') {
+          } else if (input.data_type === 'float' || input.data_type === 'double') {
             that.inputs[input.name] = input.default_value ? input.default_value : 0;
-          }
-          else {
+          } else {
             that.inputs[input.name] = input.default_value ? input.default_value : '';
           }
           break;
@@ -122,11 +166,6 @@ export class AnalysisCall {
 
   }
 
-
-  public get query() {
-    return this.parametrizeInputs().toString();
-  }
-
   queryParams() {
     const map = {};
     this.parametrizeInputs().paramsMap.forEach((value: string[], key: string) => {
@@ -136,25 +175,24 @@ export class AnalysisCall {
     return map;
   }
 
-
   public parametrizeInputs() {
     const parts: URLSearchParams = new URLSearchParams();
     const that = this;
 
     this.config.inputs.forEach((input) => {
-      if (!that.inputs[input.name])return;
+      if (!that.inputs[input.name]) {
+        return;
+      }
       switch (input.type) {
         case InputTypes.PARAMETER: {
 
           if (input.data_type === 'integer' || input.data_type === 'int') {
-            parts.append(input.name, parseInt(that.inputs[input.name]).toString());
+            parts.append(input.name, parseInt(that.inputs[input.name], 10).toString());
 
-          }
-          else if (input.data_type === 'float' || input.data_type === 'double') {
+          } else if (input.data_type === 'float' || input.data_type === 'double') {
             parts.append(input.name, parseFloat(that.inputs[input.name]).toString());
 
-          }
-          else {
+          } else {
             parts.append(input.name, that.inputs[input.name].toString());
 
           }
@@ -231,31 +269,18 @@ export class AnalysisCall {
 
   }
 
-  public get valid(): boolean {
-    let isValid = true;
-    const that = this;
-    this.config.inputs.forEach((input) => {
-      isValid = isValid && ((input.required && !!that.inputs[input.name]) || (input.required && input.guess) || (!input.required));
-      if (input.type === InputTypes.BABBAGE_AGGREGATE_URI) {
-        isValid = isValid && ((<AggregateRequest> that.inputs[input.name]).drilldowns.length > 0);
-      }
-
-    });
-    return isValid;
-  }
-
   public deParametrizeInputs(parts: any) {
 
     const that = this;
     this.config.inputs.forEach((input) => {
-      if (!parts[input.name]){
+      if (!parts[input.name]) {
         return;
       }
       switch (input.type) {
         case InputTypes.PARAMETER: {
 
           if (input.data_type === 'integer' || input.data_type === 'int') {
-            that.inputs[input.name] = parseInt(parts[input.name]);
+            that.inputs[input.name] = parseInt(parts[input.name], 10);
           } else if (input.data_type === 'float' || input.data_type === 'double') {
             that.inputs[input.name] = parseFloat(parts[input.name]);
           } else {
@@ -306,7 +331,6 @@ export class AnalysisCall {
     return parts;
   }
 
-
   private aggregateFromURI(uri: string) {
     const parts = new URI(uri).search(true);
     const request = new AggregateRequest();
@@ -356,10 +380,10 @@ export class AnalysisCall {
     }
 
     if (parts['pagesize']) {
-      request.pageSize = parseInt(parts['pagesize']);
+      request.pageSize = parseInt(parts['pagesize'], 10);
     }
     if (parts['page']) {
-      request.page = parseInt(parts['page']);
+      request.page = parseInt(parts['page'], 10);
     }
 
     return request;
@@ -386,6 +410,19 @@ export class AnalysisCall {
       });
 
     }
+
+    if (parts['fields']) {
+      const that = this;
+      const fields = AnalysisCall.breakDownQueryParamParts(parts['fields']);
+      request.fields = fields.map(field => {
+
+        const fld = that.cube.model.attributes.get(field);
+        return fld;
+      });
+
+    }
+
+
     if (parts['order']) {
       const orders = AnalysisCall.breakDownQueryParamParts(parts['order']);
       request.sorts = orders.map(sortSet => {
@@ -397,17 +434,13 @@ export class AnalysisCall {
       });
     }
     if (parts['pagesize']) {
-      request.pageSize = parseInt(parts['pagesize']);
+      request.pageSize = parseInt(parts['pagesize'], 10);
     }
     if (parts['page']) {
-      request.page = parseInt(parts['page']);
+      request.page = parseInt(parts['page'], 10);
     }
     return request;
 
 
-  }
-
-  private static breakDownQueryParamParts(queryParam) {
-    return queryParam.split('|');
   }
 }

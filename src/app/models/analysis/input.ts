@@ -3,6 +3,8 @@
  */
 
 
+import {ApiRequest} from '../apiRequest';
+
 export enum InputTypes  {
   PARAMETER= <any>'Algorithm parameter',
   ATTRIBUTE_REF= <any>'Cube Dimension Attribute',
@@ -33,6 +35,7 @@ export class Input {
   required: boolean;
   data: any;
   options: any;
+  bound: string;
 
   deserialize(data: any): Input {
 
@@ -47,6 +50,7 @@ export class Input {
     this.type = data.type;
     this.options = data.options;
     this.description = data.description;
+    this.bound = data.bound;
 
 
     return this;
@@ -65,8 +69,11 @@ export class Input {
     output['type'] =   this.type;
     output['options'] =   this.options;
     output['description'] =   this.description;
+    output['bound'] =   this.bound;
 
     return output;
   }
+
+
 }
 

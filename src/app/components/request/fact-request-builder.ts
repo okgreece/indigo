@@ -31,11 +31,11 @@ import {FactRequest} from '../../models/fact/factRequest';
   encapsulation: ViewEncapsulation.None,
   templateUrl: './fact-request-builder.html',
   styles: [`
-    
+
     form{
       margin: 30px 0 0;
     }
-    
+
   ul.alt-list{padding:0; margin:10px 0}
     ul.alt-list li {
       list-style-type: none;
@@ -49,37 +49,37 @@ import {FactRequest} from '../../models/fact/factRequest';
     ul.alt-list li:nth-child(odd) { background: #f8f8f8; }{
 
     }
-    
+
     a.action-anchor{
       cursor:pointer;
       margin: auto 10px ;
-    
+
     }
-    
+
     .md-tab-label{
       min-width:max-content!important;
-    
+
     }
-    
+
     md-toolbar-row [md-mini-fab]{
       margin:2px;
-    
+
     }
-    
+
     .md-tab-body-wrapper{
-    
+
       max-height:700px;
       overflow-y:auto!important;
-    
+
     }
-    
+
     span.node-key {
       cursor: pointer;
     }
     .well {
   background-color: #615f5f;
 }
-    
+
   `]
 })
 export class FactRequestBuilder {
@@ -94,7 +94,7 @@ export class FactRequestBuilder {
 
   @Input()
   public set cube(value: Cube){
-    let that = this;
+    const that = this;
     that._cube = value;
   }
   _cube: Cube;
@@ -110,7 +110,7 @@ export class FactRequestBuilder {
 
   @Input()
   public set request(value: FactRequest){
-    let that = this;
+    const that = this;
     that.newFactRequest = value;
   }
 
@@ -130,7 +130,7 @@ export class FactRequestBuilder {
 
 
   addCut() {
-    let newCut = new Cut();
+    const newCut = new Cut();
     newCut.column = this.newCutAttribute;
     newCut.transitivity = this.newCutTransitivity;
     newCut.value = this.newCutValueVal;
@@ -145,7 +145,7 @@ export class FactRequestBuilder {
 
 
   addSort() {
-    let newSort = new Sort();
+    const newSort = new Sort();
     newSort.column = this.newSortAttribute;
     newSort.direction = this.newSortDirection;
     this.newFactRequest.sorts.push(newSort);
@@ -166,6 +166,14 @@ export class FactRequestBuilder {
   }
 
 
+  addField() {
+    const newField = this.newField;
+    this.newFactRequest.fields.push(newField);
+  }
+
+  removeField(field: Attribute) {
+    _.remove(this.newFactRequest.fields, field);
+  }
 
 
 
@@ -179,10 +187,11 @@ export class FactRequestBuilder {
 
   newSortDirection: SortDirection;
 
+  newField: Attribute;
 
   sortDirections: Map<string, SortDirection> = SortDirection.directions;
-  public newFactPageNumber: number = 0;
-  public newFactPageSize: number = 30;
+  public newFactPageNumber = 0;
+  public newFactPageSize = 30;
 
   setCutValue(member: string) {
     this.newCutValueVal = member;
@@ -198,7 +207,7 @@ export class FactRequestBuilder {
 
   searchMembers(attribute: Attribute, search: string) {
     if (!attribute) return;
-    let that = this;
+    const that = this;
     this.rudolfCubesService.members(this.cube, attribute.dimension).subscribe(response => {
       that.members.set(attribute.ref, response);
 
@@ -221,10 +230,10 @@ export class FactRequestBuilder {
 
   getMembers(attributeName: string) {
 
-    let newCutDimension = _.filter(Array.from(this.cube.model.attributes.values()), function (attribute) {
+    const newCutDimension = _.filter(Array.from(this.cube.model.attributes.values()), function (attribute) {
       return attribute.ref === attributeName;
     })[0].dimension;
-    let that = this;
+    const that = this;
     this.rudolfCubesService.members(this.cube, newCutDimension).subscribe(response => {
       that.members.set(newCutDimension.ref, response);
 
