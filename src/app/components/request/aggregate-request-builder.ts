@@ -152,12 +152,14 @@ export class AggregateRequestBuilder {
     this.newAggregateRequest.aggregates.push(newAggregate);
 
     this.requestChange.emit(this.request);
-
+    this.newAggregateRequest.emitAggregateChanges();
 
   }
 
   removeAggregate(aggregate: AggregateParam) {
     _.remove(this.newAggregateRequest.aggregates, aggregate);
+    this.newAggregateRequest.emitAggregateChanges();
+
   }
 
   addCut() {
@@ -176,10 +178,14 @@ export class AggregateRequestBuilder {
     const newDrilldown = new Drilldown();
     newDrilldown.column = this.newDrilldownAttribute;
     this.newAggregateRequest.drilldowns.push(newDrilldown);
+    this.newAggregateRequest.emitAttributesChanges();
+
   }
 
   removeDrilldown(drilldown: Drilldown) {
     _.remove(this.newAggregateRequest.drilldowns, drilldown);
+    this.newAggregateRequest.emitAttributesChanges();
+
   }
 
   addSort() {

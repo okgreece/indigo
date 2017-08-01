@@ -97,7 +97,7 @@
                   </md-chip-list>
 
                   <aggregate-request-builder *ngIf="analysisCall?.inputs[input.name]&&aggregateShown"
-                                             [cube]="cube$|async"
+                                             [cube]="cube"
                                              [(request)]="analysisCall?.inputs[input.name]"></aggregate-request-builder>
                 </div>
                 <div *ngIf="input.type==InputTypes.BABBAGE_FACT_RAW_DATA || input.type==InputTypes.BABBAGE_FACT_URI">
@@ -115,7 +115,7 @@
                   </md-chip-list>
 
 
-                  <fact-request-builder *ngIf="analysisCall?.inputs[input.name]&&factsShown" [cube]="cube$|async"
+                  <fact-request-builder *ngIf="analysisCall?.inputs[input.name]&&factsShown" [cube]="cube"
                                         [(request)]="analysisCall?.inputs[input.name]"></fact-request-builder>
                 </div>
 
@@ -150,24 +150,26 @@
                       </ng-container>
                     </div>
 
+                    <ng-container *ngIf="!input.bound || (input.bound && analysisCall?.inputs[input.bound].actual_measures.length > 0)">
 
-                    <md-select placeholder="Measure" [multiple]="input.cardinality=='n'"
-                               [(ngModel)]="analysisCall?.inputs[input.name]">
+                      <md-select placeholder="Measure" [multiple]="input.cardinality==='n'"
+                                 [(ngModel)]="analysisCall?.inputs[input.name]">
 
-                      <ng-container *ngIf="!input.bound">
-                        <md-option [value]="item" [attr.data-key]="item |nestedProperty:'ref'"
-                                   *ngFor="let item of cube?.model?.measures|iterable">{{item |
-                          nestedProperty:'label'}}
-                        </md-option>
-                      </ng-container>
-                      <ng-container *ngIf="input.bound">
+                        <ng-container *ngIf="!input.bound">
+                          <md-option [value]="item" [attr.data-key]="item |nestedProperty:'ref'"
+                                     *ngFor="let item of cube?.model?.measures|iterable">{{item |
+                            nestedProperty:'label'}}
+                          </md-option>
+                        </ng-container>
+                        <ng-container *ngIf="input.bound">
 
-                        <md-option [value]="item" [attr.data-key]="item |nestedProperty:'ref'"
-                                   *ngFor="let item of analysisCall?.inputs[input.bound].actual_measures">{{item |
-                          nestedProperty:'label'}}
-                        </md-option>
-                      </ng-container>
-                    </md-select>
+                          <md-option [value]="item" [attr.data-key]="item |nestedProperty:'ref'"
+                                     *ngFor="let item of analysisCall?.inputs[input.bound].actual_measures">{{item |
+                            nestedProperty:'label'}}
+                          </md-option>
+                        </ng-container>
+                      </md-select>
+                    </ng-container>
 
 
                   </div>
@@ -188,26 +190,26 @@
                       </ng-container>
                     </div>
 
-                    <md-select placeholder="Aggregated measures" [multiple]="input.cardinality=='n'"
-                               [(ngModel)]="analysisCall?.inputs[input.name]">
+                    <ng-container *ngIf="!input.bound || (input.bound && analysisCall?.inputs[input.bound].actual_aggregates.length > 0)">
+                      <md-select placeholder="Aggregated measures" [multiple]="input.cardinality==='n'"
+                                 [(ngModel)]="analysisCall?.inputs[input.name]">
 
+                        <ng-container *ngIf="!input.bound">
+                          <md-option [value]="item" [attr.data-key]="item |nestedProperty:'ref'"
+                                     *ngFor="let item of cube?.model?.aggregates|iterable">{{item |
+                            nestedProperty:'label'}}
+                          </md-option>
+                        </ng-container>
 
-                      <ng-container *ngIf="!input.bound">
-                        <md-option [value]="item" [attr.data-key]="item |nestedProperty:'ref'"
-                                   *ngFor="let item of cube?.model?.aggregates|iterable">{{item |
-                          nestedProperty:'label'}}
-                        </md-option>
-                      </ng-container>
+                        <ng-container *ngIf="input.bound">
+                          <md-option [value]="item" [attr.data-key]="item |nestedProperty:'ref'"
+                                     *ngFor="let item of analysisCall?.inputs[input.bound].actual_aggregates">{{item |
+                            nestedProperty:'label'}}
+                          </md-option>
+                        </ng-container>
 
-                      <ng-container *ngIf="input.bound">
-                        <md-option [value]="item" [attr.data-key]="item |nestedProperty:'ref'"
-                                   *ngFor="let item of analysisCall?.inputs[input.bound].actual_aggregates">{{item |
-                          nestedProperty:'label'}}
-                        </md-option>
-                      </ng-container>
-
-
-                    </md-select>
+                      </md-select>
+                    </ng-container>
 
                   </div>
 
@@ -228,7 +230,7 @@
                     </div>
 
                     <ng-container *ngIf="!input.bound || (input.bound && analysisCall?.inputs[input.bound].actual_attributes.length > 0)">
-                      <md-select placeholder="Attributes" [multiple]="input.cardinality=='n'" #select="mdSelect"
+                      <md-select placeholder="Attributes" [multiple]="input.cardinality==='n'" #select="mdSelect"
                                  [(ngModel)]="analysisCall?.inputs[input.name]">
                         <ng-container *ngIf="input.bound">
                           <md-option [value]="item" [attr.data-key]="item |nestedProperty:'ref'"

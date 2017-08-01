@@ -1,10 +1,11 @@
 import {Dimension} from './dimension';
 import {Serializable} from './iserializeable';
+import {GenericProperty} from "./genericProperty";
 /**
  * Created by larjo on 16/7/2016.
  */
 
-export class Attribute implements Serializable<Attribute> {
+export class  Attribute extends GenericProperty implements Serializable<Attribute> {
 
 
   ref: string;
@@ -27,7 +28,7 @@ export class Attribute implements Serializable<Attribute> {
     return this;
   }
   constructor() {
-
+    super();
   }
 
 

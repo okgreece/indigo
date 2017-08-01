@@ -48,8 +48,10 @@ import {OutliersDetectionOutputComponent} from './analysis/outlier/outlier_detec
 import {
   MdButtonModule, MdCheckboxModule, MdInputModule, MdSidenavModule, MdChipsModule, MdButtonToggleModule,
   MdTooltipModule, MdProgressBarModule, MdCardModule, MaterialModule, MdIconModule, MdDialogModule,
-  MdProgressSpinnerModule, MdSelectModule, MdOptionModule, MdAutocompleteModule,
+  MdProgressSpinnerModule, MdSelectModule, MdOptionModule, MdAutocompleteModule, MdTableModule
 } from '@angular/material';
+import {CdkTableModule} from '@angular/cdk';
+
 import {InfiniteScrollerDirective} from '../infinite-scroller.directive';
 import {RuleMiningOutputComponent} from './analysis/rulemining/rulemining';
 import {ClusteringOutputComponent} from './analysis/clustering/clustering';
@@ -140,7 +142,9 @@ export const COMPONENTS = [
     MdProgressSpinnerModule,
     MdOptionModule,
     MdSelectModule,
-    MdAutocompleteModule
+    MdAutocompleteModule,
+    MdTableModule,
+    CdkTableModule
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,

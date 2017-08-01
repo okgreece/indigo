@@ -30,6 +30,13 @@
               nestedProperty:'label'}}</ng-container>
           </md-option>
         </md-optgroup>
+
+        <md-optgroup [label]="'Measures'">
+          <md-option *ngFor="let item of cube?.model.measures | iterable" [value]="item">
+            {{item | nestedProperty:'label'}}
+          </md-option>
+        </md-optgroup>
+
       </md-select>
 
 

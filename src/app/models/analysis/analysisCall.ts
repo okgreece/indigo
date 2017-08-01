@@ -15,6 +15,9 @@ import {Drilldown} from '../drilldown';
 import {FactRequest} from '../fact/factRequest';
 import {SortDirection} from '../sortDirection';
 import {ExecutionConfiguration} from './executionConfiguration';
+import {ApiRequest} from '../apiRequest';
+import {isArray} from 'util';
+import * as _ from 'lodash';
 /**
  * Created by larjo on 13/10/2016.
  */
@@ -43,7 +46,9 @@ export class AnalysisCall {
     let isValid = true;
     const that = this;
     this.config.inputs.forEach((input) => {
-      isValid = isValid && ((input.required && !!that.inputs[input.name]) || (input.required && input.guess) || (!input.required));
+      isValid =
+        isValid && ((input.required && !!that.inputs[input.name] && ((input.cardinality !== '1' && that.inputs[input.name].length > 0 ) || input.cardinality === '1'))
+        || (input.required && input.guess) || (!input.required));
       if (input.type === InputTypes.BABBAGE_AGGREGATE_URI) {
         isValid = isValid && ((<AggregateRequest> that.inputs[input.name]).drilldowns.length > 0);
       }
@@ -88,7 +93,7 @@ export class AnalysisCall {
     const cutString = factRequest.cuts.map(c => {
       return c.column.ref + c.transitivity.key + ':' + c.value;
     }).join('|');
-    const fieldsString = factRequest.fields.map(c => c.ref ).join('|');
+    const fieldsString = factRequest.fields.map(f => f.ref ).join('|');
 
     const params = new URLSearchParams();
     if (factRequest.cuts.length > 0) {
@@ -164,6 +169,7 @@ export class AnalysisCall {
 
     });
 
+    this.configureBoundInputs();
   }
 
   queryParams() {
@@ -328,6 +334,9 @@ export class AnalysisCall {
         }
       }
     });
+
+    this.configureBoundInputs();
+
     return parts;
   }
 
@@ -416,8 +425,7 @@ export class AnalysisCall {
       const fields = AnalysisCall.breakDownQueryParamParts(parts['fields']);
       request.fields = fields.map(field => {
 
-        const fld = that.cube.model.attributes.get(field);
-        return fld;
+        return that.cube.model.attributes.get(field);
       });
 
     }
@@ -443,4 +451,106 @@ export class AnalysisCall {
 
 
   }
+
+
+
+  private configureBoundInputs() {
+
+
+
+    const boundInputNames = Array.from(this.config.inputs.values()).filter(input => input.bound).map(input => input.bound);
+
+    const boundInputs = _.pick(this.inputs, boundInputNames);
+    const that = this;
+
+    _.forOwn(boundInputs, function (inputValue: ApiRequest, key: string) {
+      const inputs = Array.from(that.config.inputs.values()).filter(input => input.bound && input.bound === key);
+
+      inputValue.actual_attributes_change.subscribe(function () {
+        inputs.filter(input => input.type === InputTypes.ATTRIBUTE_REF).forEach(function (bindingInput) {
+          const bindingInputVal = that.inputs[bindingInput.name];
+          if (bindingInput.cardinality !== '1') {
+            const difference = _.differenceWith(bindingInputVal, inputValue.actual_attributes, function (x: Attribute, y: Attribute) {
+              return x.ref === y.ref;
+            });
+            _.pullAll(bindingInputVal, difference);
+          } else {
+            if (bindingInputVal === null) {
+              return;
+            }
+            const difference = _.differenceWith([bindingInputVal], inputValue.actual_attributes, function (x: Attribute, y: Attribute) {
+              return x.ref === y.ref;
+            });
+            if (difference.length > 0) {
+              delete that.inputs[bindingInputVal.name];
+            }
+          }
+        })
+
+      });
+
+      if (inputValue instanceof FactRequest) {
+
+        inputValue.actual_measures_change.subscribe(function () {
+          inputs.filter(input => input.type === InputTypes.MEASURE_REF).forEach(function (bindingInput) {
+            const bindingInputVal = that.inputs[bindingInput.name];
+            if (bindingInput.cardinality !== '1') {
+              const difference = _.differenceWith(bindingInputVal, inputValue.actual_measures, function (x: Measure, y: Measure) {
+                return x.ref === y.ref;
+              });
+              _.pullAll(bindingInputVal, difference);
+            } else {
+              if (bindingInputVal === null) {
+                return;
+              }
+              const difference = _.differenceWith([bindingInputVal], inputValue.actual_measures, function (x: Measure, y: Measure) {
+                return x.ref === y.ref;
+              });
+              if (difference.length > 0) {
+                delete that.inputs[bindingInputVal.name];
+              }
+            }
+          })
+
+        });
+
+      }
+
+      if (inputValue instanceof AggregateRequest) {
+        inputValue.actual_aggregates_change.subscribe(function () {
+          inputs.filter(input => input.type === InputTypes.AGGREGATE_REF).forEach(function (bindingInput) {
+            const bindingInputVal = that.inputs[bindingInput.name];
+            if (bindingInput.cardinality !== '1') {
+              const difference = _.differenceWith(bindingInputVal, inputValue.actual_aggregates, function (x: Aggregate, y: Aggregate) {
+                return x.ref === y.ref;
+              });
+              _.pullAll(bindingInputVal, difference);
+            } else {
+              if (bindingInputVal === null) {
+                return;
+              }
+              const difference = _.differenceWith([bindingInputVal], inputValue.actual_aggregates, function (x: Aggregate, y: Aggregate) {
+                return x.ref === y.ref;
+              });
+              if (difference.length > 0) {
+                delete that.inputs[bindingInputVal.name];
+              }
+            }
+          })
+
+        });
+      }
+
+
+
+
+
+
+    });
+
+
+  }
+
+
+
 }

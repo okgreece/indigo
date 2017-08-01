@@ -6,6 +6,7 @@ import {Cube} from '../cube';
 import {AggregateParam} from '../aggregateParam';
 import {Serializable} from '../iserializeable';
 import {ApiRequest} from '../apiRequest';
+import {EventEmitter} from "@angular/core";
 /**
  * Created by larjo_000 on 27/6/2016.
  */
@@ -19,6 +20,8 @@ export class AggregateRequest extends ApiRequest implements Serializable<Aggrega
   cube: Cube;
   pageSize= 30;
   page= 0;
+  public actual_aggregates_change: EventEmitter<any> = new EventEmitter<any>();
+  public actual_attributes_change: EventEmitter<any> =  new EventEmitter<any>();
 
   serialize(input: AggregateRequest): Object {
     return undefined;
@@ -82,4 +85,12 @@ export class AggregateRequest extends ApiRequest implements Serializable<Aggrega
     }
   }
 
+
+  public emitAggregateChanges() {
+    this.actual_aggregates_change.emit();
+  }
+
+  public emitAttributesChanges() {
+    this.actual_attributes_change.emit();
+  }
 }

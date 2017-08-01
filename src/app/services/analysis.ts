@@ -511,12 +511,15 @@ export class AnalysisService {
     const body = new URLSearchParams('', new PureURIEncoder());
 
     const dimensionColumnString = '\'' + inputs['dimensions'] + '\'';
-    const measuredDimString = '\'' + inputs['measured.dim'] + '\'';
+    ;
 
 
     body.set('amounts', '\'' + inputs['amounts'] + '\'');
     body.set('dimensions', dimensionColumnString);
-    body.set('measured.dim', measuredDimString);
+    if (inputs['measured.dim'] ) {
+      const measuredDimString = '\'' + inputs['measured.dim'] + '\'';
+      body.set('measured.dim', measuredDimString);
+    }
     body.set('cl.method', '\'' + inputs['cl.meth'] + '\'');
     body.set('json_data', '\'' +  inputs['json_data'] + '\'');
 

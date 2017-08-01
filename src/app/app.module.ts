@@ -7,7 +7,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { DBModule } from '@ngrx/db';
 import { RouterStoreModule } from '@ngrx/router-store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import {MaterialModule, MdCardModule} from '@angular/material';
+import {MaterialModule, MdCardModule, MdInputModule, MdTableModule} from '@angular/material';
 
 import { ComponentsModule } from './components';
 
@@ -37,6 +37,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CubeCollectionEffects} from './effects/cubesCollection';
 import {FactsPreviewDialogComponent} from './components/cube/analytics/dialog/facts-preview-dialog';
 import {AggregatePreviewDialogComponent} from './components/cube/analytics/dialog/aggregate-preview-dialog';
+import {CdkTableModule} from "@angular/cdk";
+import {PipesModule} from "./pipes/index";
 
 
 @NgModule({
@@ -45,6 +47,10 @@ import {AggregatePreviewDialogComponent} from './components/cube/analytics/dialo
 
     CommonModule,
     BrowserModule,
+    MdTableModule,
+    CdkTableModule,
+    MdInputModule,
+    PipesModule,
 /*
     MaterialModule,
 */

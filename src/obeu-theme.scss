@@ -180,6 +180,25 @@ md-chip {
   font-size: 14px;
 }
 
+
+.mat-cell, .mat-header-cell {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 3em;
+  margin: 10px;
+}
+
+md-dialog-container md-table{
+  overflow: auto;
+  max-height: 500px;
+}
+
+
+.input-card md-button-toggle{
+  box-shadow: none;
+}
+
 .font-override { // body or wrapper class
   .mat-button-toggle,
   %mat-button-base,
