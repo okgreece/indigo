@@ -45,9 +45,7 @@ export class FactRequest extends ApiRequest implements Serializable<FactRequest>
     }
     this.cuts = cuts;
 
-    for (const attribute of input.fields){
-      this.fields.push(new Attribute().deserialize(attribute));
-    }
+
 
     this.cube = new Cube().deserialize(input.cube);
     this.pageSize = input.pageSize;

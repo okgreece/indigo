@@ -76,9 +76,9 @@ export class ApiCubesService {
   }
 
   factToUri(element: FactRequest) {
-    const orderString = element.sorts.map(s => s.column.ref + ':' + s.direction.key).join('|');
+    const orderString = element.sorts.map(s => s.column.ref + ':' + s.direction.key).join(',');
     const cutString = element.cuts.map(c => c.column.ref + c.transitivity.key + ':' + c.value).join('|');
-    const fieldsString = element.fields.map(c => c.ref ).join('|');
+    const fieldsString = element.fields.map(c => c.ref ).join(',');
 
     const params = new URLSearchParams();
     if (element.cuts.length > 0) {
@@ -120,7 +120,7 @@ export class ApiCubesService {
 
   aggregateToURI(aggregateRequest: AggregateRequest) {
     const drilldownString = aggregateRequest.drilldowns.map(d => d.column.ref).join('|');
-    const orderString = aggregateRequest.sorts.map(s => s.column.ref + ':' + s.direction.key).join('|');
+    const orderString = aggregateRequest.sorts.map(s => s.column.ref + ':' + s.direction.key).join(',');
     const cutString = aggregateRequest.cuts.map(c => c.column.ref + c.transitivity.key + ':' + c.value).join('|');
     const aggregatesString =  aggregateRequest.aggregates.map(a => a.column.ref).join('|');
 

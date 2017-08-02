@@ -6,7 +6,8 @@
         <button  md-mini-fab (click)="removeField(field)">
           <md-icon >remove_circle</md-icon>
         </button>
-        <span>{{field.fullLabel}} </span>
+        <span *ngIf="field.isAttribute()">{{field.fullLabel}} </span>
+        <span *ngIf="!field.isAttribute()">{{field.label}} </span>
 
       </div>
 

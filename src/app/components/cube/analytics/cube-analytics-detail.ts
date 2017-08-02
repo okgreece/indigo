@@ -430,6 +430,7 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
     this.factsShown = !this.factsShown;
   }
 
+
 }
 
 

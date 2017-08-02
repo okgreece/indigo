@@ -6,13 +6,13 @@
 
       <span class="indigo-spacer"></span>
       <button md-tooltip="Select another algorithm" md-icon-button
-              [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/']">
+              [routerLink]="['/cube/analytics/' + analysisCall.cube.name + '/']">
         <md-icon>arrow_back</md-icon>
       </button>
 
 
-      <button md-tooltip="Execute" [disabled]="analysisCall&&!analysisCall.valid" md-icon-button
-              [routerLink]="['/cube/analytics/'+analysisCall.cube.name+'/'+ algorithm.name+'/'+ executionConfiguration.name]"
+      <button id="executeAlgorithmButton" md-tooltip="Execute" [disabled]="analysisCall && !analysisCall.valid" md-icon-button
+              [routerLink]="['/cube/analytics/' + analysisCall.cube.name + '/' + algorithm.name+'/' + executionConfiguration.name]"
               [queryParams]="analysisCall.queryParams()">
         <md-icon>play_circle_outline
         </md-icon>

@@ -94,7 +94,6 @@ export class FactRequestBuilder {
 
   @Input()
   public set cube(value: Cube){
-    debugger;
     const that = this;
     that._cube = value;
   }
@@ -170,7 +169,6 @@ export class FactRequestBuilder {
   addField() {
     const newField = this.newField;
     this.newFactRequest.fields.push(newField);
-    debugger;
 
     this.newFactRequest.emitFieldChanges();
 
@@ -251,5 +249,6 @@ export class FactRequestBuilder {
     });
 
   }
+
 
 }

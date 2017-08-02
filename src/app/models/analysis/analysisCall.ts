@@ -27,8 +27,8 @@ export class AnalysisCall {
   public outputs: any = {};
 
   private API_PATH: string = environment.apiUrl + '/api/' + environment.versionSuffix + '/cubes';
-  private static breakDownQueryParamParts(queryParam) {
-    return queryParam.split('|');
+  private static breakDownQueryParamParts(queryParam, separator: string = '|') {
+    return queryParam.split(separator);
   }
 
   public constructor(public config: ExecutionConfiguration, public cube: Cube) {
@@ -60,7 +60,7 @@ export class AnalysisCall {
 
   aggregateToURI(aggregateRequest: AggregateRequest) {
     const drilldownString = aggregateRequest.drilldowns.map(d => d.column.ref).join('|');
-    const orderString = aggregateRequest.sorts.map(s => s.column.ref + ':' + s.direction.key).join('|');
+    const orderString = aggregateRequest.sorts.map(s => s.column.ref + ':' + s.direction.key).join(',');
     const cutString = aggregateRequest.cuts.map(c => {
       return c.column.ref + c.transitivity.key + ':' + c.value;
     }).join('|');
@@ -89,11 +89,11 @@ export class AnalysisCall {
   }
 
   factsToURI(factRequest: FactRequest) {
-    const orderString = factRequest.sorts.map(s => s.column.ref + ':' + s.direction.key).join('|');
+    const orderString = factRequest.sorts.map(s => s.column.ref + ':' + s.direction.key).join(',');
     const cutString = factRequest.cuts.map(c => {
       return c.column.ref + c.transitivity.key + ':' + c.value;
     }).join('|');
-    const fieldsString = factRequest.fields.map(f => f.ref ).join('|');
+    const fieldsString = factRequest.fields.map(f => f.ref ).join(',');
 
     const params = new URLSearchParams();
     if (factRequest.cuts.length > 0) {
@@ -369,7 +369,7 @@ export class AnalysisCall {
 
     }
     if (parts['order']) {
-      const orders = AnalysisCall.breakDownQueryParamParts(parts['order']);
+      const orders = AnalysisCall.breakDownQueryParamParts(parts['order'], ',');
       request.sorts = orders.map(sortSet => {
         const sort = new Sort();
         const sortParts = sortSet.split(':');
@@ -422,17 +422,20 @@ export class AnalysisCall {
 
     if (parts['fields']) {
       const that = this;
-      const fields = AnalysisCall.breakDownQueryParamParts(parts['fields']);
+      const fields = AnalysisCall.breakDownQueryParamParts(parts['fields'], ',');
       request.fields = fields.map(field => {
-
-        return that.cube.model.attributes.get(field);
+        if (that.cube.model.attributes.has(field)) {
+          return that.cube.model.attributes.get(field);
+        } else {
+          return that.cube.model.measures.get(field);
+        }
       });
 
     }
 
 
     if (parts['order']) {
-      const orders = AnalysisCall.breakDownQueryParamParts(parts['order']);
+      const orders = AnalysisCall.breakDownQueryParamParts(parts['order'], ',');
       request.sorts = orders.map(sortSet => {
         const sort = new Sort();
         const sortParts = sortSet.split(':');

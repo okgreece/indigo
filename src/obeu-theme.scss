@@ -242,6 +242,26 @@ md-chip{
   margin: 10px 0;
 }
 
+#executeAlgorithmButton:enabled {
+  animation: beat .25s infinite alternate;
+  transform-origin: center;
+  animation-iteration-count: 20;
+}
+
+/* Heart beat animation */
+@keyframes beat{
+  to { transform: scale(1.4); }
+}
+
+
+
+
+
+
+
+
+
+
 
 md-card-header  md-card-title, md-toolbar{
 
