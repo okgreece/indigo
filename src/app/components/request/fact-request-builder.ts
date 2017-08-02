@@ -165,7 +165,13 @@ export class FactRequestBuilder {
 
   addField() {
     const newField = this.newField;
-    this.newFactRequest.fields.push(newField);
+
+    if (!_.includes(this.newFactRequest.fields, newField)) {
+      this.newFactRequest.fields.push(newField);
+
+    }
+
+
 
     this.newFactRequest.emitFieldChanges();
 

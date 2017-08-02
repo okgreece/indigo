@@ -162,8 +162,7 @@
       </md-select>
 
 
-      <md-select *ngIf="newSortAttribute" name="newSortDirection" placeholder="Sorting direction" [(ngModel)]="newSortDirection"
-                 (ngModelChange)="selectedCutChanged($event)">
+      <md-select *ngIf="newSortAttribute" name="newSortDirection" placeholder="Sorting direction" [(ngModel)]="newSortDirection">
           <md-option *ngFor="let item of sortDirections|iterable" [value]="item">
             {{item | nestedProperty:'label'}}
           </md-option>
