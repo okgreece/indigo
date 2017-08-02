@@ -11,7 +11,6 @@ import {FactsDataset, FactsDataSource} from './FactsDataSource';
   selector: 'facts-preview-dialog',
   template: `
     <div><h1>Facts preview ({{json.data.length}} records)</h1></div>
-    <div style="max-height: 400px; overflow: scroll;">
 
 
       <md-table #table [dataSource]="dataSource">
@@ -36,18 +35,7 @@ import {FactsDataset, FactsDataSource} from './FactsDataSource';
 
       </md-table>
 
-
-
-
-
-
-
-
-
-
-
-    </div>
-
+    
 
   `,
   changeDetection: ChangeDetectionStrategy.Default
