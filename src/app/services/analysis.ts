@@ -422,6 +422,9 @@ export class AnalysisService {
 
           const regex = /(.*)(\((.*)\)) (→) (.*)(\((.*)\))/g;
 
+          if (data.rules.length < 1) {
+            return data.rules;
+          }
 
           {
 

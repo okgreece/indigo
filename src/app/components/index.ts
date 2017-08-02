@@ -60,6 +60,7 @@ import {OutlierPlotVisualization, OutliersHeatmapDiagram} from './analysis/visua
 import {UploadPageComponent} from '../containers/cube/upload';
 import {LinkedPipesPageComponent} from '../containers/cube/linkedpipes';
 import {AnalysisVisualization} from './analysis/visualization';
+import {InlineSVGModule} from "ng-inline-svg";
 
 
 
@@ -144,7 +145,8 @@ export const COMPONENTS = [
     MdSelectModule,
     MdAutocompleteModule,
     MdTableModule,
-    CdkTableModule
+    CdkTableModule,
+    InlineSVGModule
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,
