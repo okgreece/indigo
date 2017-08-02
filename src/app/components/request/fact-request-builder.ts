@@ -87,6 +87,28 @@ export class FactRequestBuilder {
 
   @Output()
   public onRequestBuilt: EventEmitter<FactRequest> = new EventEmitter<FactRequest>();
+  @Output() requestChange = new EventEmitter();
+  newFactRequest: FactRequest = new FactRequest();
+  newSortAttribute: Attribute;
+  newDrilldownAttribute: Attribute;
+  newCutAttribute: Attribute;
+  newCutValueVal: string;
+  newSortDirection: SortDirection;
+  newField: Attribute;
+  sortDirections: Map<string, SortDirection> = SortDirection.directions;
+  public newFactPageNumber = 0;
+  public newFactPageSize = 30;
+  members: Map<string, Map<string, Object>> = new Map<string, Map<string, Object>>();
+  cutMembers: string[]= [];
+  transitivities: Transitivity[] = Transitivity.staticFactory();
+  newCutTransitivity: Transitivity = this.transitivities[0];
+  _cube: Cube;
+
+  constructor(private rudolfCubesService: ApiCubesService) {
+
+  }
+
+
 
   public get cube(){
     return this._cube;
@@ -97,12 +119,6 @@ export class FactRequestBuilder {
     const that = this;
     that._cube = value;
   }
-  _cube: Cube;
-
-
-
-  @Output() requestChange = new EventEmitter();
-
 
   public get request(): FactRequest{
     return this.newFactRequest;
@@ -114,21 +130,6 @@ export class FactRequestBuilder {
     that.newFactRequest = value;
   }
 
-
-
-  constructor(private rudolfCubesService: ApiCubesService) {
-
-  }
-
-
-  newFactRequest: FactRequest = new FactRequest();
-
-
-
-
-
-
-
   addCut() {
     const newCut = new Cut();
     newCut.column = this.newCutAttribute;
@@ -137,12 +138,9 @@ export class FactRequestBuilder {
     this.newFactRequest.cuts.push(newCut);
   }
 
-
   removeCut(cut: Cut) {
     _.remove(this.newFactRequest.cuts, cut);
   }
-
-
 
   addSort() {
     const newSort = new Sort();
@@ -165,7 +163,6 @@ export class FactRequestBuilder {
     this.searchMembers(this.newCutAttribute, search);
   }
 
-
   addField() {
     const newField = this.newField;
     this.newFactRequest.fields.push(newField);
@@ -180,38 +177,14 @@ export class FactRequestBuilder {
 
   }
 
-
-
-  newSortAttribute: Attribute;
-
-  newDrilldownAttribute: Attribute;
-
-  newCutAttribute: Attribute;
-
-  newCutValueVal: string;
-
-  newSortDirection: SortDirection;
-
-  newField: Attribute;
-
-  sortDirections: Map<string, SortDirection> = SortDirection.directions;
-  public newFactPageNumber = 0;
-  public newFactPageSize = 30;
-
   setCutValue(member: string) {
     this.newCutValueVal = member;
   }
-  members: Map<string, Map<string, Object>> = new Map<string, Map<string, Object>>();
-
-  cutMembers: string[]= [];
-
-  transitivities: Transitivity[] = Transitivity.staticFactory();
-
-  newCutTransitivity: Transitivity = this.transitivities[0];
-
 
   searchMembers(attribute: Attribute, search: string) {
-    if (!attribute) return;
+    if (!attribute) {
+      return;
+    }
     const that = this;
     this.rudolfCubesService.members(this.cube, attribute.dimension).subscribe(response => {
       that.members.set(attribute.ref, response);

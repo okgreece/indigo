@@ -22,12 +22,12 @@
 
     <div fxFlexFill fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="25px">
 
-      <md-select name="newField" placeholder="Field" [(ngModel)]="newField" #select="mdSelect">
+      <md-select name="newField" placeholder="Field" [(ngModel)]="newField" #selectField="mdSelect">
         <md-optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" [label]="dim.label">
           <md-option *ngFor="let item of dim?.significants|iterable" [value]="item">
-            <ng-container  *ngIf="select.panelOpen">{{item |
+            <ng-container  *ngIf="selectField.panelOpen">{{item |
               nestedProperty:'label'}}</ng-container>
-            <ng-container  *ngIf="!select.panelOpen">{{item.dimension.label}} &rarr; {{item |
+            <ng-container  *ngIf="!selectField.panelOpen">{{item.dimension.label}} &rarr; {{item |
               nestedProperty:'label'}}</ng-container>
           </md-option>
         </md-optgroup>
@@ -83,13 +83,13 @@
 
     <div  fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="25px">
 
-      <md-select name="newCutAttribute" placeholder="Filter attribute" [(ngModel)]="newCutAttribute" #select="mdSelect"
+      <md-select name="newCutAttribute" placeholder="Filter attribute" [(ngModel)]="newCutAttribute" #selectCut="mdSelect"
                  (ngModelChange)="selectedCutChanged($event)">
         <md-optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" [label]="dim.label">
           <md-option *ngFor="let item of dim?.significants|iterable" [value]="item">
-            <ng-container  *ngIf="select.panelOpen">{{item |
+            <ng-container  *ngIf="selectCut.panelOpen">{{item |
               nestedProperty:'label'}}</ng-container>
-            <ng-container  *ngIf="!select.panelOpen">{{item.dimension.label}} &rarr; {{item |
+            <ng-container  *ngIf="!selectCut.panelOpen">{{item.dimension.label}} &rarr; {{item |
               nestedProperty:'label'}}</ng-container>
           </md-option>
         </md-optgroup>
@@ -150,12 +150,12 @@
 
     <div fxFlexFill fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="25px">
 
-      <md-select name="newSortAttribute" placeholder="Sorting attribute" [(ngModel)]="newSortAttribute" #select="mdSelect">
+      <md-select name="newSortAttribute" placeholder="Sorting attribute" [(ngModel)]="newSortAttribute" #selectSort="mdSelect">
         <md-optgroup *ngFor="let dim of cube?.model?.dimensions|iterable" [label]="dim.label">
           <md-option *ngFor="let item of dim?.significants|iterable" [value]="item">
-            <ng-container  *ngIf="select.panelOpen">{{item |
+            <ng-container  *ngIf="selectSort.panelOpen">{{item |
               nestedProperty:'label'}}</ng-container>
-            <ng-container  *ngIf="!select.panelOpen">{{item.dimension.label}} &rarr; {{item |
+            <ng-container  *ngIf="!selectSort.panelOpen">{{item.dimension.label}} &rarr; {{item |
               nestedProperty:'label'}}</ng-container>
           </md-option>
         </md-optgroup>
