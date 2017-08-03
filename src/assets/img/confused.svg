@@ -205,7 +205,7 @@
 </g>
 <text transform="matrix(1 0 0 1 139.7221 53.4815)" class="st0 st3 st4">You have already uploaded your fiscal data. </text>
 <text transform="matrix(1 0 0 1 119.4106 67.665)" class="st0 st3 st4">Now, you need to perform data mining and analysis.</text>
-<text transform="matrix(1 0 0 1 165.2281 150.6689)"><tspan x="0" y="0" class="st0 st3 st4">You can use either the fiscal facts  </tspan><tspan x="-11.4" y="14.4" class="st0 st3 st4">table as-is, or an aggregated view of it.</tspan></text>
+<text transform="matrix(1 0 0 1 175.8414 150.6689)"><tspan x="0" y="0" class="st0 st3 st4">Depending on the algorithm, </tspan><tspan x="-10.2" y="14.4" class="st0 st3 st4">you can use either the fiscal facts  </tspan><tspan x="-22" y="28.8" class="st0 st3 st4">table as-is, or an aggregated view of it.</tspan></text>
 <g>
 	<path class="st0" d="M262.1,107.2h-3.2c-0.2-1.1-1.1-2-2.2-2H246c-1.2,0-2.2,1.1-2.2,2.5v5.5h-0.9c-0.2,0-0.4,0.2-0.4,0.5v2
 		c0,0.2,0.1,0.4,0.2,0.4l5.6,3.3v4.2c0,0.2,0.1,0.4,0.3,0.5c0.1,0,0.1,0,0.2,0c0.1,0,0.2-0.1,0.3-0.1l1.8-2c0.1-0.1,0.1-0.2,0.1-0.4
@@ -431,33 +431,6 @@
 </g>
 <g>
 	<g>
-		<line class="st10" x1="70.3" y1="186.3" x2="70.3" y2="193.9"/>
-		<g>
-			<path class="st0" d="M70.3,192.8l2.2-1.3l0,0.1l-1.4,3.5c-0.3,1.2-0.5,2.5-0.8,3.7c-0.3-1.2-0.5-2.5-0.8-3.7l-1.4-3.5l0-0.1
-				L70.3,192.8z"/>
-		</g>
-	</g>
-</g>
-<g>
-	<g>
-		<line class="st10" x1="430.4" y1="177.8" x2="430.4" y2="185.3"/>
-		<g>
-			<path class="st0" d="M430.4,184.2l2.2-1.3l0,0.1l-1.4,3.5c-0.3,1.2-0.5,2.5-0.8,3.7c-0.3-1.2-0.5-2.5-0.8-3.7l-1.4-3.5l0-0.1
-				L430.4,184.2z"/>
-		</g>
-	</g>
-</g>
-<g>
-	<g>
-		<line class="st10" x1="430.4" y1="177.8" x2="430.4" y2="185.3"/>
-		<g>
-			<path class="st0" d="M430.4,184.2l2.2-1.3l0,0.1l-1.4,3.5c-0.3,1.2-0.5,2.5-0.8,3.7c-0.3-1.2-0.5-2.5-0.8-3.7l-1.4-3.5l0-0.1
-				L430.4,184.2z"/>
-		</g>
-	</g>
-</g>
-<g>
-	<g>
 		<path class="st9" d="M72,360c4.1,10.6,11.4,24.8,25,37c31.7,28.5,74.4,25.4,95.1,21.7"/>
 		<g>
 			<path class="st0" d="M189.4,419.2l-4.4-4.6l0.2-0.2l9.4,1.5c3.1,0,6.3,0,9.4,0c-2.9,1.3-5.7,2.6-8.6,3.9l-7.9,5.3l-0.2-0.1
@@ -498,6 +471,22 @@
 		<g>
 			<path class="st0" d="M251.7,709.9l5.4-3.3l0.1,0.2l-3.5,8.8c-0.7,3.1-1.4,6.1-2,9.2c-0.7-3.1-1.4-6.1-2-9.2l-3.5-8.8l0.1-0.2
 				L251.7,709.9z"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		<line class="st10" x1="137" y1="266.3" x2="184.8" y2="266.3"/>
+		<g>
+			<circle class="st0" cx="184.6" cy="266.3" r="3.8"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		<line class="st10" x1="314.6" y1="266.3" x2="353.7" y2="266.3"/>
+		<g>
+			<circle class="st0" cx="314.8" cy="266.3" r="3.8"/>
 		</g>
 	</g>
 </g>
