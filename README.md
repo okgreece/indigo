@@ -75,3 +75,4 @@ table data by Trevor Dsouza from the Noun Project
 
 column middle by amy morgan from the Noun Project
 
+View Carousel by Montu Yadav from the Noun Project
