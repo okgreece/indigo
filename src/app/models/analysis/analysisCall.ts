@@ -47,8 +47,20 @@ export class AnalysisCall {
     const that = this;
     this.config.inputs.forEach((input) => {
       isValid =
-        isValid && ((input.required && !!that.inputs[input.name] && ((input.cardinality !== '1' && that.inputs[input.name].length > 0 ) || input.cardinality === '1'))
+        isValid && ((input.required && !!that.inputs[input.name]
+        && ((input.cardinality !== '1' && that.inputs[input.name].length > 0 )
+          || input.cardinality === '1'))
         || (input.required && input.guess) || (!input.required));
+
+      if (input.cardinality === 'n') {
+        isValid = isValid &&
+          ((input.minimum_cardinality && that.inputs[input.name].length >= input.minimum_cardinality) || !input.minimum_cardinality);
+
+        isValid = isValid &&
+          ((input.maximum_cardinality && that.inputs[input.name].length <= input.maximum_cardinality) || !input.maximum_cardinality);
+      }
+
+
       if (input.type === InputTypes.BABBAGE_AGGREGATE_URI) {
         isValid = isValid && ((<AggregateRequest> that.inputs[input.name]).drilldowns.length > 0);
       }

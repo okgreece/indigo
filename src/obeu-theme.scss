@@ -132,6 +132,7 @@ bc-toolbar.indigo {
 
 .output-card md-card-title{
   font-size: 20px;
+  color: #50b958;
 }
 
 .input-card .mat-input-container{
@@ -150,8 +151,8 @@ footer{
 
 th {
   text-align: center;
-  background: gainsboro;
-  color: black;
+  background: #273d3a;
+  color: white;
 }
 
 .indigo-spacer {
@@ -194,6 +195,17 @@ md-dialog-container md-table{
   max-height: 500px;
 }
 
+.axis.grid line {
+  stroke: lightgrey;
+  stroke-opacity: 0.7;
+  shape-rendering: crispEdges;
+}
+
+.quantile{
+  border: #50b958 1px solid;
+  margin: 2px;
+  padding: 2px;
+}
 
 .input-card md-button-toggle{
   box-shadow: none;
@@ -400,9 +412,9 @@ dl dd { margin: 0; }
 
 table { -webkit-font-feature-settings: "kern", "liga", "tnum"; -moz-font-feature-settings: "kern", "liga", "tnum"; -ms-font-feature-settings: "kern", "liga", "tnum"; font-feature-settings: "kern", "liga", "tnum"; border-collapse: collapse; margin: 0.75rem 0; table-layout: fixed; width: 100%; }
 
-th { border-bottom: 1px solid #a4c2bc; font-weight: 600; padding: 0.75rem 0; text-align: left; }
+th { border-bottom: 1px solid #a4c2bc; font-weight: 600; padding: 0.75rem 0.75rem; text-align: left; }
 
-td { border-bottom: 2px solid #d1e1de; padding: 0.75rem 0; }
+td { border-bottom: 2px solid #d1e1de; padding: 0.75rem 0.75rem; }
 
 tr, td, th { vertical-align: middle; }
 

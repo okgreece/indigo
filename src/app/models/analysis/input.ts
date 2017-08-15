@@ -36,6 +36,8 @@ export class Input {
   data: any;
   options: any;
   bound: string;
+  minimum_cardinality: number;
+  maximum_cardinality: number;
 
   deserialize(data: any): Input {
 
@@ -51,6 +53,8 @@ export class Input {
     this.options = data.options;
     this.description = data.description;
     this.bound = data.bound;
+    this.minimum_cardinality = data.minimum_cardinality;
+    this.maximum_cardinality = data.maximum_cardinality;
 
 
     return this;

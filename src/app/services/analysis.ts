@@ -300,9 +300,9 @@ export class AnalysisService {
     const body = new URLSearchParams();
 
     if (configuration.name === 'LOF_AGGREGATE') {
-      body.set('BABBAGE_AGGREGATE_URI',  inputs['BABBAGE_AGGREGATE_URI']);
+      body.set('BABBAGE_AGGREGATE_URI', inputs['BABBAGE_AGGREGATE_URI']);
     } else {
-      body.set('BABBAGE_FACT_URI',  inputs['BABBAGE_FACT_URI']);
+      body.set('BABBAGE_FACT_URI', inputs['BABBAGE_FACT_URI']);
     }
 
 
@@ -329,7 +329,7 @@ export class AnalysisService {
             const values: any = response.result.result;
             return {values: values};
 
-          }else {
+          } else {
             const values: any = response.result;
             const new_values = [];
             const mappings = {};
@@ -358,14 +358,15 @@ export class AnalysisService {
             });
 
 
-
             return {values: new_values};
 
           }
 
 
         }).retryWhen(function (attempts) {
-          return Observable.range(1, environment.DAMretries).zip(attempts, function (i) { return i; }).flatMap(function (i) {
+          return Observable.range(1, environment.DAMretries).zip(attempts, function (i) {
+            return i;
+          }).flatMap(function (i) {
             console.log('delay retry by ' + i + ' second(s)');
             if (i === environment.DAMretries) {
               return Observable.throw(new JobTimeoutException);
@@ -382,17 +383,15 @@ export class AnalysisService {
     const that = this;
     const body = new URLSearchParams();
 
-    body.set('BABBAGE_FACT_URI',  inputs['BABBAGE_FACT_URI']);
-    body.set('consequentColumns[]',  inputs['consequentColumns']);
-    body.set('antecedentColumns[]',  inputs['antecedentColumns']);
+    body.set('BABBAGE_FACT_URI', inputs['BABBAGE_FACT_URI']);
+    body.set('consequentColumns[]', inputs['consequentColumns']);
+    body.set('antecedentColumns[]', inputs['antecedentColumns']);
     if (inputs['minConfidence']) {
-      body.set('minConfidence',  inputs['minConfidence']);
+      body.set('minConfidence', inputs['minConfidence']);
     }
     if (inputs['minSupport']) {
-      body.set('minSupport',  inputs['minSupport']);
+      body.set('minSupport', inputs['minSupport']);
     }
-
-
 
 
     return that.http.get(configuration.endpoint.toString(), {search: body}).map(res => {
@@ -407,10 +406,11 @@ export class AnalysisService {
 
       return this.http.get(environment.DAMUrl + '/results/' + resp.jobid, {headers: headersAdditional})
         .map(res => {
+
           const response = res.json();
 
           if (!response.hasOwnProperty('result')) {
-            throw new Error('ex');
+            throw new TimeoutError();
 
           }
           const data: any = response.result;
@@ -420,13 +420,13 @@ export class AnalysisService {
 
           const new_rules = [];
 
-          const regex = /(.*)(\((.*)\)) (→) (.*)(\((.*)\))/g;
+          const regex = /(((.*?)\()(.*)\)|\*) → ((.*?)\()(.*?)(\)|$)/g;
 
           if (data.rules.length < 1) {
             return data.rules;
           }
 
-          {
+          /*{
 
             const str1 = data.rules[0].text;
             let m1;
@@ -457,11 +457,7 @@ export class AnalysisService {
             }
 
 
-
-
-          }
-
-
+          }*/
 
 
           data.rules.forEach(function (rule) {
@@ -475,35 +471,72 @@ export class AnalysisService {
                 regex.lastIndex++;
               }
 
-              const antCol = m[1];
-              const antVal = m[3];
-              const consCol = m[5];
+
+              let antCol;
+              let antVal;
+              if (m[3]) {
+                antCol = m[3];
+                antVal = m[4];
+              } else {
+                antVal = m[1];
+              }
+
+              let consCol = m[6];
               const consVal = m[7];
 
+              cube.model.dimensions.forEach(function (dimension) {
+                dimension.significants.forEach(function (attribute) {
+                  if (antCol === (dimension.ref + '_' + attribute.shortRef).toLowerCase()) {
+                    antCol = attribute.ref;
+                  }
+                });
+              });
 
-              new_rule.antCol = mappings[antCol];
+              cube.model.dimensions.forEach(function (dimension) {
+                dimension.significants.forEach(function (attribute) {
+                  if (consCol === (dimension.ref + '_' + attribute.shortRef).toLowerCase()) {
+                    consCol = attribute.ref;
+                  }
+                });
+              });
+
+              new_rule.antCol = antCol;
               new_rule.antVal = antVal;
-              new_rule.consCol = mappings[consCol];
+              new_rule.consCol = consCol;
               new_rule.consVal = consVal;
 
               new_rules.push(new_rule);
 
             }
           });
-            data.rules = new_rules;
+          data.rules = new_rules;
 
 
           return data;
 
-        }).retryWhen(function (attempts) {
-          return Observable.range(1, environment.DAMretries).zip(attempts, function (i) { return i; }).flatMap(function (i) {
+        }).catch((err: any) => {
+        if ((err instanceof TimeoutError)){
+          debugger;
+          throw err;}
+            return Observable.of(undefined);
+
+
+          }
+
+        )
+        .retryWhen(function (attempts) {
+          return Observable.range(1, environment.DAMretries).zip(attempts, function (i) {
+            return i;
+          }).flatMap(function (i) {
             console.log('delay retry by ' + i + ' second(s)');
             if (i === environment.DAMretries) {
               return Observable.throw(new JobTimeoutException);
             }
             return Observable.timer(i * environment.DAMpollingInitialStep);
           });
-        });
+        })
+        ;
+      ;
     });
 
 
@@ -519,19 +552,17 @@ export class AnalysisService {
 
     body.set('amounts', '\'' + inputs['amounts'] + '\'');
     body.set('dimensions', dimensionColumnString);
-    if (inputs['measured.dim'] ) {
+    if (inputs['measured.dim']) {
       const measuredDimString = '\'' + inputs['measured.dim'] + '\'';
       body.set('measured.dim', measuredDimString);
     }
     body.set('cl.method', '\'' + inputs['cl.meth'] + '\'');
-    body.set('json_data', '\'' +  inputs['json_data'] + '\'');
+    body.set('json_data', '\'' + inputs['json_data'] + '\'');
 
     return that.http.post(configuration.endpoint.toString() + '/print', body).map(res => {
       const response = res.json();
 
       return response;
-
-
 
 
     });
@@ -585,13 +616,13 @@ export class AnalysisService {
 
       const hist = response.histogram;
 
-      const histograms = [];
-      const histogramKeys = Object.keys(hist);
+      const histograms = hist;
+      /*const histogramKeys = Object.keys(hist);
       for (let i = 0; i < histogramKeys.length; i++) {
         const histogram = hist[histogramKeys[i]];
         histogram['label'] = histogramKeys[i];
         histograms.push(histogram);
-      }
+      }*/
 
       return {
         descriptives: descriptives,
@@ -608,8 +639,10 @@ export class AnalysisService {
 }
 
 
-import { QueryEncoder} from '@angular/http';
+import {QueryEncoder} from '@angular/http';
 import {Cube} from '../models/cube';
+import {TimeoutError} from "rxjs/Rx";
+
 class PureURIEncoder extends QueryEncoder {
   encodeKey(k: string): string {
     return encodeURIComponent(k);

@@ -11,7 +11,7 @@
       </button>
 
 
-      <button id="executeAlgorithmButton" md-tooltip="Execute" [disabled]="analysisCall && !analysisCall.valid" md-icon-button
+      <button id="executeAlgorithmButton" md-tooltip="Execute" [disabled]="(analysisCall && !analysisCall.valid) || (loading$|async) " md-icon-button
               [routerLink]="['/cube/analytics/' + analysisCall.cube.name + '/' + algorithm.name+'/' + executionConfiguration.name]"
               [queryParams]="analysisCall.queryParams()">
         <md-icon>play_circle_outline
@@ -142,6 +142,9 @@
 
                     <div class="mat-caption" *ngIf="input.bound">
                       This analysis input is bound to the <i>{{executionConfiguration.inputs.get(input.bound).title}}</i> input.
+                      <ng-container *ngIf="input.cardinality==='n' && input.minimum_cardinality"> The selected algorithm requires
+                        <b>{{wordz(input.minimum_cardinality)}}</b> or more instances of this input in order to execute.
+                      </ng-container>
                       <ng-container *ngIf="executionConfiguration.inputs.get(input.bound).type === InputTypes.BABBAGE_AGGREGATE_URI && analysisCall?.inputs[input.bound].actual_measures.length <1">
                         You have to configure this input with one or more drill-down attributes, that will appear here afterwards.
                       </ng-container>
@@ -182,6 +185,9 @@
 
                     <div class="mat-caption" *ngIf="input.bound">
                       This analysis input is bound to the <i>{{executionConfiguration.inputs.get(input.bound).title}}</i> input.
+                      <ng-container *ngIf="input.cardinality==='n' && input.minimum_cardinality"> The selected algorithm requires
+                        <b>{{wordz(input.minimum_cardinality)}}</b> or more instances of this input in order to execute.
+                      </ng-container>
                       <ng-container *ngIf="executionConfiguration.inputs.get(input.bound).type === InputTypes.BABBAGE_AGGREGATE_URI && analysisCall?.inputs[input.bound].actual_aggregates.length <1">
                         You have to configure this input with one or more drill-down attributes, that will appear here afterwards.
                       </ng-container>
@@ -221,6 +227,9 @@
                   <div>
                     <div class="mat-caption" *ngIf="input.bound">
                       This analysis input is bound to the <i>{{executionConfiguration.inputs.get(input.bound).title}}</i> input.
+                      <ng-container *ngIf="input.cardinality==='n' && input.minimum_cardinality"> The selected algorithm requires
+                        <b>{{wordz(input.minimum_cardinality)}}</b> or more instances of this input in order to execute.
+                      </ng-container>
                       <ng-container *ngIf="executionConfiguration.inputs.get(input.bound).type === InputTypes.BABBAGE_AGGREGATE_URI && analysisCall?.inputs[input.bound].actual_attributes.length <1">
                         You have to configure this input with one or more drill-down attributes, that will appear here afterwards.
                       </ng-container>
@@ -272,7 +281,7 @@
 
         </div>
       </div>
-      <div fxFlex="70%" class="content-card">
+      <div fxFlex="70%" fxLayoutAlign="center center" class="content-card">
         <div>
 
           <md-card class="error-card" *ngIf="error">
@@ -283,8 +292,10 @@
 
           </md-card>
 
+          <md-progress-spinner fxLayoutAlign="center center" mode="indeterminate" *ngIf="loading$|async"></md-progress-spinner>
 
-          <div *ngIf="!analysisCall?.outputs['values']" style="margin: 0 auto; max-width: 70%;">
+
+          <div *ngIf="!analysisCall?.outputs['values'] && !loading$|async" style="margin: 0 auto; max-width: 70%;">
             <h2 style="color:#50b958; text-align: center">Confused?</h2>
             <h4 style="color:#50b958; text-align: center">Here are some tips for you:</h4>
             <div [inlineSVG]="'/assets/img/confused.svg'">
@@ -293,7 +304,6 @@
           </div>
 
 
-          <md-progress-spinner mode="indeterminate" *ngIf="loading$|async"></md-progress-spinner>
 
           <analytics-timeseries-output *ngIf="algorithm.name=='time_series'"
                                        style="min-height: 500px;" [cube]="cube"

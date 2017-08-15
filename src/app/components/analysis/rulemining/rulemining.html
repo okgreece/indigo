@@ -10,10 +10,10 @@
       <div class="text-center">
 
 
-        <table class="table table-bordered">
+        <table class="table table-bordered" style="text-align: center">
 
           <thead>
-          <tr>
+          <tr style="text-align: center">
             <th>Antecedent</th>
             <th></th>
             <th>Consequent</th>
@@ -27,12 +27,14 @@
                 <ng-container *ngFor="let attribute of dimension.significants|iterable" >
 
                   <md-chip [mdTooltip]="dimension.label + ' → ' +  attribute.label"   *ngIf="rule['antCol']===attribute.ref"  >
+                    <a class="action-anchor">{{dimension.label}}</a>:
 
-                    <a class="action-anchor">{{rule["antVal"]}}</a>
+                    <b><a class="action-anchor">{{rule["antVal"]}}</a></b>
                   </md-chip>
                 </ng-container>
 
               </ng-container>
+              <md-chip *ngIf="!rule['antCol']">{{rule["antVal"]}}</md-chip>
 
             </td>
             <td style="text-align: center">→</td>
@@ -41,12 +43,15 @@
                 <ng-container *ngFor="let attribute of dimension.significants|iterable" >
 
                   <md-chip [mdTooltip]="dimension.label + ' → ' +  attribute.label"   *ngIf="rule['consCol']===attribute.ref"  >
+                    <a class="action-anchor">{{dimension.label}}</a>:
 
-                    <a class="action-anchor">{{rule["consVal"]}}</a>
+                    <b><a class="action-anchor">{{rule["consVal"]}}</a></b>
                   </md-chip>
                 </ng-container>
 
               </ng-container>
+              <md-chip *ngIf="!rule['consCol']">{{rule["consVal"]}}</md-chip>
+
             </td>
           </tr>
 

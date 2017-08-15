@@ -14,7 +14,7 @@ import {AnalysisCall} from '../../../models/analysis/analysisCall';
 import {AnalysisService} from '../../../services/analysis';
 import {Attribute} from '../../../models/attribute';
 import * as execution from '../../../actions/execution';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Router, NavigationExtras} from '@angular/router';
 import {FactRequest} from '../../../models/fact/factRequest';
 import {MdDialog, MdDialogRef} from '@angular/material';
 import {ApiCubesService} from '../../../services/api-cubes';
@@ -25,6 +25,7 @@ import {ExecutionConfiguration} from '../../../models/analysis/executionConfigur
 import {JobTimeoutException} from '../../../models/analysis/jobTimeoutException';
 import {AggregatePreviewDialogComponent} from './dialog/aggregate-preview-dialog';
 import {FactsPreviewDialogComponent} from './dialog/facts-preview-dialog';
+import * as converter from 'number-to-words';
 
 /**
  * Tip: Export type aliases for your component's inputs and outputs. Until we
@@ -220,7 +221,6 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
       // the following is required, otherwise the view will not be updated
       this.ref.markForCheck();
     }, 5000);
-
     router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.cube$ = this.store.let(fromRoot.getSelectedCube);
@@ -430,6 +430,35 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
     this.factsShown = !this.factsShown;
   }
 
+  wordz(cardinality: number) {
+    return converter.toWords(cardinality);
+  }
+
+
+
+  canNavigate() {
+
+    if (!this.analysisCall) {
+      return false;
+    }
+    if (!this.analysisCall.cube) {
+      return false;
+    }
+    if (!this.algorithm) {
+      return false;
+    }
+    if (!this.executionConfiguration) {
+      return false;
+    }
+
+    debugger;
+
+    const urlTree = this.router.createUrlTree(['/cube/analytics/' + this.analysisCall.cube.name + '/' + this.algorithm.name + '/' + this.executionConfiguration.name],
+      this.analysisCall.queryParams());
+    const isHere = this.router.isActive(urlTree, false);
+
+    return !isHere;
+  }
 
 }
 

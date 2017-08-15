@@ -22,7 +22,7 @@ import {AggregateRequest} from '../../models/aggregate/aggregateRequest';
 import {Cube} from '../../models/cube';
 import {Dimension} from '../../models/dimension';
 import {FactRequest} from '../../models/fact/factRequest';
-
+import {GenericProperty} from "../../models/genericProperty";
 
 @Component({
 
@@ -97,7 +97,7 @@ export class FactRequestBuilder {
   newField: Attribute;
   sortDirections: Map<string, SortDirection> = SortDirection.directions;
   public newFactPageNumber = 0;
-  public newFactPageSize = 30;
+  public newFactPageSize = null;
   members: Map<string, Map<string, Object>> = new Map<string, Map<string, Object>>();
   cutMembers: string[]= [];
   transitivities: Transitivity[] = Transitivity.staticFactory();
@@ -228,6 +228,11 @@ export class FactRequestBuilder {
     });
 
   }
+
+  isAttribute(property: GenericProperty) {
+    return property instanceof Attribute;
+  }
+
 
 
 }

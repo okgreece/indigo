@@ -87,7 +87,7 @@ export class AggregateRequestBuilder {
   newCustomValue: any;
   sortDirections: Map<string, SortDirection> = SortDirection.directions;
   public newAggregatePageNumber = 0;
-  public newAggregatePageSize = 30;
+  public newAggregatePageSize = null;
   members: Map<string, Map<string, Object>> = new Map<string, Map<string, Object>>();
   cutMembers: string[] = [];
   transitivities: Transitivity[] = Transitivity.staticFactory();

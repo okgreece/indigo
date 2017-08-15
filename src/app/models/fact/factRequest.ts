@@ -18,7 +18,7 @@ export class FactRequest extends ApiRequest implements Serializable<FactRequest>
   fields: GenericProperty[] = [];
   cuts: Cut[] = [];
   cube: Cube;
-  pageSize= 30;
+  pageSize= null;
   page= 0;
 
   @Output()

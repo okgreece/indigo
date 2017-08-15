@@ -18,7 +18,7 @@ export class AggregateRequest extends ApiRequest implements Serializable<Aggrega
   drilldowns: Drilldown[] = [];
   cuts: Cut[] = [];
   cube: Cube;
-  pageSize= 30;
+  pageSize= null;
   page= 0;
   public actual_aggregates_change: EventEmitter<any> = new EventEmitter<any>();
   public actual_attributes_change: EventEmitter<any> =  new EventEmitter<any>();
