@@ -3,6 +3,8 @@
  */
 
 
+import {ApiRequest} from '../apiRequest';
+
 export enum InputTypes  {
   PARAMETER= <any>'Algorithm parameter',
   ATTRIBUTE_REF= <any>'Cube Dimension Attribute',
@@ -32,6 +34,10 @@ export class Input {
   guess: boolean;
   required: boolean;
   data: any;
+  options: any;
+  bound: string;
+  minimum_cardinality: number;
+  maximum_cardinality: number;
 
   deserialize(data: any): Input {
 
@@ -44,6 +50,11 @@ export class Input {
     this.required = data.required;
     this.data_type = data.data_type;
     this.type = data.type;
+    this.options = data.options;
+    this.description = data.description;
+    this.bound = data.bound;
+    this.minimum_cardinality = data.minimum_cardinality;
+    this.maximum_cardinality = data.maximum_cardinality;
 
 
     return this;
@@ -60,8 +71,13 @@ export class Input {
     output['required'] = this.required;
     output['data_type'] = this.data_type;
     output['type'] =   this.type;
+    output['options'] =   this.options;
+    output['description'] =   this.description;
+    output['bound'] =   this.bound;
 
     return output;
   }
+
+
 }
 

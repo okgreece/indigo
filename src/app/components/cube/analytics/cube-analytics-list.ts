@@ -11,9 +11,9 @@ import * as fromRoot from '../../../reducers';
   selector: 'indigo-cube-analytics-preview-list',
   template: `
 
-    <md-card>
+    <md-card style="box-shadow:none">
       <md-card-title>
-          {{cube.pckg.title}}
+        {{cube.pckg.title}}
 
       </md-card-title>
 
@@ -21,19 +21,9 @@ import * as fromRoot from '../../../reducers';
         <masonry-brick class="brick" *ngFor="let algorithm of algorithms">
           <indigo-cube-analytics-preview [cube]="cube"
                                          [algorithm]="algorithm"></indigo-cube-analytics-preview>
-
         </masonry-brick>
       </masonry>
-      <!--
-            <div class="card-container">
-      
-              <indigo-cube-analytics-preview *ngFor="let algorithm of algorithms" [cube]="cube"
-                                             [algorithm]="algorithm"></indigo-cube-analytics-preview>
-              <hr/>
-              <indigo-cube-analytics-preview *ngFor="let algorithm of actualAlgorithms" [cube]="cube"
-                                             [algorithm]="algorithm"></indigo-cube-analytics-preview>
-      
-            </div>-->
+
     </md-card>
 
 
@@ -55,17 +45,17 @@ import * as fromRoot from '../../../reducers';
       text-align: center;
 
     }
-    
-    md-sidenav a{
-      color:white;
+
+    md-sidenav a {
+      color: white;
     }
 
     .card-container {
       display: flex;
       flex-direction: row;
     }
-    
-    .mat-card md-card-title{
+
+    .mat-card md-card-title {
       text-align: center;
     }
   `]

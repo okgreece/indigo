@@ -10,7 +10,7 @@ import { ChangeDetectorRef} from '@angular/core';
 import * as d3 from 'd3';
 import * as $ from 'jquery';
 import * as _ from 'lodash';
-import {AnalysisVisualization} from "../visualization";
+import {AnalysisVisualization} from '../visualization';
 
 
 @Component({
@@ -20,7 +20,7 @@ import {AnalysisVisualization} from "../visualization";
   templateUrl: './histogram.html',
   styles: [`
 
-  
+
  .axis path,
 .axis .line {
   fill: none;
@@ -66,23 +66,24 @@ export class HistogramVisualization implements AfterViewInit {
   @Input()
   public label_y: string;
   private generateBarChart(data: any) {
-    let margin = {top: 20, right: 40, bottom: 50, left: 50};
+    const margin = {top: 20, right: 50, bottom: 70, left: 80};
+
+    const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+    const viewerWidth = $(this.vizCanvas.nativeElement).width() - margin.left - margin.right - 50;
+    const viewerHeight = $(this.vizCanvas.nativeElement).height() - margin.top - margin.bottom;
 
 
-    let viewerWidth = $(this.vizCanvas.nativeElement).width() - margin.left - margin.right -50;
-    let viewerHeight = $(this.vizCanvas.nativeElement).height() - margin.top - margin.bottom;
-
-
-    let lineData = [];
+    const lineData = [];
     for (let i = 0; i < data.cuts.length; i++) {
       lineData.push({
-        x: data["normal.curve.x"][i],
-        y: data["normal.curve.y"][i]
+        x: data['normal.curve.x'][i],
+        y: data['normal.curve.y'][i]
       });
     }
 
-    let boxData = [];
-    for(let i=0;i<data.density.length; i++){
+    const boxData = [];
+    for (let i = 0; i < data.density.length; i++){
       boxData.push({
         from: data.cuts[i],
         to: data.cuts[i + 1],
@@ -92,27 +93,27 @@ export class HistogramVisualization implements AfterViewInit {
 
 
 
-    let max: number = d3.max([d3.max(data.density as number[]), d3.max(data['normal.curve.y'] as number[])]);
-    let min: number = d3.min([d3.min(data.density as number[]) , d3.min(data['normal.curve.y'] as number[]) ]);
+    const max: number = d3.max([d3.max(data.density as number[]), d3.max(data['normal.curve.y'] as number[])]);
+    const min: number = d3.min([d3.min(data.density as number[]) , d3.min(data['normal.curve.y'] as number[]) ]);
 
-    let x_max: number = d3.max(data.cuts as number[]);
-    let x_min: number = d3.min(data.cuts as number[]);
+    const x_max: number = d3.max(data.cuts as number[]);
+    const x_min: number = d3.min(data.cuts as number[]);
 
-    let x = d3.scaleLinear()
+    const x = d3.scaleLinear()
       .range([0, viewerWidth]);
 
-    let y = d3.scaleLinear()
+    const y = d3.scaleLinear()
       .range([viewerHeight, 0]);
 
-    let xAxis = d3.axisBottom(x).tickFormat(d3.format('d'))
+    const xAxis = d3.axisBottom(x).tickFormat(d3.format(",.2r"))
       /*.tickFormat(function(d){
        return d3.time.format('%Y')(new Date(d));
        })*/;
 
-    let yAxis = d3.axisLeft(y);
+    const yAxis = d3.axisLeft(y).tickFormat(d3.format(",.2r")).ticks(10).tickSize(-viewerWidth);
 
 
-    let line = d3.line()
+    const line = d3.line()
       .x(function (d: any) {
         return x(d.x);
       })
@@ -120,57 +121,57 @@ export class HistogramVisualization implements AfterViewInit {
         return y(d.y);
       });
 
-    let svg = d3.select(this.vizCanvas.nativeElement).append("svg")
-      .attr("width", viewerWidth + margin.left + margin.right)
-      .attr("height", viewerHeight + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    const svg = d3.select(this.vizCanvas.nativeElement).append('svg')
+      .attr('width', viewerWidth + margin.left + margin.right)
+      .attr('height', viewerHeight + margin.top + margin.bottom)
+      .append('g')
+      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
 
     x.domain([x_min, x_max]);
 
     y.domain([min, max]);
 
-    svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + viewerHeight + ")")
+    svg.append('g')
+      .attr('class', 'x axis')
+      .attr('transform', 'translate(0,' + viewerHeight + ')')
       .call(xAxis)
-      .selectAll("text")
-      .attr("y", 0)
-      .attr("x", 9)
-      .attr("dy", ".35em")
-      .attr("transform", "rotate(45)")
-      .style("text-anchor", "start");
+      .selectAll('text')
+      .attr('y', 0)
+      .attr('x', 9)
+      .attr('dy', '.35em')
+      .attr('transform', 'rotate(45)')
+      .style('text-anchor', 'start');
 
-    svg.append("g")
-      .attr("class", "y axis")
+    svg.append('g')
+      .attr('class', 'y axis grid')
       .call(yAxis)
-      .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .attr("dx", "-0.71em")
-      .style("text-anchor", "end")
-      .text("Amount");
+      .append('text')
+      .attr('transform', 'rotate(-90)')
+      .attr('y', 6)
+      .attr('dy', '.71em')
+      .attr('dx', '-0.71em')
+      .style('text-anchor', 'end')
+      .text('Amount');
 
 
-    svg.selectAll(".box")
+    svg.selectAll('.box')
       .data(boxData)
-      .enter().append("rect")
-      .style("fill", "#FDA500")
-      .style("stroke", "black")
-      .attr("class", "box")
-      .attr("x", function(d:any) { return x(d.from); })
-      .attr("y", function(d:any) { return y( d.frequency); })
-      .attr("width", function(d:any) { return Math.abs(x(d.to) - x(d.from)); })
-      .attr("height", function(d:any) { return viewerHeight-  y(d.frequency); });
+      .enter().append('rect')
+      .style('fill', function(d: any) { return color(y(d.frequency).toString()); } )
+      .style('stroke', 'transparent')
+      .attr('class', 'box')
+      .attr('x', function(d: any) { return x(d.from); })
+      .attr('y', function(d: any) { return y( d.frequency); })
+      .attr('width', function(d: any) { return Math.abs(x(d.to) - x(d.from)); })
+      .attr('height', function(d: any) { return viewerHeight -  y(d.frequency); });
 
 
 
-    svg.append("path")
+    svg.append('path')
       .datum(lineData)
-      .attr("class", "line")
-      .attr("d", line);
+      .attr('class', 'line')
+      .attr('d', line);
 
 
 
@@ -182,28 +183,34 @@ export class HistogramVisualization implements AfterViewInit {
       .attr("d", lineLow95).attr("data-legend","Lower limit for 95% prediction interval");
 
 */
-    svg.append("rect")
-      .attr("x", 0)
-      .attr("y", 0)
-      .attr("height", viewerHeight)
-      .attr("width", viewerWidth)
-      .style("stroke", "black")
-      .style("fill", "none")
-      .style("stroke-width", "1");
+    svg.append('rect')
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('height', viewerHeight)
+      .attr('width', viewerWidth)
+      .style('stroke', 'black')
+      .style('fill', 'none')
+      .style('stroke-width', '1');
 
-    svg.append("svg:line")
-      .attr("x1", 0)
-      .attr("x2", viewerWidth)
-      .attr("y1", y(0))
-      .attr("y2", y(0))
-      .style("stroke", "black");
+    svg.append('svg:line')
+      .attr('x1', 0)
+      .attr('x2', viewerWidth)
+      .attr('y1', y(0))
+      .attr('y2', y(0))
+      .style('stroke', 'black');
 
+
+
+
+    // text label for the x axis
     svg.append("text")
       .attr("transform",
-        "translate(" + (viewerWidth / 2) + " ," +
-        (viewerHeight + margin.top + 20) + ")")
+        "translate(" + (viewerWidth/2) + " ," +
+        (viewerHeight + margin.top + 40) + ")")
       .style("text-anchor", "middle")
+      .style("font-weight", "bold")
       .text(this.label_x);
+
 
     svg.append("text")
       .attr("transform", "rotate(-90)")
@@ -211,19 +218,20 @@ export class HistogramVisualization implements AfterViewInit {
       .attr("x",0 - (viewerHeight / 2))
       .attr("dy", "1em")
       .style("text-anchor", "middle")
+      .style("font-weight", "bold")
       .text(this.label_y);
 
 
 
   }
   @Input()
-  legend: boolean = false;
+  legend = false;
 
 
   init(values: any) {
 
 
-    let that = this;
+    const that = this;
 
     d3.select(that.vizCanvas.nativeElement).html('');
 
@@ -260,7 +268,7 @@ export class HistogramVisualization implements AfterViewInit {
   styles: [`
 
 
-  
+
   .line {
   fill: none;
   stroke: #82bf5e;

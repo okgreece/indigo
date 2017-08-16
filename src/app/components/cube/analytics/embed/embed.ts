@@ -88,7 +88,7 @@ export class CubeAnalyticsEmbedComponent {
           }
 
 
-          analysisService.execute(configuration, params).subscribe(function (outputs) {
+          analysisService.execute(configuration, params, cube).subscribe(function (outputs) {
             that.componentData = {
               component: DynamicComponents[route.snapshot.params['part']],
               inputs: {

@@ -14,7 +14,7 @@ import {AnalysisCall} from '../../../models/analysis/analysisCall';
 import {AnalysisService} from '../../../services/analysis';
 import {Attribute} from '../../../models/attribute';
 import * as execution from '../../../actions/execution';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Router, NavigationExtras} from '@angular/router';
 import {FactRequest} from '../../../models/fact/factRequest';
 import {MdDialog, MdDialogRef} from '@angular/material';
 import {ApiCubesService} from '../../../services/api-cubes';
@@ -23,6 +23,9 @@ import {IterablePairsPipe} from '../../../pipes/mapToPairsIterable';
 import {PipesModule} from '../../../pipes/index';
 import {ExecutionConfiguration} from '../../../models/analysis/executionConfiguration';
 import {JobTimeoutException} from '../../../models/analysis/jobTimeoutException';
+import {AggregatePreviewDialogComponent} from './dialog/aggregate-preview-dialog';
+import {FactsPreviewDialogComponent} from './dialog/facts-preview-dialog';
+import * as converter from 'number-to-words';
 
 /**
  * Tip: Export type aliases for your component's inputs and outputs. Until we
@@ -32,7 +35,6 @@ import {JobTimeoutException} from '../../../models/analysis/jobTimeoutException'
 export type InCollectionInput = boolean;
 export type AddOutput = Cube;
 export type RemoveOutput = Cube;
-
 
 @Component({
   selector: 'app-cube-analytics-detail',
@@ -132,7 +134,6 @@ export type RemoveOutput = Cube;
   `]
 })
 
-
 export class CubeAnalyticsDetailComponent implements AfterViewInit {
   private _analysisCall: AnalysisCall;
 
@@ -220,7 +221,6 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
       // the following is required, otherwise the view will not be updated
       this.ref.markForCheck();
     }, 5000);
-
     router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.cube$ = this.store.let(fromRoot.getSelectedCube);
@@ -382,17 +382,19 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
   public execute(configuration: ExecutionConfiguration) {
 
     this.error = null;
-    if (configuration.algorithm.name === 'time_series')
+    if (configuration.algorithm.name === 'time_series') {
       this.prepareTimeSeries();
+    }
 
-    if (configuration.algorithm.name === 'descriptive_statistics')
+    if (configuration.algorithm.name === 'descriptive_statistics') {
       this.prepareDescriptiveStatistics();
+    }
 
 
     const that = this;
     this.store.dispatch(new execution.ExecuteAction(null));
 
-    this.analysisService.execute(configuration, this.analysisCall.queryParams())
+    this.analysisService.execute(configuration, this.analysisCall.queryParams(), this.cube)
       .catch((error: any) => {
         if (error.status < 400 || error.status === 500) {
           return Observable.throw(new Error(error.status));
@@ -428,97 +430,36 @@ export class CubeAnalyticsDetailComponent implements AfterViewInit {
     this.factsShown = !this.factsShown;
   }
 
-}
-
-
-@Component({
-  selector: 'facts-preview-dialog',
-  template: `
-    <div><h1>Facts preview ({{json.data.length}} records)</h1></div>
-    <div style="max-height: 400px; overflow: scroll;">
-      <table class="table table-bordered">
-        <thead>
-        <tr>
-          <th *ngFor="let col of json.fields">
-            <span
-              *ngIf="cube.model.attributes.get(col)">
-              {{cube.model.attributes.get(col)?.dimension.label}} - {{cube.model.attributes.get(col)?.label}}</span>
-            <span *ngIf="cube.model.measures.get(col)">{{cube.model.measures.get(col)?.label}}</span>
-          </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let item of json.data">
-          <td *ngFor="let col of json.fields">{{item[col]}}</td>
-        </tr>
-        </tbody>
-
-      </table>
-    </div>
-
-
-  `,
-  changeDetection: ChangeDetectionStrategy.OnPush
-  /*
-   templateUrl: './facts-preview-dialog.html',
-   */
-})
-
-@NgModule({
-  imports: [
-
-    PipesModule,
-
-  ],
-
-})
-export class FactsPreviewDialogComponent {
-  constructor(public dialogRef: MdDialogRef<FactsPreviewDialogComponent>) {
+  wordz(cardinality: number) {
+    return converter.toWords(cardinality);
   }
-}
 
 
-@Component({
-  selector: 'aggregate-preview-dialog',
-  template: `
-    <div><h1>Aggregate preview ({{json.cells.length}} results)</h1></div>
-    <div style="max-height: 400px; overflow: scroll;">
-      <table class="table table-bordered">
-        <thead>
-        <tr>
-          <th *ngFor="let col of json.attributes">
-            <span
-              *ngIf="cube.model.attributes.get(col)">{{cube.model.attributes.get(col)?.dimension.label}} - {{cube.model.attributes.get(col)?.label}}</span>
 
-          </th>
-          <th *ngFor="let col of json.aggregates">
-            <span *ngIf="cube.model.aggregates.get(col)">{{cube.model.aggregates.get(col)?.label}}</span>
+  canNavigate() {
 
-          </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let item of json.cells">
-          <td *ngFor="let col of json.attributes">{{item[col]}}</td>
-          <td *ngFor="let col of json.aggregates">{{item[col]}}</td>
-        </tr>
-        </tbody>
+    if (!this.analysisCall) {
+      return false;
+    }
+    if (!this.analysisCall.cube) {
+      return false;
+    }
+    if (!this.algorithm) {
+      return false;
+    }
+    if (!this.executionConfiguration) {
+      return false;
+    }
 
-      </table>
-    </div>
+    debugger;
 
+    const urlTree = this.router.createUrlTree(['/cube/analytics/' + this.analysisCall.cube.name + '/' + this.algorithm.name + '/' + this.executionConfiguration.name],
+      this.analysisCall.queryParams());
+    const isHere = this.router.isActive(urlTree, false);
 
-  `,
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
-
-@NgModule({
-  imports: [
-    PipesModule,
-  ],
-
-})
-export class AggregatePreviewDialogComponent {
-  constructor(public dialogRef: MdDialogRef<AggregatePreviewDialogComponent>) {
+    return !isHere;
   }
+
 }
+
+

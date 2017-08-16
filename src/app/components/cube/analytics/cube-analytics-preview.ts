@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {Cube} from '../../../models/cube';
-
+import {Algorithm} from "../../../models/analysis/algorithm"
 
 @Component({
   selector: 'indigo-cube-analytics-preview',
@@ -10,12 +10,12 @@ import {Cube} from '../../../models/cube';
         <md-card-title>{{ algorithm.title }}</md-card-title>
         <span class="indigo-spacer"></span>
 
-        <button [md-tooltip]="'Perform analysis: '+configuration.title"
+        <a [md-tooltip]="'Perform analysis: '+configuration.title"
                 *ngFor="let configuration of algorithm?.configurations|iterable"
                 md-icon-button [routerLink]="'/cube/analytics/' + cubeId+ '/'+algorithm.name+ '/'+configuration.name">
           <md-icon>play_circle_outline
           </md-icon>
-        </button>
+        </a>
 
 
       </md-card-header>

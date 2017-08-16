@@ -3,24 +3,56 @@
     <md-card fxFlex="100%" class="output-card">
       <md-card-title-group align="center center">
 
-        <md-card-title>Rule mining</md-card-title>
+        <md-card-title>Rules</md-card-title>
 
 
       </md-card-title-group>
       <div class="text-center">
 
 
-        <table class="table table-bordered">
+        <table class="table table-bordered" style="text-align: center">
 
           <thead>
-          <tr>
-            <th>Rule</th>
+          <tr style="text-align: center">
+            <th>Antecedent</th>
+            <th></th>
+            <th>Consequent</th>
           </tr>
           </thead>
           <tbody *ngIf="data?.rules">
 
           <tr *ngFor="let rule of data.rules">
-            <td>{{rule.text}}</td>
+            <td>
+              <ng-container *ngFor="let dimension of cube.model.dimensions|iterable" >
+                <ng-container *ngFor="let attribute of dimension.significants|iterable" >
+
+                  <md-chip [mdTooltip]="dimension.label + ' → ' +  attribute.label"   *ngIf="rule['antCol']===attribute.ref"  >
+                    <a class="action-anchor">{{dimension.label}}</a>:
+
+                    <b><a class="action-anchor">{{rule["antVal"]}}</a></b>
+                  </md-chip>
+                </ng-container>
+
+              </ng-container>
+              <md-chip *ngIf="!rule['antCol']">{{rule["antVal"]}}</md-chip>
+
+            </td>
+            <td style="text-align: center">→</td>
+            <td>
+              <ng-container *ngFor="let dimension of cube.model.dimensions|iterable" >
+                <ng-container *ngFor="let attribute of dimension.significants|iterable" >
+
+                  <md-chip [mdTooltip]="dimension.label + ' → ' +  attribute.label"   *ngIf="rule['consCol']===attribute.ref"  >
+                    <a class="action-anchor">{{dimension.label}}</a>:
+
+                    <b><a class="action-anchor">{{rule["consVal"]}}</a></b>
+                  </md-chip>
+                </ng-container>
+
+              </ng-container>
+              <md-chip *ngIf="!rule['consCol']">{{rule["consVal"]}}</md-chip>
+
+            </td>
           </tr>
 
 

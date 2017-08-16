@@ -67,7 +67,6 @@ import {Cube} from '../../../models/cube';
     }
 
     svg {
-      background: url('assets/sprites/grid_paper.png');
       font-family: monospace;
     }
 

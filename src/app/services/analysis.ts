@@ -1,6 +1,6 @@
 import 'rxjs/add/operator/map';
 import {Injectable} from '@angular/core';
-import {Http, URLSearchParams} from '@angular/http';
+import {Http, URLSearchParams, Headers} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 
 import 'rxjs/add/operator/mergeMap';
@@ -19,69 +19,70 @@ export class AnalysisService {
   constructor(private http: Http, public apiService: ApiCubesService) {
   }
 
-  execute(configuration: ExecutionConfiguration, inputs): Observable<any> {
+  execute(configuration: ExecutionConfiguration, inputs, cube: Cube): Observable<any> {
 
 
     if (configuration.algorithm.name === 'time_series' || configuration.algorithm.name === 'TimeSeries') {
       return this.timeseries(configuration, inputs);
 
-    }
-    else if (configuration.algorithm.name === 'descriptive_statistics') {
+    } else if (configuration.algorithm.name === 'descriptive_statistics') {
       return this.descriptive(configuration, inputs);
-    }
-
-    else if (configuration.algorithm.name === 'clustering') {
+    } else if (configuration.algorithm.name === 'clustering') {
       return this.clustering(configuration, inputs);
-    }
-
-
-    else if (configuration.algorithm.name === 'outlier_detection') {
-      return this.outlier(configuration, inputs);
-    }
-   else if (configuration.algorithm.name === 'rule_mining') {
-      return this.rulemining(configuration, inputs);
+    } else if (configuration.algorithm.name === 'outlier_detection') {
+      return this.outlier(configuration, inputs, cube);
+    } else if (configuration.algorithm.name === 'rule_mining') {
+      return this.rulemining(configuration, inputs, cube);
     }
 
 
   }
 
   timeseries(configuration, inputs) {
-    let that = this;
-    let body = new URLSearchParams("", new PureURIEncoder());
+    const that = this;
+    const body = new URLSearchParams('', new PureURIEncoder());
     body.set('amount', '\'' + inputs['amount'] + '\'');
     body.set('time', '\'' + inputs['time'] + '\'');
     body.set('prediction_steps', inputs['prediction_steps']);
     body.set('json_data', '\'' + (inputs['json_data']) + '\'');
 
     return that.http.post(configuration.endpoint.toString(), body).map(res => {
-      let response = res.json();
+      const response = res.json();
 
 
-      let forecasts = response['forecasts'];
-      let values: any = [];
+      const forecasts = response['forecasts'];
+      const values: any = [];
       for (let i = 0; i < forecasts.data_year.length; i++) {
         values.push({
-          year: parseInt(forecasts.data_year[i]),
+          year: parseInt(forecasts.data_year[i], 10),
           amount: parseFloat(forecasts.data[i])
         });
       }
       for (let i = 0; i < forecasts.predict_time.length; i++) {
-        let val: any = {
-          year: parseInt(forecasts.predict_time[i]),
+        const val: any = {
+          year: parseInt(forecasts.predict_time[i], 10),
           amount: parseFloat(forecasts.predict_values[i])
 
         };
 
 
-        if (!isNaN(forecasts.up80[i])) val.up80 = parseFloat(forecasts.up80[i]);
-        if (!isNaN(forecasts.up95[i])) val.up95 = parseFloat(forecasts.up95[i]);
-        if (!isNaN(forecasts.low80[i])) val.low80 = parseFloat(forecasts.low80[i]);
-        if (!isNaN(forecasts.low95[i])) val.low95 = parseFloat(forecasts.low95[i]);
+        if (!isNaN(forecasts.up80[i])) {
+          val.up80 = parseFloat(forecasts.up80[i]);
+        }
+        if (!isNaN(forecasts.up95[i])) {
+          val.up95 = parseFloat(forecasts.up95[i]);
+        }
+        if (!isNaN(forecasts.low80[i])) {
+          val.low80 = parseFloat(forecasts.low80[i]);
+        }
+        if (!isNaN(forecasts.low95[i])) {
+          val.low95 = parseFloat(forecasts.low95[i]);
+        }
 
         values.push(val);
       }
-      let acfRegular = response['acf.param']['acf.parameters'];
-      let acfValues = [];
+      const acfRegular = response['acf.param']['acf.parameters'];
+      const acfValues = [];
 
       for (let i = 0; i < acfRegular['acf.lag'].length; i++) {
         acfValues.push({
@@ -90,8 +91,8 @@ export class AnalysisService {
         });
       }
 
-      let pacfRegular = response['acf.param']['pacf.parameters'];
-      let pacfValues = [];
+      const pacfRegular = response['acf.param']['pacf.parameters'];
+      const pacfValues = [];
 
       for (let i = 0; i < pacfRegular['pacf.lag'].length; i++) {
         pacfValues.push({
@@ -101,8 +102,8 @@ export class AnalysisService {
       }
 
 
-      let acfResiduals = response['acf.param']['acf.residuals.parameters'];
-      let acfResValues = [];
+      const acfResiduals = response['acf.param']['acf.residuals.parameters'];
+      const acfResValues = [];
 
       for (let i = 0; i < acfResiduals['acf.residuals.lag'].length; i++) {
         acfResValues.push({
@@ -111,8 +112,8 @@ export class AnalysisService {
         });
       }
 
-      let pacfResiduals = response['acf.param']['pacf.residuals.parameters'];
-      let pacfResValues = [];
+      const pacfResiduals = response['acf.param']['pacf.residuals.parameters'];
+      const pacfResValues = [];
 
       for (let i = 0; i < pacfResiduals['pacf.residuals.lag'].length; i++) {
         pacfResValues.push({
@@ -122,34 +123,38 @@ export class AnalysisService {
       }
 
 
-      let stl_plot = response.decomposition['stl.plot'];
-      let trends: any = [];
+      const stl_plot = response.decomposition['stl.plot'];
+      const trends: any = [];
       for (let i = 0; i < stl_plot.time.length; i++) {
-        let val: any = {
-          year: parseInt(stl_plot.time[i]),
+        const val: any = {
+          year: parseInt(stl_plot.time[i], 10),
           amount: parseFloat(stl_plot.trend[i])
         };
         if (stl_plot['conf.interval.low']) {
-          if (!isNaN(stl_plot['conf.interval.low'][i])) val.low80 = parseFloat(stl_plot['conf.interval.low'][i]);
+          if (!isNaN(stl_plot['conf.interval.low'][i])) {
+            val.low80 = parseFloat(stl_plot['conf.interval.low'][i]);
+          }
         }
         if (stl_plot['conf.interval.up']) {
-          if (!isNaN(stl_plot['conf.interval.up'][i])) val.up80 = parseFloat(stl_plot['conf.interval.up'][i]);
+          if (!isNaN(stl_plot['conf.interval.up'][i])) {
+            val.up80 = parseFloat(stl_plot['conf.interval.up'][i]);
+          }
         }
         trends.push(val);
       }
-      let seasonals: any = [];
+      const seasonals: any = [];
       for (let i = 0; i < stl_plot.time.length; i++) {
-        let val = {
-          year: parseInt(stl_plot.time[i]),
+        const val = {
+          year: parseInt(stl_plot.time[i], 10),
           amount: parseFloat(stl_plot.seasonal[i])
         };
 
         seasonals.push(val);
       }
-      let remainders: any = [];
+      const remainders: any = [];
       for (let i = 0; i < stl_plot.time.length; i++) {
-        let val = {
-          year: parseInt(stl_plot.time[i]),
+        const val = {
+          year: parseInt(stl_plot.time[i], 10),
           amount: parseFloat(stl_plot.remainder[i])
         };
 
@@ -157,14 +162,14 @@ export class AnalysisService {
       }
 
 
-      let stl_general = response.decomposition['stl.general'];
-      let compare = response.decomposition['compare'];
+      const stl_general = response.decomposition['stl.general'];
+      const compare = response.decomposition['compare'];
 
-      let residuals = response.decomposition['residuals_fitted'];
+      const residuals = response.decomposition['residuals_fitted'];
 
-      let fitted_residuals: any = [];
+      const fitted_residuals: any = [];
       for (let i = 0; i < residuals.fitted.length; i++) {
-        let val = {
+        const val = {
           year: parseFloat(residuals.fitted[i]),
           amount: parseFloat(residuals.residuals[i])
         };
@@ -173,9 +178,9 @@ export class AnalysisService {
       }
 
 
-      let time_residuals: any = [];
+      const time_residuals: any = [];
       for (let i = 0; i < residuals.time.length; i++) {
-        let val = {
+        const val = {
           year: parseFloat(residuals.time[i]),
           amount: parseFloat(residuals.residuals[i])
         };
@@ -183,9 +188,9 @@ export class AnalysisService {
         time_residuals.push(val);
       }
 
-      let time_fitted: any = [];
+      const time_fitted: any = [];
       for (let i = 0; i < residuals.time.length; i++) {
-        let val = {
+        const val = {
           year: parseFloat(residuals.time[i]),
           amount: parseFloat(residuals.fitted[i])
         };
@@ -194,13 +199,13 @@ export class AnalysisService {
       }
 
 
-      let model_fitting = response['model.param'].residuals_fitted;
-      let model_fitting_compare = response['model.param'].compare;
-      let model = response['model.param'].model;
+      const model_fitting = response['model.param'].residuals_fitted;
+      const model_fitting_compare = response['model.param'].compare;
+      const model = response['model.param'].model;
 
-      let model_fitted_residuals: any = [];
+      const model_fitted_residuals: any = [];
       for (let i = 0; i < model_fitting.fitted.length; i++) {
-        let val = {
+        const val = {
           year: parseFloat(model_fitting.fitted[i]),
           amount: parseFloat(model_fitting.residuals[i])
         };
@@ -209,9 +214,9 @@ export class AnalysisService {
       }
 
 
-      let model_time_residuals: any = [];
+      const model_time_residuals: any = [];
       for (let i = 0; i < model_fitting.time.length; i++) {
-        let val = {
+        const val = {
           year: parseFloat(model_fitting.time[i]),
           amount: parseFloat(model_fitting.residuals[i])
         };
@@ -219,9 +224,9 @@ export class AnalysisService {
         model_time_residuals.push(val);
       }
 
-      let model_time_fitted: any = [];
+      const model_time_fitted: any = [];
       for (let i = 0; i < model_fitting.time.length; i++) {
-        let val = {
+        const val = {
           year: parseFloat(model_fitting.time[i]),
           amount: parseFloat(model_fitting.fitted[i])
         };
@@ -290,41 +295,82 @@ export class AnalysisService {
 
   }
 
-  outlier(configuration, inputs) {
-    let that = this;
-    let body = new URLSearchParams();
+  outlier(configuration, inputs, cube) {
+    const that = this;
+    const body = new URLSearchParams();
 
-    body.set('BABBAGE_FACT_URI',  inputs['BABBAGE_FACT_URI']);
+    if (configuration.name === 'LOF_AGGREGATE') {
+      body.set('BABBAGE_AGGREGATE_URI', inputs['BABBAGE_AGGREGATE_URI']);
+    } else {
+      body.set('BABBAGE_FACT_URI', inputs['BABBAGE_FACT_URI']);
+    }
+
 
     return that.http.get(configuration.endpoint.toString(), {search: body}).map(res => {
       return res.json();
     }).mergeMap(resp => {
 
 
-      return this.http.get(environment.DAMUrl + '/results/' + resp.jobid)
+      const headersAdditional = new Headers;
+      headersAdditional.append('Cache-control', 'no-cache');
+      headersAdditional.append('Cache-control', 'no-store');
+      headersAdditional.append('Expires', '0');
+      headersAdditional.append('Pragma', 'no-cache');
+
+      return this.http.get(environment.DAMUrl + '/results/' + resp.jobid, {'headers': headersAdditional})
         .map(res => {
-          let response = res.json();
+          const response = res.json();
 
           if (!response.hasOwnProperty('result')) {
-            throw 'ex';
+            throw new Error('ex');
 
           }
-          if (configuration.name === 'LOF_FACTS' || configuration.name === 'AGGREGATE') {
-            let values: any = response.result.result;
+          if (configuration.name === 'LOF_FACTS' || configuration.name === 'LOF_AGGREGATE') {
+            const values: any = response.result.result;
             return {values: values};
 
-          }else {
-            let values: any = response.result;
+          } else {
+            const values: any = response.result;
+            const new_values = [];
+            const mappings = {};
 
-            return {values: values};
+            Object.keys(values[0]).forEach(function (key) {
+              mappings[key] = key;
+              cube.model.dimensions.forEach(function (dimension) {
+                dimension.significants.forEach(function (attribute) {
+                  if (key === (dimension.ref + '_' + attribute.shortRef).toLowerCase()) {
+                    mappings[key] = attribute.ref;
+                  }
+                });
+              });
+              cube.model.measures.forEach(function (measure) {
+                if (key === (measure.ref).toLowerCase()) {
+                  mappings[key] = 'Target';
+                }
+              })
+            });
+            values.forEach(function (value) {
+              const new_value = {};
+              Object.keys(value).forEach(function (key) {
+                new_value[mappings[key]] = value[key];
+              });
+              new_values.push(new_value);
+            });
+
+
+            return {values: new_values};
 
           }
 
 
         }).retryWhen(function (attempts) {
-          return Observable.range(1, environment.DAMretries).zip(attempts, function (i) { return i; }).flatMap(function (i) {
+          return Observable.range(1, environment.DAMretries).zip(attempts, function (i) {
+            return i;
+          }).flatMap(function (i) {
             console.log('delay retry by ' + i + ' second(s)');
-            if (i === environment.DAMretries) return Observable.throw(new JobTimeoutException);
+            if (i === environment.DAMretries) {
+              return Observable.throw(new JobTimeoutException);
+            }
             return Observable.timer(i * environment.DAMpollingInitialStep);
           });
         });
@@ -333,69 +379,190 @@ export class AnalysisService {
 
   }
 
-  rulemining(configuration, inputs) {
-    let that = this;
-    let body = new URLSearchParams();
+  rulemining(configuration, inputs, cube) {
+    const that = this;
+    const body = new URLSearchParams();
 
-    body.set('BABBAGE_FACT_URI',  inputs['BABBAGE_FACT_URI']);
-    body.set('consequentColumns[]',  inputs['consequentColumns']);
-    body.set('antecedentColumns[]',  inputs['antecedentColumns']);
-    if(inputs["minConfidence"])body.set('minConfidence',  inputs['minConfidence']);
-    if(inputs["minSupport"])body.set('minSupport',  inputs['minSupport']);
+    body.set('BABBAGE_FACT_URI', inputs['BABBAGE_FACT_URI']);
+    body.set('consequentColumns[]', inputs['consequentColumns']);
+    body.set('antecedentColumns[]', inputs['antecedentColumns']);
+    if (inputs['minConfidence']) {
+      body.set('minConfidence', inputs['minConfidence']);
+    }
+    if (inputs['minSupport']) {
+      body.set('minSupport', inputs['minSupport']);
+    }
+
 
     return that.http.get(configuration.endpoint.toString(), {search: body}).map(res => {
       return res.json();
     }).mergeMap(resp => {
 
+      const headersAdditional = new Headers;
+      headersAdditional.append('Cache-control', 'no-cache');
+      headersAdditional.append('Cache-control', 'no-store');
+      headersAdditional.append('Expires', '0');
+      headersAdditional.append('Pragma', 'no-cache');
 
-      return this.http.get(environment.DAMUrl + '/results/' + resp.jobid)
+      return this.http.get(environment.DAMUrl + '/results/' + resp.jobid, {headers: headersAdditional})
         .map(res => {
-          let response = res.json();
+
+          const response = res.json();
 
           if (!response.hasOwnProperty('result')) {
-            throw 'ex';
+            throw new TimeoutError();
 
           }
-          let data: any = response.result;
+          const data: any = response.result;
+
+          const mappings = {};
+
+
+          const new_rules = [];
+
+          const regex = /(((.*?)\()(.*)\)|\*) → ((.*?)\()(.*?)(\)|$)/g;
+
+          if (data.rules.length < 1) {
+            return data.rules;
+          }
+
+          /*{
+
+            const str1 = data.rules[0].text;
+            let m1;
+
+            while ((m1 = regex.exec(str1)) !== null) {
+              // This is necessary to avoid infinite loops with zero-width matches
+              if (m1.index === regex.lastIndex) {
+                regex.lastIndex++;
+              }
+
+              const cols = [m1[1], m1[5]];
+
+              cols.forEach(function (key) {
+                mappings[key] = key;
+                cube.model.dimensions.forEach(function (dimension) {
+                  dimension.significants.forEach(function (attribute) {
+                    if (key === (dimension.ref + '_' + attribute.shortRef).toLowerCase()) {
+                      mappings[key] = attribute.ref;
+                    }
+                  });
+                });
+                cube.model.measures.forEach(function (measure) {
+                  if (key === (measure.ref).toLowerCase()) {
+                    mappings[key] = measure.ref;
+                  }
+                })
+              });
+            }
+
+
+          }*/
+
+
+          data.rules.forEach(function (rule) {
+            const new_rule = rule;
+            const str = rule.text;
+            let m;
+
+            while ((m = regex.exec(str)) !== null) {
+              // This is necessary to avoid infinite loops with zero-width matches
+              if (m.index === regex.lastIndex) {
+                regex.lastIndex++;
+              }
+
+
+              let antCol;
+              let antVal;
+              if (m[3]) {
+                antCol = m[3];
+                antVal = m[4];
+              } else {
+                antVal = m[1];
+              }
+
+              let consCol = m[6];
+              const consVal = m[7];
+
+              cube.model.dimensions.forEach(function (dimension) {
+                dimension.significants.forEach(function (attribute) {
+                  if (antCol === (dimension.ref + '_' + attribute.shortRef).toLowerCase()) {
+                    antCol = attribute.ref;
+                  }
+                });
+              });
+
+              cube.model.dimensions.forEach(function (dimension) {
+                dimension.significants.forEach(function (attribute) {
+                  if (consCol === (dimension.ref + '_' + attribute.shortRef).toLowerCase()) {
+                    consCol = attribute.ref;
+                  }
+                });
+              });
+
+              new_rule.antCol = antCol;
+              new_rule.antVal = antVal;
+              new_rule.consCol = consCol;
+              new_rule.consVal = consVal;
+
+              new_rules.push(new_rule);
+
+            }
+          });
+          data.rules = new_rules;
+
 
           return data;
 
-        }).retryWhen(function (attempts) {
-          return Observable.range(1, environment.DAMretries).zip(attempts, function (i) { return i; }).flatMap(function (i) {
+        }).catch((err: any) => {
+        if ((err instanceof TimeoutError)){
+          debugger;
+          throw err;}
+            return Observable.of(undefined);
+
+
+          }
+
+        )
+        .retryWhen(function (attempts) {
+          return Observable.range(1, environment.DAMretries).zip(attempts, function (i) {
+            return i;
+          }).flatMap(function (i) {
             console.log('delay retry by ' + i + ' second(s)');
-            if (i === environment.DAMretries) return Observable.throw(new JobTimeoutException);
+            if (i === environment.DAMretries) {
+              return Observable.throw(new JobTimeoutException);
+            }
             return Observable.timer(i * environment.DAMpollingInitialStep);
           });
-        });
+        })
+        ;
+      ;
     });
 
 
   }
 
   clustering(configuration, inputs) {
-    let that = this;
-    let body = new URLSearchParams("", new PureURIEncoder());
+    const that = this;
+    const body = new URLSearchParams('', new PureURIEncoder());
 
-    let dimensionColumnString = '\'' + inputs['dimensions'] + '\'';
-    let measuredDimString = '\'' + inputs['measured.dim'] + '\'';
+    const dimensionColumnString = '\'' + inputs['dimensions'] + '\'';
+    ;
 
 
     body.set('amounts', '\'' + inputs['amounts'] + '\'');
     body.set('dimensions', dimensionColumnString);
-    body.set('measured.dim', measuredDimString);
-    body.set('cl.method', '\'' + inputs['cl.method'] + '\'');
-    body.set('json_data', '\'' +  inputs['json_data'] + '\'');
+    if (inputs['measured.dim']) {
+      const measuredDimString = '\'' + inputs['measured.dim'] + '\'';
+      body.set('measured.dim', measuredDimString);
+    }
+    body.set('cl.method', '\'' + inputs['cl.meth'] + '\'');
+    body.set('json_data', '\'' + inputs['json_data'] + '\'');
 
     return that.http.post(configuration.endpoint.toString() + '/print', body).map(res => {
-      let response = res.json();
-
-
-      debugger;
-
+      const response = res.json();
 
       return response;
-
-
 
 
     });
@@ -404,31 +571,31 @@ export class AnalysisService {
   }
 
   descriptive(configuration, inputs) {
-    let that = this;
-    let body = new URLSearchParams("", new PureURIEncoder());
+    const that = this;
+    const body = new URLSearchParams('', new PureURIEncoder());
     body.set('json_data', '\'' + (inputs['json_data']) + '\'');
 
 
-    let amountColumnString = '\'' + inputs['amounts'] + '\'';
+    const amountColumnString = '\'' + inputs['amounts'] + '\'';
 
-    let dimensionColumnString = '\'' + inputs['dimensions'] + '\'';
+    const dimensionColumnString = '\'' + inputs['dimensions'] + '\'';
 
     body.set('amounts', amountColumnString);
     body.set('dimensions', dimensionColumnString);
     // body.set('x', "'" + JSON.stringify(json) + "'");
 
     return that.http.post(configuration.endpoint.toString() + '/print', body).map(res => {
-      let response = res.json();
+      const response = res.json();
 
-      let dimension = inputs['dimensions'];
-      let descriptives = response.descriptives;
-      let frequencyKeys = Object.keys(response.frequencies.frequencies);
-      let frequencies: any = {};
+      const dimension = inputs['dimensions'];
+      const descriptives = response.descriptives;
+      const frequencyKeys = Object.keys(response.frequencies.frequencies);
+      const frequencies: any = {};
       for (let i = 0; i < frequencyKeys.length; i++) {
         frequencies[frequencyKeys[i]] = [];
         for (let j = 0; j < response.frequencies.frequencies[frequencyKeys[i]].length; j++) {
 
-          let val = {
+          const val = {
             frequency: response.frequencies.frequencies[frequencyKeys[i]][j]['Freq'],
             label: response.frequencies.frequencies[frequencyKeys[i]][j]['Var1'],
             relative: response.frequencies['relative.frequencies'][frequencyKeys[i]][j]
@@ -438,24 +605,24 @@ export class AnalysisService {
       }
 
 
-      let boxplotResponse = response.boxplot;
-      let boxplots = [];
-      let boxplotkeys = Object.keys(boxplotResponse);
+      const boxplotResponse = response.boxplot;
+      const boxplots = [];
+      const boxplotkeys = Object.keys(boxplotResponse);
       for (let i = 0; i < boxplotkeys.length; i++) {
-        let boxPlot = boxplotResponse[boxplotkeys[i]];
+        const boxPlot = boxplotResponse[boxplotkeys[i]];
         boxPlot['label'] = boxplotkeys[i];
         boxplots.push(boxPlot);
       }
 
-      let hist = response.histogram;
+      const hist = response.histogram;
 
-      let histograms = [];
-      let histogramKeys = Object.keys(hist);
+      const histograms = hist;
+      /*const histogramKeys = Object.keys(hist);
       for (let i = 0; i < histogramKeys.length; i++) {
-        let histogram = hist[histogramKeys[i]];
+        const histogram = hist[histogramKeys[i]];
         histogram['label'] = histogramKeys[i];
         histograms.push(histogram);
-      }
+      }*/
 
       return {
         descriptives: descriptives,
@@ -472,7 +639,10 @@ export class AnalysisService {
 }
 
 
-import { QueryEncoder} from '@angular/http';
+import {QueryEncoder} from '@angular/http';
+import {Cube} from '../models/cube';
+import {TimeoutError} from "rxjs/Rx";
+
 class PureURIEncoder extends QueryEncoder {
   encodeKey(k: string): string {
     return encodeURIComponent(k);

@@ -1,18 +1,14 @@
-import {Output} from './output';
-import {Input} from './input';
-import {RequestMethod} from '@angular/http';
-import {environment} from '../../../environments/environment';
 import {ExecutionConfiguration} from './executionConfiguration';
 /**
  * Created by larjo on 12/10/2016.
  */
 export class Algorithm {
 
-  name: string;
-  title: string;
+  public name: string;
+  public title: string;
   description: string;
 
-  configurations: Map<string, ExecutionConfiguration> = new Map<string, ExecutionConfiguration>();
+  public configurations: Map<string, ExecutionConfiguration> = new Map<string, ExecutionConfiguration>();
 
 
   deserialize(data: any): Algorithm {

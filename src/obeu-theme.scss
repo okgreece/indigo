@@ -103,9 +103,14 @@ $mat-font-family: 'Cabin', sans-serif;
 // that you are using.
 @include angular-material-theme($indigo-app-theme);
 
+$flag-icon-css-path: '~flag-icon-css/flags' !default;
+@import "~flag-icon-css/sass/flag-icon";
+
+
 md-card-header, #giant, md-toolbar{
   background-color: map_get($md-obeupalette0, 500);
-  color: map_get( map_get($md-obeupalette0, 'contrast'), 700)
+  color: map_get( map_get($md-obeupalette0, 'contrast'), 700);
+  border-radius: 2px;
 }
 .mat-card-header-text{
   display: flex;
@@ -127,6 +132,7 @@ bc-toolbar.indigo {
 
 .output-card md-card-title{
   font-size: 20px;
+  color: #50b958;
 }
 
 .input-card .mat-input-container{
@@ -145,8 +151,8 @@ footer{
 
 th {
   text-align: center;
-  background: gainsboro;
-  color: black;
+  background: #273d3a;
+  color: white;
 }
 
 .indigo-spacer {
@@ -163,8 +169,46 @@ md-chip {
 }
 
 
+.input-card .mat-caption{
+
+  margin-bottom: 30px;
+  border-bottom: dotted 1px #D5D5D5;
+  text-align: justify;
+
+}
+
 .mat-select-placeholder{
   font-size: 14px;
+}
+
+
+.mat-cell, .mat-header-cell {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 3em;
+  margin: 10px;
+}
+
+md-dialog-container md-table{
+  overflow: auto;
+  max-height: 500px;
+}
+
+.axis.grid line {
+  stroke: lightgrey;
+  stroke-opacity: 0.7;
+  shape-rendering: crispEdges;
+}
+
+.quantile{
+  border: #50b958 1px solid;
+  margin: 2px;
+  padding: 2px;
+}
+
+.input-card md-button-toggle{
+  box-shadow: none;
 }
 
 .font-override { // body or wrapper class
@@ -210,6 +254,26 @@ md-chip{
   margin: 10px 0;
 }
 
+#executeAlgorithmButton:enabled {
+  animation: beat .25s infinite alternate;
+  transform-origin: center;
+  animation-iteration-count: 20;
+}
+
+/* Heart beat animation */
+@keyframes beat{
+  to { transform: scale(1.4); }
+}
+
+
+
+
+
+
+
+
+
+
 
 md-card-header  md-card-title, md-toolbar{
 
@@ -240,6 +304,16 @@ fact-request-builder>md-card, aggregate-request-builder>md-card{
   margin: 5px 0;
 }
 
+
+.required-asterisk{
+  margin-left: 5px;
+  font-size: 1.5em;
+  color: #273d3a;
+}
+
+.input-card md-card-header.mat-card-header {
+  height: 3em;
+}
 
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 /** 1. Set default font family to sans-serif. 2. Prevent iOS and IE text size adjust after device orientation change, without disabling user zoom. */
@@ -338,9 +412,9 @@ dl dd { margin: 0; }
 
 table { -webkit-font-feature-settings: "kern", "liga", "tnum"; -moz-font-feature-settings: "kern", "liga", "tnum"; -ms-font-feature-settings: "kern", "liga", "tnum"; font-feature-settings: "kern", "liga", "tnum"; border-collapse: collapse; margin: 0.75rem 0; table-layout: fixed; width: 100%; }
 
-th { border-bottom: 1px solid #a4c2bc; font-weight: 600; padding: 0.75rem 0; text-align: left; }
+th { border-bottom: 1px solid #a4c2bc; font-weight: 600; padding: 0.75rem 0.75rem; text-align: left; }
 
-td { border-bottom: 2px solid #d1e1de; padding: 0.75rem 0; }
+td { border-bottom: 2px solid #d1e1de; padding: 0.75rem 0.75rem; }
 
 tr, td, th { vertical-align: middle; }
 
@@ -831,4 +905,9 @@ body{
 
 indigo-cube-preview md-card.mat-card{
   background-color: map_get($md-obeupalette0, 50) ;
+}
+
+
+td.numeric, th.numeric{
+  text-align: right;
 }

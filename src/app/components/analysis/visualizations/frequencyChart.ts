@@ -120,7 +120,7 @@ export class FrequencyVisualization implements AfterViewInit {
         .selectAll("text")
         .attr("y", 0)
         .attr("x", 9)
-        .attr("dy", "1em")
+        .attr("dy", "1.5em")
 /*
         .attr("transform", "rotate(45)")
 */
@@ -129,8 +129,8 @@ export class FrequencyVisualization implements AfterViewInit {
 
 
       g.append("g")
-        .attr("class", "axis axis--y")
-        .call(d3.axisLeft(y).ticks(10, "%"))
+        .attr("class", "axis axis--y grid")
+        .call(d3.axisLeft(y).ticks(10, "%").tickSize(-viewerWidth))
         .append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 6)
@@ -152,8 +152,9 @@ export class FrequencyVisualization implements AfterViewInit {
     g.append("text")
       .attr("transform",
         "translate(" + (viewerWidth/2) + " ," +
-        (viewerHeight + margin.top + 20) + ")")
+        (viewerHeight + margin.top + 40) + ")")
       .style("text-anchor", "middle")
+      .style("font-weight", "bold")
       .text(this.label_x);
 
 
@@ -163,10 +164,17 @@ export class FrequencyVisualization implements AfterViewInit {
       .attr("x",0 - (viewerHeight / 2))
       .attr("dy", "1em")
       .style("text-anchor", "middle")
+      .style("font-weight", "bold")
       .text(this.label_y);
 
 
-    let yTextPadding = 10;
+
+
+
+
+
+
+    let yTextPadding = -10;
     g.selectAll(".bartext")
       .data(data)
       .enter()
@@ -175,7 +183,8 @@ export class FrequencyVisualization implements AfterViewInit {
       .attr("text-anchor", "middle")
       .attr("fill", "white")
       .attr("x", function(d:any) { return x(d.label) + x.bandwidth()/2; })
-
+      .attr("stroke", function(d:any) { return color(x(d.label).toString()); })
+      .attr("fill", function(d:any) { return color(x(d.label).toString()); })
       .attr("y", function(d:any) {
         return y(d.frequency/sum) + yTextPadding;
       })
@@ -183,7 +192,14 @@ export class FrequencyVisualization implements AfterViewInit {
         return d.frequency;
       });
 
-
+    g.append('rect')
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('height', viewerHeight)
+      .attr('width', viewerWidth)
+      .style('stroke', 'black')
+      .style('fill', 'none')
+      .style('stroke-width', '1');
   }
 
 

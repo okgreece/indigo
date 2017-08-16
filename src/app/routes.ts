@@ -2,7 +2,6 @@ import {Routes} from '@angular/router';
 
 import {CubeExistsGuard} from './guards/cube-exists';
 import {FindCubePageComponent} from './containers/cube/find-cube-page';
-import {ViewCubePageComponent} from './containers/cube/view-cube-page';
 import {NotFoundPageComponent} from './containers/not-found-page';
 import {CubeAnalyticsPage} from './containers/cube/cube-analytics';
 import {CubeAnalyticsIndexComponent} from './containers/cube/cube-analytics-index-page';
@@ -10,6 +9,8 @@ import {CubeAnalyticsEmbedPage} from './containers/cube/cube-analytics-embed-pag
 import {LayoutComponent} from './components/layout';
 import {CubeExistsLightGuard} from './guards/cube-exists-light';
 import {UserGuidePageComponent} from './components/user-guide';
+import {UploadPageComponent} from './containers/cube/upload';
+import {LinkedPipesPageComponent} from './containers/cube/linkedpipes';
 
 export const routes: Routes = [
 
@@ -34,11 +35,6 @@ export const routes: Routes = [
           path: 'userguide',
           component: UserGuidePageComponent
         },
-        {
-          path: 'cube/indicators/:id',
-          canActivate: [CubeExistsGuard],
-          component: ViewCubePageComponent
-        },
 
         {
           path: 'cube/analytics/:id/:algorithm/:configuration',
@@ -52,14 +48,15 @@ export const routes: Routes = [
           canActivate: [CubeExistsGuard],
           component: CubeAnalyticsIndexComponent
         },
-
-
         {
-          path: 'cube/:id',
-          canActivate: [CubeExistsGuard],
-          component: ViewCubePageComponent
+          path: 'upload',
+          component: UploadPageComponent
         },
 
+        {
+          path: 'upload/linkedpipes',
+          component: LinkedPipesPageComponent
+        }
       ]
     },
 

@@ -1,13 +1,13 @@
 import {NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
-import { RouterModule } from '@angular/router';
+import {RouterModule, ROUTES} from '@angular/router';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { DBModule } from '@ngrx/db';
 import { RouterStoreModule } from '@ngrx/router-store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import {MaterialModule, MdCardModule} from '@angular/material';
+import {MaterialModule, MdCardModule, MdInputModule, MdTableModule} from '@angular/material';
 
 import { ComponentsModule } from './components';
 
@@ -17,42 +17,47 @@ import { routes } from './routes';
 import { reducer } from './reducers';
 import { schema } from './db';
 import {ApiCubesService} from './services/api-cubes';
-import {CollectionCubePageComponent} from './containers/cube/collection-page';
-import {ViewCubePageComponent} from './containers/cube/view-cube-page';
 import {FindCubePageComponent} from './containers/cube/find-cube-page';
-import {SelectedCubePageComponent} from './containers/cube/selected-cube-page';
 import {CubeExistsGuard} from './guards/cube-exists';
 import {CubeEffects} from './effects/cube';
 import {AlgorithmsService} from './services/algorithms';
 import {CubeAnalyticsPage} from './containers/cube/cube-analytics';
 import {AnalysisService} from './services/analysis';
 import {environment} from '../environments/environment';
+/*
 import {APP_BASE_HREF} from '@angular/common';
+*/
 import {CubeAnalyticsEmbedPage} from './containers/cube/cube-analytics-embed-page';
 import {CubeExistsLightGuard} from './guards/cube-exists-light';
-import {AggregatePreviewDialogComponent, FactsPreviewDialogComponent} from './components/cube/analytics/cube-analytics-detail';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import 'hammerjs';
 import {MarkdownModule} from 'angular2-markdown';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import { InfiniteScrollerDirective } from './infinite-scroller.directive';
-import {CubeCollectionEffects} from "./effects/cubesCollection";
-import DynamicComponent from "./components/dynamic-component";
+import {CubeCollectionEffects} from './effects/cubesCollection';
+import {FactsPreviewDialogComponent} from './components/cube/analytics/dialog/facts-preview-dialog';
+import {AggregatePreviewDialogComponent} from './components/cube/analytics/dialog/aggregate-preview-dialog';
+import {CdkTableModule} from "@angular/cdk";
+import {PipesModule} from "./pipes/index";
 
 
 @NgModule({
   imports: [
 
+
     CommonModule,
     BrowserModule,
+    MdTableModule,
+    CdkTableModule,
+    MdInputModule,
+    PipesModule,
 /*
     MaterialModule,
 */
     BrowserAnimationsModule,
     FlexLayoutModule,
     ComponentsModule,
-    RouterModule.forRoot(routes, { useHash: true }),
+    RouterModule.forRoot(routes, { useHash: false }),
     MarkdownModule.forRoot(),
 MdCardModule,
     /**
@@ -100,22 +105,19 @@ MdCardModule,
   declarations: [
     AppComponent,
     FindCubePageComponent,
-    SelectedCubePageComponent,
-    ViewCubePageComponent,
     CubeAnalyticsPage,
-    CollectionCubePageComponent,
     NotFoundPageComponent,
     CubeAnalyticsEmbedPage,
     FactsPreviewDialogComponent,
-    AggregatePreviewDialogComponent,
+    AggregatePreviewDialogComponent
+
   ],
   providers: [
     CubeExistsGuard,
     CubeExistsLightGuard,
     ApiCubesService,
     AlgorithmsService,
-    AnalysisService,
-    {provide: APP_BASE_HREF, useValue: environment.baseHref},
+    AnalysisService
   ],
   bootstrap: [
     AppComponent

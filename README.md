@@ -42,3 +42,37 @@ Indigo lets you set the following configuration options, by editing the `src/env
   
 ### Usage
 Currently, Indigo offers two analysis functions: descriptive statistics and time series analysis. You can start [here](USERGUIDE.md) .  
+
+
+### Attribution
+Budget Planning by Creative Stall from the Noun Project
+
+rubiks cube by Rflor from the Noun Project
+
+rubiks cube by Rflor from the Noun Project
+
+filter by alrigel from the Noun Project
+
+jack hammer by mungang kim from the Noun Project
+
+update order by Jenie Tomboc from the Noun Project
+
+Aggregator by Stuart McMorris from the Noun Project
+
+Settings by Pablo Rozenberg from the Noun Project
+
+select coins by anbileru adaleru from the Noun Project
+
+flow diagram by Creative Stall from the Noun Project
+
+infographic by Rob Gill from the Noun Project
+
+Repeat by Mood Design Studio from the Noun Project
+
+Data Analysis by Becris from the Noun Project
+
+table data by Trevor Dsouza from the Noun Project
+
+column middle by amy morgan from the Noun Project
+
+View Carousel by Montu Yadav from the Noun Project
