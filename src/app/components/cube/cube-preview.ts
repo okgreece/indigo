@@ -14,7 +14,7 @@ import {Cube} from '../../models/cube';
 
       </md-card-title-group>
       <div class="row text-center">
-        <a [href]="'../viewer/' + cube.id"  color="primary"  md-raised-button>Explore
+        <a [href]="'../viewer/' + cube.id"  color="primary"  md-raised-button>View
         </a>
         <a [routerLink]="'/cube/analytics/' + cube.id"  color="primary"  md-raised-button>Analyse
         </a>
