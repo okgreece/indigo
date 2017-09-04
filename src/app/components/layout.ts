@@ -25,6 +25,10 @@ import {Observable} from "rxjs";
           <nav>
             <ul>
 
+              <li >
+                <a href="http://openbudgets.eu/tools/">Toolbox</a>
+
+              </li>
 
               <li [routerLink]="['/upload']" routerLinkActive="active" >
                 <a [routerLink]="['/upload']" routerLinkActive="active">Upload</a>
@@ -34,25 +38,20 @@ import {Observable} from "rxjs";
               <li [routerLink]="['/']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:
 true}">
                 <a  [routerLink]="['/']"  routerLinkActive="active" [routerLinkActiveOptions]="{exact:
-true}" >Explore Data</a>
+true}" >Explore</a>
 
               </li>
 
 
-              <li >
-                <a href="http://openbudgets.eu/tools/">Data Toolbox</a>
-
-              </li>
-
-
-              <li>
-                <a href="http:///openbudgets.github.io/documentation">Documentation</a>
-
-              </li>
 
 
               <li>
                 <a href="http:///openbudgets.github.io/blog">Blog</a>
+
+              </li>
+
+              <li>
+                <a href="http:///openbudgets.github.io/contact">Contact</a>
 
               </li>
 
