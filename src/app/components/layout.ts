@@ -30,8 +30,8 @@ import {Observable} from "rxjs";
 
               </li>
 
-              <li [routerLink]="['/upload']" routerLinkActive="active" >
-                <a [routerLink]="['/upload']" routerLinkActive="active">Upload</a>
+              <li>
+                <a href="http:///openbudgets.github.io/upload">Upload</a>
 
               </li>
 
