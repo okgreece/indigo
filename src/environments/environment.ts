@@ -10,7 +10,7 @@ export const environment = {
   openCpuEndpoint: 'http://okfnrg.math.auth.gr/ocpu/',
   versionSuffix: '3',
   baseHref: '/',
-  DAMUrl: 'http://dam-obeu.iais.fraunhofer.de',
+  DAMUrl: 'https://apps.openbudgets.eu/dam',
   DAMretries: 12,
   DAMpollingInitialStep: 1000,
 };

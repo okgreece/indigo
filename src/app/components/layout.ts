@@ -51,7 +51,7 @@ true}" >Explore</a>
               </li>
 
               <li>
-                <a href="http:///openbudgets.github.io/contact">Contact</a>
+                <a href="http:///openbudgets.github.io/network">Network</a>
 
               </li>
 
@@ -73,30 +73,90 @@ true}" >Explore</a>
                <router-outlet></router-outlet>
         </div>
         <nav class="footer-nav">
-          <ul>
+  <ul>
+    
+    <li>
+      <a href="/about">About</a>
+    </li>
+  
+    <li>
+      <a href="/about/work-packages">Work Packages</a>
+    </li>
+  
+    <li>
+      <a href="/about/deliverables">Deliverables</a>
+    </li>
+  
+    <li>
+      <a href="/about/technical-structure">Technical Structure</a>
+    </li>
+  
+    <li>
+      <a href="/about/partners/">Partners</a>
+    </li>
+  
+    <li>
+      <a href="/resources">Resources</a>
+    </li>
+  
+    <li>
+      <a href="/contact">Contact</a>
+    </li>
+  
+    <li>
+      <a href="/press">Press</a>
+    </li>
+  
+  </ul>
+</nav>
+<footer class="site-footer">
+  <div class="wrapper">
+    <a class="footer-logo" href="http://openbudgets.eu/">
+      <img src="http://openbudgets.eu/img/openbudgets-logo-white.png" alt="OpenBudgets.eu">
+    </a>
 
-            <li>
-              <a href="http://openbudgets.github.io/about">About</a>
-            </li>
+    <ul class="footer-primary-links">
+      <li><a href="https://okfn.org/about/">About</a></li>
+    </ul>
+    <div class="footer-secondary-links">
 
-            <li>
-              <a href="http://openbudgets.github.io/about/work-packages">Work Packages</a>
-            </li>
+      <ul class="footer-social">
+        
+        <li>
+            <a href="https://facebook.com/openbudgets" class="facebook" rel="external">
+              Facebook
+            </a>
+        </li>
+        
+        
+        <li>
+          <a href="https://twitter.com/openbudgetseu" class="twitter" rel="external">
+            Twitter
+          </a>
+        </li>
+        
+        
+        <li>
+          <a href="https://www.linkedin.com/company/open-budgets" class="linkedin" rel="external">
+            LinkedIn
+          </a>
+        </li>
+        
+        
+        <li>
+          <a href="https://github.com/openbudgets" class="github" rel="external">
+            GitHub
+          </a>
+        </li>
+        
+      </ul>
+    </div>
 
-            <li>
-              <a href="http://openbudgets.github.io/about/deliverables">Deliverables</a>
-            </li>
+    <hr>
+    <p><img src="http://openbudgets.eu/img/eu-2.jpg" alt="OpenBudgets.eu" align="center" width="40em">OpenBudget.eu has received funding from the European Union’s <a href="https://ec.europa.eu/programmes/horizon2020/">H2020 EU research and innovation programme</a> under grant agreement <a href="http://cordis.europa.eu/project/rcn/194394_en.html">No 645833</a>.</p>
+  </div>
 
-            <li>
-              <a href="http://openbudgets.github.io/about/technical-structure">Technical Structure</a>
-            </li>
-
-            <li>
-              <a href="http://openbudgets.github.io/resources">Resources</a>
-            </li>
-
-          </ul>
-        </nav>
+        </footer>
       </main>
   `,
   styles: [`
