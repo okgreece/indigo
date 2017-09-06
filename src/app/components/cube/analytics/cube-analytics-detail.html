@@ -295,7 +295,7 @@
           <md-progress-spinner fxLayoutAlign="center center" mode="indeterminate" *ngIf="loading$|async"></md-progress-spinner>
 
 
-          <div *ngIf="!analysisCall?.outputs['values'] && !loading$|async" style="margin: 0 auto; max-width: 70%;">
+          <div *ngIf="!analysisCall?.outputs['values']" style="margin: 0 auto; max-width: 70%;">
             <h2 style="color:#50b958; text-align: center">Confused?</h2>
             <h4 style="color:#50b958; text-align: center">Here are some tips for you:</h4>
             <div [inlineSVG]="'/assets/img/confused.svg'">
