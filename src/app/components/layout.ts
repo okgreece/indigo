@@ -18,7 +18,7 @@ import {Observable} from "rxjs";
 
       <header class="site-header">
         <div class="wrapper">
-          <a href="/" class="logo">
+          <a href="http://openbudgets.eu" class="logo">
             <img src="assets/sprites/openbudgets-logo.svg" alt="OpenBudgets">
           </a>
 
@@ -31,7 +31,7 @@ import {Observable} from "rxjs";
               </li>
 
               <li>
-                <a href="http:///openbudgets.github.io/upload">Upload</a>
+                <a href="upload">Upload</a>
 
               </li>
 
@@ -46,12 +46,12 @@ true}" >Explore</a>
 
 
               <li>
-                <a href="http:///openbudgets.github.io/blog">Blog</a>
+                <a href="http://openbudgets.github.io/blog">Blog</a>
 
               </li>
 
               <li>
-                <a href="http:///openbudgets.github.io/network">Network</a>
+                <a href="http://openbudgets.github.io/network">Network</a>
 
               </li>
 

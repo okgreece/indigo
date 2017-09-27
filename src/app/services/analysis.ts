@@ -1,22 +1,20 @@
 import 'rxjs/add/operator/map';
 import {Injectable} from '@angular/core';
-import {Http, URLSearchParams, Headers} from '@angular/http';
+import {Headers, Http, QueryEncoder, URLSearchParams} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/Subscription';
-import {AnalysisCall} from '../models/analysis/analysisCall';
-import {Algorithm} from '../models/analysis/algorithm';
-import {ApiCubesService} from './api-cubes';
 import {ExecutionConfiguration} from '../models/analysis/executionConfiguration';
 import {environment} from '../../environments/environment';
-import {OperationCanceledException} from 'typescript';
 import {JobTimeoutException} from '../models/analysis/jobTimeoutException';
+import {Cube} from '../models/cube';
+import {TimeoutError} from 'rxjs/Rx';
 
 @Injectable()
 export class AnalysisService {
 
-  constructor(private http: Http, public apiService: ApiCubesService) {
+  constructor(private http: Http) {
   }
 
   execute(configuration: ExecutionConfiguration, inputs, cube: Cube): Observable<any> {
@@ -39,259 +37,290 @@ export class AnalysisService {
   }
 
   timeseries(configuration, inputs) {
+
+
     const that = this;
-    const body = new URLSearchParams('', new PureURIEncoder());
-    body.set('amount', '\'' + inputs['amount'] + '\'');
-    body.set('time', '\'' + inputs['time'] + '\'');
+    const body = new URLSearchParams();
+
+    body.set('amount', inputs['amount']);
+    body.set('time', inputs['time']);
     body.set('prediction_steps', inputs['prediction_steps']);
-    body.set('json_data', '\'' + (inputs['json_data']) + '\'');
+    body.set('json_data', (inputs['json_data']));
 
-    return that.http.post(configuration.endpoint.toString(), body).map(res => {
-      const response = res.json();
-
-
-      const forecasts = response['forecasts'];
-      const values: any = [];
-      for (let i = 0; i < forecasts.data_year.length; i++) {
-        values.push({
-          year: parseInt(forecasts.data_year[i], 10),
-          amount: parseFloat(forecasts.data[i])
-        });
-      }
-      for (let i = 0; i < forecasts.predict_time.length; i++) {
-        const val: any = {
-          year: parseInt(forecasts.predict_time[i], 10),
-          amount: parseFloat(forecasts.predict_values[i])
-
-        };
+    return that.http.get(configuration.endpoint.toString(), {search: body}).map(res => {
+      return res.json();
+    }).mergeMap(resp => {
 
 
-        if (!isNaN(forecasts.up80[i])) {
-          val.up80 = parseFloat(forecasts.up80[i]);
-        }
-        if (!isNaN(forecasts.up95[i])) {
-          val.up95 = parseFloat(forecasts.up95[i]);
-        }
-        if (!isNaN(forecasts.low80[i])) {
-          val.low80 = parseFloat(forecasts.low80[i]);
-        }
-        if (!isNaN(forecasts.low95[i])) {
-          val.low95 = parseFloat(forecasts.low95[i]);
-        }
+      const headersAdditional = new Headers;
+      headersAdditional.append('Cache-control', 'no-cache');
+      headersAdditional.append('Cache-control', 'no-store');
+      headersAdditional.append('Expires', '0');
+      headersAdditional.append('Pragma', 'no-cache');
 
-        values.push(val);
-      }
-      const acfRegular = response['acf.param']['acf.parameters'];
-      const acfValues = [];
+      return this.http.get(environment.DAMUrl + '/results/' + resp.jobid, {'headers': headersAdditional})
+        .map(res => {
+          let response = res.json();
+          if (!response.hasOwnProperty('result')) {
+            throw new Error('ex');
 
-      for (let i = 0; i < acfRegular['acf.lag'].length; i++) {
-        acfValues.push({
-          lag: parseFloat(acfRegular['acf.lag'][i]),
-          correlation: parseFloat(acfRegular['acf'][i])
-        });
-      }
-
-      const pacfRegular = response['acf.param']['pacf.parameters'];
-      const pacfValues = [];
-
-      for (let i = 0; i < pacfRegular['pacf.lag'].length; i++) {
-        pacfValues.push({
-          lag: parseFloat(pacfRegular['pacf.lag'][i]),
-          correlation: parseFloat(pacfRegular['pacf'][i])
-        });
-      }
-
-
-      const acfResiduals = response['acf.param']['acf.residuals.parameters'];
-      const acfResValues = [];
-
-      for (let i = 0; i < acfResiduals['acf.residuals.lag'].length; i++) {
-        acfResValues.push({
-          lag: parseFloat(acfResiduals['acf.residuals.lag'][i]),
-          correlation: parseFloat(acfResiduals['acf.residuals'][i])
-        });
-      }
-
-      const pacfResiduals = response['acf.param']['pacf.residuals.parameters'];
-      const pacfResValues = [];
-
-      for (let i = 0; i < pacfResiduals['pacf.residuals.lag'].length; i++) {
-        pacfResValues.push({
-          lag: parseFloat(pacfResiduals['pacf.residuals.lag'][i]),
-          correlation: parseFloat(pacfResiduals['pacf.residuals'][i])
-        });
-      }
-
-
-      const stl_plot = response.decomposition['stl.plot'];
-      const trends: any = [];
-      for (let i = 0; i < stl_plot.time.length; i++) {
-        const val: any = {
-          year: parseInt(stl_plot.time[i], 10),
-          amount: parseFloat(stl_plot.trend[i])
-        };
-        if (stl_plot['conf.interval.low']) {
-          if (!isNaN(stl_plot['conf.interval.low'][i])) {
-            val.low80 = parseFloat(stl_plot['conf.interval.low'][i]);
           }
-        }
-        if (stl_plot['conf.interval.up']) {
-          if (!isNaN(stl_plot['conf.interval.up'][i])) {
-            val.up80 = parseFloat(stl_plot['conf.interval.up'][i]);
+
+          response = response.result;
+
+          const forecasts = response['forecasts'];
+          const values: any = [];
+          for (let i = 0; i < forecasts.data_year.length; i++) {
+            values.push({
+              year: parseInt(forecasts.data_year[i], 10),
+              amount: parseFloat(forecasts.data[i])
+            });
           }
-        }
-        trends.push(val);
-      }
-      const seasonals: any = [];
-      for (let i = 0; i < stl_plot.time.length; i++) {
-        const val = {
-          year: parseInt(stl_plot.time[i], 10),
-          amount: parseFloat(stl_plot.seasonal[i])
-        };
+          for (let i = 0; i < forecasts.predict_time.length; i++) {
+            const val: any = {
+              year: parseInt(forecasts.predict_time[i], 10),
+              amount: parseFloat(forecasts.predict_values[i])
 
-        seasonals.push(val);
-      }
-      const remainders: any = [];
-      for (let i = 0; i < stl_plot.time.length; i++) {
-        const val = {
-          year: parseInt(stl_plot.time[i], 10),
-          amount: parseFloat(stl_plot.remainder[i])
-        };
-
-        remainders.push(val);
-      }
+            };
 
 
-      const stl_general = response.decomposition['stl.general'];
-      const compare = response.decomposition['compare'];
-
-      const residuals = response.decomposition['residuals_fitted'];
-
-      const fitted_residuals: any = [];
-      for (let i = 0; i < residuals.fitted.length; i++) {
-        const val = {
-          year: parseFloat(residuals.fitted[i]),
-          amount: parseFloat(residuals.residuals[i])
-        };
-
-        fitted_residuals.push(val);
-      }
-
-
-      const time_residuals: any = [];
-      for (let i = 0; i < residuals.time.length; i++) {
-        const val = {
-          year: parseFloat(residuals.time[i]),
-          amount: parseFloat(residuals.residuals[i])
-        };
-
-        time_residuals.push(val);
-      }
-
-      const time_fitted: any = [];
-      for (let i = 0; i < residuals.time.length; i++) {
-        const val = {
-          year: parseFloat(residuals.time[i]),
-          amount: parseFloat(residuals.fitted[i])
-        };
-
-        time_fitted.push(val);
-      }
-
-
-      const model_fitting = response['model.param'].residuals_fitted;
-      const model_fitting_compare = response['model.param'].compare;
-      const model = response['model.param'].model;
-
-      const model_fitted_residuals: any = [];
-      for (let i = 0; i < model_fitting.fitted.length; i++) {
-        const val = {
-          year: parseFloat(model_fitting.fitted[i]),
-          amount: parseFloat(model_fitting.residuals[i])
-        };
-
-        model_fitted_residuals.push(val);
-      }
-
-
-      const model_time_residuals: any = [];
-      for (let i = 0; i < model_fitting.time.length; i++) {
-        const val = {
-          year: parseFloat(model_fitting.time[i]),
-          amount: parseFloat(model_fitting.residuals[i])
-        };
-
-        model_time_residuals.push(val);
-      }
-
-      const model_time_fitted: any = [];
-      for (let i = 0; i < model_fitting.time.length; i++) {
-        const val = {
-          year: parseFloat(model_fitting.time[i]),
-          amount: parseFloat(model_fitting.fitted[i])
-        };
-
-        model_time_fitted.push(val);
-      }
-
-
-      return {
-        forecast: {
-          values: values, model: forecasts['ts.model'][0]
-        },
-        autocorrelation: {
-          acf: {
-            regular: {
-              values: acfValues,
-              interval_up: acfRegular['confidence.interval.up'][0],
-              interval_low: acfRegular['confidence.interval.low'][0]
-
-            },
-            residuals: {
-              values: acfResValues,
-              interval_up: acfResiduals['confidence.interval.up'][0],
-              interval_low: acfResiduals['confidence.interval.low'][0]
-            },
-          },
-
-          pacf: {
-            regular: {
-              values: pacfValues,
-              interval_up: pacfRegular['confidence.interval.up'][0],
-              interval_low: pacfRegular['confidence.interval.low'][0]
-            },
-            residuals: {
-              values: pacfResValues,
-              interval_up: pacfResiduals['confidence.interval.up'][0],
-              interval_low: pacfResiduals['confidence.interval.low'][0]
+            if (!isNaN(forecasts.up80[i])) {
+              val.up80 = parseFloat(forecasts.up80[i]);
             }
+            if (!isNaN(forecasts.up95[i])) {
+              val.up95 = parseFloat(forecasts.up95[i]);
+            }
+            if (!isNaN(forecasts.low80[i])) {
+              val.low80 = parseFloat(forecasts.low80[i]);
+            }
+            if (!isNaN(forecasts.low95[i])) {
+              val.low95 = parseFloat(forecasts.low95[i]);
+            }
+
+            values.push(val);
           }
-        },
-        decomposition: {
-          trends: trends,
-          remainders: remainders,
-          seasonals: seasonals,
-          time_fitted: time_fitted,
-          time_residuals: time_residuals,
-          fitted_residuals: fitted_residuals,
-          general: stl_general,
-          compare: compare,
-          seasonal: Object.keys(stl_plot.seasonal).length > 0
+          const acfRegular = response['acf.param']['acf.parameters'];
+          const acfValues = [];
 
-        },
-        fitting: {
-          time_fitted: model_time_fitted,
-          time_residuals: model_time_residuals,
-          fitted_residuals: model_fitted_residuals,
-          compare: model_fitting_compare,
-          model: model
-        }
+          for (let i = 0; i < acfRegular['acf.lag'].length; i++) {
+            acfValues.push({
+              lag: parseFloat(acfRegular['acf.lag'][i]),
+              correlation: parseFloat(acfRegular['acf'][i])
+            });
+          }
+
+          const pacfRegular = response['acf.param']['pacf.parameters'];
+          const pacfValues = [];
+
+          for (let i = 0; i < pacfRegular['pacf.lag'].length; i++) {
+            pacfValues.push({
+              lag: parseFloat(pacfRegular['pacf.lag'][i]),
+              correlation: parseFloat(pacfRegular['pacf'][i])
+            });
+          }
 
 
-      }
-        ;
+          const acfResiduals = response['acf.param']['acf.residuals.parameters'];
+          const acfResValues = [];
+
+          for (let i = 0; i < acfResiduals['acf.residuals.lag'].length; i++) {
+            acfResValues.push({
+              lag: parseFloat(acfResiduals['acf.residuals.lag'][i]),
+              correlation: parseFloat(acfResiduals['acf.residuals'][i])
+            });
+          }
+
+          const pacfResiduals = response['acf.param']['pacf.residuals.parameters'];
+          const pacfResValues = [];
+
+          for (let i = 0; i < pacfResiduals['pacf.residuals.lag'].length; i++) {
+            pacfResValues.push({
+              lag: parseFloat(pacfResiduals['pacf.residuals.lag'][i]),
+              correlation: parseFloat(pacfResiduals['pacf.residuals'][i])
+            });
+          }
+
+
+          const stl_plot = response.decomposition['stl.plot'];
+          const trends: any = [];
+          for (let i = 0; i < stl_plot.time.length; i++) {
+            const val: any = {
+              year: parseInt(stl_plot.time[i], 10),
+              amount: parseFloat(stl_plot.trend[i])
+            };
+            if (stl_plot['conf.interval.low']) {
+              if (!isNaN(stl_plot['conf.interval.low'][i])) {
+                val.low80 = parseFloat(stl_plot['conf.interval.low'][i]);
+              }
+            }
+            if (stl_plot['conf.interval.up']) {
+              if (!isNaN(stl_plot['conf.interval.up'][i])) {
+                val.up80 = parseFloat(stl_plot['conf.interval.up'][i]);
+              }
+            }
+            trends.push(val);
+          }
+          const seasonals: any = [];
+          for (let i = 0; i < stl_plot.time.length; i++) {
+            const val = {
+              year: parseInt(stl_plot.time[i], 10),
+              amount: parseFloat(stl_plot.seasonal[i])
+            };
+
+            seasonals.push(val);
+          }
+          const remainders: any = [];
+          for (let i = 0; i < stl_plot.time.length; i++) {
+            const val = {
+              year: parseInt(stl_plot.time[i], 10),
+              amount: parseFloat(stl_plot.remainder[i])
+            };
+
+            remainders.push(val);
+          }
+
+
+          const stl_general = response.decomposition['stl.general'];
+          const compare = response.decomposition['compare'];
+
+          const residuals = response.decomposition['residuals_fitted'];
+
+          const fitted_residuals: any = [];
+          for (let i = 0; i < residuals.fitted.length; i++) {
+            const val = {
+              year: parseFloat(residuals.fitted[i]),
+              amount: parseFloat(residuals.residuals[i])
+            };
+
+            fitted_residuals.push(val);
+          }
+
+
+          const time_residuals: any = [];
+          for (let i = 0; i < residuals.time.length; i++) {
+            const val = {
+              year: parseFloat(residuals.time[i]),
+              amount: parseFloat(residuals.residuals[i])
+            };
+
+            time_residuals.push(val);
+          }
+
+          const time_fitted: any = [];
+          for (let i = 0; i < residuals.time.length; i++) {
+            const val = {
+              year: parseFloat(residuals.time[i]),
+              amount: parseFloat(residuals.fitted[i])
+            };
+
+            time_fitted.push(val);
+          }
+
+
+          const model_fitting = response['model.param'].residuals_fitted;
+          const model_fitting_compare = response['model.param'].compare;
+          const model = response['model.param'].model;
+
+          const model_fitted_residuals: any = [];
+          for (let i = 0; i < model_fitting.fitted.length; i++) {
+            const val = {
+              year: parseFloat(model_fitting.fitted[i]),
+              amount: parseFloat(model_fitting.residuals[i])
+            };
+
+            model_fitted_residuals.push(val);
+          }
+
+
+          const model_time_residuals: any = [];
+          for (let i = 0; i < model_fitting.time.length; i++) {
+            const val = {
+              year: parseFloat(model_fitting.time[i]),
+              amount: parseFloat(model_fitting.residuals[i])
+            };
+
+            model_time_residuals.push(val);
+          }
+
+          const model_time_fitted: any = [];
+          for (let i = 0; i < model_fitting.time.length; i++) {
+            const val = {
+              year: parseFloat(model_fitting.time[i]),
+              amount: parseFloat(model_fitting.fitted[i])
+            };
+
+            model_time_fitted.push(val);
+          }
+
+
+          return {
+            forecast: {
+              values: values, model: forecasts['ts.model'][0]
+            },
+            autocorrelation: {
+              acf: {
+                regular: {
+                  values: acfValues,
+                  interval_up: acfRegular['confidence.interval.up'][0],
+                  interval_low: acfRegular['confidence.interval.low'][0]
+
+                },
+                residuals: {
+                  values: acfResValues,
+                  interval_up: acfResiduals['confidence.interval.up'][0],
+                  interval_low: acfResiduals['confidence.interval.low'][0]
+                },
+              },
+
+              pacf: {
+                regular: {
+                  values: pacfValues,
+                  interval_up: pacfRegular['confidence.interval.up'][0],
+                  interval_low: pacfRegular['confidence.interval.low'][0]
+                },
+                residuals: {
+                  values: pacfResValues,
+                  interval_up: pacfResiduals['confidence.interval.up'][0],
+                  interval_low: pacfResiduals['confidence.interval.low'][0]
+                }
+              }
+            },
+            decomposition: {
+              trends: trends,
+              remainders: remainders,
+              seasonals: seasonals,
+              time_fitted: time_fitted,
+              time_residuals: time_residuals,
+              fitted_residuals: fitted_residuals,
+              general: stl_general,
+              compare: compare,
+              seasonal: Object.keys(stl_plot.seasonal).length > 0
+
+            },
+            fitting: {
+              time_fitted: model_time_fitted,
+              time_residuals: model_time_residuals,
+              fitted_residuals: model_fitted_residuals,
+              compare: model_fitting_compare,
+              model: model
+            }
+
+
+          }
+
+
+        }).retryWhen(function (attempts) {
+          return Observable.range(1, environment.DAMretries).zip(attempts, function (i) {
+            return i;
+          }).flatMap(function (i) {
+            console.log('delay retry by ' + i + ' second(s)');
+            if (i === environment.DAMretries) {
+              return Observable.throw(new JobTimeoutException);
+            }
+            return Observable.timer(i * environment.DAMpollingInitialStep);
+          });
+        });
     });
-
 
   }
 
@@ -415,7 +444,6 @@ export class AnalysisService {
           }
           const data: any = response.result;
 
-          const mappings = {};
 
 
           const new_rules = [];
@@ -426,41 +454,7 @@ export class AnalysisService {
             return data.rules;
           }
 
-          /*{
-
-            const str1 = data.rules[0].text;
-            let m1;
-
-            while ((m1 = regex.exec(str1)) !== null) {
-              // This is necessary to avoid infinite loops with zero-width matches
-              if (m1.index === regex.lastIndex) {
-                regex.lastIndex++;
-              }
-
-              const cols = [m1[1], m1[5]];
-
-              cols.forEach(function (key) {
-                mappings[key] = key;
-                cube.model.dimensions.forEach(function (dimension) {
-                  dimension.significants.forEach(function (attribute) {
-                    if (key === (dimension.ref + '_' + attribute.shortRef).toLowerCase()) {
-                      mappings[key] = attribute.ref;
-                    }
-                  });
-                });
-                cube.model.measures.forEach(function (measure) {
-                  if (key === (measure.ref).toLowerCase()) {
-                    mappings[key] = measure.ref;
-                  }
-                })
-              });
-            }
-
-
-          }*/
-
-
-          data.rules.forEach(function (rule) {
+            data.rules.forEach(function (rule) {
             const new_rule = rule;
             const str = rule.text;
             let m;
@@ -515,14 +509,13 @@ export class AnalysisService {
           return data;
 
         }).catch((err: any) => {
-        if ((err instanceof TimeoutError)){
-          debugger;
-          throw err;}
+            if ((err instanceof TimeoutError)) {
+              throw err;
+            }
             return Observable.of(undefined);
 
 
           }
-
         )
         .retryWhen(function (attempts) {
           return Observable.range(1, environment.DAMretries).zip(attempts, function (i) {
@@ -535,8 +528,7 @@ export class AnalysisService {
             return Observable.timer(i * environment.DAMpollingInitialStep);
           });
         })
-        ;
-      ;
+
     });
 
 
@@ -547,8 +539,6 @@ export class AnalysisService {
     const body = new URLSearchParams('', new PureURIEncoder());
 
     const dimensionColumnString = '\'' + inputs['dimensions'] + '\'';
-    ;
-
 
     body.set('amounts', '\'' + inputs['amounts'] + '\'');
     body.set('dimensions', dimensionColumnString);
@@ -560,9 +550,7 @@ export class AnalysisService {
     body.set('json_data', '\'' + inputs['json_data'] + '\'');
 
     return that.http.post(configuration.endpoint.toString() + '/print', body).map(res => {
-      const response = res.json();
-
-      return response;
+      return res.json();
 
 
     });
@@ -587,7 +575,6 @@ export class AnalysisService {
     return that.http.post(configuration.endpoint.toString() + '/print', body).map(res => {
       const response = res.json();
 
-      const dimension = inputs['dimensions'];
       const descriptives = response.descriptives;
       const frequencyKeys = Object.keys(response.frequencies.frequencies);
       const frequencies: any = {};
@@ -616,19 +603,11 @@ export class AnalysisService {
 
       const hist = response.histogram;
 
-      const histograms = hist;
-      /*const histogramKeys = Object.keys(hist);
-      for (let i = 0; i < histogramKeys.length; i++) {
-        const histogram = hist[histogramKeys[i]];
-        histogram['label'] = histogramKeys[i];
-        histograms.push(histogram);
-      }*/
-
       return {
         descriptives: descriptives,
         frequencies: frequencies,
         boxplot: boxplots,
-        histogram: histograms
+        histogram: hist
       };
     });
 
@@ -638,10 +617,6 @@ export class AnalysisService {
 
 }
 
-
-import {QueryEncoder} from '@angular/http';
-import {Cube} from '../models/cube';
-import {TimeoutError} from "rxjs/Rx";
 
 class PureURIEncoder extends QueryEncoder {
   encodeKey(k: string): string {
