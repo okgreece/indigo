@@ -9,7 +9,8 @@
       </md-card-title-group>
 
 
-      <analytics-tree-diagram [values]="data"></analytics-tree-diagram>
+      <analytics-tree-diagram *ngIf="analysisCall.inputs['cl.meth']=='hierarchical'" [values]="data"></analytics-tree-diagram>
+      <analytics-medoid-diagram *ngIf="analysisCall.inputs['cl.meth']!='hierarchical'" [values]="data"></analytics-medoid-diagram>
 
 
 

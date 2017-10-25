@@ -547,6 +547,7 @@ export class AnalysisService {
       body.set('measured.dim', measuredDimString);
     }
     body.set('cl.method', '\'' + inputs['cl.meth'] + '\'');
+    body.set('cl.num', '\'' + Number(inputs['cl.num']) + '\'');
     body.set('json_data', '\'' + inputs['json_data'] + '\'');
 
     return that.http.post(configuration.endpoint.toString() + '/print', body).map(res => {

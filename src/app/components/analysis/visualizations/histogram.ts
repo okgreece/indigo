@@ -74,27 +74,20 @@ export class HistogramVisualization implements AfterViewInit {
     const viewerHeight = $(this.vizCanvas.nativeElement).height() - margin.top - margin.bottom;
 
 
-    const lineData = [];
-    for (let i = 0; i < data.cuts.length; i++) {
-      lineData.push({
-        x: data['normal.curve.x'][i],
-        y: data['normal.curve.y'][i]
-      });
-    }
 
     const boxData = [];
-    for (let i = 0; i < data.density.length; i++){
+    for (let i = 0; i < data.counts.length; i++) {
       boxData.push({
         from: data.cuts[i],
         to: data.cuts[i + 1],
-        frequency : data.density[i]
+        frequency : data.counts[i]
       });
     }
 
 
 
-    const max: number = d3.max([d3.max(data.density as number[]), d3.max(data['normal.curve.y'] as number[])]);
-    const min: number = d3.min([d3.min(data.density as number[]) , d3.min(data['normal.curve.y'] as number[]) ]);
+    const max: number = d3.max(data.counts as number[]);
+    const min: number = d3.min(data.counts as number[]) ;
 
     const x_max: number = d3.max(data.cuts as number[]);
     const x_min: number = d3.min(data.cuts as number[]);
@@ -132,6 +125,10 @@ export class HistogramVisualization implements AfterViewInit {
 
     y.domain([min, max]);
 
+
+
+
+
     svg.append('g')
       .attr('class', 'x axis')
       .attr('transform', 'translate(0,' + viewerHeight + ')')
@@ -166,12 +163,6 @@ export class HistogramVisualization implements AfterViewInit {
       .attr('width', function(d: any) { return Math.abs(x(d.to) - x(d.from)); })
       .attr('height', function(d: any) { return viewerHeight -  y(d.frequency); });
 
-
-
-    svg.append('path')
-      .datum(lineData)
-      .attr('class', 'line')
-      .attr('d', line);
 
 
 
@@ -222,6 +213,24 @@ export class HistogramVisualization implements AfterViewInit {
       .text(this.label_y);
 
 
+    svg.append('line')
+      .style("stroke", "red")  // colour the line
+      .style("stroke-dasharray", "6 12 12 10")
+
+      .attr("x1", x(data["mean"][0]))     // x position of the first end of the line
+      .attr("y1", y(0))      // y position of the first end of the line
+      .attr("x2", x(data["mean"][0]))     // x position of the second end of the line
+      .attr("y2", y(max));    // y position of the second end of the line
+
+
+    svg.append('line')
+      .style("stroke", "orange")  // colour the line
+      .style("stroke-dasharray", "6 12 12 10")
+
+      .attr("x1", x(data["median"][0]))     // x position of the first end of the line
+      .attr("y1", y(0))      // y position of the first end of the line
+      .attr("x2", x(data["median"][0]))     // x position of the second end of the line
+      .attr("y2", y(max));    // y position of the second end of the line
 
   }
   @Input()

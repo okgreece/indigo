@@ -8,14 +8,14 @@ import {
 } from '@angular/core';
 import {Inject, NgZone, ChangeDetectorRef} from '@angular/core';
 import * as d3 from 'd3';
-import {Observable} from "rxjs";
+import {Observable} from 'rxjs';
 import * as $ from 'jquery'
 import * as _ from 'lodash';
 
-import {Store} from "@ngrx/store";
-import {Cube} from "../../../models/cube";
-import {AnalysisCall} from "../../../models/analysis/analysisCall";
-import {IterablePipe} from "../../../pipes/mapToIterable";
+import {Store} from '@ngrx/store';
+import {Cube} from '../../../models/cube';
+import {AnalysisCall} from '../../../models/analysis/analysisCall';
+import {IterablePipe} from '../../../pipes/mapToIterable';
 
 
 @Component({
@@ -25,7 +25,7 @@ import {IterablePipe} from "../../../pipes/mapToIterable";
   templateUrl: './clustering.html',
   styles: [`
 
-  
+
  .axis path,
 .axis line {
   fill: none;
@@ -47,14 +47,14 @@ import {IterablePipe} from "../../../pipes/mapToIterable";
   fill: none;
   stroke: orange;
   stroke-width: 1.5px;
-    stroke-dasharray: 5,5; 
+    stroke-dasharray: 5,5;
 
 }
 .lineUp95 {
   fill: none;
   stroke: red;
   stroke-width: 1.5px;
-    stroke-dasharray: 5,5; 
+    stroke-dasharray: 5,5;
 
 }
 
@@ -63,14 +63,14 @@ import {IterablePipe} from "../../../pipes/mapToIterable";
   fill: none;
   stroke: green;
   stroke-width: 1.5px;
-    stroke-dasharray: 5,5; 
+    stroke-dasharray: 5,5;
 
 }
 .lineLow80 {
   fill: none;
   stroke: gold;
   stroke-width: 1.5px;
-    stroke-dasharray: 5,5; 
+    stroke-dasharray: 5,5;
 
 }
 
@@ -107,9 +107,12 @@ export class ClusteringOutputComponent implements AfterViewInit {
 
     this.ref.detectChanges();
   }
+
+
+
   ngAfterViewInit(): void {
 
-    let that = this;
+    const that = this;
 
   }
 
@@ -121,7 +124,7 @@ export class ClusteringOutputComponent implements AfterViewInit {
 
   init(values: any) {
 
-    let that = this;
+    const that = this;
     this.container = this.elementRef;
 
   }
@@ -140,6 +143,8 @@ export class ClusteringOutputComponent implements AfterViewInit {
 
   set analysisCall(value: AnalysisCall) {
     this._analysisCall = value;
+    this.ref.detectChanges();
+
   }
 
   private _analysisCall: AnalysisCall;

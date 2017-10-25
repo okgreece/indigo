@@ -1,22 +1,23 @@
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {ReactiveFormsModule, FormsModule} from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import {RouterModule} from '@angular/router';
 
 
-import { LayoutComponent } from './layout';
-import { NavItemComponent } from './nav-item';
-import { SidenavComponent } from './sidenav';
-import { ToolbarComponent } from './toolbar';
+import {LayoutComponent} from './layout';
+import {NavItemComponent} from './nav-item';
+import {SidenavComponent} from './sidenav';
+import {ToolbarComponent} from './toolbar';
 
-import { PipesModule } from '../pipes';
+import {PipesModule} from '../pipes';
 import {CubePreviewComponent} from './cube/cube-preview';
 import {CubePreviewListComponent} from './cube/cube-preview-list';
 import {CubeSearchComponent} from './cube/cube-search';
 import {AggregateRequestBuilder} from './request/aggregate-request-builder';
 
 import {
-  CubeAnalyticsDetailComponent} from './cube/analytics/cube-analytics-detail';
+  CubeAnalyticsDetailComponent
+} from './cube/analytics/cube-analytics-detail';
 import {
   LineChartVisualization, LineChartTrends, LineChartRemainders,
   LineChartFittingResiduals, LineChartFittingTimeFitted, LineChartTimeSeriesForecast
@@ -26,7 +27,7 @@ import {
   AcfChartVisualization, AcfChartVisualizationRegular,
   AcfChartVisualizationResiduals, PacfChartVisualizationRegular, PacfChartVisualizationResiduals
 } from './analysis/visualizations/acfChart';
-import { CubeAnalyticsIndexComponent} from '../containers/cube/cube-analytics-index-page';
+import {CubeAnalyticsIndexComponent} from '../containers/cube/cube-analytics-index-page';
 import {CubeAnalyticsListComponent} from './cube/analytics/cube-analytics-list';
 import {CubeAnalyticsPreviewComponent} from './cube/analytics/cube-analytics-preview';
 import {
@@ -43,11 +44,11 @@ import {MasonryModule} from 'angular2-masonry';
 import {CubeAnalyticsEmbedComponent} from './cube/analytics/embed/embed';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {UserGuidePageComponent} from './user-guide';
-import {MarkdownComponent, MarkdownModule} from 'angular2-markdown';
+import {MarkdownModule} from 'angular2-markdown';
 import {OutliersDetectionOutputComponent} from './analysis/outlier/outlier_detection';
 import {
-  MdButtonModule, MdCheckboxModule, MdInputModule, MdSidenavModule, MdChipsModule, MdButtonToggleModule,
-  MdTooltipModule, MdProgressBarModule, MdCardModule, MaterialModule, MdIconModule, MdDialogModule,
+  MdButtonModule, MdInputModule, MdSidenavModule, MdChipsModule, MdButtonToggleModule,
+  MdTooltipModule, MdProgressBarModule, MdCardModule, MdIconModule, MdDialogModule,
   MdProgressSpinnerModule, MdSelectModule, MdOptionModule, MdAutocompleteModule, MdTableModule
 } from '@angular/material';
 import {CdkTableModule} from '@angular/cdk';
@@ -60,59 +61,60 @@ import {OutlierPlotVisualization, OutliersHeatmapDiagram} from './analysis/visua
 import {UploadPageComponent} from '../containers/cube/upload';
 import {LinkedPipesPageComponent} from '../containers/cube/linkedpipes';
 import {AnalysisVisualization} from './analysis/visualization';
-import {InlineSVGModule} from "ng-inline-svg";
-
+import {InlineSVGModule} from 'ng-inline-svg';
+import {MedoidDiagramVisualization} from './analysis/visualizations/medoidDiagram';
 
 
 export const COMPONENTS = [
   CubePreviewComponent,
   CubePreviewListComponent,
-    CubeSearchComponent,
-    DynamicComponent,
-    LayoutComponent,
-    OutlierPlotVisualization,
-    NavItemComponent,
-    SidenavComponent,
-    ToolbarComponent,
-    HistogramVisualization,
-    AggregateRequestBuilder,
-    FactRequestBuilder,
-    UserGuidePageComponent,
-    UploadPageComponent,
-    LinkedPipesPageComponent,
-    CubeAnalyticsDetailComponent,
-    CubeAnalyticsIndexComponent,
-    FrequencyVisualization,
-    BoxPlotVisualization,
-    LineChartVisualization,
-    ScatterPlotVisualization,
-    TreeDiagramVisualization,
-    TimeSeriesOutputComponent,
-    RuleMiningOutputComponent,
-    ClusteringOutputComponent,
-    DescriptiveStatisticsOutputComponent,
-    AcfChartVisualization,
-    AcfChartVisualizationRegular,
-    AcfChartVisualizationResiduals,
-    LineChartTrends,
-    LineChartRemainders,
-    ScatterPlotTimeseriesDecompositionFittedResiduals,
-    ScatterPlotTimeseriesFittingFittedResiduals,
-    LineChartFittingResiduals,
-    OutliersDetectionOutputComponent,
-    LineChartFittingTimeFitted,
-    PacfChartVisualizationRegular,
-    PacfChartVisualizationResiduals,
-    BoxPlotDescriptive,
-    CubePreviewListComponent,
-    CubePreviewComponent,
-    CubeAnalyticsListComponent,
-    CubeAnalyticsPreviewComponent,
-    CubeAnalyticsEmbedComponent,
-    LineChartTimeSeriesForecast,
-    FrequencyChartDescriptive,
-    HistogramDescriptive,
-    InfiniteScrollerDirective,
+  CubeSearchComponent,
+  DynamicComponent,
+  LayoutComponent,
+  OutlierPlotVisualization,
+  NavItemComponent,
+  SidenavComponent,
+  ToolbarComponent,
+  HistogramVisualization,
+  AggregateRequestBuilder,
+  FactRequestBuilder,
+  UserGuidePageComponent,
+  UploadPageComponent,
+  LinkedPipesPageComponent,
+  CubeAnalyticsDetailComponent,
+  CubeAnalyticsIndexComponent,
+  FrequencyVisualization,
+  BoxPlotVisualization,
+  LineChartVisualization,
+  ScatterPlotVisualization,
+  TreeDiagramVisualization,
+  MedoidDiagramVisualization,
+  TimeSeriesOutputComponent,
+  RuleMiningOutputComponent,
+  ClusteringOutputComponent,
+  DescriptiveStatisticsOutputComponent,
+  AcfChartVisualization,
+  AcfChartVisualizationRegular,
+  AcfChartVisualizationResiduals,
+  LineChartTrends,
+  LineChartRemainders,
+  ScatterPlotTimeseriesDecompositionFittedResiduals,
+  ScatterPlotTimeseriesFittingFittedResiduals,
+  LineChartFittingResiduals,
+  OutliersDetectionOutputComponent,
+  LineChartFittingTimeFitted,
+  PacfChartVisualizationRegular,
+  PacfChartVisualizationResiduals,
+  BoxPlotDescriptive,
+  CubePreviewListComponent,
+  CubePreviewComponent,
+  CubeAnalyticsListComponent,
+  CubeAnalyticsPreviewComponent,
+  CubeAnalyticsEmbedComponent,
+  LineChartTimeSeriesForecast,
+  FrequencyChartDescriptive,
+  HistogramDescriptive,
+  InfiniteScrollerDirective,
   AnalysisVisualization,
   ClusteringTreeDiagram,
   OutliersHeatmapDiagram,
@@ -151,6 +153,6 @@ export const COMPONENTS = [
   declarations: COMPONENTS,
   exports: COMPONENTS,
 })
-export  class ComponentsModule {
+export class ComponentsModule {
 
 }

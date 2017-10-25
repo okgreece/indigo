@@ -76,6 +76,7 @@ export class TreeDiagramVisualization implements AfterViewInit {
   private generateTreeDiagram(data: any) {
     const margin = {top: 20, right: 40, bottom: 50, left: 75};
 
+    data = data.tree;
 
     const viewerWidth = $(this.vizCanvas.nativeElement).width() - margin.left - margin.right;
     const viewerHeight = $(this.vizCanvas.nativeElement).height() - margin.top - margin.bottom;
