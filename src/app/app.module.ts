@@ -8,6 +8,7 @@ import { DBModule } from '@ngrx/db';
 import { RouterStoreModule } from '@ngrx/router-store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import {MaterialModule, MdCardModule, MdInputModule, MdTableModule} from '@angular/material';
+import {TranslateModule} from '@ngx-translate/core';
 
 import { ComponentsModule } from './components';
 
@@ -51,9 +52,11 @@ import {PipesModule} from "./pipes/index";
     CdkTableModule,
     MdInputModule,
     PipesModule,
-/*
-    MaterialModule,
-*/
+    TranslateModule.forRoot(),
+
+    /*
+        MaterialModule,
+    */
     BrowserAnimationsModule,
     FlexLayoutModule,
     ComponentsModule,

@@ -63,6 +63,7 @@ import {LinkedPipesPageComponent} from '../containers/cube/linkedpipes';
 import {AnalysisVisualization} from './analysis/visualization';
 import {InlineSVGModule} from 'ng-inline-svg';
 import {MedoidDiagramVisualization} from './analysis/visualizations/medoidDiagram';
+import {TranslateModule} from "@ngx-translate/core";
 
 
 export const COMPONENTS = [
@@ -148,7 +149,8 @@ export const COMPONENTS = [
     MdAutocompleteModule,
     MdTableModule,
     CdkTableModule,
-    InlineSVGModule
+    InlineSVGModule,
+    TranslateModule
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,

@@ -10,7 +10,9 @@ import { ChangeDetectorRef} from '@angular/core';
 import * as d3 from 'd3';
 import * as $ from 'jquery'
 import * as _ from 'lodash';
+import * as d3tip from 'd3-tip';
 import {AnalysisVisualization} from '../visualization';
+import {AnalysisCall} from '../../../models/analysis/analysisCall';
 
 
 @Component({
@@ -67,22 +69,28 @@ export class TreeDiagramVisualization implements AfterViewInit {
   @ViewChild('vizCanvas') vizCanvas: any;
 
   private _values: any;
-  @Input()
-  public label_x: string;
 
+
+
+  @Input()
+  public analysisCall: AnalysisCall;
 
   @Input()
   public label_y: string;
   private generateTreeDiagram(data: any) {
-    const margin = {top: 20, right: 40, bottom: 50, left: 75};
 
+    const margin = {top: 20, right: 40, bottom: 50, left: 75};
+    const originalData = data;
     data = data.tree;
 
     const viewerWidth = $(this.vizCanvas.nativeElement).width() - margin.left - margin.right;
     const viewerHeight = $(this.vizCanvas.nativeElement).height() - margin.top - margin.bottom;
 
 
-
+    const div = d3.select(this.vizCanvas.nativeElement).append('div')
+      .attr('class', 'tooltip')
+      .style('opacity', 0)
+      .text(' ');
 
     const svg = d3.select(this.vizCanvas.nativeElement).append('svg')
       .attr('width', viewerWidth + margin.left + margin.right)
@@ -104,7 +112,6 @@ export class TreeDiagramVisualization implements AfterViewInit {
     let i = 0,
       duration = 750,
       root;
-
 
 
     const that = this;
@@ -159,6 +166,7 @@ export class TreeDiagramVisualization implements AfterViewInit {
       const node = g.selectAll('g.node')
         .data(nodes, function(d: any) {return d.id || (d.id = ++i); });
 
+
       // Enter any new modes at the parent's previous position.
       const nodeEnter = node.enter().append('g')
         .attr('class', 'node')
@@ -167,12 +175,24 @@ export class TreeDiagramVisualization implements AfterViewInit {
         })
         .on('click', click);
 
+
+      nodeEnter.on('mouseover', function (event) {
+        const a = that.analysisCall;
+        if ((<any>event.data).leaf[0] === true) {
+          div.style('opacity', 1);
+          div.text(that.analysisCall.inputs.dimensions[0].fullLabel + ': ' + originalData['raw.data'][(<any>event.data).value[0] - 1][that.analysisCall.inputs.dimensions[0].ref]);
+        }
+      })
+        .on('mouseout', function (event) {
+          div.style('opacity', 0);
+        });
+
       // Add Circle for the nodes
       nodeEnter.append('circle')
         .attr('class', 'node')
         .attr('r', 1e-6)
         .style('fill', function(d: any) {
-          return d._children ? 'lightsteelblue' : '#fff';
+          return d.children !== undefined ? 'lightsteelblue' : '#fff';
         });
 
       // Add labels for the nodes
@@ -184,7 +204,11 @@ export class TreeDiagramVisualization implements AfterViewInit {
         .attr('text-anchor', function(d: any) {
           return d.children || d._children ? 'end' : 'start';
         })
-        .text(function(d: any) { return d.data.name; });
+        .text(function(d: any) { if (!d.children) {
+          return d.data.name ;
+        } else {
+          return '';
+        } });
 
       // UPDATE
       const nodeUpdate = nodeEnter.merge(node);
@@ -200,7 +224,7 @@ export class TreeDiagramVisualization implements AfterViewInit {
       nodeUpdate.select('circle.node')
         .attr('r', 10)
         .style('fill', function(d: any) {
-          return d._children ? 'lightsteelblue' : '#fff';
+          return d.children!==undefined ? 'lightsteelblue' : '#fff';
         })
         .attr('cursor', 'pointer');
 
@@ -257,6 +281,8 @@ export class TreeDiagramVisualization implements AfterViewInit {
         d.x0 = d.x;
         d.y0 = d.y;
       });
+
+
 
       // Creates a curved (diagonal) path from parent to the child nodes
       function diagonal(s, d) {

@@ -10,7 +10,7 @@ import {
   NavigationError
 } from '@angular/router';
 import {Http} from '@angular/http';
-
+import {TranslateService} from '@ngx-translate/core';
 
 
 @Component({
@@ -31,17 +31,17 @@ import {Http} from '@angular/http';
 
 export class AppComponent {
 
+  loading = true;
 
+  constructor(private router: Router, private translate: TranslateService) {
+    // this language will be used as a fallback when a translation isn't found in the current language
+    translate.setDefaultLang('en');
 
-  loading: boolean = true;
-
-
-  constructor(private router: Router) {
+    // the lang to use, if the lang isn't available, it will use the current loader to get them
+    translate.use('en');
     router.events.subscribe((event: RouterEvent) => {
       this.navigationInterceptor(event);
     });
-
-
 
 
   }
