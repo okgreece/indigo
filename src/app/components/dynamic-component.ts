@@ -17,6 +17,7 @@ import {
 import {FrequencyChartDescriptive} from './analysis/visualizations/frequencyChart';
 import {HistogramDescriptive} from './analysis/visualizations/histogram';
 import {BoxPlotDescriptive} from './analysis/visualizations/boxPlot';
+import {ClusteringMedoidDiagram} from "./analysis/visualizations/medoidDiagram";
 // http://blog.mgechev.com/2015/12/30/angular2-router-dynamic-route-config-definition-creation/
 
 
@@ -34,7 +35,8 @@ export const DynamicComponents = {
   'analytics-line-chart-timeseries-forecast': LineChartTimeSeriesForecast,
   'analytics-frequency-chart-descriptive': FrequencyChartDescriptive,
   'analytics-histogram-chart-descriptive': HistogramDescriptive,
-  'analytics-box-plot-descriptive': BoxPlotDescriptive
+  'analytics-box-plot-descriptive': BoxPlotDescriptive,
+  'analytics-clustering-medoid-diagram': ClusteringMedoidDiagram
 
 };
 

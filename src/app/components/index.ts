@@ -62,7 +62,7 @@ import {UploadPageComponent} from '../containers/cube/upload';
 import {LinkedPipesPageComponent} from '../containers/cube/linkedpipes';
 import {AnalysisVisualization} from './analysis/visualization';
 import {InlineSVGModule} from 'ng-inline-svg';
-import {MedoidDiagramVisualization} from './analysis/visualizations/medoidDiagram';
+import {ClusteringMedoidDiagram, MedoidDiagramVisualization} from './analysis/visualizations/medoidDiagram';
 import {TranslateModule} from "@ngx-translate/core";
 
 
@@ -113,6 +113,7 @@ export const COMPONENTS = [
   CubeAnalyticsPreviewComponent,
   CubeAnalyticsEmbedComponent,
   LineChartTimeSeriesForecast,
+  ClusteringMedoidDiagram,
   FrequencyChartDescriptive,
   HistogramDescriptive,
   InfiniteScrollerDirective,
